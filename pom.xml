@@ -44,6 +44,8 @@
         <module>erp-market</module>
         <module>erp-purchase</module>
         <module>erp-warehouse</module>
+        <module>erp-common</module>
+        <module>erp-user</module>
     </modules>
 
     <build>
