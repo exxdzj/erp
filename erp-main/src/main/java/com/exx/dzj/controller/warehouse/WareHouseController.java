@@ -1,4 +1,4 @@
-package com.exx.dzj.controller;
+package com.exx.dzj.controller.warehouse;
 
 /**
  * @author yangyun
