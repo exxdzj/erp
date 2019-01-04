@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.exx.dzj</groupId>
-    <artifactId>erp</artifactId>
+    <artifactId>erp-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 
