@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exx.dzj.mapper.contactway.ContactWayBeanMapper">
+  <resultMap id="BaseResultMap" type="com.exx.dzj.entity.contactway.ContactWayBean">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="cust_code" jdbcType="VARCHAR" property="custCode" />
+    <result column="link_man" jdbcType="VARCHAR" property="linkMan" />
+    <result column="telephone_num" jdbcType="VARCHAR" property="telephoneNum" />
+    <result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
+    <result column="fax_num" jdbcType="VARCHAR" property="faxNum" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="postal_address" jdbcType="VARCHAR" property="postalAddress" />
+    <result column="postal_address_eng" jdbcType="VARCHAR" property="postalAddressEng" />
+    <result column="delivery_address_one" jdbcType="VARCHAR" property="deliveryAddressOne" />
+    <result column="delivery_address_two" jdbcType="VARCHAR" property="deliveryAddressTwo" />
+    <result column="zip_code" jdbcType="VARCHAR" property="zipCode" />
+    <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, cust_code, link_man, telephone_num, phone_num, fax_num, email, postal_address, 
+    postal_address_eng, delivery_address_one, delivery_address_two, zip_code, is_enable, 
+    create_time, create_user, update_time, update_user
+  </sql>
+  <select id="selectByExample" parameterType="com.exx.dzj.entity.contactway.ContactWayBeanExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tab_contact_way
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tab_contact_way
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tab_contact_way
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.exx.dzj.entity.contactway.ContactWayBeanExample">
+    delete from tab_contact_way
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.exx.dzj.entity.contactway.ContactWayBean">
+    insert into tab_contact_way (id, cust_code, link_man, 
+      telephone_num, phone_num, fax_num, 
+      email, postal_address, postal_address_eng, 
+      delivery_address_one, delivery_address_two, 
+      zip_code, is_enable, create_time, 
+      create_user, update_time, update_user
+      )
+    values (#{id,jdbcType=INTEGER}, #{custCode,jdbcType=VARCHAR}, #{linkMan,jdbcType=VARCHAR}, 
+      #{telephoneNum,jdbcType=VARCHAR}, #{phoneNum,jdbcType=VARCHAR}, #{faxNum,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{postalAddress,jdbcType=VARCHAR}, #{postalAddressEng,jdbcType=VARCHAR}, 
+      #{deliveryAddressOne,jdbcType=VARCHAR}, #{deliveryAddressTwo,jdbcType=VARCHAR}, 
+      #{zipCode,jdbcType=VARCHAR}, #{isEnable,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.exx.dzj.entity.contactway.ContactWayBean">
+    insert into tab_contact_way
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="custCode != null">
+        cust_code,
+      </if>
+      <if test="linkMan != null">
+        link_man,
+      </if>
+      <if test="telephoneNum != null">
+        telephone_num,
+      </if>
+      <if test="phoneNum != null">
+        phone_num,
+      </if>
+      <if test="faxNum != null">
+        fax_num,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="postalAddress != null">
+        postal_address,
+      </if>
+      <if test="postalAddressEng != null">
+        postal_address_eng,
+      </if>
+      <if test="deliveryAddressOne != null">
+        delivery_address_one,
+      </if>
+      <if test="deliveryAddressTwo != null">
+        delivery_address_two,
+      </if>
+      <if test="zipCode != null">
+        zip_code,
+      </if>
+      <if test="isEnable != null">
+        is_enable,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="custCode != null">
+        #{custCode,jdbcType=VARCHAR},
+      </if>
+      <if test="linkMan != null">
+        #{linkMan,jdbcType=VARCHAR},
+      </if>
+      <if test="telephoneNum != null">
+        #{telephoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null">
+        #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="faxNum != null">
+        #{faxNum,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="postalAddress != null">
+        #{postalAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="postalAddressEng != null">
+        #{postalAddressEng,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryAddressOne != null">
+        #{deliveryAddressOne,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryAddressTwo != null">
+        #{deliveryAddressTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null">
+        #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnable != null">
+        #{isEnable,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.exx.dzj.entity.contactway.ContactWayBeanExample" resultType="java.lang.Long">
+    select count(*) from tab_contact_way
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tab_contact_way
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.custCode != null">
+        cust_code = #{record.custCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.linkMan != null">
+        link_man = #{record.linkMan,jdbcType=VARCHAR},
+      </if>
+      <if test="record.telephoneNum != null">
+        telephone_num = #{record.telephoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phoneNum != null">
+        phone_num = #{record.phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.faxNum != null">
+        fax_num = #{record.faxNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null">
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.postalAddress != null">
+        postal_address = #{record.postalAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.postalAddressEng != null">
+        postal_address_eng = #{record.postalAddressEng,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deliveryAddressOne != null">
+        delivery_address_one = #{record.deliveryAddressOne,jdbcType=VARCHAR},
+      </if>
+      <if test="record.deliveryAddressTwo != null">
+        delivery_address_two = #{record.deliveryAddressTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zipCode != null">
+        zip_code = #{record.zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isEnable != null">
+        is_enable = #{record.isEnable,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createUser != null">
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null">
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tab_contact_way
+    set id = #{record.id,jdbcType=INTEGER},
+      cust_code = #{record.custCode,jdbcType=VARCHAR},
+      link_man = #{record.linkMan,jdbcType=VARCHAR},
+      telephone_num = #{record.telephoneNum,jdbcType=VARCHAR},
+      phone_num = #{record.phoneNum,jdbcType=VARCHAR},
+      fax_num = #{record.faxNum,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      postal_address = #{record.postalAddress,jdbcType=VARCHAR},
+      postal_address_eng = #{record.postalAddressEng,jdbcType=VARCHAR},
+      delivery_address_one = #{record.deliveryAddressOne,jdbcType=VARCHAR},
+      delivery_address_two = #{record.deliveryAddressTwo,jdbcType=VARCHAR},
+      zip_code = #{record.zipCode,jdbcType=VARCHAR},
+      is_enable = #{record.isEnable,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.contactway.ContactWayBean">
+    update tab_contact_way
+    <set>
+      <if test="custCode != null">
+        cust_code = #{custCode,jdbcType=VARCHAR},
+      </if>
+      <if test="linkMan != null">
+        link_man = #{linkMan,jdbcType=VARCHAR},
+      </if>
+      <if test="telephoneNum != null">
+        telephone_num = #{telephoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null">
+        phone_num = #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="faxNum != null">
+        fax_num = #{faxNum,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="postalAddress != null">
+        postal_address = #{postalAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="postalAddressEng != null">
+        postal_address_eng = #{postalAddressEng,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryAddressOne != null">
+        delivery_address_one = #{deliveryAddressOne,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryAddressTwo != null">
+        delivery_address_two = #{deliveryAddressTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="zipCode != null">
+        zip_code = #{zipCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isEnable != null">
+        is_enable = #{isEnable,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.contactway.ContactWayBean">
+    update tab_contact_way
+    set cust_code = #{custCode,jdbcType=VARCHAR},
+      link_man = #{linkMan,jdbcType=VARCHAR},
+      telephone_num = #{telephoneNum,jdbcType=VARCHAR},
+      phone_num = #{phoneNum,jdbcType=VARCHAR},
+      fax_num = #{faxNum,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      postal_address = #{postalAddress,jdbcType=VARCHAR},
+      postal_address_eng = #{postalAddressEng,jdbcType=VARCHAR},
+      delivery_address_one = #{deliveryAddressOne,jdbcType=VARCHAR},
+      delivery_address_two = #{deliveryAddressTwo,jdbcType=VARCHAR},
+      zip_code = #{zipCode,jdbcType=VARCHAR},
+      is_enable = #{isEnable,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

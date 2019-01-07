@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!--数据库驱动-->
+    <!--<classPathEntry    location="mysql-connector-java-5.0.8-bin.jar"/>-->
+    <context id="DB2Tables"  targetRuntime="MyBatis3">
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <!--数据库链接地址账号密码-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://192.168.0.134:3306/erp" userId="dzj-app" password="dzjapp">
+        </jdbcConnection>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!--生成Model类存放位置-->
+        <javaModelGenerator targetPackage="com.exx.dzj.entity" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <!--生成映射文件存放位置-->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources/mappers">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <!--生成Dao类存放位置-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.exx.dzj.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <!--生成对应表及类名-->
+
+        <table tableName="tab_account_attribute"
+               domainObjectName="AccountAttributeBean">
+        </table>
+
+        <table tableName="tab_contact_way"
+               domainObjectName="ContactWayBean">
+        </table>
+
+        <table tableName="tab_customer_supplier"
+               domainObjectName="CustomerSupplierBean">
+        </table>
+
+        <table tableName="tab_dept_info"
+               domainObjectName="DeptInfoBean">
+        </table>
+
+        <table tableName="tab_dictionary_info"
+               domainObjectName="DictionaryInfo">
+        </table>
+
+        <table tableName="tab_dictionary_type"
+               domainObjectName="DictionaryTypeBean">
+        </table>
+
+        <table tableName="tab_icon"
+               domainObjectName="IconBean">
+        </table>
+
+        <table tableName="tab_log"
+               domainObjectName="LogBean">
+        </table>
+
+        <table tableName="tab_menu_info"
+               domainObjectName="MenuInfo">
+        </table>
+
+        <table tableName="tab_purchase_goods_detail"
+               domainObjectName="PurchaseGoodsDetailBean">
+        </table>
+
+        <table tableName="tab_purchase_info"
+               domainObjectName="PurchaseInfo">
+        </table>
+
+        <table tableName="tab_purchase_receipts_details"
+               domainObjectName="PurchaseReceiptsDetailsBean">
+        </table>
+
+        <table tableName="tab_role"
+               domainObjectName="RoleBean">
+        </table>
+
+        <table tableName="tab_role_menu"
+               domainObjectName="RoleMenuBean">
+        </table>
+
+        <table tableName="tab_sale_goods_detail"
+               domainObjectName="SaleGoodsDetailBean">
+        </table>
+
+        <table tableName="tab_sale_info"
+               domainObjectName="SaleInfo">
+        </table>
+
+        <table tableName="tab_sale_receipts_details"
+               domainObjectName="SaleReceiptsDetails">
+        </table>
+
+        <table tableName="tab_stock_info"
+               domainObjectName="StockInfo">
+        </table>
+
+        <table tableName="tab_stock_num_price"
+               domainObjectName="StockNumPrice">
+        </table>
+
+        <table tableName="tab_user_info"
+               domainObjectName="UserInfo">
+        </table>
+
+        <table tableName="tab_user_role"
+               domainObjectName="UserRole">
+        </table>
+    </context>
+</generatorConfiguration>

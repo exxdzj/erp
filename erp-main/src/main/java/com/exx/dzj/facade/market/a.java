@@ -1,4 +1,4 @@
-package com.exx.dzj.facade;
+package com.exx.dzj.facade.market;
 
 /**
  * @author yangyun
