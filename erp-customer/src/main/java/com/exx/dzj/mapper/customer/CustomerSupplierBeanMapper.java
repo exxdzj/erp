@@ -45,4 +45,12 @@ public interface CustomerSupplierBeanMapper {
      * @return
      */
     CustomerSupplierInfo queryCustomerSupplierInfo(@Param("custCode") String custCode);
+
+    /**
+     * 修改  数据状态
+     * @param custCodes
+     * @param isEnable
+     * @return
+     */
+    int modifyCustomerSupplierDataStatus(@Param("custCodes")List<String> custCodes, @Param("isEnable")int isEnable);
 }

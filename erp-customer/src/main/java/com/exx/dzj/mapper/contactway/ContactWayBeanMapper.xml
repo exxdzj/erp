@@ -78,11 +78,13 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List">
     id, cust_code, link_man, telephone_num, phone_num, fax_num, email, postal_address, 
     postal_address_eng, delivery_address_one, delivery_address_two, zip_code, is_enable, 
     create_time, create_user, update_time, update_user
   </sql>
+
   <select id="selectByExample" parameterType="com.exx.dzj.entity.contactway.ContactWayBeanExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -97,22 +99,26 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from tab_contact_way
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tab_contact_way
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.contactway.ContactWayBeanExample">
     delete from tab_contact_way
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.exx.dzj.entity.contactway.ContactWayBean">
     insert into tab_contact_way (id, cust_code, link_man, 
       telephone_num, phone_num, fax_num, 
@@ -125,10 +131,11 @@
       #{telephoneNum,jdbcType=VARCHAR}, #{phoneNum,jdbcType=VARCHAR}, #{faxNum,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{postalAddress,jdbcType=VARCHAR}, #{postalAddressEng,jdbcType=VARCHAR}, 
       #{deliveryAddressOne,jdbcType=VARCHAR}, #{deliveryAddressTwo,jdbcType=VARCHAR}, 
-      #{zipCode,jdbcType=VARCHAR}, #{isEnable,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}
+      #{zipCode,jdbcType=VARCHAR}, #{isEnable,jdbcType=INTEGER}, SYSDATE(),
+      #{createUser,jdbcType=VARCHAR}, SYSDATE(), #{updateUser,jdbcType=VARCHAR}
       )
   </insert>
+
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.contactway.ContactWayBean">
     insert into tab_contact_way
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -171,15 +178,11 @@
       <if test="isEnable != null">
         is_enable,
       </if>
-      <if test="createTime != null">
         create_time,
-      </if>
       <if test="createUser != null">
         create_user,
       </if>
-      <if test="updateTime != null">
         update_time,
-      </if>
       <if test="updateUser != null">
         update_user,
       </if>
@@ -224,26 +227,24 @@
       <if test="isEnable != null">
         #{isEnable,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="createUser != null">
         #{createUser,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
+
   <select id="countByExample" parameterType="com.exx.dzj.entity.contactway.ContactWayBeanExample" resultType="java.lang.Long">
     select count(*) from tab_contact_way
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update tab_contact_way
     <set>
@@ -286,15 +287,7 @@
       <if test="record.isEnable != null">
         is_enable = #{record.isEnable,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.createUser != null">
-        create_user = #{record.createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="record.updateUser != null">
         update_user = #{record.updateUser,jdbcType=VARCHAR},
       </if>
@@ -303,6 +296,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByExample" parameterType="map">
     update tab_contact_way
     set id = #{record.id,jdbcType=INTEGER},
@@ -318,14 +312,13 @@
       delivery_address_two = #{record.deliveryAddressTwo,jdbcType=VARCHAR},
       zip_code = #{record.zipCode,jdbcType=VARCHAR},
       is_enable = #{record.isEnable,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_time = SYSDATE(),
       update_user = #{record.updateUser,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.contactway.ContactWayBean">
     update tab_contact_way
     <set>
@@ -365,21 +358,14 @@
       <if test="isEnable != null">
         is_enable = #{isEnable,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.contactway.ContactWayBean">
     update tab_contact_way
     set cust_code = #{custCode,jdbcType=VARCHAR},
@@ -394,9 +380,7 @@
       delivery_address_two = #{deliveryAddressTwo,jdbcType=VARCHAR},
       zip_code = #{zipCode,jdbcType=VARCHAR},
       is_enable = #{isEnable,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_time = SYSDATE(),
       update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

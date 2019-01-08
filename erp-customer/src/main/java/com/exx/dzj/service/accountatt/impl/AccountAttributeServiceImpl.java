@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * @Date 2019/1/7 0007 13:54
  * @Description 会计属性 service
  */
-@Service
+@Service("accountAttService")
 public class AccountAttributeServiceImpl implements AccountAttributeService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(AccountAttributeServiceImpl.class);

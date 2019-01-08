@@ -38,4 +38,10 @@ public interface CustomerService {
      * @param bean
      */
     void modifyCustomerSupplier(CustomerSupplierBean bean);
+
+    /**
+     * 删除 客户或供应商数据
+     * @param custCodes
+     */
+    void delCustomerSupplier(String custCodes, int isEnable);
 }

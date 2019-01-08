@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * @Date 2019/1/7 0007 13:53
  * @Description 会计属性 service
  */
-@Service
+@Service("contactwayService")
 public class ContactWayServiceImpl implements ContactWayService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ContactWayServiceImpl.class);

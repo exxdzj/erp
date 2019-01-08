@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -79,6 +80,24 @@ public class CustomerServiceImpl implements CustomerService {
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", CustomerServiceImpl.class.getName()+".modifyCustomerSupplier", ex.getMessage());
             throw new ErpException(400, "修改客户或供应商基础信息失败!");
+        }
+    }
+
+    /**
+     * 删除 客户或供应商数据
+     * @param custCodes
+     */
+    @Override
+    public void delCustomerSupplier(String custCodes, int isEnable){
+        try{
+            String comma = ",";
+            if(custCodes.contains(comma)){
+                List<String> list = new ArrayList<String>(custCodes.split(",").length);
+                csMapper.modifyCustomerSupplierDataStatus(list, isEnable);
+            }
+        }catch(Exception ex){
+            LOGGER.error("异常方法:{}异常信息:{}", CustomerServiceImpl.class.getName()+".delCustomerSupplier", ex.getMessage());
+            throw new ErpException(400, "删除客户或供应商基础信息失败!");
         }
     }
 }

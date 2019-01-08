@@ -132,8 +132,8 @@
       #{custType,jdbcType=VARCHAR}, #{custLevel,jdbcType=VARCHAR}, #{levelName,jdbcType=VARCHAR}, 
       #{salesmanCode,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, #{regionCode,jdbcType=VARCHAR}, 
       #{regionName,jdbcType=VARCHAR}, #{shipCode,jdbcType=VARCHAR}, #{shipAddress,jdbcType=VARCHAR}, 
-      #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
+      #{remarks,jdbcType=VARCHAR}, SYSDATE(), #{createUser,jdbcType=VARCHAR},
+      SYSDATE(), #{updateUser,jdbcType=VARCHAR})
   </insert>
 
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
@@ -175,15 +175,11 @@
       <if test="remarks != null">
         remarks,
       </if>
-      <if test="createTime != null">
         create_time,
-      </if>
       <if test="createUser != null">
         create_user,
       </if>
-      <if test="updateTime != null">
         update_time,
-      </if>
       <if test="updateUser != null">
         update_user,
       </if>
@@ -225,15 +221,11 @@
       <if test="remarks != null">
         #{remarks,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="createUser != null">
         #{createUser,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
       </if>
@@ -283,15 +275,7 @@
       <if test="record.remarks != null">
         remarks = #{record.remarks,jdbcType=VARCHAR},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.createUser != null">
-        create_user = #{record.createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="record.updateUser != null">
         update_user = #{record.updateUser,jdbcType=VARCHAR},
       </if>
@@ -315,9 +299,7 @@
       ship_code = #{record.shipCode,jdbcType=VARCHAR},
       ship_address = #{record.shipAddress,jdbcType=VARCHAR},
       remarks = #{record.remarks,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_time = SYSDATE(),
       update_user = #{record.updateUser,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -360,15 +342,7 @@
       <if test="remarks != null">
         remarks = #{remarks,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
@@ -390,9 +364,7 @@
       ship_code = #{shipCode,jdbcType=VARCHAR},
       ship_address = #{shipAddress,jdbcType=VARCHAR},
       remarks = #{remarks,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_time = SYSDATE(),
       update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -408,7 +380,13 @@
         ui.real_name salesman,
         cs.level_name levelName,
         ta.discount_rate discountRate,
-        ta.account_period accountPeriod
+        ta.account_period accountPeriod,
+      CASE
+    WHEN cs.is_enable = 1 THEN
+    '使用中'
+    ELSE
+    '关闭'
+    END dataStatus
     FROM
         tab_customer_supplier cs
     LEFT JOIN tab_user_info ui ON cs.salesman_code = ui.salesman_code
@@ -503,4 +481,18 @@
       AND cs.cust_code = #{custCode}
     </if>
   </select>
+
+  <!-- 修改数据状态 -->
+  <update id="modifyCustomerSupplierDataStatus">
+    update tab_customer_supplier cs set cs.is_enable = #{isEnable}
+    <choose>
+      <when test="custCodes!=null">
+        where cs.cust_code in
+        <foreach collection="custCodes" item="item" open="(" close=")" separator=",">#{item}</foreach>
+      </when>
+      <otherwise>
+        where cs.cust_code = null
+      </otherwise>
+    </choose>
+  </update>
 </mapper>

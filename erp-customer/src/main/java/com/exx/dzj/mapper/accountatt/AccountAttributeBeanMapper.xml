@@ -18,6 +18,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
   </resultMap>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -47,6 +48,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -76,11 +78,13 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List">
     id, cust_code, payment_method, discount_rate, account_period, line_credit, pay_taxes_num, 
     bill_type, bank_deposit, open_account, is_enable, create_time, create_user, update_time, 
     update_user
   </sql>
+
   <select id="selectByExample" parameterType="com.exx.dzj.entity.accountatt.AccountAttributeBeanExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -95,6 +99,7 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -105,12 +110,14 @@
     delete from tab_account_attribute
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.accountatt.AccountAttributeBeanExample">
     delete from tab_account_attribute
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.exx.dzj.entity.accountatt.AccountAttributeBean">
     insert into tab_account_attribute (id, cust_code, payment_method, 
       discount_rate, account_period, line_credit, 
@@ -121,10 +128,11 @@
     values (#{id,jdbcType=INTEGER}, #{custCode,jdbcType=VARCHAR}, #{paymentMethod,jdbcType=VARCHAR}, 
       #{discountRate,jdbcType=DOUBLE}, #{accountPeriod,jdbcType=INTEGER}, #{lineCredit,jdbcType=DOUBLE}, 
       #{payTaxesNum,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, #{bankDeposit,jdbcType=VARCHAR}, 
-      #{openAccount,jdbcType=VARCHAR}, #{isEnable,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}
+      #{openAccount,jdbcType=VARCHAR}, #{isEnable,jdbcType=INTEGER}, SYSDATE(),
+      #{createUser,jdbcType=VARCHAR}, SYSDATE(), #{updateUser,jdbcType=VARCHAR}
       )
   </insert>
+
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.accountatt.AccountAttributeBean">
     insert into tab_account_attribute
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -161,15 +169,11 @@
       <if test="isEnable != null">
         is_enable,
       </if>
-      <if test="createTime != null">
         create_time,
-      </if>
       <if test="createUser != null">
         create_user,
       </if>
-      <if test="updateTime != null">
         update_time,
-      </if>
       <if test="updateUser != null">
         update_user,
       </if>
@@ -208,26 +212,24 @@
       <if test="isEnable != null">
         #{isEnable,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="createUser != null">
         #{createUser,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
+
   <select id="countByExample" parameterType="com.exx.dzj.entity.accountatt.AccountAttributeBeanExample" resultType="java.lang.Long">
     select count(*) from tab_account_attribute
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update tab_account_attribute
     <set>
@@ -264,15 +266,7 @@
       <if test="record.isEnable != null">
         is_enable = #{record.isEnable,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.createUser != null">
-        create_user = #{record.createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="record.updateUser != null">
         update_user = #{record.updateUser,jdbcType=VARCHAR},
       </if>
@@ -281,6 +275,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByExample" parameterType="map">
     update tab_account_attribute
     set id = #{record.id,jdbcType=INTEGER},
@@ -294,14 +289,13 @@
       bank_deposit = #{record.bankDeposit,jdbcType=VARCHAR},
       open_account = #{record.openAccount,jdbcType=VARCHAR},
       is_enable = #{record.isEnable,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_time = SYSDATE(),
       update_user = #{record.updateUser,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.accountatt.AccountAttributeBean">
     update tab_account_attribute
     <set>
@@ -335,21 +329,14 @@
       <if test="isEnable != null">
         is_enable = #{isEnable,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.accountatt.AccountAttributeBean">
     update tab_account_attribute
     set cust_code = #{custCode,jdbcType=VARCHAR},
@@ -362,9 +349,7 @@
       bank_deposit = #{bankDeposit,jdbcType=VARCHAR},
       open_account = #{openAccount,jdbcType=VARCHAR},
       is_enable = #{isEnable,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_time = SYSDATE(),
       update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
