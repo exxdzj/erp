@@ -6,6 +6,17 @@ package com.exx.dzj.unique;
  * @Description
  */
 public class DefaultIdGeneratorConfig implements IdGeneratorConfig{
+
+    private String prefix = "";
+
+    public DefaultIdGeneratorConfig(){
+
+    }
+
+    public DefaultIdGeneratorConfig(String prefix){
+        this.prefix = prefix;
+    }
+
     @Override
     public String getSplitString() {
         return "";
@@ -18,7 +29,7 @@ public class DefaultIdGeneratorConfig implements IdGeneratorConfig{
 
     @Override
     public String getPrefix() {
-        return "";
+        return prefix;
     }
 
     @Override

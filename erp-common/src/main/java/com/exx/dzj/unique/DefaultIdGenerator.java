@@ -44,6 +44,8 @@ public class DefaultIdGenerator implements IdGenerator, Runnable{
         thread.start();
     }
 
+
+
     @Override
     public String next() {
         lock.readLock().lock();

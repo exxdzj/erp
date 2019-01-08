@@ -128,17 +128,34 @@ public class TestStandaloneIdGenerator {
         IdGeneratorConfig config = new DefaultIdGeneratorConfig() {
             @Override
             public String getSplitString() {
-                return "-";
+                return "";
             }
             @Override
             public int getInitial() {
-                return 1000000;
+
+                return 0;
             }
             @Override
             public String getPrefix() {
-                return "NODE01";
+                return "KH";
             }
         };
+        IdGenerator idGenerator = new DefaultIdGenerator(config);
+        for (int i=0; i<20; i++){
+            String id = idGenerator.next();
+            System.out.println(id);
+            try {
+                Thread.sleep(1000 * 1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void test7(){
+        System.out.println("--------ID生成器的特殊设置相关----------");
+        IdGeneratorConfig config = new DefaultIdGeneratorConfig("KH");
         IdGenerator idGenerator = new DefaultIdGenerator(config);
         for (int i=0; i<20; i++){
             String id = idGenerator.next();
