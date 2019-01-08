@@ -22,4 +22,11 @@ public interface UserService {
      * @param info
      */
     void saveSalesman(UserInfo info);
+
+    /**
+     * 查询 用户详细信息
+     * @param userCode
+     * @return
+     */
+    UserInfo queryUserInfo(String userCode);
 }

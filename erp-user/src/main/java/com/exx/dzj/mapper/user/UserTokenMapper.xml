@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exx.dzj.mapper.user.UserTokenMapper">
+
+    <!-- 保存user token -->
+    <insert id="saveSelective" parameterType="com.exx.dzj.entity.user.UserTokenBean">
+        insert into tab_user_token
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userCode != null">
+                user_code,
+            </if>
+            <if test="userToken != null">
+                user_token,
+            </if>
+            start_date,
+            expired_date,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="userToken != null">
+                #{userToken,jdbcType=VARCHAR},
+            </if>
+            SYSDATE(),
+            DATE_ADD(SYSDATE(),INTERVAL 3 HOUR),
+        </trim>
+    </insert>
+
+    <select id="queryUserCodeForToken" parameterType="string" resultType="string">
+      select ut.user_code from tab_user_token ut where ut.user_token = #{userToken}
+    </select>
+
+    <select id="queryUserToken" resultMap="com.exx.dzj.entity.user.UserTokenBean" parameterType="map">
+        select
+          user_code userCode,
+          user_token userToken
+        from tab_user_token
+        where
+        <![CDATA[ expired_date < SYSDATE() ]]>
+        and user_code = #{userCode}
+    </select>
+</mapper>

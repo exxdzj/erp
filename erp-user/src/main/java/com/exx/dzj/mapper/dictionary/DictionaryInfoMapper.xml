@@ -318,7 +318,7 @@
         tab_dictionary_info di
     WHERE
         di.is_enable = 1
-    <if test="dataType != null and dateType !=''">
+    <if test="dataType != null and dataType !=''">
       AND di.data_type = #{dataType}
     </if>
   </select>

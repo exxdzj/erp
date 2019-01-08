@@ -15,7 +15,7 @@ import java.util.List;
  * @Date 2019/1/7 0007 14:35
  * @Description
  */
-@Service
+@Service("dictService")
 public class DictionaryServiceImpl implements DictionaryService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(DictionaryServiceImpl.class);

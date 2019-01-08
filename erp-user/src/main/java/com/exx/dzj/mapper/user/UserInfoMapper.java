@@ -19,7 +19,7 @@ public interface UserInfoMapper {
 
     List<UserInfo> selectByExample(UserInfoExample example);
 
-    UserInfo selectByPrimaryKey(Integer id);
+    UserInfo selectByPrimaryKey(String userCode);
 
     int updateByExampleSelective(@Param("record") UserInfo record, @Param("example") UserInfoExample example);
 
