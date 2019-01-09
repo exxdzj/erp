@@ -37,7 +37,7 @@
       select ut.user_code from tab_user_token ut where ut.user_token = #{userToken}
     </select>
 
-    <select id="queryUserToken" resultMap="com.exx.dzj.entity.user.UserTokenBean" parameterType="map">
+    <select id="queryUserToken" resultType="com.exx.dzj.entity.user.UserTokenBean" parameterType="map">
         select
           user_code userCode,
           user_token userToken
