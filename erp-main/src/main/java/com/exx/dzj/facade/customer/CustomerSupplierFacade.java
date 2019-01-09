@@ -5,6 +5,7 @@ import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierInfo;
+import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.excepte.ErpException;
@@ -70,8 +71,8 @@ public class CustomerSupplierFacade {
      * @param pageSize
      * @return
      */
-    public Result queryCustomerSupplierList(int pageNum, int pageSize) {
-        return customerSupplierService.queryCustomerSupplierList(pageNum, pageSize);
+    public Result queryCustomerSupplierList(int pageNum, int pageSize, CustomerSupplierQuery queryParam) {
+        return customerSupplierService.queryCustomerSupplierList(pageNum, pageSize, queryParam);
     }
 
     /**

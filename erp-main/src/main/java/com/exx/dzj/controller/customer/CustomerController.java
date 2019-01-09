@@ -4,8 +4,10 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
+import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.facade.customer.CustomerSupplierFacade;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.util.JsonUtils;
 import com.exx.dzj.util.MathUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,11 +39,12 @@ public class CustomerController {
      * @return
      */
     @GetMapping("queryCustomerSupplierList")
-    public Result queryCustomerSupplierList(HttpServletRequest request, HttpServletResponse response){
+    public Result queryCustomerSupplierList(HttpServletRequest request, HttpServletResponse response, String query){
         Result result = Result.responseSuccess();
-        int pageNum = MathUtil.toInt(request.getParameter("pageNum"), CommonConstant.DEFAULT_PAGE_NUM);
-        int pageSize = MathUtil.toInt(request.getParameter("pageSize"), CommonConstant.DEFAULT_PAGE_SIZE);
-        result = customerSupplierFacade.queryCustomerSupplierList(pageNum, pageSize);
+        CustomerSupplierQuery queryParam = JsonUtils.jsonToPojo(query, CustomerSupplierQuery.class);
+        int pageNum = queryParam != null ? queryParam.getPage() : CommonConstant.DEFAULT_PAGE_NUM;
+        int pageSize = queryParam != null ? queryParam.getLimit() : CommonConstant.DEFAULT_PAGE_SIZE;
+        result = customerSupplierFacade.queryCustomerSupplierList(pageNum, pageSize, queryParam);
         return result;
     }
 
