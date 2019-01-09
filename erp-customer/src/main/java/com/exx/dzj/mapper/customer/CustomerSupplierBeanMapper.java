@@ -1,9 +1,6 @@
 package com.exx.dzj.mapper.customer;
 
-import com.exx.dzj.entity.customer.CustomerSupplierBean;
-import com.exx.dzj.entity.customer.CustomerSupplierBeanExample;
-import com.exx.dzj.entity.customer.CustomerSupplierInfo;
-import com.exx.dzj.entity.customer.CustomerSupplierModel;
+import com.exx.dzj.entity.customer.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -34,10 +31,10 @@ public interface CustomerSupplierBeanMapper {
 
     /**
      * 查询  客户或供应商列表数据
-     * @param param
+     * @param queryParam
      * @return
      */
-    List<CustomerSupplierModel> queryCustomerSupplierList(Map<String, Object> param);
+    List<CustomerSupplierModel> queryCustomerSupplierList(CustomerSupplierQuery queryParam);
 
     /**
      * 查询 客户或供应商的详细信息

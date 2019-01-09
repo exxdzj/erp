@@ -37,6 +37,10 @@ public class CustomerSupplierModel implements Serializable {
 
     /** 账期 */
     private Integer accountPeriod;
+
+    /** 地区 */
+    private String regionName;
+
     /** 数据状态(使用中、关闭) */
     private String dataStatus;
 }

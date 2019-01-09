@@ -3,6 +3,7 @@ package com.exx.dzj.service.customer.impl;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.customer.CustomerSupplierModel;
+import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.mapper.customer.CustomerSupplierBeanMapper;
 import com.exx.dzj.page.ERPage;
@@ -36,10 +37,10 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
-    public Result queryCustomerSupplierList(int pageNum, int pageSize) {
+    public Result queryCustomerSupplierList(int pageNum, int pageSize, CustomerSupplierQuery queryParam) {
         Result result = Result.responseSuccess();
         PageHelper.startPage(pageNum, pageSize);
-        List<CustomerSupplierModel> list = csMapper.queryCustomerSupplierList(null);
+        List<CustomerSupplierModel> list = csMapper.queryCustomerSupplierList(queryParam);
         ERPage<CustomerSupplierModel> pages = new ERPage<>(list);
         result.setData(pages);
         return result;

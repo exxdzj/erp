@@ -371,7 +371,7 @@
 
   <!-- *****************************************手写 sql  start ******************************************* -->
   <!-- 查询 客户或供应商列表数据 -->
-  <select id="queryCustomerSupplierList" resultType="com.exx.dzj.entity.customer.CustomerSupplierModel" parameterType="map">
+  <select id="queryCustomerSupplierList" resultType="com.exx.dzj.entity.customer.CustomerSupplierModel" parameterType="com.exx.dzj.entity.customer.CustomerSupplierQuery">
     SELECT
         cs.cust_code custCode,
         cs.cust_name custName,
@@ -381,6 +381,7 @@
         cs.level_name levelName,
         ta.discount_rate discountRate,
         ta.account_period accountPeriod,
+        cs.region_name regionName,
       CASE
     WHEN cs.is_enable = 1 THEN
     '使用中'
@@ -395,8 +396,11 @@
     LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code
     WHERE
         1 = 1
-    <if test="custCode != null and custCode != ''">
-      AND cs.cust_code = #{custCode}
+    <if test="custName != null and custName != ''">
+      AND cs.cust_name LIKE CONCAT('%',#{custName},'%')
+    </if>
+    <if test="linkMan != null and linkMan != ''">
+      AND cw.link_man LIKE CONCAT('%',#{linkMan},'%')
     </if>
   </select>
 
