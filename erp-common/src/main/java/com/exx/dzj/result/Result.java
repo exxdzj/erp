@@ -9,8 +9,10 @@ import lombok.Data;
  */
 @Data
 public class Result {
-    public static int success_code = 200;
-    public static String success_msg="操作成功";
+    public static int SUCCESS_CODE = 200;
+    public static int FAIL_CODE = 400;
+    public static String SUCCESS_MSG="操作成功";
+    public static String FAIL_MSG = "操作失败";
 
     /** 客户端提示状态 */
     private int code;
@@ -28,8 +30,8 @@ public class Result {
      */
     public static Result responseSuccess(){
         Result result = new Result();
-        result.setCode(success_code);
-        result.setMsg(success_msg);
+        result.setCode(SUCCESS_CODE);
+        result.setMsg(SUCCESS_MSG);
         return result;
     }
 
