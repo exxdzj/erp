@@ -91,32 +91,97 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, sale_code, user_code, salesman_code, cust_code, sale_project, sale_date, sales_order_code, 
-    currency, exchange_rate, delivery_order_code, cust_order_code, delivery_address, 
-    invoice_code, bill_type, total_sum, discount_amount, receivable_accoun, received_amoun, 
-    receipt_num, collection_terms, account_period, due_date, is_enable, remarks, create_time, 
+    id, sale_code, user_code, salesman_code, cust_code, sale_project, sale_date, sales_order_code,
+    currency, exchange_rate, delivery_order_code, cust_order_code, delivery_address,
+    invoice_code, bill_type, total_sum, discount_amount, receivable_accoun, received_amoun,
+    receipt_num, collection_terms, account_period, due_date, is_enable, remarks, create_time,
     create_user, update_time, update_user
   </sql>
-  <select id="selectByExample" parameterType="com.exx.dzj.entity.market.SaleInfoExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from tab_sale_info
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
+
+  <!-- 销售单列表查询 -->
+  <select id="querySalesTicketList" resultType="com.exx.dzj.entity.market.SaleInfo" parameterType="java.util.Map">
+    SELECT
+      SINFO.sale_code AS saleCode,
+      SINFO.sale_date AS saleDate,
+      CSUPPLIER.cust_name AS custName,
+      SINFO.currency AS currency,
+      SINFO.receivable_accoun AS receivableAccoun,
+      SINFO.due_date AS dueDate,
+      DICTIONPAY.dict_name AS paymentStatus,
+      SINFO.invoice_code AS invoiceCode,
+      DICTIONPRO.dict_name AS saleProject,
+      UINFO.user_name AS userName,
+      SINFO.user_code AS userCode,
+      SINFO.create_user AS createUser
+    FROM tab_sale_info SINFO
+    LEFT JOIN tab_dictionary_info DICTIONPAY ON SINFO.payment_status=DICTIONPAY.dict_code AND DICTIONPAY.data_type='collection_status'
+    LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
+    LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code
+    LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
+   /* WHERE */
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from tab_sale_info
-    where id = #{id,jdbcType=INTEGER}
+
+  <!-- 销售单详情 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="saleTicketMap">
+    SELECT
+      SINFO.sale_code,
+      SINFO.user_code ,
+      SINFO.salesman_code ,
+      SINFO.cust_code ,
+      SINFO.sale_project ,
+      SINFO.sale_date ,
+      SINFO.currency ,
+      SINFO.exchange_rate ,
+      SINFO.cust_order_code ,
+      SINFO.delivery_address ,
+      SINFO.invoice_code ,
+      SINFO.bill_type ,
+      SINFO.total_sum ,
+      SINFO.discount_amount ,
+      SINFO.receivable_accoun ,
+      SINFO.receipt_num ,
+      SINFO.collection_terms ,
+      SINFO.account_period ,
+      SINFO.due_date ,
+      SINFO.is_enable ,
+      SINFO.remarks ,
+      SINFO.create_user ,
+      SINFO.payment_status
+    FROM tab_sale_info SINFO
+    WHERE SINFO.id = #{id,jdbcType=INTEGER}
   </select>
+  <resultMap id="saleTicketMap" type="com.exx.dzj.entity.market.SaleInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sale_code" property="saleCode" />
+    <result column="user_code" property="userCode" />
+    <result column="salesman_code" jdbcType="VARCHAR" property="salesmanCode" />
+    <result column="cust_code" jdbcType="VARCHAR" property="custCode" />
+    <result column="sale_project" jdbcType="VARCHAR" property="saleProject" />
+    <result column="sale_date" jdbcType="DATE" property="saleDate" />
+    <result column="currency" jdbcType="VARCHAR" property="currency" />
+    <result column="exchange_rate" jdbcType="DOUBLE" property="exchangeRate" />
+    <result column="cust_order_code" jdbcType="VARCHAR" property="custOrderCode" />
+    <result column="delivery_address" jdbcType="VARCHAR" property="deliveryAddress" />
+    <result column="invoice_code" jdbcType="VARCHAR" property="invoiceCode" />
+    <result column="bill_type" jdbcType="VARCHAR" property="billType" />
+    <result column="total_sum" jdbcType="DECIMAL" property="totalSum" />
+    <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount" />
+    <result column="receivable_accoun" jdbcType="DECIMAL" property="receivableAccoun" />
+    <result column="receipt_num" jdbcType="VARCHAR" property="receiptNum" />
+    <result column="collection_terms" jdbcType="VARCHAR" property="collectionTerms" />
+    <result column="account_period" jdbcType="INTEGER" property="accountPeriod" />
+    <result column="due_date" jdbcType="DATE" property="dueDate" />
+    <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <!-- 查询关联收款记录 -->
+    <collection property="saleReceiptsDetailsList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleReceiptsDetails" javaType="java.util.List"
+      select="com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper.querySaleReceiptsDetailsList" />
+    <!-- 查询关联商品详情 -->
+    <collection property="saleGoodsDetailBeanList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleGoodsDetailBean" javaType="java.util.List"
+      select="com.exx.dzj.mapper.market.SaleGoodsDetailBeanMapper.querySaleGoodsDetailBeanList" />
+  </resultMap>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tab_sale_info
     where id = #{id,jdbcType=INTEGER}
@@ -128,27 +193,29 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.exx.dzj.entity.market.SaleInfo">
-    insert into tab_sale_info (id, sale_code, user_code, 
-      salesman_code, cust_code, sale_project, 
-      sale_date, sales_order_code, currency, 
-      exchange_rate, delivery_order_code, cust_order_code, 
-      delivery_address, invoice_code, bill_type, 
-      total_sum, discount_amount, receivable_accoun, 
-      received_amoun, receipt_num, collection_terms, 
-      account_period, due_date, is_enable, 
-      remarks, create_time, create_user, 
+    insert into tab_sale_info (id, sale_code, user_code,
+      salesman_code, cust_code, sale_project,
+      sale_date, sales_order_code, currency,
+      exchange_rate, delivery_order_code, cust_order_code,
+      delivery_address, invoice_code, bill_type,
+      total_sum, discount_amount, receivable_accoun,
+      received_amoun, receipt_num, collection_terms,
+      account_period, due_date, is_enable,
+      remarks, create_time, create_user,
       update_time, update_user)
-    values (#{id,jdbcType=INTEGER}, #{saleCode,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, 
-      #{salesmanCode,jdbcType=VARCHAR}, #{custCode,jdbcType=VARCHAR}, #{saleProject,jdbcType=VARCHAR}, 
-      #{saleDate,jdbcType=DATE}, #{salesOrderCode,jdbcType=VARCHAR}, #{currency,jdbcType=VARCHAR}, 
-      #{exchangeRate,jdbcType=DOUBLE}, #{deliveryOrderCode,jdbcType=VARCHAR}, #{custOrderCode,jdbcType=VARCHAR}, 
-      #{deliveryAddress,jdbcType=VARCHAR}, #{invoiceCode,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR}, 
-      #{totalSum,jdbcType=DECIMAL}, #{discountAmount,jdbcType=DECIMAL}, #{receivableAccoun,jdbcType=DECIMAL}, 
-      #{receivedAmoun,jdbcType=DECIMAL}, #{receiptNum,jdbcType=VARCHAR}, #{collectionTerms,jdbcType=VARCHAR}, 
-      #{accountPeriod,jdbcType=INTEGER}, #{dueDate,jdbcType=DATE}, #{isEnable,jdbcType=INTEGER}, 
-      #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{saleCode,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR},
+      #{salesmanCode,jdbcType=VARCHAR}, #{custCode,jdbcType=VARCHAR}, #{saleProject,jdbcType=VARCHAR},
+      #{saleDate,jdbcType=DATE}, #{salesOrderCode,jdbcType=VARCHAR}, #{currency,jdbcType=VARCHAR},
+      #{exchangeRate,jdbcType=DOUBLE}, #{deliveryOrderCode,jdbcType=VARCHAR}, #{custOrderCode,jdbcType=VARCHAR},
+      #{deliveryAddress,jdbcType=VARCHAR}, #{invoiceCode,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR},
+      #{totalSum,jdbcType=DECIMAL}, #{discountAmount,jdbcType=DECIMAL}, #{receivableAccoun,jdbcType=DECIMAL},
+      #{receivedAmoun,jdbcType=DECIMAL}, #{receiptNum,jdbcType=VARCHAR}, #{collectionTerms,jdbcType=VARCHAR},
+      #{accountPeriod,jdbcType=INTEGER}, #{dueDate,jdbcType=DATE}, #{isEnable,jdbcType=INTEGER},
+      #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
       #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
   </insert>
+
+  <!-- 新增销售单 -->
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.market.SaleInfo">
     insert into tab_sale_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
