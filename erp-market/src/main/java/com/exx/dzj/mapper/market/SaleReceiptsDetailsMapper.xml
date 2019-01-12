@@ -256,4 +256,77 @@
       create_user = #{createUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 查询销售单详情关联收款纪录 -->
+  <select id="querySaleReceiptsDetailsList" parameterType="String" resultMap="saleReceiptsDetailMap">
+    SELECT
+    SRDETAIL.id,
+    SRDETAIL.collection_account ,
+    SRDETAIL.collected_amount ,
+    SRDETAIL.payment_method ,
+    SRDETAIL.ref_no refNo,
+    SRDETAIL.create_user
+    FROM tab_sale_receipts_details SRDETAIL
+    WHERE SRDETAIL.sale_code=#{saleCode}
+  </select>
+  <resultMap id="saleReceiptsDetailMap" type="com.exx.dzj.entity.market.SaleReceiptsDetails">
+    <result property="id" jdbcType="INTEGER" column="id"></result>
+    <result property="collectionAccount" column="collection_account" />
+    <result property="collectedAmount" column="collected_amount" />
+    <result property="paymentMethod" column="payment_method" />
+    <result property="refNo" column="ref_no" />
+    <result property="createUser" column="create_user" />
+  </resultMap>
+
+  <!-- 批量添加 -->
+  <select id="batchInsertSalesReceiptsDeail">
+    INSERT INTO tab_sale_receipts_details
+      (sale_code, collection_account,
+      collected_amount, payment_method, ref_no,
+      create_time, create_user)
+    VALUES
+    <foreach collection="list" item="salesReceiptsDetail" separator=",">
+      (#{salesReceiptsDetail.saleCode,jdbcType=VARCHAR}, #{salesReceiptsDetail.collectionAccount,jdbcType=VARCHAR},
+      #{salesReceiptsDetail.collectedAmount,jdbcType=DECIMAL}, #{salesReceiptsDetail.paymentMethod,jdbcType=VARCHAR}, #{salesReceiptsDetail.refNo,jdbcType=VARCHAR},
+      SYSDATE(), #{salesReceiptsDetail.createUser,jdbcType=VARCHAR})
+    </foreach>
+  </select>
+
+  <!-- 批量修改 -->
+  <update id="batchUpdateSalesReceiptsDeail">
+    <foreach collection="list" item="salesReceiptsDetail" separator=";">
+      UPDATE tab_sale_receipts_details
+        <set>
+          <if test="salesReceiptsDetail.saleCode != null">
+            sale_code = #{salesReceiptsDetail.saleCode,jdbcType=VARCHAR},
+          </if>
+          <if test="salesReceiptsDetail.collectionAccount != null">
+            collection_account = #{salesReceiptsDetail.collectionAccount,jdbcType=VARCHAR},
+          </if>
+          <if test="salesReceiptsDetail.collectedAmount != null">
+            collected_amount = #{salesReceiptsDetail.collectedAmount,jdbcType=DECIMAL},
+          </if>
+          <if test="salesReceiptsDetail.paymentMethod != null">
+            payment_method = #{salesReceiptsDetail.paymentMethod,jdbcType=VARCHAR},
+          </if>
+          <if test="salesReceiptsDetail.refNo != null">
+            ref_no = #{salesReceiptsDetail.refNo,jdbcType=VARCHAR},
+          </if>
+          <if test="salesReceiptsDetail.createUser != null">
+            create_user = #{salesReceiptsDetail.createUser,jdbcType=VARCHAR},
+          </if>
+        </set>
+        <where>
+          id = #{salesReceiptsDetail.id,jdbcType=INTEGER}
+        </where>
+    </foreach>
+  </update>
+
+    <!-- 批量删除 -->
+    <delete id="batchDeleteSalesReceiptsDeail" parameterType="java.util.List">
+        DELETE FROM tab_sale_receipts_details WHERE id IN
+          <foreach collection="list" item="id" separator="," open="(" close=")" index="index">
+              #{id}
+          </foreach>
+    </delete>
 </mapper>

@@ -28,4 +28,10 @@ public interface SaleGoodsDetailBeanMapper {
     int updateByPrimaryKeySelective(SaleGoodsDetailBean record);
 
     int updateByPrimaryKey(SaleGoodsDetailBean record);
+
+    void batchInsertSalesGoodsDetail(List<SaleGoodsDetailBean> saleGoodsDetailBeansList);
+
+    void batchUpdateSalesGoodsDetail(List<SaleGoodsDetailBean> saleGoodsDetailBeansList);
+
+    void batchDeleteSalesGoodsDetail(List<Integer> sgbIds);
 }

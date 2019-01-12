@@ -398,4 +398,122 @@
       update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 查询销售单详情关联商品 -->
+  <select id="querySaleGoodsDetailBeanList" parameterType="String" resultMap="saleGoodsDetailBeanMap">
+    SELECT
+    SGDETAIL.id,
+    SGDETAIL.stock_code ,
+    SGDETAIL.stock_name ,
+    SGDETAIL.stock_address_code ,
+    SGDETAIL.stock_address ,
+    SGDETAIL.goods_num ,
+    SGDETAIL.unit_price ,
+    SGDETAIL.price_type ,
+    SGDETAIL.discount_rate ,
+    SGDETAIL.discount_amount ,
+    SGDETAIL.sales_volume ,
+    SGDETAIL.remarks ,
+    SGDETAIL.create_user ,
+    SGDETAIL.update_user
+    FROM tab_sale_goods_detail SGDETAIL
+    WHERE SGDETAIL.sale_code=#{saleCode}
+  </select>
+  <resultMap id="saleGoodsDetailBeanMap" type="com.exx.dzj.entity.market.SaleGoodsDetailBean">
+    <result property="id" jdbcType="INTEGER" column="id" />
+    <result property="stockCode" jdbcType="VARCHAR" column="stock_code" />
+    <result property="stockName" jdbcType="VARCHAR" column="stock_name" />
+    <result property="stockAddressCode" jdbcType="VARCHAR" column="stock_address_code" />
+    <result property="stockAddress" jdbcType="VARCHAR" column="stock_address" />
+    <result property="goodsNum" jdbcType="INTEGER" column="goods_num" />
+    <result property="priceType" jdbcType="VARCHAR" column="unit_price" />
+    <result property="discountRate" jdbcType="DECIMAL" column="discount_rate" />
+    <result property="discountAmount" jdbcType="DECIMAL" column="discount_amount" />
+    <result property="salesVolume" jdbcType="DECIMAL" column="sales_volume" />
+    <result property="remarks" jdbcType="VARCHAR" column="remarks" />
+    <result property="createUser" jdbcType="VARCHAR" column="create_user" />
+    <result property="updateUser" jdbcType="VARCHAR" column="update_user" />
+  </resultMap>
+
+  <!-- 批量新增销售单商品 -->
+  <insert id="batchInsertSalesGoodsDetail">
+    INSERT INTO tab_sale_goods_detail
+      (sale_code, stock_code,stock_name, stock_address_code, stock_address,
+      goods_num, unit_price, price_type,
+      discount_rate, discount_amount, sales_volume,
+      remarks, create_time, create_user,
+      update_time, update_user)
+    VALUES
+    <foreach collection="list" item="saleGoodsDetail" separator=",">
+      (#{saleGoodsDetail.saleCode,jdbcType=VARCHAR}, #{saleGoodsDetail.stockCode,jdbcType=VARCHAR},
+      #{saleGoodsDetail.stockName,jdbcType=VARCHAR}, #{saleGoodsDetail.stockAddressCode,jdbcType=VARCHAR}, #{saleGoodsDetail.stockAddress,jdbcType=VARCHAR},
+      #{saleGoodsDetail.goodsNum,jdbcType=INTEGER}, #{saleGoodsDetail.unitPrice,jdbcType=DECIMAL}, #{saleGoodsDetail.priceType,jdbcType=VARCHAR},
+      #{saleGoodsDetail.discountRate,jdbcType=DECIMAL}, #{saleGoodsDetail.discountAmount,jdbcType=DECIMAL}, #{saleGoodsDetail.salesVolume,jdbcType=DECIMAL},
+      #{saleGoodsDetail.remarks,jdbcType=VARCHAR}, SYSDATE(), #{saleGoodsDetail.createUser,jdbcType=VARCHAR},
+      SYSDATE(), #{saleGoodsDetail.updateUser,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+
+  <!-- 批量修改 -->
+  <update id="batchUpdateSalesGoodsDetail" parameterType="java.util.List">
+    <foreach collection="list" separator=";" item="item" index="index" close="" open="">
+      UPDATE tab_sale_goods_detail
+        <set>
+          <if test="item.saleCode != null">
+            sale_code = #{item.saleCode,jdbcType=VARCHAR},
+          </if>
+          <if test="item.stockCode != null">
+            stock_code = #{item.stockCode,jdbcType=VARCHAR},
+          </if>
+          <if test="item.stockName != null">
+            stock_name = #{item.stockName,jdbcType=VARCHAR},
+          </if>
+          <if test="item.stockAddressCode != null">
+            stock_address_code = #{item.stockAddressCode,jdbcType=VARCHAR},
+          </if>
+          <if test="item.stockAddress != null">
+            stock_address = #{item.stockAddress,jdbcType=VARCHAR},
+          </if>
+          <if test="item.goodsNum != null">
+            goods_num = #{item.goodsNum,jdbcType=INTEGER},
+          </if>
+          <if test="item.unitPrice != null">
+            unit_price = #{item.unitPrice,jdbcType=DECIMAL},
+          </if>
+          <if test="item.priceType != null">
+            price_type = #{item.priceType,jdbcType=VARCHAR},
+          </if>
+          <if test="item.discountRate != null">
+            discount_rate = #{item.discountRate,jdbcType=DECIMAL},
+          </if>
+          <if test="item.discountAmount != null">
+            discount_amount = #{item.discountAmount,jdbcType=DECIMAL},
+          </if>
+          <if test="item.salesVolume != null">
+            sales_volume = #{item.salesVolume,jdbcType=DECIMAL},
+          </if>
+          <if test="item.remarks != null">
+            remarks = #{item.remarks,jdbcType=VARCHAR},
+          </if>
+          <if test="item.updateTime != null">
+            update_time = SYSDATE(),
+          </if>
+          <if test="item.updateUser != null">
+            update_user = #{item.updateUser,jdbcType=VARCHAR},
+          </if>
+        </set>
+        <where>
+          id = #{item.id,jdbcType=INTEGER}
+        </where>
+    </foreach>
+  </update>
+  
+  <!-- 批量删除 -->
+  <delete id="batchDeleteSalesGoodsDetail" parameterType="java.util.List">
+    DELETE FROM tab_sale_goods_detail
+      WHERE id IN
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+          #{id}
+        </foreach>
+  </delete>
 </mapper>

@@ -28,4 +28,10 @@ public interface SaleReceiptsDetailsMapper {
     int updateByPrimaryKeySelective(SaleReceiptsDetails record);
 
     int updateByPrimaryKey(SaleReceiptsDetails record);
+
+    void batchInsertSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails);
+
+    void batchUpdateSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails);
+
+    void batchDeleteSalesReceiptsDeail(List<Integer> srdIds);
 }
