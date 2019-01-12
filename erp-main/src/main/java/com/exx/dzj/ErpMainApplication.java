@@ -7,9 +7,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EnableTransactionManagement
-//@ComponentScan("com.exx.dzj")
-@MapperScan("com.exx.dzj")
+@EnableTransactionManagement // 开启事务
+@ComponentScan("com.exx.dzj")
+@MapperScan("com.exx.dzj.mapper") // mapper 包扫描
 public class ErpMainApplication {
 
 	public static void main(String[] args) {
