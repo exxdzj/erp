@@ -1,10 +1,13 @@
 package com.exx.dzj.mapper.market;
 
+import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleInfoExample;
+import com.exx.dzj.entity.market.SaleReceiptsDetails;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SaleInfoMapper {
     long countByExample(SaleInfoExample example);
@@ -17,7 +20,7 @@ public interface SaleInfoMapper {
 
     int insertSelective(SaleInfo record);
 
-    List<SaleInfo> selectByExample(SaleInfoExample example);
+    List<SaleInfo> querySalesTicketList(SaleInfo saleInfo);
 
     SaleInfo selectByPrimaryKey(Integer id);
 
