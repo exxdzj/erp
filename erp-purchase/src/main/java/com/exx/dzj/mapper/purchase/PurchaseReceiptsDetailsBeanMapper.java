@@ -28,4 +28,10 @@ public interface PurchaseReceiptsDetailsBeanMapper {
     int updateByPrimaryKeySelective(PurchaseReceiptsDetailsBean record);
 
     int updateByPrimaryKey(PurchaseReceiptsDetailsBean record);
+
+    void batchInsertPurchaseReceipts(List<PurchaseReceiptsDetailsBean> purchaseReceiptsDetailsBeans);
+
+    void batchUpdatePurchaseReceiptsDetails(List<PurchaseReceiptsDetailsBean> purchaseReceiptsDetailsBeans);
+
+    void batchDeletePurchaseReceipts(List<Integer> receiptIds);
 }

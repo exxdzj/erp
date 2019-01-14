@@ -105,6 +105,8 @@
       SINFO.sale_date AS saleDate,
       CSUPPLIER.cust_name AS custName,
       SINFO.currency AS currency,
+      SINFO.total_sum AS totalSum,
+      SINFO.discount_amount AS discountAmount,
       SINFO.receivable_accoun AS receivableAccoun,
       SINFO.due_date AS dueDate,
       DICTIONPAY.dict_name AS paymentStatus,
@@ -219,9 +221,6 @@
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.market.SaleInfo">
     insert into tab_sale_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="saleCode != null">
         sale_code,
       </if>

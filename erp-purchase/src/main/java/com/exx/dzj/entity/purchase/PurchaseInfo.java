@@ -6,6 +6,7 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @ToString
@@ -67,4 +68,15 @@ public class PurchaseInfo implements Serializable {
     private Date updateTime;
 
     private String updateUser;
+
+    private List<PurchaseReceiptsDetailsBean> purchaseReceiptsDetailsBeans;
+
+    private List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans;
+
+    /**付款状态**/
+    private String paymentStatus;
+
+    /**供应商名称**/
+    private String supplierName;
+
 }

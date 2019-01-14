@@ -46,13 +46,18 @@ public class SalesTicketFacade {
     public void saveSalesTicket(SaleInfo saleInfo){
         List<SaleGoodsDetailBean> goodsDetailBeanList = saleInfo.getSaleGoodsDetailBeanList();
         List<SaleReceiptsDetails> receiptsDetailsList = saleInfo.getSaleReceiptsDetailsList();
+        Optional.of(saleInfo);
         salesTicketService.saveSaleInfo(saleInfo);
-        salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList);
-        saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+        if(Optional.of(saleInfo.getSaleGoodsDetailBeanList()).isPresent()){
+            salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList);
+        }
+        if (Optional.of(saleInfo.getSaleReceiptsDetailsList()).isPresent()){
+            saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+        }
     }
 
-    public ERPage<SaleInfo> querySalesTicketList(SaleInfo saleInfo, int pageNo, int pageSize){
-        PageHelper.startPage(pageNo, pageSize);
+    public ERPage<SaleInfo> querySalesTicketList(SaleInfo saleInfo, int pageNum, int pageSize){
+        PageHelper.startPage(pageNum, pageSize);
         List<SaleInfo> saleInfoList = salesTicketService.querySalesTicketList(saleInfo);
         ERPage<SaleInfo> saleInfoPage = new ERPage<>(saleInfoList);
         return saleInfoPage;
@@ -72,11 +77,16 @@ public class SalesTicketFacade {
     @Transactional
     public void updateSalesTicket(SaleInfo saleInfo){
 //        saleInfo = calculatePrice(saleInfo);
+        Optional.of(saleInfo);
         List<SaleGoodsDetailBean> goodsDetailBeanList = saleInfo.getSaleGoodsDetailBeanList();
         List<SaleReceiptsDetails> receiptsDetailsList = saleInfo.getSaleReceiptsDetailsList();
         salesTicketService.updateSalesTicketById(saleInfo);
-        salesGoodsDetailService.batchUpdateSalesGoodsDetail(goodsDetailBeanList);
-        saleReceiptsDetailService.batchUpdateSalesReceiptsDeail(receiptsDetailsList);
+        if(Optional.of(goodsDetailBeanList).isPresent()){
+            salesGoodsDetailService.batchUpdateSalesGoodsDetail(goodsDetailBeanList);
+        }
+        if (Optional.of(receiptsDetailsList).isPresent()){
+            saleReceiptsDetailService.batchUpdateSalesReceiptsDeail(receiptsDetailsList);
+        }
     }
 
     /**
@@ -121,7 +131,7 @@ public class SalesTicketFacade {
         }
 
         List<SaleGoodsDetailBean> saleGoodsDetailBeans = Optional.of(saleInfo.getSaleGoodsDetailBeanList()).get();
-        List<Integer> sgbIds = saleGoodsDetailBeans.stream().map(s -> s.getId()).collect(Collectors.toList());
+        List<Integer> sgbIds = saleGoodsDetailBeans.stream().map((s) -> s.getId()).collect(Collectors.toList());
         if(Optional.of(sgbIds).isPresent()){
             salesGoodsDetailService.batchDeleteSalesGoodsDetail(sgbIds);
         }

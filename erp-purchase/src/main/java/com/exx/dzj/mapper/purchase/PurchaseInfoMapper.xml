@@ -97,30 +97,106 @@
     received_amoun, receipt_num, collection_terms, account_period, due_date, is_enable, 
     remarks, create_time, create_user, update_time, update_user
   </sql>
-  <select id="selectByExample" parameterType="com.exx.dzj.entity.purchase.PurchaseInfoExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from tab_purchase_info
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
+
+  <!-- 采购单列表查询 -->
+  <select id="queryPurchaseTickets" parameterType="com.exx.dzj.entity.purchase.PurchaseInfo" resultType="com.exx.dzj.entity.purchase.PurchaseInfo">
+    SELECT
+      PINFO.purchase_code AS purchaseCode,
+      PINFO.purchase_date AS purchaseDate,
+      SUPPLIER.cust_name AS supplierName,
+      PINFO.currency AS currency,
+      PINFO.exchange_rate AS exchangeRate,
+      PINFO.total_sum AS totalSum,
+      PINFO.discount_amount AS discountAmount,
+      PINFO.receivable_accoun AS receivableAccoun,
+      PINFO.due_date AS dueDate,
+      PINFO.payment_status AS paymentStatus,
+      PINFO.invoice_code AS invoiceCode,
+      UINFO.user_name AS purchaseName,
+      PINFO.create_user AS createUser,
+      PINFO.remarks AS remarks
+    FROM
+        tab_purchase_info PINFO
+    LEFT JOIN tab_customer_supplier SUPPLIER ON SUPPLIER.cust_type=3 AND SUPPLIER.cust_code=PINFO.cust_code
+    LEFT JOIN tab_user_info UINFO ON UINFO.user_code=PINFO.user_code
+    /*WHERE*/
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from tab_purchase_info
-    where id = #{id,jdbcType=INTEGER}
+
+  <!-- 采购单详情 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="purchaseMap">
+    SELECT
+      id,
+      purchase_code ,
+      user_code ,
+      salesman_code A,
+      cust_code ,
+      purchase_project ,
+      purchase_date ,
+      exchange_rate ,
+      purchase_order_code ,
+      currency AS currency,
+      delivery_order_code ,
+      cust_order_code ,
+      delivery_address ,
+      invoice_code ,
+      bill_type ,
+      total_sum ,
+      discount_amount ,
+      receivable_accoun ,
+      received_amoun ,
+      receipt_num ,
+      collection_terms ,
+      account_period ,
+      due_date ,
+      is_enable ,
+      remarks ,
+      create_user ,
+      create_time
+    FROM tab_purchase_info PINFO
+    WHERE id = #{id,jdbcType=INTEGER}
   </select>
+  <resultMap id="purchaseMap" type="com.exx.dzj.entity.purchase.PurchaseInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="purchase_code" jdbcType="VARCHAR" property="purchaseCode" />
+    <result column="user_code" jdbcType="VARCHAR" property="userCode" />
+    <result column="salesman_code" jdbcType="VARCHAR" property="salesmanCode" />
+    <result column="cust_code" jdbcType="VARCHAR" property="custCode" />
+    <result column="purchase_project" jdbcType="VARCHAR" property="purchaseProject" />
+    <result column="purchase_date" jdbcType="DATE" property="purchaseDate" />
+    <result column="purchase_order_code" jdbcType="VARCHAR" property="purchaseOrderCode" />
+    <result column="currency" jdbcType="VARCHAR" property="currency" />
+    <result column="exchange_rate" jdbcType="DOUBLE" property="exchangeRate" />
+    <result column="delivery_order_code" jdbcType="VARCHAR" property="deliveryOrderCode" />
+    <result column="cust_order_code" jdbcType="VARCHAR" property="custOrderCode" />
+    <result column="delivery_address" jdbcType="VARCHAR" property="deliveryAddress" />
+    <result column="invoice_code" jdbcType="VARCHAR" property="invoiceCode" />
+    <result column="bill_type" jdbcType="VARCHAR" property="billType" />
+    <result column="total_sum" jdbcType="DECIMAL" property="totalSum" />
+    <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount" />
+    <result column="receivable_accoun" jdbcType="DECIMAL" property="receivableAccoun" />
+    <result column="received_amoun" jdbcType="DECIMAL" property="receivedAmoun" />
+    <result column="receipt_num" jdbcType="VARCHAR" property="receiptNum" />
+    <result column="collection_terms" jdbcType="VARCHAR" property="collectionTerms" />
+    <result column="account_period" jdbcType="INTEGER" property="accountPeriod" />
+    <result column="due_date" jdbcType="DATE" property="dueDate" />
+    <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <!-- 采购单关联采购收款单 -->
+    <collection property="purchaseReceiptsDetailsBeans" column="purchase_code" ofType="com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean" javaType="java.util.List"
+                select="com.exx.dzj.mapper.purchase.PurchaseReceiptsDetailsBeanMapper.queryPurchaseTicketRelevanceReceipts" />
+    <!-- 采购单关联商品 -->
+    <collection property="purchaseGoodsDetailBeans" column="purchase_code" ofType="com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean" javaType="java.util.List"
+                select="com.exx.dzj.mapper.purchase.PurchaseGoodsDetailBeanMapper.queryPurchaseTicketRelevanceGoods" />
+  </resultMap>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tab_purchase_info
-    where id = #{id,jdbcType=INTEGER}
+    DELETE FROM tab_purchase_info
+      WHERE id = #{id,jdbcType=INTEGER}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.purchase.PurchaseInfoExample">
     delete from tab_purchase_info
     <if test="_parameter != null">
@@ -152,9 +228,6 @@
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.purchase.PurchaseInfo">
     insert into tab_purchase_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="purchaseCode != null">
         purchase_code,
       </if>

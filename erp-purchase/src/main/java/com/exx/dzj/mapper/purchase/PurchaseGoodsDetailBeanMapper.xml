@@ -398,4 +398,139 @@
       update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 批量添加 -->
+  <insert id="batchInsertPurchaseGoods">
+    INSERT INTO tab_purchase_goods_detail
+      (purchase_code, stock_code,
+      stock_name, stock_address_code, stock_address,
+      goods_num, unit_price, price_type,
+      discount_rate, discount_amount, purchase_volume,
+      remarks, create_time, create_user,
+      update_time, update_user)
+    VALUES
+    <foreach collection="list" item="item" separator=",">
+      (#{item.purchaseCode,jdbcType=VARCHAR}, #{item.stockCode,jdbcType=VARCHAR},
+      #{item.stockName,jdbcType=VARCHAR}, #{item.stockAddressCode,jdbcType=VARCHAR}, #{item.stockAddress,jdbcType=VARCHAR},
+      #{item.goodsNum,jdbcType=INTEGER}, #{item.unitPrice,jdbcType=DECIMAL}, #{item.priceType,jdbcType=VARCHAR},
+      #{item.discountRate,jdbcType=DECIMAL}, #{item.discountAmount,jdbcType=DECIMAL}, #{item.purchaseVolume,jdbcType=DECIMAL},
+      #{item.remarks,jdbcType=VARCHAR}, SYSDATE(), #{item.createUser,jdbcType=VARCHAR},
+      SYSDATE(), #{item.updateUser,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+
+  <!-- 采购单详情查询关联商品 -->
+  <select id="queryPurchaseTicketRelevanceGoods" parameterType="String"  resultMap="relevanceGoodsMap">
+    SELECT
+      PGDETAIL.id,
+      PGDETAIL.purchase_code,
+      PGDETAIL.stock_code,
+      PGDETAIL.stock_name,
+      PGDETAIL.stock_address_code,
+      PGDETAIL.stock_address,
+      PGDETAIL.goods_num,
+      PGDETAIL.unit_price,
+      PGDETAIL.price_type,
+      PGDETAIL.discount_rate,
+      PGDETAIL.discount_amount,
+      PGDETAIL.purchase_volume,
+      PGDETAIL.remarks,
+      PGDETAIL.create_time,
+      PGDETAIL.create_user,
+      PGDETAIL.update_time,
+      PGDETAIL.update_user
+    FROM tab_purchase_goods_detail PGDETAIL
+    WHERE PGDETAIL.purchase_code=#{purchaseCode}
+  </select>
+  <resultMap id="relevanceGoodsMap" type="com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="purchase_code" jdbcType="VARCHAR" property="purchaseCode" />
+    <result column="stock_code" jdbcType="VARCHAR" property="stockCode" />
+    <result column="stock_name" jdbcType="VARCHAR" property="stockName" />
+    <result column="stock_address_code" jdbcType="VARCHAR" property="stockAddressCode" />
+    <result column="stock_address" jdbcType="VARCHAR" property="stockAddress" />
+    <result column="goods_num" jdbcType="INTEGER" property="goodsNum" />
+    <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="price_type" jdbcType="VARCHAR" property="priceType" />
+    <result column="discount_rate" jdbcType="DECIMAL" property="discountRate" />
+    <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount" />
+    <result column="purchase_volume" jdbcType="DECIMAL" property="purchaseVolume" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+  </resultMap>
+
+  <!-- 批量修改 -->
+  <update id="batchUpdatePurchaseGoodsDetails">
+    <foreach collection="list" separator=";" item="record">
+      UPDATE tab_purchase_goods_detail
+      <set>
+        <if test="record.id != null">
+          id = #{record.id,jdbcType=INTEGER},
+        </if>
+        <if test="record.purchaseCode != null">
+          purchase_code = #{record.purchaseCode,jdbcType=VARCHAR},
+        </if>
+        <if test="record.stockCode != null">
+          stock_code = #{record.stockCode,jdbcType=VARCHAR},
+        </if>
+        <if test="record.stockName != null">
+          stock_name = #{record.stockName,jdbcType=VARCHAR},
+        </if>
+        <if test="record.stockAddressCode != null">
+          stock_address_code = #{record.stockAddressCode,jdbcType=VARCHAR},
+        </if>
+        <if test="record.stockAddress != null">
+          stock_address = #{record.stockAddress,jdbcType=VARCHAR},
+        </if>
+        <if test="record.goodsNum != null">
+          goods_num = #{record.goodsNum,jdbcType=INTEGER},
+        </if>
+        <if test="record.unitPrice != null">
+          unit_price = #{record.unitPrice,jdbcType=DECIMAL},
+        </if>
+        <if test="record.priceType != null">
+          price_type = #{record.priceType,jdbcType=VARCHAR},
+        </if>
+        <if test="record.discountRate != null">
+          discount_rate = #{record.discountRate,jdbcType=DECIMAL},
+        </if>
+        <if test="record.discountAmount != null">
+          discount_amount = #{record.discountAmount,jdbcType=DECIMAL},
+        </if>
+        <if test="record.purchaseVolume != null">
+          purchase_volume = #{record.purchaseVolume,jdbcType=DECIMAL},
+        </if>
+        <if test="record.remarks != null">
+          remarks = #{record.remarks,jdbcType=VARCHAR},
+        </if>
+        <if test="record.createTime != null">
+          create_time = #{record.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="record.createUser != null">
+          create_user = #{record.createUser,jdbcType=VARCHAR},
+        </if>
+        <if test="record.updateTime != null">
+          update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="record.updateUser != null">
+          update_user = #{record.updateUser,jdbcType=VARCHAR},
+        </if>
+      </set>
+      <where>
+        id=#{record.id}
+      </where>
+    </foreach>
+  </update>
+
+  <!-- 批量删除 -->
+  <delete id="batchDeletePurchaseGoods">
+    DELETE FROM tab_purchase_goods_detail
+      WHERE id IN
+      <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+  </delete>
 </mapper>

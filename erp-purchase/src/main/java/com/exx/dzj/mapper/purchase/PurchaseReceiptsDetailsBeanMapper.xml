@@ -256,4 +256,84 @@
       create_user = #{createUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 批量添加 -->
+  <insert id="batchInsertPurchaseReceipts">
+    INSERT INTO tab_purchase_receipts_details
+      (purchase_code, collection_account,
+      collected_amount, payment_method, ref_no,
+      create_time, create_user)
+    VALUES
+    <foreach collection="list" item="item" separator=",">
+      (#{item.purchaseCode,jdbcType=VARCHAR}, #{item.collectionAccount,jdbcType=VARCHAR},
+      #{item.collectedAmount,jdbcType=DECIMAL}, #{item.paymentMethod,jdbcType=VARCHAR}, #{item.refNo,jdbcType=VARCHAR},
+      SYSDATE(), #{item.createUser,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <!-- 采购单关联收款单 -->
+  <select id="queryPurchaseTicketRelevanceReceipts" parameterType="String" resultMap="relevanceReceiptsMap">
+    SELECT
+      PRDETAIL.id,
+      PRDETAIL.purchase_code,
+      PRDETAIL.collection_account,
+      PRDETAIL.collected_amount,
+      PRDETAIL.payment_method,
+      PRDETAIL.ref_no,
+      PRDETAIL.create_time,
+      PRDETAIL.create_user
+    FROM tab_purchase_receipts_details PRDETAIL
+    WHERE PRDETAIL.purchase_code=#{purchaseCode}
+  </select>
+  <resultMap id="relevanceReceiptsMap" type="com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="purchase_code" jdbcType="VARCHAR" property="purchaseCode" />
+    <result column="collection_account" jdbcType="VARCHAR" property="collectionAccount" />
+    <result column="collected_amount" jdbcType="DECIMAL" property="collectedAmount" />
+    <result column="payment_method" jdbcType="VARCHAR" property="paymentMethod" />
+    <result column="ref_no" jdbcType="VARCHAR" property="refNo" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+  </resultMap>
+
+  <!-- 批量修改 -->
+  <update id="batchUpdatePurchaseReceiptsDetails">
+    <foreach collection="list" item="record" separator=";">
+      UPDATE tab_purchase_receipts_details
+      <set>
+        <if test="record.purchaseCode != null">
+          purchase_code = #{record.purchaseCode,jdbcType=VARCHAR},
+        </if>
+        <if test="record.collectionAccount != null">
+          collection_account = #{record.collectionAccount,jdbcType=VARCHAR},
+        </if>
+        <if test="record.collectedAmount != null">
+          collected_amount = #{record.collectedAmount,jdbcType=DECIMAL},
+        </if>
+        <if test="record.paymentMethod != null">
+          payment_method = #{record.paymentMethod,jdbcType=VARCHAR},
+        </if>
+        <if test="record.refNo != null">
+          ref_no = #{record.refNo,jdbcType=VARCHAR},
+        </if>
+        <if test="record.createTime != null">
+          create_time = #{record.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="record.createUser != null">
+          create_user = #{record.createUser,jdbcType=VARCHAR},
+        </if>
+      </set>
+      <where>
+        id=#{record.id}
+      </where>
+    </foreach>
+  </update>
+
+  <!-- 批量删除 -->
+  <delete id="batchDeletePurchaseReceipts">
+    DELETE FROM tab_purchase_receipts_details
+      WHERE id IN
+      <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+  </delete>
 </mapper>

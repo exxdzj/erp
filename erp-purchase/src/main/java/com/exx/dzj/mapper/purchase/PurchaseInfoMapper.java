@@ -17,7 +17,7 @@ public interface PurchaseInfoMapper {
 
     int insertSelective(PurchaseInfo record);
 
-    List<PurchaseInfo> selectByExample(PurchaseInfoExample example);
+    List<PurchaseInfo> queryPurchaseTickets(PurchaseInfo purchaseInfo);
 
     PurchaseInfo selectByPrimaryKey(Integer id);
 
