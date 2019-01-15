@@ -101,4 +101,21 @@ public class CustomerServiceImpl implements CustomerService {
             throw new ErpException(400, "删除客户或供应商基础信息失败!");
         }
     }
+
+    /**
+     * 获取需要导出的excel数据
+     * @param custType
+     * @param query
+     * @return
+     */
+    @Override
+    public Result getCustomerSupplierExcelList(int custType, CustomerSupplierQuery query){
+        Result result= Result.responseSuccess();
+        if(null == query){
+            query = new CustomerSupplierQuery();
+        }
+        query.setCustType(custType);
+        result.setData(csMapper.getCustomerSupplierExcelList(query));
+        return result;
+    }
 }

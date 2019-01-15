@@ -50,4 +50,6 @@ public interface CustomerSupplierBeanMapper {
      * @return
      */
     int modifyCustomerSupplierDataStatus(@Param("custCodes")List<String> custCodes, @Param("isEnable")int isEnable);
+
+    List<CustomerSupplierInfo> getCustomerSupplierExcelList(CustomerSupplierQuery params);
 }

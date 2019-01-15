@@ -1,127 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.exx.dzj.mapper.customer.CustomerSupplierBeanMapper">
-  <resultMap id="BaseResultMap" type="com.exx.dzj.entity.customer.CustomerSupplierBean">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="cust_code" jdbcType="VARCHAR" property="custCode" />
-    <result column="cust_name" jdbcType="VARCHAR" property="custName" />
-    <result column="cust_type" jdbcType="VARCHAR" property="custType" />
-    <result column="cust_level" jdbcType="VARCHAR" property="custLevel" />
-    <result column="level_name" jdbcType="VARCHAR" property="levelName" />
-    <result column="salesman_code" jdbcType="VARCHAR" property="salesmanCode" />
-    <result column="user_code" jdbcType="VARCHAR" property="userCode" />
-    <result column="region_code" jdbcType="VARCHAR" property="regionCode" />
-    <result column="region_name" jdbcType="VARCHAR" property="regionName" />
-    <result column="ship_code" jdbcType="VARCHAR" property="shipCode" />
-    <result column="ship_address" jdbcType="VARCHAR" property="shipAddress" />
-    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.exx.dzj.entity.customer.CustomerSupplierBean">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="cust_code" jdbcType="VARCHAR" property="custCode"/>
+        <result column="cust_name" jdbcType="VARCHAR" property="custName"/>
+        <result column="cust_type" jdbcType="VARCHAR" property="custType"/>
+        <result column="cust_level" jdbcType="VARCHAR" property="custLevel"/>
+        <result column="level_name" jdbcType="VARCHAR" property="levelName"/>
+        <result column="salesman_code" jdbcType="VARCHAR" property="salesmanCode"/>
+        <result column="user_code" jdbcType="VARCHAR" property="userCode"/>
+        <result column="region_code" jdbcType="VARCHAR" property="regionCode"/>
+        <result column="region_name" jdbcType="VARCHAR" property="regionName"/>
+        <result column="ship_code" jdbcType="VARCHAR" property="shipCode"/>
+        <result column="ship_address" jdbcType="VARCHAR" property="shipAddress"/>
+        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+    </resultMap>
 
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
             </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
+        </where>
+    </sql>
 
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
             </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
+        </where>
+    </sql>
 
-  <sql id="Base_Column_List">
+    <sql id="Base_Column_List">
     id, cust_code, cust_name, cust_type, cust_level, level_name, salesman_code, user_code, 
     region_code, region_name, ship_code, ship_address, remarks, create_time, create_user, 
     update_time, update_user
   </sql>
 
-  <select id="selectByExample" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBeanExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from tab_customer_supplier
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
+    <select id="selectByExample" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBeanExample"
+            resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from tab_customer_supplier
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from tab_customer_supplier
-    where id = #{id,jdbcType=INTEGER}
-  </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from tab_customer_supplier
+        where id = #{id,jdbcType=INTEGER}
+    </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tab_customer_supplier
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
-  <delete id="deleteByExample" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBeanExample">
-    delete from tab_customer_supplier
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
+    <delete id="deleteByExample" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBeanExample">
+        delete from tab_customer_supplier
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
 
-  <insert id="insert" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
+    <insert id="insert" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
     insert into tab_customer_supplier (cust_code, cust_name,
       cust_type, cust_level, level_name, 
       salesman_code, user_code, region_code, 
@@ -136,221 +139,222 @@
       SYSDATE(), #{updateUser,jdbcType=VARCHAR})
   </insert>
 
-  <insert id="insertSelective" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
-    insert into tab_customer_supplier
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="custCode != null">
-        cust_code,
-      </if>
-      <if test="custName != null">
-        cust_name,
-      </if>
-      <if test="custType != null">
-        cust_type,
-      </if>
-      <if test="custLevel != null">
-        cust_level,
-      </if>
-      <if test="levelName != null">
-        level_name,
-      </if>
-      <if test="salesmanCode != null">
-        salesman_code,
-      </if>
-      <if test="userCode != null">
-        user_code,
-      </if>
-      <if test="regionCode != null">
-        region_code,
-      </if>
-      <if test="regionName != null">
-        region_name,
-      </if>
-      <if test="shipCode != null">
-        ship_code,
-      </if>
-      <if test="shipAddress != null">
-        ship_address,
-      </if>
-      <if test="remarks != null">
-        remarks,
-      </if>
-        create_time,
-      <if test="createUser != null">
-        create_user,
-      </if>
-        update_time,
-      <if test="updateUser != null">
-        update_user,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="custCode != null">
-        #{custCode,jdbcType=VARCHAR},
-      </if>
-      <if test="custName != null">
-        #{custName,jdbcType=VARCHAR},
-      </if>
-      <if test="custType != null">
-        #{custType,jdbcType=VARCHAR},
-      </if>
-      <if test="custLevel != null">
-        #{custLevel,jdbcType=VARCHAR},
-      </if>
-      <if test="levelName != null">
-        #{levelName,jdbcType=VARCHAR},
-      </if>
-      <if test="salesmanCode != null">
-        #{salesmanCode,jdbcType=VARCHAR},
-      </if>
-      <if test="userCode != null">
-        #{userCode,jdbcType=VARCHAR},
-      </if>
-      <if test="regionCode != null">
-        #{regionCode,jdbcType=VARCHAR},
-      </if>
-      <if test="regionName != null">
-        #{regionName,jdbcType=VARCHAR},
-      </if>
-      <if test="shipCode != null">
-        #{shipCode,jdbcType=VARCHAR},
-      </if>
-      <if test="shipAddress != null">
-        #{shipAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="remarks != null">
-        #{remarks,jdbcType=VARCHAR},
-      </if>
-        SYSDATE(),
-      <if test="createUser != null">
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-        SYSDATE(),
-      <if test="updateUser != null">
-        #{updateUser,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
+    <insert id="insertSelective" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
+        insert into tab_customer_supplier
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="custCode != null">
+                cust_code,
+            </if>
+            <if test="custName != null">
+                cust_name,
+            </if>
+            <if test="custType != null">
+                cust_type,
+            </if>
+            <if test="custLevel != null">
+                cust_level,
+            </if>
+            <if test="levelName != null">
+                level_name,
+            </if>
+            <if test="salesmanCode != null">
+                salesman_code,
+            </if>
+            <if test="userCode != null">
+                user_code,
+            </if>
+            <if test="regionCode != null">
+                region_code,
+            </if>
+            <if test="regionName != null">
+                region_name,
+            </if>
+            <if test="shipCode != null">
+                ship_code,
+            </if>
+            <if test="shipAddress != null">
+                ship_address,
+            </if>
+            <if test="remarks != null">
+                remarks,
+            </if>
+            create_time,
+            <if test="createUser != null">
+                create_user,
+            </if>
+            update_time,
+            <if test="updateUser != null">
+                update_user,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="custCode != null">
+                #{custCode,jdbcType=VARCHAR},
+            </if>
+            <if test="custName != null">
+                #{custName,jdbcType=VARCHAR},
+            </if>
+            <if test="custType != null">
+                #{custType,jdbcType=VARCHAR},
+            </if>
+            <if test="custLevel != null">
+                #{custLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="levelName != null">
+                #{levelName,jdbcType=VARCHAR},
+            </if>
+            <if test="salesmanCode != null">
+                #{salesmanCode,jdbcType=VARCHAR},
+            </if>
+            <if test="userCode != null">
+                #{userCode,jdbcType=VARCHAR},
+            </if>
+            <if test="regionCode != null">
+                #{regionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="regionName != null">
+                #{regionName,jdbcType=VARCHAR},
+            </if>
+            <if test="shipCode != null">
+                #{shipCode,jdbcType=VARCHAR},
+            </if>
+            <if test="shipAddress != null">
+                #{shipAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                #{remarks,jdbcType=VARCHAR},
+            </if>
+            SYSDATE(),
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            SYSDATE(),
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
 
-  <select id="countByExample" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBeanExample" resultType="java.lang.Long">
-    select count(*) from tab_customer_supplier
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
+    <select id="countByExample" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBeanExample"
+            resultType="java.lang.Long">
+        select count(*) from tab_customer_supplier
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
 
-  <update id="updateByExampleSelective" parameterType="map">
-    update tab_customer_supplier
-    <set>
-      <if test="record.custName != null">
+    <update id="updateByExampleSelective" parameterType="map">
+        update tab_customer_supplier
+        <set>
+            <if test="record.custName != null">
+                cust_name = #{record.custName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.custType != null">
+                cust_type = #{record.custType,jdbcType=VARCHAR},
+            </if>
+            <if test="record.custLevel != null">
+                cust_level = #{record.custLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="record.levelName != null">
+                level_name = #{record.levelName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.salesmanCode != null">
+                salesman_code = #{record.salesmanCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.userCode != null">
+                user_code = #{record.userCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.regionCode != null">
+                region_code = #{record.regionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.regionName != null">
+                region_name = #{record.regionName,jdbcType=VARCHAR},
+            </if>
+            <if test="record.shipCode != null">
+                ship_code = #{record.shipCode,jdbcType=VARCHAR},
+            </if>
+            <if test="record.shipAddress != null">
+                ship_address = #{record.shipAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="record.remarks != null">
+                remarks = #{record.remarks,jdbcType=VARCHAR},
+            </if>
+            update_time = SYSDATE(),
+            <if test="record.updateUser != null">
+                update_user = #{record.updateUser,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+
+    <update id="updateByExample" parameterType="map">
+        update tab_customer_supplier
+        set
         cust_name = #{record.custName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.custType != null">
         cust_type = #{record.custType,jdbcType=VARCHAR},
-      </if>
-      <if test="record.custLevel != null">
         cust_level = #{record.custLevel,jdbcType=VARCHAR},
-      </if>
-      <if test="record.levelName != null">
         level_name = #{record.levelName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.salesmanCode != null">
         salesman_code = #{record.salesmanCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.userCode != null">
         user_code = #{record.userCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.regionCode != null">
         region_code = #{record.regionCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.regionName != null">
         region_name = #{record.regionName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.shipCode != null">
         ship_code = #{record.shipCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.shipAddress != null">
         ship_address = #{record.shipAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="record.remarks != null">
         remarks = #{record.remarks,jdbcType=VARCHAR},
-      </if>
         update_time = SYSDATE(),
-      <if test="record.updateUser != null">
-        update_user = #{record.updateUser,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
+        update_user = #{record.updateUser,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
 
-  <update id="updateByExample" parameterType="map">
-    update tab_customer_supplier
-    set
-      cust_name = #{record.custName,jdbcType=VARCHAR},
-      cust_type = #{record.custType,jdbcType=VARCHAR},
-      cust_level = #{record.custLevel,jdbcType=VARCHAR},
-      level_name = #{record.levelName,jdbcType=VARCHAR},
-      salesman_code = #{record.salesmanCode,jdbcType=VARCHAR},
-      user_code = #{record.userCode,jdbcType=VARCHAR},
-      region_code = #{record.regionCode,jdbcType=VARCHAR},
-      region_name = #{record.regionName,jdbcType=VARCHAR},
-      ship_code = #{record.shipCode,jdbcType=VARCHAR},
-      ship_address = #{record.shipAddress,jdbcType=VARCHAR},
-      remarks = #{record.remarks,jdbcType=VARCHAR},
-      update_time = SYSDATE(),
-      update_user = #{record.updateUser,jdbcType=VARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
+        update tab_customer_supplier
+        <set>
+            <if test="custName != null">
+                cust_name = #{custName,jdbcType=VARCHAR},
+            </if>
+            <if test="custType != null">
+                cust_type = #{custType,jdbcType=VARCHAR},
+            </if>
+            <if test="custLevel != null">
+                cust_level = #{custLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="levelName != null">
+                level_name = #{levelName,jdbcType=VARCHAR},
+            </if>
+            <if test="salesmanCode != null">
+                salesman_code = #{salesmanCode,jdbcType=VARCHAR},
+            </if>
+            <if test="userCode != null">
+                user_code = #{userCode,jdbcType=VARCHAR},
+            </if>
+            <if test="regionCode != null">
+                region_code = #{regionCode,jdbcType=VARCHAR},
+            </if>
+            <if test="regionName != null">
+                region_name = #{regionName,jdbcType=VARCHAR},
+            </if>
+            <if test="shipCode != null">
+                ship_code = #{shipCode,jdbcType=VARCHAR},
+            </if>
+            <if test="shipAddress != null">
+                ship_address = #{shipAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+            update_time = SYSDATE(),
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where cust_code = #{custCode,jdbcType=VARCHAR}
+    </update>
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
-    update tab_customer_supplier
-    <set>
-      <if test="custName != null">
-        cust_name = #{custName,jdbcType=VARCHAR},
-      </if>
-      <if test="custType != null">
-        cust_type = #{custType,jdbcType=VARCHAR},
-      </if>
-      <if test="custLevel != null">
-        cust_level = #{custLevel,jdbcType=VARCHAR},
-      </if>
-      <if test="levelName != null">
-        level_name = #{levelName,jdbcType=VARCHAR},
-      </if>
-      <if test="salesmanCode != null">
-        salesman_code = #{salesmanCode,jdbcType=VARCHAR},
-      </if>
-      <if test="userCode != null">
-        user_code = #{userCode,jdbcType=VARCHAR},
-      </if>
-      <if test="regionCode != null">
-        region_code = #{regionCode,jdbcType=VARCHAR},
-      </if>
-      <if test="regionName != null">
-        region_name = #{regionName,jdbcType=VARCHAR},
-      </if>
-      <if test="shipCode != null">
-        ship_code = #{shipCode,jdbcType=VARCHAR},
-      </if>
-      <if test="shipAddress != null">
-        ship_address = #{shipAddress,jdbcType=VARCHAR},
-      </if>
-      <if test="remarks != null">
-        remarks = #{remarks,jdbcType=VARCHAR},
-      </if>
-        update_time = SYSDATE(),
-      <if test="updateUser != null">
-        update_user = #{updateUser,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where cust_code = #{custCode,jdbcType=VARCHAR}
-  </update>
-
-  <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
+    <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
     update tab_customer_supplier
     set cust_code = #{custCode,jdbcType=VARCHAR},
       cust_name = #{custName,jdbcType=VARCHAR},
@@ -369,10 +373,11 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <!-- *****************************************手写 sql  start ******************************************* -->
-  <!-- 查询 客户或供应商列表数据 -->
-  <select id="queryCustomerSupplierList" resultType="com.exx.dzj.entity.customer.CustomerSupplierModel" parameterType="com.exx.dzj.entity.customer.CustomerSupplierQuery">
-    SELECT
+    <!-- *****************************************手写 sql  start ******************************************* -->
+    <!-- 查询 客户或供应商列表数据 -->
+    <select id="queryCustomerSupplierList" resultType="com.exx.dzj.entity.customer.CustomerSupplierModel"
+            parameterType="com.exx.dzj.entity.customer.CustomerSupplierQuery">
+        SELECT
         cs.cust_code custCode,
         cs.cust_name custName,
         cw.link_man linkMan,
@@ -382,72 +387,88 @@
         ta.discount_rate discountRate,
         ta.account_period accountPeriod,
         cs.region_name regionName,
-      CASE
-    WHEN cs.is_enable = 1 THEN
-    '使用中'
-    ELSE
-    '关闭'
-    END dataStatus
-    FROM
+        CASE
+        WHEN cs.is_enable = 1 THEN
+        '使用中'
+        ELSE
+        '关闭'
+        END dataStatus
+        FROM
         tab_customer_supplier cs
-    LEFT JOIN tab_user_info ui ON cs.salesman_code = ui.salesman_code
-    AND cs.user_code = ui.user_code
-    LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code
-    LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code
-    WHERE
+        LEFT JOIN tab_user_info ui ON cs.salesman_code = ui.salesman_code
+        AND cs.user_code = ui.user_code
+        LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code
+        LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code
+        WHERE
         1 = 1
-    <if test="custName != null and custName != ''">
-      AND cs.cust_name LIKE CONCAT('%',#{custName},'%')
-    </if>
-    <if test="linkMan != null and linkMan != ''">
-      AND cw.link_man LIKE CONCAT('%',#{linkMan},'%')
-    </if>
-  </select>
+        <if test="custName != null and custName != ''">
+            AND cs.cust_name LIKE CONCAT('%',#{custName},'%')
+        </if>
+        <if test="linkMan != null and linkMan != ''">
+            AND cw.link_man LIKE CONCAT('%',#{linkMan},'%')
+        </if>
+        <if test="custType != null and custType=='1'.toString">
+            AND cs.cust_type in (1, 3)
+        </if>
+        <if test="custType != null and custType=='2'.toString">
+            AND cs.cust_type in (2, 3)
+        </if>
+        ORDER BY cs.create_time DESC
+    </select>
 
-  <!-- 查询  客户和供应商详细信息 -->
-  <resultMap id="CustomerSupplierResultMap" type="com.exx.dzj.entity.customer.CustomerSupplierInfo">
-    <result column="custCode" property="custCode"/>
-    <result column="custName" property="custName"/>
-    <result column="custType" property="custType"/>
-    <result column="custLevel" property="custLevel"/>
-    <result column="levelName" property="levelName"/>
-    <result column="salesmanCode" property="salesmanCode"/>
-    <result column="userCode" property="userCode"/>
-    <result column="regionCode" property="regionCode"/>
-    <result column="regionName" property="regionName"/>
-    <result column="shipCode" property="shipCode"/>
-    <result column="shipAddress" property="shipAddress"/>
-    <result column="remarks" property="remarks"/>
-    <association property="contactWayBean" javaType="com.exx.dzj.entity.contactway.ContactWayBean">
-      <result column="linkMan" property="linkMan"/>
-      <result column="telephoneNum" property="telephoneNum"/>
-      <result column="phoneNum" property="phoneNum"/>
-      <result column="faxNum" property="faxNum"/>
-      <result column="email" property="email"/>
-      <result column="postalAddress" property="postalAddress"/>
-      <result column="postalAddressEng" property="postalAddressEng"/>
-      <result column="deliveryAddressOne" property="deliveryAddressOne"/>
-      <result column="deliveryAddressTwo" property="deliveryAddressTwo"/>
-      <result column="zipCode" property="zipCode"/>
-    </association>
-    <association property="accountAttributeBean" javaType="com.exx.dzj.entity.accountatt.AccountAttributeBean">
-      <result column="paymentMethod" property="paymentMethod"/>
-      <result column="discountRate" property="discountRate"/>
-      <result column="accountPeriod" property="accountPeriod"/>
-      <result column="lineCredit" property="lineCredit"/>
-      <result column="payTaxesNum" property="payTaxesNum"/>
-      <result column="billType" property="billType"/>
-      <result column="bankDeposit" property="bankDeposit"/>
-      <result column="openAccount" property="openAccount"/>
-    </association>
-  </resultMap>
-  
-  <!-- 查询 客户或供应商详细信息 -->
-  <select id="queryCustomerSupplierInfo" resultMap="CustomerSupplierResultMap">
-    SELECT
+    <!-- 查询  客户和供应商详细信息 -->
+    <resultMap id="CustomerSupplierResultMap" type="com.exx.dzj.entity.customer.CustomerSupplierInfo">
+        <result column="custCode" property="custCode"/>
+        <result column="custName" property="custName"/>
+        <result column="custTypeName" property="custTypeName"/>
+        <result column="custType" property="custType"/>
+        <result column="custLevel" property="custLevel"/>
+        <result column="levelName" property="levelName"/>
+        <result column="salesmanCode" property="salesmanCode"/>
+        <result column="userCode" property="userCode"/>
+        <result column="regionCode" property="regionCode"/>
+        <result column="regionName" property="regionName"/>
+        <result column="shipCode" property="shipCode"/>
+        <result column="shipAddress" property="shipAddress"/>
+        <result column="remarks" property="remarks"/>
+        <!-- 联系信息 -->
+        <result column="linkMan" property="linkMan"/>
+        <result column="telephoneNum" property="telephoneNum"/>
+        <result column="phoneNum" property="phoneNum"/>
+        <result column="faxNum" property="faxNum"/>
+        <result column="email" property="email"/>
+        <result column="postalAddress" property="postalAddress"/>
+        <result column="postalAddressEng" property="postalAddressEng"/>
+        <result column="deliveryAddressOne" property="deliveryAddressOne"/>
+        <result column="deliveryAddressTwo" property="deliveryAddressTwo"/>
+        <result column="zipCode" property="zipCode"/>
+        <!-- 会计属性 -->
+        <result column="paymentMethod" property="paymentMethod"/>
+        <result column="paymentMethodName" property="paymentMethodName"/>
+        <result column="discountRate" property="discountRate"/>
+        <result column="accountPeriod" property="accountPeriod"/>
+        <result column="lineCredit" property="lineCredit"/>
+        <result column="payTaxesNum" property="payTaxesNum"/>
+        <result column="billType" property="billType"/>
+        <result column="bankDeposit" property="bankDeposit"/>
+        <result column="openAccount" property="openAccount"/>
+    </resultMap>
+
+    <!-- 查询片段 -->
+    <sql id="QueryCustomerSupplierSQL">
+      SELECT
         cs.cust_code custCode,
         cs.cust_name custName,
         cs.cust_type custType,
+        CASE WHEN cs.cust_type = 1 THEN
+          '客户'
+        WHEN cs.cust_type = 2 THEN
+          '供应商'
+        WHEN cs.cust_type = 3 THEN
+          '即是客户又是供应商'
+        ELSE
+          '无'
+        END custTypeName,
         cs.cust_level custLevel,
         cs.level_name levelName,
         cs.salesman_code salesmanCode,
@@ -468,6 +489,7 @@
         cw.delivery_address_two deliveryAddressTwo,
         cw.zip_code zipCode,
         ta.payment_method paymentMethod,
+        di.dict_name paymentMethodName,
         ta.discount_rate discountRate,
         ta.account_period accountPeriod,
         ta.line_credit lineCredit,
@@ -475,28 +497,54 @@
         ta.bill_type billType,
         ta.bank_deposit bankDeposit,
         ta.open_account openAccount
-    FROM
+      FROM
         tab_customer_supplier cs
-    LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code
-    LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code
-    WHERE
+      LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code
+      LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code
+      LEFT JOIN tab_dictionary_info di ON di.is_enable = 1
+        AND di.data_type = 'receivables_payment_method'
+        AND di.dict_code = ta.payment_method
+      WHERE
         1 = 1
-    <if test="custCode != null and custCode !=''">
-      AND cs.cust_code = #{custCode}
-    </if>
-  </select>
+    </sql>
 
-  <!-- 修改数据状态 -->
-  <update id="modifyCustomerSupplierDataStatus">
-    update tab_customer_supplier cs set cs.is_enable = #{isEnable}
-    <choose>
-      <when test="custCodes!=null">
-        where cs.cust_code in
-        <foreach collection="custCodes" item="item" open="(" close=")" separator=",">#{item}</foreach>
-      </when>
-      <otherwise>
-        where cs.cust_code = null
-      </otherwise>
-    </choose>
-  </update>
+    <!-- 查询 客户或供应商详细信息 -->
+    <select id="queryCustomerSupplierInfo" resultMap="CustomerSupplierResultMap">
+        <include refid="QueryCustomerSupplierSQL"/>
+        <if test="custCode != null and custCode !=''">
+            AND cs.cust_code = #{custCode}
+        </if>
+    </select>
+
+    <!-- 修改数据状态 -->
+    <update id="modifyCustomerSupplierDataStatus">
+        update tab_customer_supplier cs set cs.is_enable = #{isEnable}
+        <choose>
+            <when test="custCodes!=null">
+                where cs.cust_code in
+                <foreach collection="custCodes" item="item" open="(" close=")" separator=",">#{item}</foreach>
+            </when>
+            <otherwise>
+                where cs.cust_code = null
+            </otherwise>
+        </choose>
+    </update>
+
+    <!-- 获取 excel 导出数据 -->
+    <select id="getCustomerSupplierExcelList" resultMap="CustomerSupplierResultMap" parameterType="com.exx.dzj.entity.customer.CustomerSupplierQuery">
+        <include refid="QueryCustomerSupplierSQL"/>
+        <if test="custName != null and custName != ''">
+            AND cs.cust_name LIKE CONCAT('%',#{custName},'%')
+        </if>
+        <if test="linkMan != null and linkMan != ''">
+            AND cw.link_man LIKE CONCAT('%',#{linkMan},'%')
+        </if>
+        <if test="custType != null and custType=='1'.toString">
+            AND cs.cust_type in (1, 3)
+        </if>
+        <if test="custType != null and custType=='2'.toString">
+            AND cs.cust_type in (2, 3)
+        </if>
+        ORDER BY cs.create_time DESC
+    </select>
 </mapper>

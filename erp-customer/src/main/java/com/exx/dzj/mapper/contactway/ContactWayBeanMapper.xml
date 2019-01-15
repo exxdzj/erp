@@ -322,9 +322,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.contactway.ContactWayBean">
     update tab_contact_way
     <set>
-      <if test="custCode != null">
-        cust_code = #{custCode,jdbcType=VARCHAR},
-      </if>
       <if test="linkMan != null">
         link_man = #{linkMan,jdbcType=VARCHAR},
       </if>
@@ -363,7 +360,7 @@
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where cust_code = #{custCode,jdbcType=VARCHAR}
   </update>
 
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.contactway.ContactWayBean">

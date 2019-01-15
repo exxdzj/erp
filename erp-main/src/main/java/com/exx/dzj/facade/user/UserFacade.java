@@ -24,8 +24,8 @@ public class UserFacade {
      * 获取 用户信息
      * @return
      */
-    public UserInfo getUserInfo(){
-        String userCode = userTokenFacade.queryUserCodeForToken();
+    public UserInfo getUserInfo(String userToken){
+        String userCode = userTokenFacade.queryUserCodeForToken(userToken);
         return salesmanService.queryUserInfo(userCode);
     }
 

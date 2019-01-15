@@ -1,5 +1,6 @@
 package com.exx.dzj.service.login;
 
+import com.exx.dzj.entity.login.LoginInfo;
 import com.exx.dzj.result.Result;
 
 /**
@@ -11,11 +12,10 @@ public interface LoginService {
 
     /**
      * 用户登录
-     * @param userName
-     * @param password
+     * @param loginInfo
      * @return 返回 userToken, 前端获取之后,将 userToken 放到 header 域中
      */
-    Result signIn(String userName, String password);
+    Result signIn(LoginInfo loginInfo);
 
     /**
      * 用户退出登录

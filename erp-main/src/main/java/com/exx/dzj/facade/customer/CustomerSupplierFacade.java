@@ -24,6 +24,7 @@ import com.exx.dzj.util.EntityJudgeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,19 +52,6 @@ public class CustomerSupplierFacade {
     private DictionaryService dictService;
     @Autowired
     private UserService salesmanService;
-
-    /**@Autowired
-    public  CustomerSupplierFacade(CustomerService customerService,
-                                        ContactWayService contactWayService,
-                                        AccountAttributeService accountAttributeService,
-                                        DictionaryService dictionaryService,
-                                        UserService userService){
-        this.customerService = customerService;
-        this.contactWayService = contactWayService;
-        this.accountAttributeService = accountAttributeService;
-        this.dictionaryService = dictionaryService;
-        this.userService = userService;
-    }*/
 
     /**
      * 查询 客户或供应商列表数据
@@ -93,7 +81,7 @@ public class CustomerSupplierFacade {
             List<DictionaryInfo> customerClasses = dictService.queryDictionary(CommonConstant.CUSTOMER_CATEGORY);
             map.put("customerClasses", customerClasses);
 
-            //查询-发货地点(客户)<暂时没有数据>
+            //查询-发货地点(客户)
             List<DictionaryInfo> shipAddress = dictService.queryDictionary(CommonConstant.INVENTORY_SHIP_ADDRESS);
             map.put("shipAddress", shipAddress);
 
@@ -171,17 +159,20 @@ public class CustomerSupplierFacade {
 
     /**
      * 保存 客户或供应商基础信息数据
-     * @param customerBean
-     * @param contactWayBean
-     * @param accountBean
+     * @param info
      */
     @Transactional(rollbackFor=ErpException.class)
-    public Result saveCustomerSupplier(CustomerSupplierBean customerBean,
-                                       ContactWayBean contactWayBean,
-                                       AccountAttributeBean accountBean,
+    public Result saveCustomerSupplier(CustomerSupplierInfo info,
                                        int custType) throws ErpException{
         Result result = Result.responseSuccess();
         try{
+            CustomerSupplierBean customerBean = new CustomerSupplierBean();
+            ContactWayBean contactWayBean = new ContactWayBean();
+            AccountAttributeBean accountBean = new AccountAttributeBean();
+            BeanUtils.copyProperties(info, customerBean);
+            BeanUtils.copyProperties(info, contactWayBean);
+            BeanUtils.copyProperties(info, accountBean);
+
             if(StringUtils.isNotBlank(customerBean.getCustCode())){
                 //修改
                 customerSupplierService.modifyCustomerSupplier(customerBean);
@@ -190,11 +181,17 @@ public class CustomerSupplierFacade {
                 accountBean.setCustCode(null);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(contactWayBean)){
                     contactWayBean.setCustCode(customerBean.getCustCode());
-                    contactwayService.modifyContactWay(contactWayBean);
+                    int count = contactwayService.modifyContactWay(contactWayBean);
+                    if(count == 0){
+                        contactwayService.saveContactWay(contactWayBean);
+                    }
                 }
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(accountBean)){
                     accountBean.setCustCode(customerBean.getCustCode());
-                    accountAttService.modifyAccountAttribute(accountBean);
+                    int count = accountAttService.modifyAccountAttribute(accountBean);
+                    if(count == 0){
+                        accountAttService.saveAccountAttribute(accountBean);
+                    }
                 }
             }else{
                 String prefix = "";
@@ -234,6 +231,18 @@ public class CustomerSupplierFacade {
     public Result delCustomerSupplier(String custCodes){
         Result result = Result.responseSuccess();
         customerSupplierService.delCustomerSupplier(custCodes, CommonConstant.DEFAULT_VALUE_ZERO);
+        return result;
+    }
+
+    /**
+     * 获取需要导出的excel数据
+     * @param custType
+     * @param query
+     * @return
+     */
+    public Result getCustomerSupplierExcelList(int custType, CustomerSupplierQuery query){
+        Result result = Result.responseSuccess();
+        result = customerSupplierService.getCustomerSupplierExcelList(custType, query);
         return result;
     }
 }

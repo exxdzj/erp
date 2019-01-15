@@ -21,4 +21,6 @@ public class CustomerSupplierQuery implements Serializable {
     private String custName;
 
     private String linkMan;
+
+    private int custType;
 }

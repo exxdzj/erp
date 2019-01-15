@@ -4,11 +4,11 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
+import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.facade.customer.CustomerSupplierFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.JsonUtils;
-import com.exx.dzj.util.MathUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +38,15 @@ public class CustomerController {
      * @param response
      * @return
      */
-    @GetMapping("queryCustomerSupplierList")
-    public Result queryCustomerSupplierList(HttpServletRequest request, HttpServletResponse response, String query){
+    @GetMapping("queryCustomerSupplierList/{custType}")
+    public Result queryCustomerSupplierList(HttpServletRequest request, HttpServletResponse response, @PathVariable("custType") int custType, String query){
         Result result = Result.responseSuccess();
         CustomerSupplierQuery queryParam = JsonUtils.jsonToPojo(query, CustomerSupplierQuery.class);
         int pageNum = queryParam != null ? queryParam.getPage() : CommonConstant.DEFAULT_PAGE_NUM;
         int pageSize = queryParam != null ? queryParam.getLimit() : CommonConstant.DEFAULT_PAGE_SIZE;
+        if(null != queryParam){
+            queryParam.setCustType(custType);
+        }
         result = customerSupplierFacade.queryCustomerSupplierList(pageNum, pageSize, queryParam);
         return result;
     }
@@ -87,22 +90,20 @@ public class CustomerController {
      * 保存 客户或供应商信息
      * @param request
      * @param response
-     * @param customerBean
-     * @param contactWayBean
-     * @param accountBean
+     * @param info
      * @return
      */
     @PostMapping("saveCustomerSupplier/{custType}")
     public Result saveCustomerSupplier(HttpServletRequest request, HttpServletResponse response,
-                                       CustomerSupplierBean customerBean, ContactWayBean contactWayBean,
-                                       AccountAttributeBean accountBean, @PathVariable("custType") int custType){
+                                       @RequestBody CustomerSupplierInfo info,
+                                       @PathVariable("custType") int custType){
         Result result = Result.responseSuccess();
-        if(null != customerBean && StringUtils.isNotBlank(customerBean.getCustName())){
+        if(null != info && !StringUtils.isNotBlank(info.getCustName())){
             result.setCode(400);
             result.setMsg("名称不可为空,请填写!");
             return result;
         }
-        result = customerSupplierFacade.saveCustomerSupplier(customerBean, contactWayBean, accountBean, custType);
+        result = customerSupplierFacade.saveCustomerSupplier(info, custType);
         return result;
     }
 
@@ -122,6 +123,20 @@ public class CustomerController {
             return result;
         }
         result = customerSupplierFacade.delCustomerSupplier(custCodes);
+        return result;
+    }
+
+    /**
+     * 获取需要导出的excel数据
+     * @param request
+     * @param response
+     * @return
+     */
+    @GetMapping("getCustomerSupplierExcelList/{custType}")
+    public Result getCustomerSupplierExcelList(HttpServletRequest request, HttpServletResponse response, @PathVariable("custType") int custType, String query){
+        Result result = Result.responseSuccess();
+        CustomerSupplierQuery queryParam = JsonUtils.jsonToPojo(query, CustomerSupplierQuery.class);
+        result = customerSupplierFacade.getCustomerSupplierExcelList(custType, queryParam);
         return result;
     }
 }

@@ -21,6 +21,8 @@ public class StockInfo implements Serializable {
 
     private String stockClass;
 
+    private String stockClassName;
+
     private String stockAddress;
 
     private String meterUnit;
@@ -28,6 +30,8 @@ public class StockInfo implements Serializable {
     private String pictures;
 
     private String barCode;
+
+    private Integer isShelves;
 
     private Integer isEnable;
 

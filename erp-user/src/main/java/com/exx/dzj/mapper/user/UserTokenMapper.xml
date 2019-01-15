@@ -22,8 +22,8 @@
             <if test="id != null">
                 #{id,jdbcType=VARCHAR},
             </if>
-            <if test="userId != null">
-                #{userId,jdbcType=VARCHAR},
+            <if test="userCode != null">
+                #{userCode,jdbcType=VARCHAR},
             </if>
             <if test="userToken != null">
                 #{userToken,jdbcType=VARCHAR},
@@ -43,7 +43,7 @@
           user_token userToken
         from tab_user_token
         where
-        <![CDATA[ expired_date < SYSDATE() ]]>
+        <![CDATA[ expired_date > SYSDATE() ]]>
         and user_code = #{userCode}
     </select>
 </mapper>

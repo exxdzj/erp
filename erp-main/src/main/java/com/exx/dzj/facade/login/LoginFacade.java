@@ -1,5 +1,6 @@
 package com.exx.dzj.facade.login;
 
+import com.exx.dzj.entity.login.LoginInfo;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.login.LoginService;
 import org.slf4j.Logger;
@@ -21,13 +22,12 @@ public class LoginFacade {
 
     /**
      * 用户登录
-     * @param userName
-     * @param password
+     * @param loginInfo
      * @return 返回 userToken, 前端获取之后,将 userToken 放到 header 域中
      */
-    public Result signIn(String userName, String password){
+    public Result signIn(LoginInfo loginInfo){
         Result result = Result.responseSuccess();
-        result = logonService.signIn(userName, password);
+        result = logonService.signIn(loginInfo);
         return result;
     }
 

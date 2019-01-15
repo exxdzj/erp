@@ -299,9 +299,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.accountatt.AccountAttributeBean">
     update tab_account_attribute
     <set>
-      <if test="custCode != null">
-        cust_code = #{custCode,jdbcType=VARCHAR},
-      </if>
       <if test="paymentMethod != null">
         payment_method = #{paymentMethod,jdbcType=VARCHAR},
       </if>
@@ -334,7 +331,7 @@
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where cust_code = #{custCode,jdbcType=VARCHAR}
   </update>
 
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.accountatt.AccountAttributeBean">

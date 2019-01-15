@@ -19,5 +19,5 @@ public interface ContactWayService {
      * 修改 联系信息
      * @param bean
      */
-    void modifyContactWay(ContactWayBean bean);
+    int modifyContactWay(ContactWayBean bean);
 }
