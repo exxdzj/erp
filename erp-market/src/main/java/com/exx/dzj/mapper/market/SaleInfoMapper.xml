@@ -105,6 +105,7 @@
       SINFO.sale_date AS saleDate,
       CSUPPLIER.cust_name AS custName,
       SINFO.currency AS currency,
+      SINFO.exchange_rate AS exchangeRate,
       SINFO.total_sum AS totalSum,
       SINFO.discount_amount AS discountAmount,
       SINFO.receivable_accoun AS receivableAccoun,
@@ -114,13 +115,20 @@
       DICTIONPRO.dict_name AS saleProject,
       UINFO.user_name AS userName,
       SINFO.user_code AS userCode,
-      SINFO.create_user AS createUser
+      SINFO.create_user AS createUser,
+      SINFO.remarks AS remarks
     FROM tab_sale_info SINFO
     LEFT JOIN tab_dictionary_info DICTIONPAY ON SINFO.payment_status=DICTIONPAY.dict_code AND DICTIONPAY.data_type='collection_status'
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code
     LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
-   /* WHERE */
+    WHERE 1=1
+      <if test="saleCode != null and saleCode != ''">
+        AND  SINFO.sale_code = #{saleCode}
+      </if>
+      <if test="userCode != null and userCode != ''">
+        AND  SINFO.user_code=#{userCode}
+      </if>
   </select>
 
   <!-- 销售单详情 -->

@@ -4,6 +4,7 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
+import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.facade.customer.CustomerSupplierFacade;
 import com.exx.dzj.result.Result;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @Author
@@ -122,6 +124,21 @@ public class CustomerController {
             return result;
         }
         result = customerSupplierFacade.delCustomerSupplier(custCodes);
+        return result;
+    }
+
+    /**
+     * @description 客户下拉数据
+     * @author yangyun
+     * @date 2019/1/16 0016
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querycustomerpulldowninfo")
+    public Result queryCustomerPullDownInfo(){
+        Result result = Result.responseSuccess();
+        List<CustomerSupplierInfo> customers = customerSupplierFacade.queryCustomerPullDownInfo();
+        result.setData(customers);
         return result;
     }
 }

@@ -44,4 +44,6 @@ public interface CustomerService {
      * @param custCodes
      */
     void delCustomerSupplier(String custCodes, int isEnable);
+
+    List<CustomerSupplierInfo> queryCustomerPullDownInfo();
 }
