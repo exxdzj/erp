@@ -37,6 +37,13 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 
+		<!-- 阿里云存储 -->
+		<dependency>
+			<groupId>com.aliyun.oss</groupId>
+			<artifactId>aliyun-sdk-oss</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
 		<!-- 依赖模块 -->
 		<dependency>
 			<groupId>com.exx.dzj</groupId>

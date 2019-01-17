@@ -41,9 +41,9 @@ public class AccountAttributeServiceImpl implements AccountAttributeService {
      * @param bean
      */
     @Override
-    public void modifyAccountAttribute(AccountAttributeBean bean) {
+    public int modifyAccountAttribute(AccountAttributeBean bean) {
         try{
-            accountAttributeMapper.updateByPrimaryKeySelective(bean);
+            return accountAttributeMapper.updateByPrimaryKeySelective(bean);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", AccountAttributeServiceImpl.class.getName()+".modifyAccountAttribute", ex.getMessage());
             throw new ErpException(400, "属性会计属性信息失败!");

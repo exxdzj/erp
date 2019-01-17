@@ -1,7 +1,6 @@
 package com.exx.dzj.mapper.stock;
 
-import com.exx.dzj.entity.stock.StockInfo;
-import com.exx.dzj.entity.stock.StockInfoExample;
+import com.exx.dzj.entity.stock.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,4 +27,26 @@ public interface StockInfoMapper {
     int updateByPrimaryKeySelective(StockInfo record);
 
     int updateByPrimaryKey(StockInfo record);
+
+    /**
+     * 查询存货列表数据
+     * @param param
+     * @return
+     */
+    List<StockModel> queryStockList(StockQuery param);
+
+    /**
+     * 查询存货信息
+     * @param stockCode
+     * @return
+     */
+    StockBean queryStockInfo(@Param("stockCode") String stockCode);
+
+    /**
+     * 上架-下架 或 删除
+     * @param isShelves
+     * @param stockCodes
+     * @return
+     */
+    int shelvesStock(@Param("isShelves") String isShelves, @Param("isEnable") Integer isEnable, @Param("stockCodes") List<String> stockCodes);
 }

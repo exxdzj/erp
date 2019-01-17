@@ -499,17 +499,4 @@
       </otherwise>
     </choose>
   </update>
-
-  <!-- 客户下拉数据 -->
-  <select id="queryCustomerPullDownInfo" resultMap="pullDownMap">
-    SELECT
-        cust_code ,
-        cust_name
-    FROM tab_customer_supplier
-    WHERE cust_type IN (1,3)
-  </select>
-  <resultMap id="pullDownMap" type="com.exx.dzj.entity.customer.CustomerSupplierInfo">
-    <result column="cust_code" property="custCode"/>
-    <result column="cust_name" property="custName"/>
-  </resultMap>
 </mapper>

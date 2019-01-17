@@ -3,6 +3,7 @@ package com.exx.dzj.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class JsonUtils {
      */
     public static String objectToJson(Object data) {
         try {
+            if(null == data){
+                return null;
+            }
             String string = MAPPER.writeValueAsString(data);
             return string;
         } catch (JsonProcessingException e) {
@@ -49,6 +53,9 @@ public class JsonUtils {
      */
     public static <T> T jsonToPojo(String jsonData, Class<T> beanType) {
         try {
+            if(!StringUtils.isNotBlank(jsonData)){
+                return null;
+            }
             T t = MAPPER.readValue(jsonData, beanType);
             return t;
         } catch (Exception e) {
@@ -71,6 +78,9 @@ public class JsonUtils {
     public static <T>List<T> jsonToList(String jsonData, Class<T> beanType) {
         JavaType javaType = MAPPER.getTypeFactory().constructParametricType(List.class, beanType);
         try {
+            if(!StringUtils.isNotBlank(jsonData)){
+                return null;
+            }
             List<T> list = MAPPER.readValue(jsonData, javaType);
             return list;
         } catch (Exception e) {

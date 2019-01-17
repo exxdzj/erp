@@ -15,6 +15,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
   </resultMap>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -44,6 +45,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -73,10 +75,12 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List">
     id, stock_code, standard_buy_price, standard_sell_price, max_purchase_price, min_sell_price, 
     min_inventory, is_enable, create_time, create_user, update_time, update_user
   </sql>
+
   <select id="selectByExample" parameterType="com.exx.dzj.entity.stock.StockNumPriceExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -91,40 +95,41 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from tab_stock_num_price
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tab_stock_num_price
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.stock.StockNumPriceExample">
     delete from tab_stock_num_price
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
-    insert into tab_stock_num_price (id, stock_code, standard_buy_price, 
+    insert into tab_stock_num_price (stock_code, standard_buy_price,
       standard_sell_price, max_purchase_price, min_sell_price, 
       min_inventory, is_enable, create_time, 
       create_user, update_time, update_user
       )
-    values (#{id,jdbcType=INTEGER}, #{stockCode,jdbcType=VARCHAR}, #{standardBuyPrice,jdbcType=DECIMAL}, 
+    values (#{stockCode,jdbcType=VARCHAR}, #{standardBuyPrice,jdbcType=DECIMAL},
       #{standardSellPrice,jdbcType=DECIMAL}, #{maxPurchasePrice,jdbcType=DECIMAL}, #{minSellPrice,jdbcType=DECIMAL}, 
-      #{minInventory,jdbcType=INTEGER}, #{isEnable,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}
+      #{minInventory,jdbcType=INTEGER}, #{isEnable,jdbcType=INTEGER}, SYSDATE(),
+      #{createUser,jdbcType=VARCHAR}, SYSDATE(), #{updateUser,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
     insert into tab_stock_num_price
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="stockCode != null">
         stock_code,
       </if>
@@ -146,23 +151,16 @@
       <if test="isEnable != null">
         is_enable,
       </if>
-      <if test="createTime != null">
         create_time,
-      </if>
       <if test="createUser != null">
         create_user,
       </if>
-      <if test="updateTime != null">
         update_time,
-      </if>
       <if test="updateUser != null">
         update_user,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="stockCode != null">
         #{stockCode,jdbcType=VARCHAR},
       </if>
@@ -184,35 +182,27 @@
       <if test="isEnable != null">
         #{isEnable,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="createUser != null">
         #{createUser,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
+
   <select id="countByExample" parameterType="com.exx.dzj.entity.stock.StockNumPriceExample" resultType="java.lang.Long">
     select count(*) from tab_stock_num_price
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update tab_stock_num_price
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.stockCode != null">
-        stock_code = #{record.stockCode,jdbcType=VARCHAR},
-      </if>
       <if test="record.standardBuyPrice != null">
         standard_buy_price = #{record.standardBuyPrice,jdbcType=DECIMAL},
       </if>
@@ -231,15 +221,7 @@
       <if test="record.isEnable != null">
         is_enable = #{record.isEnable,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.createUser != null">
-        create_user = #{record.createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="record.updateUser != null">
         update_user = #{record.updateUser,jdbcType=VARCHAR},
       </if>
@@ -250,28 +232,22 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update tab_stock_num_price
-    set id = #{record.id,jdbcType=INTEGER},
-      stock_code = #{record.stockCode,jdbcType=VARCHAR},
-      standard_buy_price = #{record.standardBuyPrice,jdbcType=DECIMAL},
+    set standard_buy_price = #{record.standardBuyPrice,jdbcType=DECIMAL},
       standard_sell_price = #{record.standardSellPrice,jdbcType=DECIMAL},
       max_purchase_price = #{record.maxPurchasePrice,jdbcType=DECIMAL},
       min_sell_price = #{record.minSellPrice,jdbcType=DECIMAL},
       min_inventory = #{record.minInventory,jdbcType=INTEGER},
       is_enable = #{record.isEnable,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_time = SYSDATE(),
       update_user = #{record.updateUser,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
     update tab_stock_num_price
     <set>
-      <if test="stockCode != null">
-        stock_code = #{stockCode,jdbcType=VARCHAR},
-      </if>
       <if test="standardBuyPrice != null">
         standard_buy_price = #{standardBuyPrice,jdbcType=DECIMAL},
       </if>
@@ -290,34 +266,24 @@
       <if test="isEnable != null">
         is_enable = #{isEnable,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where stock_code = #{stockCode,jdbcType=VARCHAR}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
     update tab_stock_num_price
-    set stock_code = #{stockCode,jdbcType=VARCHAR},
-      standard_buy_price = #{standardBuyPrice,jdbcType=DECIMAL},
+    set standard_buy_price = #{standardBuyPrice,jdbcType=DECIMAL},
       standard_sell_price = #{standardSellPrice,jdbcType=DECIMAL},
       max_purchase_price = #{maxPurchasePrice,jdbcType=DECIMAL},
       min_sell_price = #{minSellPrice,jdbcType=DECIMAL},
       min_inventory = #{minInventory,jdbcType=INTEGER},
       is_enable = #{isEnable,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_time = SYSDATE(),
       update_user = #{updateUser,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where stock_code = #{stockCode,jdbcType=VARCHAR}
   </update>
 </mapper>

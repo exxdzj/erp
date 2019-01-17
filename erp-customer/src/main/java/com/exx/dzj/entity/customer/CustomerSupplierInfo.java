@@ -16,7 +16,35 @@ import java.io.Serializable;
 @ToString
 public class CustomerSupplierInfo extends CustomerSupplierBean implements Serializable {
 
-    private ContactWayBean contactWayBean;
+    /**
+     * 供应商类型(供应商，或即是供应商又是客户)
+     */
+    private String custTypeName;
 
-    private AccountAttributeBean accountAttributeBean;
+    /**
+     * 联系信息
+     */
+    private String linkMan;
+    private String telephoneNum;
+    private String phoneNum;
+    private String faxNum;
+    private String email;
+    private String postalAddress;
+    private String postalAddressEng;
+    private String deliveryAddressOne;
+    private String deliveryAddressTwo;
+    private String zipCode;
+
+    /**
+     * 会计属性
+     */
+    private String paymentMethod;
+    private String paymentMethodName;
+    private Double discountRate;
+    private int accountPeriod;
+    private Double lineCredit;
+    private String payTaxesNum;
+    private String billType;
+    private String bankDeposit;
+    private String openAccount;
 }

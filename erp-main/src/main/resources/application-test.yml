@@ -40,3 +40,12 @@ pagehelper:
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
+
+# 阿里云存储配置
+aliyun:
+  endpoint: http://oss-cn-shenzhen.aliyuncs.com
+  accessKeyId: LTAI24Fekt4cpDoy
+  accessKeySecret: iw4Yp42IqB5wh461RITJJexpCaFhJw
+  bucketName: exx-erp
+  subdir: producet-images
+  active: test

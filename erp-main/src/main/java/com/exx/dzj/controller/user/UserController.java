@@ -1,16 +1,11 @@
 package com.exx.dzj.controller.user;
 
-import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Author
@@ -29,24 +24,16 @@ public class UserController {
      * @return
      */
     @GetMapping("getUserInfo")
-    public Result getUserInfo(){
+    public Result getUserInfo(String token){
         Result result = Result.responseSuccess();
-        result.setData(userFacade.getUserInfo());
+        result.setData(userFacade.getUserInfo(token));
         return result;
     }
 
-    /**
-     * @description 获取业务员信息, 用作下拉
-     * @author yangyun
-     * @date 2019/1/15 0015
-     * @param
-     * @return com.exx.dzj.result.Result
-     */
-    @GetMapping("querysalesman")
-    public Result querySalesman(){
+    @GetMapping("querySalesman")
+    public Result querySalesman() {
         Result result = Result.responseSuccess();
-        List<UserInfo> userInfos = userFacade.querySalesman();
-        result.setData(userInfos);
+        result.setData(userFacade.querySalesman());
         return result;
     }
 }

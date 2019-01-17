@@ -101,9 +101,4 @@ public class CustomerServiceImpl implements CustomerService {
             throw new ErpException(400, "删除客户或供应商基础信息失败!");
         }
     }
-
-    @Override
-    public List<CustomerSupplierInfo> queryCustomerPullDownInfo() {
-        return csMapper.queryCustomerPullDownInfo();
-    }
 }

@@ -236,8 +236,4 @@ public class CustomerSupplierFacade {
         customerSupplierService.delCustomerSupplier(custCodes, CommonConstant.DEFAULT_VALUE_ZERO);
         return result;
     }
-
-    public List<CustomerSupplierInfo> queryCustomerPullDownInfo(){
-        return customerSupplierService.queryCustomerPullDownInfo();
-    }
 }

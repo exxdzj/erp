@@ -92,4 +92,9 @@ public class CommonConstant {
      * 存货地址-发货地址
      */
     public final static String INVENTORY_SHIP_ADDRESS = "inventory_ship_address";
+
+    /**
+     * 存货类别
+     */
+    public final static String INVENTORY_TYPE = "inventory_type";
 }

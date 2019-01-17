@@ -24,12 +24,12 @@ public class UserTokenFacade {
      * 获取用户 user code
      * @return
      */
-    public String queryUserCodeForToken() {
-        HttpServletRequest request =  ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+    public String queryUserCodeForToken(String userToken) {
+        /*HttpServletRequest request =  ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         String userToken = request.getHeader("user_token");
         if(StringUtils.isEmpty(userToken)){
             return null;
-        }
+        }*/
         return tokenService.queryUserCodeForToken(userToken);
     }
 }

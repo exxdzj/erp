@@ -45,17 +45,16 @@ public class UserTokenServiceImpl implements UserTokenService {
     @Override
     public String getUserToken(String userCode) {
         try{
-            UserTokenBean tokenBean = new UserTokenBean();
             IdGenerator idGenerator = new DefaultIdGenerator();
 
             Map<String, Object> param = new HashMap();
-            param.put("userId", userCode);
+            param.put("userCode", userCode);
             //判断用户 token 是否过期
-            tokenBean = userTokenMapper.queryUserToken(param);
+            UserTokenBean tokenBean = userTokenMapper.queryUserToken(param);
             if(null != tokenBean){
                 return tokenBean.getUserToken();
             }
-
+            tokenBean = new UserTokenBean();
             String userToken = getNextToken();
             tokenBean.setId(idGenerator.next());
             tokenBean.setUserCode(userCode);

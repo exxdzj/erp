@@ -1,11 +1,13 @@
 package com.exx.dzj.service.login.impl;
 
+import com.exx.dzj.entity.login.LoginInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.entity.user.UserInfoExample;
 import com.exx.dzj.mapper.user.UserInfoMapper;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.login.LoginService;
 import com.exx.dzj.service.user.UserTokenService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,19 +33,18 @@ public class LoginServiceImpl implements LoginService {
 
     /**
      * 用户登录
-     * @param userName
-     * @param password
+     * @param loginInfo
      * @return 返回 userToken, 前端获取之后,将 userToken 放到 header 域中
      */
     @Override
-    public Result signIn(String userName, String password){
+    public Result signIn(LoginInfo loginInfo){
         Result result = Result.responseSuccess();
 
         //首先判断用户是否存在，用户名和密码是否错误
         UserInfoExample example = new UserInfoExample();
         UserInfoExample.Criteria criteria = example.createCriteria();
-        criteria.andUserNameEqualTo(userName);
-        criteria.andPassWordEqualTo(password);
+        criteria.andUserNameEqualTo(loginInfo.getUsername());
+        criteria.andPassWordEqualTo(loginInfo.getPassword());
         List<UserInfo> userList = userMapper.selectByExample(example);
         if(null == userList || userList.isEmpty()){
             result.setCode(400);
@@ -54,7 +55,10 @@ public class LoginServiceImpl implements LoginService {
         UserInfo userInfo = userList.get(0);
         //用户存在, 则生成 userToken, 并保存到数据库重
         String userToken = tokenService.getUserToken(userInfo.getUserCode());
-        result.setData(userToken);
+        if(StringUtils.isNotBlank(userToken)){
+            loginInfo.setUsertoken(userToken);
+        }
+        result.setData(loginInfo);
         return result;
     }
 

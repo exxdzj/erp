@@ -19,5 +19,5 @@ public interface AccountAttributeService {
      * 修改 会计数据信息
      * @param bean
      */
-    void modifyAccountAttribute(AccountAttributeBean bean);
+    int modifyAccountAttribute(AccountAttributeBean bean);
 }

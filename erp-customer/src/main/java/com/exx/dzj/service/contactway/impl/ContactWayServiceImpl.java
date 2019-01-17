@@ -41,9 +41,9 @@ public class ContactWayServiceImpl implements ContactWayService {
      * @param bean
      */
     @Override
-    public void modifyContactWay(ContactWayBean bean) {
+    public int modifyContactWay(ContactWayBean bean) {
         try{
-            contactWayMapper.updateByPrimaryKeySelective(bean);
+            return contactWayMapper.updateByPrimaryKeySelective(bean);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", ContactWayServiceImpl.class.getName()+".modifyContactWay", ex.getMessage());
             throw new ErpException(400, "修改客户或供应商联系信息失败!");

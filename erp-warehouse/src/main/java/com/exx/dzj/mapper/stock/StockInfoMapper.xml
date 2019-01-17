@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.exx.dzj.mapper.stock.StockInfoMapper">
+
   <resultMap id="BaseResultMap" type="com.exx.dzj.entity.stock.StockInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="stock_code" jdbcType="VARCHAR" property="stockCode" />
@@ -8,10 +9,12 @@
     <result column="stock_name" jdbcType="VARCHAR" property="stockName" />
     <result column="specificate_type" jdbcType="VARCHAR" property="specificateType" />
     <result column="stock_class" jdbcType="VARCHAR" property="stockClass" />
+    <result column="stock_class_name" jdbcType="VARCHAR" property="stockClassName" />
     <result column="stock_address" jdbcType="VARCHAR" property="stockAddress" />
     <result column="meter_unit" jdbcType="VARCHAR" property="meterUnit" />
     <result column="pictures" jdbcType="VARCHAR" property="pictures" />
     <result column="bar_code" jdbcType="VARCHAR" property="barCode" />
+    <result column="is_shelves" jdbcType="VARCHAR" property="isShelves" />
     <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
     <result column="is_comm_sale" jdbcType="INTEGER" property="isCommSale" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -19,6 +22,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
   </resultMap>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -48,6 +52,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -77,11 +82,13 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List">
-    id, stock_code, nature, stock_name, specificate_type, stock_class, stock_address, 
-    meter_unit, pictures, bar_code, is_enable, is_comm_sale, create_time, create_user, 
+    id, stock_code, nature, stock_name, specificate_type, stock_class, stock_class_name, stock_address,
+    meter_unit, pictures, bar_code, is_shelves, is_enable, is_comm_sale, create_time, create_user,
     update_time, update_user
   </sql>
+
   <select id="selectByExample" parameterType="com.exx.dzj.entity.stock.StockInfoExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -96,42 +103,44 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from tab_stock_info
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tab_stock_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.stock.StockInfoExample">
     delete from tab_stock_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.exx.dzj.entity.stock.StockInfo">
-    insert into tab_stock_info (id, stock_code, nature, 
-      stock_name, specificate_type, stock_class, 
+    insert into tab_stock_info (stock_code, nature,
+      stock_name, specificate_type, stock_class, stock_class_name,
       stock_address, meter_unit, pictures, 
-      bar_code, is_enable, is_comm_sale, 
+      bar_code, is_shelves, is_enable, is_comm_sale,
       create_time, create_user, update_time, 
       update_user)
-    values (#{id,jdbcType=INTEGER}, #{stockCode,jdbcType=VARCHAR}, #{nature,jdbcType=VARCHAR}, 
-      #{stockName,jdbcType=VARCHAR}, #{specificateType,jdbcType=VARCHAR}, #{stockClass,jdbcType=VARCHAR}, 
+    values (#{stockCode,jdbcType=VARCHAR}, #{nature,jdbcType=VARCHAR},
+      #{stockName,jdbcType=VARCHAR}, #{specificateType,jdbcType=VARCHAR}, #{stockClass,jdbcType=VARCHAR}, #{stockClassName,jdbcType=VARCHAR},
       #{stockAddress,jdbcType=VARCHAR}, #{meterUnit,jdbcType=VARCHAR}, #{pictures,jdbcType=VARCHAR}, 
-      #{barCode,jdbcType=VARCHAR}, #{isEnable,jdbcType=INTEGER}, #{isCommSale,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{barCode,jdbcType=VARCHAR}, #{isShelves,jdbcType=INTEGER}, #{isEnable,jdbcType=INTEGER}, #{isCommSale,jdbcType=INTEGER},
+      SYSDATE(), #{createUser,jdbcType=VARCHAR}, SYSDATE(),
       #{updateUser,jdbcType=VARCHAR})
   </insert>
+
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.stock.StockInfo">
     insert into tab_stock_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="stockCode != null">
         stock_code,
       </if>
@@ -147,6 +156,9 @@
       <if test="stockClass != null">
         stock_class,
       </if>
+      <if test="stockClassName != null">
+        stock_class_name,
+      </if>
       <if test="stockAddress != null">
         stock_address,
       </if>
@@ -159,25 +171,25 @@
       <if test="barCode != null">
         bar_code,
       </if>
+      <if test="isShelves != null">
+        is_shelves,
+      </if>
       <if test="isEnable != null">
         is_enable,
       </if>
       <if test="isCommSale != null">
         is_comm_sale,
       </if>
-      <if test="createTime != null">
         create_time,
-      </if>
       <if test="createUser != null">
         create_user,
       </if>
-      <if test="updateTime != null">
         update_time,
-      </if>
       <if test="updateUser != null">
         update_user,
       </if>
     </trim>
+
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
@@ -197,6 +209,9 @@
       <if test="stockClass != null">
         #{stockClass,jdbcType=VARCHAR},
       </if>
+      <if test="stockClassName != null">
+        #{stockClassName,jdbcType=VARCHAR},
+      </if>
       <if test="stockAddress != null">
         #{stockAddress,jdbcType=VARCHAR},
       </if>
@@ -209,41 +224,36 @@
       <if test="barCode != null">
         #{barCode,jdbcType=VARCHAR},
       </if>
+      <if test="isShelves != null">
+        #{isShelves,jdbcType=INTEGER},
+      </if>
       <if test="isEnable != null">
         #{isEnable,jdbcType=INTEGER},
       </if>
       <if test="isCommSale != null">
         #{isCommSale,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="createUser != null">
         #{createUser,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
+
   <select id="countByExample" parameterType="com.exx.dzj.entity.stock.StockInfoExample" resultType="java.lang.Long">
     select count(*) from tab_stock_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update tab_stock_info
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.stockCode != null">
-        stock_code = #{record.stockCode,jdbcType=VARCHAR},
-      </if>
       <if test="record.nature != null">
         nature = #{record.nature,jdbcType=VARCHAR},
       </if>
@@ -255,6 +265,9 @@
       </if>
       <if test="record.stockClass != null">
         stock_class = #{record.stockClass,jdbcType=VARCHAR},
+      </if>
+      <if test="record.stockClassName != null">
+        stock_class = #{record.stockClassName,jdbcType=VARCHAR},
       </if>
       <if test="record.stockAddress != null">
         stock_address = #{record.stockAddress,jdbcType=VARCHAR},
@@ -274,15 +287,7 @@
       <if test="record.isCommSale != null">
         is_comm_sale = #{record.isCommSale,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.createUser != null">
-        create_user = #{record.createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="record.updateUser != null">
         update_user = #{record.updateUser,jdbcType=VARCHAR},
       </if>
@@ -291,34 +296,31 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByExample" parameterType="map">
     update tab_stock_info
-    set id = #{record.id,jdbcType=INTEGER},
-      stock_code = #{record.stockCode,jdbcType=VARCHAR},
-      nature = #{record.nature,jdbcType=VARCHAR},
+    set nature = #{record.nature,jdbcType=VARCHAR},
       stock_name = #{record.stockName,jdbcType=VARCHAR},
       specificate_type = #{record.specificateType,jdbcType=VARCHAR},
       stock_class = #{record.stockClass,jdbcType=VARCHAR},
+      stock_class_name = #{record.stockClassName,jdbcType=VARCHAR},
       stock_address = #{record.stockAddress,jdbcType=VARCHAR},
       meter_unit = #{record.meterUnit,jdbcType=VARCHAR},
       pictures = #{record.pictures,jdbcType=VARCHAR},
       bar_code = #{record.barCode,jdbcType=VARCHAR},
+      is_shelves = #{record.isShelves,jdbcType=INTEGER},
       is_enable = #{record.isEnable,jdbcType=INTEGER},
       is_comm_sale = #{record.isCommSale,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_time = SYSDATE(),
       update_user = #{record.updateUser,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.stock.StockInfo">
     update tab_stock_info
     <set>
-      <if test="stockCode != null">
-        stock_code = #{stockCode,jdbcType=VARCHAR},
-      </if>
       <if test="nature != null">
         nature = #{nature,jdbcType=VARCHAR},
       </if>
@@ -330,6 +332,9 @@
       </if>
       <if test="stockClass != null">
         stock_class = #{stockClass,jdbcType=VARCHAR},
+      </if>
+      <if test="stockClassName != null">
+        stock_class_name = #{stockClassName,jdbcType=VARCHAR},
       </if>
       <if test="stockAddress != null">
         stock_address = #{stockAddress,jdbcType=VARCHAR},
@@ -343,44 +348,130 @@
       <if test="barCode != null">
         bar_code = #{barCode,jdbcType=VARCHAR},
       </if>
+      <if test="isShelves != null">
+        is_shelves = #{isShelves,jdbcType=VARCHAR},
+      </if>
       <if test="isEnable != null">
         is_enable = #{isEnable,jdbcType=INTEGER},
       </if>
       <if test="isCommSale != null">
         is_comm_sale = #{isCommSale,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where stock_code = #{stockCode,jdbcType=VARCHAR}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.stock.StockInfo">
     update tab_stock_info
-    set stock_code = #{stockCode,jdbcType=VARCHAR},
-      nature = #{nature,jdbcType=VARCHAR},
+    set nature = #{nature,jdbcType=VARCHAR},
       stock_name = #{stockName,jdbcType=VARCHAR},
       specificate_type = #{specificateType,jdbcType=VARCHAR},
       stock_class = #{stockClass,jdbcType=VARCHAR},
+      stock_class_name = #{stockClassName,jdbcType=VARCHAR},
       stock_address = #{stockAddress,jdbcType=VARCHAR},
       meter_unit = #{meterUnit,jdbcType=VARCHAR},
       pictures = #{pictures,jdbcType=VARCHAR},
       bar_code = #{barCode,jdbcType=VARCHAR},
+      is_shelves = #{isShelves,jdbcType=INTEGER},
       is_enable = #{isEnable,jdbcType=INTEGER},
       is_comm_sale = #{isCommSale,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_time = SYSDATE(),
       update_user = #{updateUser,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where stock_code = #{stockCode,jdbcType=VARCHAR}
+  </update>
+
+  <!-- ********************************* -->
+
+  <!-- 查询存货列表数据 -->
+  <select id="queryStockList" resultType="com.exx.dzj.entity.stock.StockModel" parameterType="com.exx.dzj.entity.stock.StockQuery">
+    SELECT
+      ti.stock_code stockCode,
+      concat_ws(
+          '/',
+          ti.stock_name,
+          ti.specificate_type
+      ) stockNameForSpe,
+      ti.stock_class_name stockClassName,
+      sn.standard_buy_price standardBuyPrice,
+      sn.standard_sell_price standardSellPrice,
+      CASE
+    WHEN ti.nature = '1' THEN
+        '原材料'
+    WHEN ti.nature = '2' THEN
+        '在产品'
+    WHEN ti.nature = '3' THEN
+        '产成品'
+    WHEN ti.nature = '4' THEN
+        '服务项目'
+    ELSE
+        '未知'
+    END natureName,
+      CASE
+    WHEN ti.is_shelves = 1 THEN
+      '上架'
+    WHEN ti.is_shelves = 0 THEN
+      '上架'
+    ELSE
+      '未知'
+    END shelvesName
+    FROM
+      tab_stock_info ti
+    LEFT JOIN tab_stock_num_price sn ON ti.stock_code = sn.stock_code
+  </select>
+
+  <!-- SQL 片段 -->
+  <sql id="QueryStockInfoSql">
+    SELECT
+      ti.stock_code stockCode,
+      ti.nature,
+      ti.stock_name stockName,
+      ti.specificate_type specificateType,
+      ti.stock_class stockClass,
+      ti.stock_address stockAddress,
+      ti.meter_unit meterUnit,
+      ti.pictures,
+      ti.bar_code barCode,
+      ti.is_comm_sale isCommSale,
+      sn.standard_buy_price standardBuyPrice,
+      sn.standard_sell_price standardSellPrice,
+      sn.max_purchase_price maxPurchasePrice,
+      sn.min_sell_price minSellPrice,
+      sn.min_inventory minInventory
+    FROM
+        tab_stock_info ti
+    LEFT JOIN tab_stock_num_price sn ON ti.stock_code = sn.stock_code
+    WHERE 1 = 1
+  </sql>
+
+  <!-- 查询存货详细信息 -->
+  <select id="queryStockInfo" resultType="com.exx.dzj.entity.stock.StockBean">
+    <include refid="QueryStockInfoSql"/>
+    AND ti.stock_code = #{stockCode}
+  </select>
+
+  <!-- 上架、下架 或 删除 -->
+  <update id="shelvesStock">
+    update tab_stock_info
+    <set>
+      <if test="isShelves != null">
+        is_shelves = #{isShelves},
+      </if>
+      <if test="isEnable != null">
+        is_enable = #{isEnable}
+      </if>
+    </set>
+    <choose>
+      <when test="custCodes!=null">
+        where stock_code in
+        <foreach collection="stockCodes" item="item" open="(" close=")" separator=",">#{item}</foreach>
+      </when>
+      <otherwise>
+        where stock_code = null
+      </otherwise>
+    </choose>
   </update>
 </mapper>

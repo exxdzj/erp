@@ -1,15 +1,13 @@
 package com.exx.dzj.controller.login;
 
+import com.exx.dzj.entity.login.LoginInfo;
 import com.exx.dzj.facade.login.LoginFacade;
 import com.exx.dzj.result.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,14 +32,16 @@ public class LoginController {
      */
     @PostMapping("signIn")
     public Result signIn(HttpServletRequest request, HttpServletResponse response,
-                         String userName, String password){
+                         @RequestBody LoginInfo loginInfo){
         Result result = Result.responseSuccess();
-        if(!StringUtils.isNotBlank(userName) || !StringUtils.isNotBlank(password)){
+        if(null == loginInfo
+                || !StringUtils.isNotBlank(loginInfo.getUsername())
+                || !StringUtils.isNotBlank(loginInfo.getPassword())){
             result.setCode(400);
             result.setMsg("用户或密码不可为空!");
             return result;
         }
-        result = loginFacade.signIn(userName, password);
+        result = loginFacade.signIn(loginInfo);
         return result;
     }
 
