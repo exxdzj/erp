@@ -107,7 +107,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
-    public List<CustomerSupplierInfo> getCustomerSupplierExcelList() {
-        return csMapper.getCustomerSupplierExcelList();
+    public List<CustomerSupplierInfo> getCustomerSupplierExcelList(CustomerSupplierQuery query) {
+        return csMapper.getCustomerSupplierExcelList(query);
     }
 }

@@ -49,5 +49,5 @@ public interface CustomerService {
      * 查询 导出 excel 的数据
      * @return
      */
-    List<CustomerSupplierInfo> getCustomerSupplierExcelList();
+    List<CustomerSupplierInfo> getCustomerSupplierExcelList(CustomerSupplierQuery query);
 }

@@ -55,5 +55,5 @@ public interface CustomerSupplierBeanMapper {
      * 查询 需要导出的 excel 数据
      * @return
      */
-    List<CustomerSupplierInfo> getCustomerSupplierExcelList();
+    List<CustomerSupplierInfo> getCustomerSupplierExcelList(CustomerSupplierQuery query);
 }
