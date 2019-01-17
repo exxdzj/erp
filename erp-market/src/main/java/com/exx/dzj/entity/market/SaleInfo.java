@@ -1,6 +1,5 @@
 package com.exx.dzj.entity.market;
 
-import com.exx.dzj.page.BaseModule;
 import lombok.Data;
 import lombok.ToString;
 
@@ -11,7 +10,7 @@ import java.util.List;
 
 @Data
 @ToString
-public class SaleInfo extends BaseModule {
+public class SaleInfo implements Serializable {
     private Integer id;
 
     private String saleCode;
@@ -23,6 +22,8 @@ public class SaleInfo extends BaseModule {
     private String custCode;
 
     private String saleProject;
+
+    private String saleProjectName;
 
     private Date saleDate;
 

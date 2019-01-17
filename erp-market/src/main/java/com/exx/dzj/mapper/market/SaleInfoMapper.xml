@@ -101,6 +101,7 @@
   <!-- 销售单列表查询 -->
   <select id="querySalesTicketList" resultType="com.exx.dzj.entity.market.SaleInfo" parameterType="java.util.Map">
     SELECT
+      SINFO.id AS id,
       SINFO.sale_code AS saleCode,
       SINFO.sale_date AS saleDate,
       CSUPPLIER.cust_name AS custName,
@@ -134,11 +135,15 @@
   <!-- 销售单详情 -->
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="saleTicketMap">
     SELECT
+      SINFO.id,
       SINFO.sale_code,
       SINFO.user_code ,
       SINFO.salesman_code ,
       SINFO.cust_code ,
-      SINFO.sale_project ,
+      CSUPPLIER.cust_name AS custName,
+      UINFO.user_name AS userName,
+      SINFO.sale_project,
+      DICTIONPRO.dict_name AS saleProjectName,
       SINFO.sale_date ,
       SINFO.currency ,
       SINFO.exchange_rate ,
@@ -158,6 +163,9 @@
       SINFO.create_user ,
       SINFO.payment_status
     FROM tab_sale_info SINFO
+    LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
+    LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code
+    LEFT JOIN tab_user_info UINFO ON SINFO.salesman_code = UINFO.salesman_code
     WHERE SINFO.id = #{id,jdbcType=INTEGER}
   </select>
   <resultMap id="saleTicketMap" type="com.exx.dzj.entity.market.SaleInfo">
