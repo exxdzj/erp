@@ -7,6 +7,7 @@ import com.exx.dzj.entity.stock.StockQuery;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.dictionary.DictionaryService;
 import com.exx.dzj.service.stock.StockService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,6 +52,9 @@ public class StockFacade {
          * 存货信息
          */
         StockBean stockBean = stockInfoService.queryStockInfo(stockCode);
+        if(null != stockBean && StringUtils.isNotBlank(stockBean.getPictures())){
+            stockBean.setImages(stockBean.getPictures().split(","));
+        }
 
         /**
          * 存货类别
@@ -76,7 +80,12 @@ public class StockFacade {
      */
     public Result saveStockInfo(StockBean bean) {
         Result result = Result.responseSuccess();
-        stockInfoService.saveStockInfo(bean);
+        try{
+            stockInfoService.saveStockInfo(bean);
+        } catch (Exception ex){
+            result.setCode(400);
+            result.setMsg("数据更新失败!");
+        }
         return result;
     }
 

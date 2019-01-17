@@ -63,7 +63,7 @@ public class StockController {
     @PostMapping("saveStockInfo")
     public Result saveStockInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody StockBean bean) {
         Result result = Result.responseSuccess();
-        stockFacade.saveStockInfo(bean);
+        result = stockFacade.saveStockInfo(bean);
         return result;
     }
 

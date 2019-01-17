@@ -71,11 +71,12 @@ public class CustomerSupplierFacade {
     public Result queryCustomerSupplierInfo(int custType, String custCode) {
         Result result = Result.responseSuccess();
 
-        Map<String, Object> map = new HashMap<>();
         //查询详细信息
         CustomerSupplierInfo customerInfo = customerSupplierService.queryCustomerSupplierInfo(custCode);
-        map.put("customerInfo", customerInfo);
 
+        /**
+        Map<String, Object> map = new HashMap<>();
+        map.put("customerInfo", customerInfo);
         if(custType == CommonConstant.DEFAULT_VALUE_ONE){
             //查询-类别(客户)
             List<DictionaryInfo> customerClasses = dictService.queryDictionary(CommonConstant.CUSTOMER_CATEGORY);
@@ -107,8 +108,8 @@ public class CustomerSupplierFacade {
         //查询-业务员
         List<UserInfo> salesmans = salesmanService.querySalesman();
         map.put("salesmans", salesmans);
-
-        result.setData(map);
+        result.setData(map);*/
+        result.setData(customerInfo);
         return result;
     }
 
@@ -126,7 +127,7 @@ public class CustomerSupplierFacade {
             List<DictionaryInfo> customerClasses = dictService.queryDictionary(CommonConstant.CUSTOMER_CATEGORY);
             map.put("customerClasses", customerClasses);
 
-            //查询-发货地点(客户)<暂时没有数据>
+            //查询-发货地点(客户)
             List<DictionaryInfo> shipAddress = dictService.queryDictionary(CommonConstant.INVENTORY_SHIP_ADDRESS);
             map.put("shipAddress", shipAddress);
 

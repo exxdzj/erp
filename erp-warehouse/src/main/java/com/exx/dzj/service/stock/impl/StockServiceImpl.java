@@ -75,6 +75,9 @@ public class StockServiceImpl implements StockService {
     public Result saveStockInfo(StockBean bean) {
         Result result = Result.responseSuccess();
         try{
+            if(StringUtils.isNotBlank(bean.getPictures()) && bean.getPictures().endsWith(",")){
+                bean.setPictures(bean.getPictures().substring(0, bean.getPictures().length() - 1));
+            }
             StockInfo stockInfo = new StockInfo();
             StockNumPrice stockNumPrice = new StockNumPrice();
             BeanUtils.copyProperties(bean, stockInfo);

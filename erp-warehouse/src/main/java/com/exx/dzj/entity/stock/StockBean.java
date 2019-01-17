@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 @ToString
 public class StockBean extends StockInfo implements Serializable {
 
+    private String[] images;
+
     private BigDecimal standardBuyPrice;
 
     private BigDecimal standardSellPrice;
