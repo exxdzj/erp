@@ -44,4 +44,10 @@ public interface CustomerService {
      * @param custCodes
      */
     void delCustomerSupplier(String custCodes, int isEnable);
+
+    /**
+     * 查询 导出 excel 的数据
+     * @return
+     */
+    List<CustomerSupplierInfo> getCustomerSupplierExcelList();
 }

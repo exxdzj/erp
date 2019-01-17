@@ -50,4 +50,10 @@ public interface CustomerSupplierBeanMapper {
      * @return
      */
     int modifyCustomerSupplierDataStatus(@Param("custCodes")List<String> custCodes, @Param("isEnable")int isEnable);
+
+    /**
+     * 查询 需要导出的 excel 数据
+     * @return
+     */
+    List<CustomerSupplierInfo> getCustomerSupplierExcelList();
 }

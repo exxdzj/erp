@@ -402,6 +402,12 @@
     <if test="linkMan != null and linkMan != ''">
       AND cw.link_man LIKE CONCAT('%',#{linkMan},'%')
     </if>
+    <if test="custType != null and custType != '' and custType == '1'.toString()">
+      AND cw.cust_type in (1, 3)
+    </if>
+    <if test="custType != null and custType != '' and custType == '2'.toString()">
+      AND cw.cust_type in (2, 3)
+    </if>
   </select>
 
   <!-- 查询  客户和供应商详细信息 -->
@@ -418,72 +424,82 @@
     <result column="shipCode" property="shipCode"/>
     <result column="shipAddress" property="shipAddress"/>
     <result column="remarks" property="remarks"/>
-    <association property="contactWayBean" javaType="com.exx.dzj.entity.contactway.ContactWayBean">
-      <result column="linkMan" property="linkMan"/>
-      <result column="telephoneNum" property="telephoneNum"/>
-      <result column="phoneNum" property="phoneNum"/>
-      <result column="faxNum" property="faxNum"/>
-      <result column="email" property="email"/>
-      <result column="postalAddress" property="postalAddress"/>
-      <result column="postalAddressEng" property="postalAddressEng"/>
-      <result column="deliveryAddressOne" property="deliveryAddressOne"/>
-      <result column="deliveryAddressTwo" property="deliveryAddressTwo"/>
-      <result column="zipCode" property="zipCode"/>
-    </association>
-    <association property="accountAttributeBean" javaType="com.exx.dzj.entity.accountatt.AccountAttributeBean">
-      <result column="paymentMethod" property="paymentMethod"/>
-      <result column="discountRate" property="discountRate"/>
-      <result column="accountPeriod" property="accountPeriod"/>
-      <result column="lineCredit" property="lineCredit"/>
-      <result column="payTaxesNum" property="payTaxesNum"/>
-      <result column="billType" property="billType"/>
-      <result column="bankDeposit" property="bankDeposit"/>
-      <result column="openAccount" property="openAccount"/>
-    </association>
+    <!-- 联系方式 -->
+    <result column="linkMan" property="linkMan"/>
+    <result column="telephoneNum" property="telephoneNum"/>
+    <result column="phoneNum" property="phoneNum"/>
+    <result column="faxNum" property="faxNum"/>
+    <result column="email" property="email"/>
+    <result column="postalAddress" property="postalAddress"/>
+    <result column="postalAddressEng" property="postalAddressEng"/>
+    <result column="deliveryAddressOne" property="deliveryAddressOne"/>
+    <result column="deliveryAddressTwo" property="deliveryAddressTwo"/>
+    <result column="zipCode" property="zipCode"/>
+    <!-- 会计属性 -->
+    <result column="paymentMethod" property="paymentMethod"/>
+    <result column="paymentMethodName" property="paymentMethodName"/>
+    <result column="discountRate" property="discountRate"/>
+    <result column="accountPeriod" property="accountPeriod"/>
+    <result column="lineCredit" property="lineCredit"/>
+    <result column="payTaxesNum" property="payTaxesNum"/>
+    <result column="billType" property="billType"/>
+    <result column="bankDeposit" property="bankDeposit"/>
+    <result column="openAccount" property="openAccount"/>
   </resultMap>
-  
-  <!-- 查询 客户或供应商详细信息 -->
-  <select id="queryCustomerSupplierInfo" resultMap="CustomerSupplierResultMap">
+
+  <sql id="QueryCustomerSupplierSql">
     SELECT
-        cs.cust_code custCode,
-        cs.cust_name custName,
-        cs.cust_type custType,
-        cs.cust_level custLevel,
-        cs.level_name levelName,
-        cs.salesman_code salesmanCode,
-        cs.user_code userCode,
-        cs.region_code regionCode,
-        cs.region_name regionName,
-        cs.ship_code shipCode,
-        cs.ship_address shipAddress,
-        cs.remarks,
-        cw.link_man linkMan,
-        cw.telephone_num telephoneNum,
-        cw.phone_num phoneNum,
-        cw.fax_num faxNum,
-        cw.email email,
-        cw.postal_address postalAddress,
-        cw.postal_address_eng postalAddressEng,
-        cw.delivery_address_one deliveryAddressOne,
-        cw.delivery_address_two deliveryAddressTwo,
-        cw.zip_code zipCode,
-        ta.payment_method paymentMethod,
-        ta.discount_rate discountRate,
-        ta.account_period accountPeriod,
-        ta.line_credit lineCredit,
-        ta.pay_taxes_num payTaxesNum,
-        ta.bill_type billType,
-        ta.bank_deposit bankDeposit,
-        ta.open_account openAccount
+      cs.cust_code custCode,
+      cs.cust_name custName,
+      cs.cust_type custType,
+      cs.cust_level custLevel,
+      cs.level_name levelName,
+      cs.salesman_code salesmanCode,
+      cs.user_code userCode,
+      cs.region_code regionCode,
+      cs.region_name regionName,
+      cs.ship_code shipCode,
+      cs.ship_address shipAddress,
+      cs.remarks,
+      cw.link_man linkMan,
+      cw.telephone_num telephoneNum,
+      cw.phone_num phoneNum,
+      cw.fax_num faxNum,
+      cw.email email,
+      cw.postal_address postalAddress,
+      cw.postal_address_eng postalAddressEng,
+      cw.delivery_address_one deliveryAddressOne,
+      cw.delivery_address_two deliveryAddressTwo,
+      cw.zip_code zipCode,
+      ta.payment_method paymentMethod,
+      di.dict_name paymentMethodName,
+      ta.discount_rate discountRate,
+      ta.account_period accountPeriod,
+      ta.line_credit lineCredit,
+      ta.pay_taxes_num payTaxesNum,
+      ta.bill_type billType,
+      ta.bank_deposit bankDeposit,
+      ta.open_account openAccount
     FROM
         tab_customer_supplier cs
     LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code
     LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code
+    LEFT JOIN tab_dictionary_info di ON di.dict_code = ta.payment_method AND di.data_type = 'receivables_payment_method'
     WHERE
         1 = 1
+  </sql>
+
+  <!-- 查询 客户或供应商详细信息 -->
+  <select id="queryCustomerSupplierInfo" resultMap="CustomerSupplierResultMap">
+    <include refid="QueryCustomerSupplierSql"/>
     <if test="custCode != null and custCode !=''">
       AND cs.cust_code = #{custCode}
     </if>
+  </select>
+
+  <!-- excel导出数据 -->
+  <select id="getCustomerSupplierExcelList" resultMap="CustomerSupplierResultMap">
+    <include refid="QueryCustomerSupplierSql"/>
   </select>
 
   <!-- 修改数据状态 -->

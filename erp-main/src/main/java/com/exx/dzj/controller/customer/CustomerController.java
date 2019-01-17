@@ -38,12 +38,17 @@ public class CustomerController {
      * @param response
      * @return
      */
-    @GetMapping("queryCustomerSupplierList")
-    public Result queryCustomerSupplierList(HttpServletRequest request, HttpServletResponse response, String query){
+    @GetMapping("queryCustomerSupplierList/{custType}")
+    public Result queryCustomerSupplierList(HttpServletRequest request, HttpServletResponse response,
+                                            String query, @PathVariable("custType") int custType){
         Result result = Result.responseSuccess();
         CustomerSupplierQuery queryParam = JsonUtils.jsonToPojo(query, CustomerSupplierQuery.class);
         int pageNum = queryParam != null ? queryParam.getPage() : CommonConstant.DEFAULT_PAGE_NUM;
         int pageSize = queryParam != null ? queryParam.getLimit() : CommonConstant.DEFAULT_PAGE_SIZE;
+        if(null == queryParam){
+            queryParam = new CustomerSupplierQuery();
+        }
+        queryParam.setCustType(custType);
         result = customerSupplierFacade.queryCustomerSupplierList(pageNum, pageSize, queryParam);
         return result;
     }
@@ -123,5 +128,17 @@ public class CustomerController {
         }
         result = customerSupplierFacade.delCustomerSupplier(custCodes);
         return result;
+    }
+
+    /**
+     * 查询导出数据
+     * @param request
+     * @param response
+     * @param custType
+     * @return
+     */
+    @GetMapping("getCustomerSupplierExcelList/{custType}")
+    public Result getCustomerSupplierExcelList(HttpServletRequest request, HttpServletResponse response, @PathVariable("custType") int custType){
+        return customerSupplierFacade.getCustomerSupplierExcelList();
     }
 }

@@ -83,11 +83,12 @@ public class CustomerSupplierFacade {
     public Result queryCustomerSupplierInfo(int custType, String custCode) {
         Result result = Result.responseSuccess();
 
-        Map<String, Object> map = new HashMap<>();
+
         //查询详细信息
         CustomerSupplierInfo customerInfo = customerSupplierService.queryCustomerSupplierInfo(custCode);
-        map.put("customerInfo", customerInfo);
 
+        /** Map<String, Object> map = new HashMap<>();
+        map.put("customerInfo", customerInfo);
         if(custType == CommonConstant.DEFAULT_VALUE_ONE){
             //查询-类别(客户)
             List<DictionaryInfo> customerClasses = dictService.queryDictionary(CommonConstant.CUSTOMER_CATEGORY);
@@ -119,8 +120,8 @@ public class CustomerSupplierFacade {
         //查询-业务员
         List<UserInfo> salesmans = salesmanService.querySalesman();
         map.put("salesmans", salesmans);
-
-        result.setData(map);
+        result.setData(map);*/
+        result.setData(customerInfo);
         return result;
     }
 
@@ -223,6 +224,16 @@ public class CustomerSupplierFacade {
             LOGGER.error("异常方法:{}异常信息:{}", CustomerSupplierFacade.class.getName()+".saveCustomerSupplier", ex.getMessage());
             throw new ErpException(400, "保存数据失败!");
         }
+        return result;
+    }
+
+    /**
+     * 查询 导出 excel 数据
+     * @return
+     */
+    public Result getCustomerSupplierExcelList(){
+        Result result = Result.responseSuccess();
+        result.setData(customerSupplierService.getCustomerSupplierExcelList());
         return result;
     }
 
