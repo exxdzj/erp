@@ -7,6 +7,7 @@ import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.market.SalesTicketFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.unique.SingletonGeneratorConfig;
 import com.exx.dzj.util.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -125,6 +126,21 @@ public class SalesTickeContorller {
             result.setCode(Result.FAIL_CODE);
             result.setMsg(Result.FAIL_MSG + ", by " + e.getMessage());
         }
+        return result;
+    }
+
+    /**
+     * @description 销售单编码生成器
+     * @author yangyun
+     * @date 2019/1/16 0016
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("salecodegenerator")
+    public Result querySaleTicketCode(){
+        Result result = Result.responseSuccess();
+        String saleCode = "SC" + SingletonGeneratorConfig.getSingleton().next();
+        result.setData(saleCode);
         return result;
     }
 
