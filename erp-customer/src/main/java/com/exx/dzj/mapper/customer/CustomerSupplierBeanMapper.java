@@ -56,4 +56,6 @@ public interface CustomerSupplierBeanMapper {
      * @return
      */
     List<CustomerSupplierInfo> getCustomerSupplierExcelList(CustomerSupplierQuery query);
+
+    List<CustomerSupplierInfo> queryCustomerPullDownInfo();
 }

@@ -50,4 +50,6 @@ public interface CustomerService {
      * @return
      */
     List<CustomerSupplierInfo> getCustomerSupplierExcelList(CustomerSupplierQuery query);
+
+    List<CustomerSupplierInfo> queryCustomerPullDownInfo();
 }
