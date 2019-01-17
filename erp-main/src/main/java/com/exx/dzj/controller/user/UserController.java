@@ -24,9 +24,16 @@ public class UserController {
      * @return
      */
     @GetMapping("getUserInfo")
-    public Result getUserInfo(){
+    public Result getUserInfo(String token){
         Result result = Result.responseSuccess();
-        result.setData(userFacade.getUserInfo());
+        result.setData(userFacade.getUserInfo(token));
+        return result;
+    }
+
+    @GetMapping("querySalesman")
+    public Result querySalesman() {
+        Result result = Result.responseSuccess();
+        result.setData(userFacade.querySalesman());
         return result;
     }
 }

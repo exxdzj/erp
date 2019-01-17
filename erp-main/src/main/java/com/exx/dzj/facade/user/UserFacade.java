@@ -27,6 +27,7 @@ public class UserFacade {
      * @return
      */
     public UserInfo getUserInfo(String userToken){
+
         String userCode = userTokenFacade.queryUserCodeForToken(userToken);
         return salesmanService.queryUserInfo(userCode);
     }
