@@ -138,7 +138,13 @@ public class CustomerController {
      * @return
      */
     @GetMapping("getCustomerSupplierExcelList/{custType}")
-    public Result getCustomerSupplierExcelList(HttpServletRequest request, HttpServletResponse response, @PathVariable("custType") int custType){
-        return customerSupplierFacade.getCustomerSupplierExcelList();
+    public Result getCustomerSupplierExcelList(HttpServletRequest request, HttpServletResponse response,
+                                               String query, @PathVariable("custType") int custType){
+        CustomerSupplierQuery queryParam = JsonUtils.jsonToPojo(query, CustomerSupplierQuery.class);
+        if(null == queryParam){
+            queryParam = new CustomerSupplierQuery();
+        }
+        queryParam.setCustType(custType);
+        return customerSupplierFacade.getCustomerSupplierExcelList(queryParam);
     }
 }

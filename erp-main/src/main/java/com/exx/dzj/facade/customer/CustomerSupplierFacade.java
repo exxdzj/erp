@@ -87,6 +87,7 @@ public class CustomerSupplierFacade {
         //查询详细信息
         CustomerSupplierInfo customerInfo = customerSupplierService.queryCustomerSupplierInfo(custCode);
 
+        //在查询详细信息时把下拉框数据一起查询,可以减少后台请求次数
         /** Map<String, Object> map = new HashMap<>();
         map.put("customerInfo", customerInfo);
         if(custType == CommonConstant.DEFAULT_VALUE_ONE){
@@ -231,9 +232,9 @@ public class CustomerSupplierFacade {
      * 查询 导出 excel 数据
      * @return
      */
-    public Result getCustomerSupplierExcelList(){
+    public Result getCustomerSupplierExcelList(CustomerSupplierQuery query){
         Result result = Result.responseSuccess();
-        result.setData(customerSupplierService.getCustomerSupplierExcelList());
+        result.setData(customerSupplierService.getCustomerSupplierExcelList(query));
         return result;
     }
 
