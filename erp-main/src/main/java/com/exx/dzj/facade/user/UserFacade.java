@@ -6,6 +6,8 @@ import com.exx.dzj.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @Author
  * @Date 2019/1/8 0008 17:04
@@ -43,5 +45,16 @@ public class UserFacade {
             result.setMsg("保存业务员信息失败!");
         }
         return result;
+    }
+
+    /**
+     * @description查询业务员
+     * @author yangyun
+     * @date 2019/1/15 0015
+     * @param
+     * @return java.util.List<com.exx.dzj.entity.user.UserInfo>
+     */
+    public List<UserInfo> querySalesman(){
+        return salesmanService.querySalesman();
     }
 }

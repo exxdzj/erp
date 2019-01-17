@@ -24,7 +24,6 @@ import com.exx.dzj.util.EntityJudgeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +52,19 @@ public class CustomerSupplierFacade {
     @Autowired
     private UserService salesmanService;
 
+    /**@Autowired
+    public  CustomerSupplierFacade(CustomerService customerService,
+                                        ContactWayService contactWayService,
+                                        AccountAttributeService accountAttributeService,
+                                        DictionaryService dictionaryService,
+                                        UserService userService){
+        this.customerService = customerService;
+        this.contactWayService = contactWayService;
+        this.accountAttributeService = accountAttributeService;
+        this.dictionaryService = dictionaryService;
+        this.userService = userService;
+    }*/
+
     /**
      * 查询 客户或供应商列表数据
      * @param pageNum
@@ -71,18 +83,17 @@ public class CustomerSupplierFacade {
     public Result queryCustomerSupplierInfo(int custType, String custCode) {
         Result result = Result.responseSuccess();
 
+        Map<String, Object> map = new HashMap<>();
         //查询详细信息
         CustomerSupplierInfo customerInfo = customerSupplierService.queryCustomerSupplierInfo(custCode);
-
-        /**
-        Map<String, Object> map = new HashMap<>();
         map.put("customerInfo", customerInfo);
+
         if(custType == CommonConstant.DEFAULT_VALUE_ONE){
             //查询-类别(客户)
             List<DictionaryInfo> customerClasses = dictService.queryDictionary(CommonConstant.CUSTOMER_CATEGORY);
             map.put("customerClasses", customerClasses);
 
-            //查询-发货地点(客户)
+            //查询-发货地点(客户)<暂时没有数据>
             List<DictionaryInfo> shipAddress = dictService.queryDictionary(CommonConstant.INVENTORY_SHIP_ADDRESS);
             map.put("shipAddress", shipAddress);
 
@@ -108,8 +119,8 @@ public class CustomerSupplierFacade {
         //查询-业务员
         List<UserInfo> salesmans = salesmanService.querySalesman();
         map.put("salesmans", salesmans);
-        result.setData(map);*/
-        result.setData(customerInfo);
+
+        result.setData(map);
         return result;
     }
 
@@ -127,7 +138,7 @@ public class CustomerSupplierFacade {
             List<DictionaryInfo> customerClasses = dictService.queryDictionary(CommonConstant.CUSTOMER_CATEGORY);
             map.put("customerClasses", customerClasses);
 
-            //查询-发货地点(客户)
+            //查询-发货地点(客户)<暂时没有数据>
             List<DictionaryInfo> shipAddress = dictService.queryDictionary(CommonConstant.INVENTORY_SHIP_ADDRESS);
             map.put("shipAddress", shipAddress);
 
@@ -160,20 +171,17 @@ public class CustomerSupplierFacade {
 
     /**
      * 保存 客户或供应商基础信息数据
-     * @param info
+     * @param customerBean
+     * @param contactWayBean
+     * @param accountBean
      */
     @Transactional(rollbackFor=ErpException.class)
-    public Result saveCustomerSupplier(CustomerSupplierInfo info,
+    public Result saveCustomerSupplier(CustomerSupplierBean customerBean,
+                                       ContactWayBean contactWayBean,
+                                       AccountAttributeBean accountBean,
                                        int custType) throws ErpException{
         Result result = Result.responseSuccess();
         try{
-            CustomerSupplierBean customerBean = new CustomerSupplierBean();
-            ContactWayBean contactWayBean = new ContactWayBean();
-            AccountAttributeBean accountBean = new AccountAttributeBean();
-            BeanUtils.copyProperties(info, customerBean);
-            BeanUtils.copyProperties(info, contactWayBean);
-            BeanUtils.copyProperties(info, accountBean);
-
             if(StringUtils.isNotBlank(customerBean.getCustCode())){
                 //修改
                 customerSupplierService.modifyCustomerSupplier(customerBean);
@@ -182,17 +190,11 @@ public class CustomerSupplierFacade {
                 accountBean.setCustCode(null);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(contactWayBean)){
                     contactWayBean.setCustCode(customerBean.getCustCode());
-                    int count = contactwayService.modifyContactWay(contactWayBean);
-                    if(count == 0){
-                        contactwayService.saveContactWay(contactWayBean);
-                    }
+                    contactwayService.modifyContactWay(contactWayBean);
                 }
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(accountBean)){
                     accountBean.setCustCode(customerBean.getCustCode());
-                    int count = accountAttService.modifyAccountAttribute(accountBean);
-                    if(count == 0){
-                        accountAttService.saveAccountAttribute(accountBean);
-                    }
+                    accountAttService.modifyAccountAttribute(accountBean);
                 }
             }else{
                 String prefix = "";
@@ -232,18 +234,6 @@ public class CustomerSupplierFacade {
     public Result delCustomerSupplier(String custCodes){
         Result result = Result.responseSuccess();
         customerSupplierService.delCustomerSupplier(custCodes, CommonConstant.DEFAULT_VALUE_ZERO);
-        return result;
-    }
-
-    /**
-     * 获取需要导出的excel数据
-     * @param custType
-     * @param query
-     * @return
-     */
-    public Result getCustomerSupplierExcelList(int custType, CustomerSupplierQuery query){
-        Result result = Result.responseSuccess();
-        result = customerSupplierService.getCustomerSupplierExcelList(custType, query);
         return result;
     }
 }

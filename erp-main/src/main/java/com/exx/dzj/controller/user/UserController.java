@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @Author
  * @Date 2019/1/8 0008 17:18
@@ -27,9 +24,9 @@ public class UserController {
      * @return
      */
     @GetMapping("getUserInfo")
-    public Result getUserInfo(HttpServletRequest request, HttpServletResponse response, String token){
+    public Result getUserInfo(){
         Result result = Result.responseSuccess();
-        result.setData(userFacade.getUserInfo(token));
+        result.setData(userFacade.getUserInfo());
         return result;
     }
 }
