@@ -24,6 +24,7 @@ import com.exx.dzj.util.EntityJudgeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -173,17 +174,20 @@ public class CustomerSupplierFacade {
 
     /**
      * 保存 客户或供应商基础信息数据
-     * @param customerBean
-     * @param contactWayBean
-     * @param accountBean
      */
     @Transactional(rollbackFor=ErpException.class)
-    public Result saveCustomerSupplier(CustomerSupplierBean customerBean,
-                                       ContactWayBean contactWayBean,
-                                       AccountAttributeBean accountBean,
+    public Result saveCustomerSupplier(CustomerSupplierInfo bean,
                                        int custType) throws ErpException{
         Result result = Result.responseSuccess();
         try{
+            CustomerSupplierBean customerBean = new CustomerSupplierBean();
+            ContactWayBean contactWayBean = new ContactWayBean();
+            AccountAttributeBean accountBean = new AccountAttributeBean();
+
+            BeanUtils.copyProperties(bean, customerBean);
+            BeanUtils.copyProperties(bean, contactWayBean);
+            BeanUtils.copyProperties(bean, accountBean);
+
             if(StringUtils.isNotBlank(customerBean.getCustCode())){
                 //修改
                 customerSupplierService.modifyCustomerSupplier(customerBean);

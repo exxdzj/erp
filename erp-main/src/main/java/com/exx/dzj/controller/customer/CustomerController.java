@@ -94,22 +94,19 @@ public class CustomerController {
      * 保存 客户或供应商信息
      * @param request
      * @param response
-     * @param customerBean
-     * @param contactWayBean
-     * @param accountBean
      * @return
      */
     @PostMapping("saveCustomerSupplier/{custType}")
     public Result saveCustomerSupplier(HttpServletRequest request, HttpServletResponse response,
-                                       CustomerSupplierBean customerBean, ContactWayBean contactWayBean,
-                                       AccountAttributeBean accountBean, @PathVariable("custType") int custType){
+                                       @RequestBody CustomerSupplierInfo info,
+                                       @PathVariable("custType") int custType){
         Result result = Result.responseSuccess();
-        if(null != customerBean && StringUtils.isNotBlank(customerBean.getCustName())){
+        if(null != info && StringUtils.isNotBlank(info.getCustName())){
             result.setCode(400);
             result.setMsg("名称不可为空,请填写!");
             return result;
         }
-        result = customerSupplierFacade.saveCustomerSupplier(customerBean, contactWayBean, accountBean, custType);
+        result = customerSupplierFacade.saveCustomerSupplier(info, custType);
         return result;
     }
 
