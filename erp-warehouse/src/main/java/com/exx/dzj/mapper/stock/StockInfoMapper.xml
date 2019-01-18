@@ -421,6 +421,13 @@
     FROM
       tab_stock_info ti
     LEFT JOIN tab_stock_num_price sn ON ti.stock_code = sn.stock_code
+    WHERE 1=1
+    <if test="stockClass != null and stockClass != ''">
+      AND ti.stock_class=#{stockClass}
+    </if>
+    <if test="stockName != null and stockName != ''">
+      AND ti.stock_name LIKE CONCAT('%',#{stockName},'%')
+    </if>
   </select>
 
   <!-- SQL 片段 -->
