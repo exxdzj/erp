@@ -1,5 +1,6 @@
 package com.exx.dzj.entity.stock;
 
+import com.exx.dzj.page.BaseModule;
 import lombok.Data;
 import lombok.ToString;
 
@@ -12,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @ToString
-public class StockQuery implements Serializable {
+public class StockQuery extends StockInfo {
     private int page;
 
     private int limit;

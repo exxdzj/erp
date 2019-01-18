@@ -1,5 +1,6 @@
 package com.exx.dzj.entity.stock;
 
+import com.exx.dzj.page.BaseModule;
 import lombok.Data;
 import lombok.ToString;
 
@@ -8,7 +9,7 @@ import java.util.Date;
 
 @Data
 @ToString
-public class StockInfo implements Serializable {
+public class StockInfo extends BaseModule {
     private Integer id;
 
     private String stockCode;
