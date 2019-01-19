@@ -387,7 +387,8 @@
   <!-- ********************************* -->
 
   <!-- 查询存货列表数据 -->
-  <select id="queryStockList" resultType="com.exx.dzj.entity.stock.StockModel" parameterType="com.exx.dzj.entity.stock.StockQuery">
+  <select id="queryStockList" resultType="com.exx.dzj.entity.stock.StockModel"
+          parameterType="com.exx.dzj.entity.stock.StockQuery">
     SELECT
       ti.stock_code stockCode,
       concat_ws(
@@ -421,6 +422,16 @@
     FROM
       tab_stock_info ti
     LEFT JOIN tab_stock_num_price sn ON ti.stock_code = sn.stock_code
+    WHERE ti.is_enable = 1
+    <if test="stockName!=null and stockName!=''">
+      AND ti.stock_name LIKE CONCAT('%', #{stockName}, '%')
+    </if>
+    <if test="specificateType!=null and specificateType!=''">
+      AND ti.specificate_type LIKE CONCAT('%', #{specificateType}, '%')
+    </if>
+    <if test="stockClass!=null and stockClass!=''">
+      AND ti.stock_class = #{stockClass}
+    </if>
   </select>
 
   <!-- SQL 片段 -->
@@ -465,7 +476,7 @@
       </if>
     </set>
     <choose>
-      <when test="custCodes!=null">
+      <when test="stockCodes!=null">
         where stock_code in
         <foreach collection="stockCodes" item="item" open="(" close=")" separator=",">#{item}</foreach>
       </when>

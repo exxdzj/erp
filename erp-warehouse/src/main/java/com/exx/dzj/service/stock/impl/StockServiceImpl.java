@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -121,10 +122,15 @@ public class StockServiceImpl implements StockService {
     public void delStockInfo(String stockCodes, int isEnable) {
         try{
             String comma = ",";
+            List<String> list = new ArrayList<>();
             if(stockCodes.contains(comma)){
-                List<String> list = new ArrayList<String>(stockCodes.split(",").length);
-                stockMapper.shelvesStock(null, isEnable, list);
+                String[]  stockCodeTemps = stockCodes.split(",");
+                list = new ArrayList<>(stockCodeTemps.length);
+                Collections.addAll(list, stockCodeTemps);
+            } else {
+                list.add(stockCodes);
             }
+            stockMapper.shelvesStock(null, isEnable, list);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", StockServiceImpl.class.getName()+".delStockInfo", ex.getMessage());
             throw new ErpException(400, "删除存货数据失败!");
@@ -146,7 +152,9 @@ public class StockServiceImpl implements StockService {
             String comma = ",";
             List<String> list = new ArrayList<String>();
             if(stockCodes.contains(comma)){
-                list = new ArrayList<String>(stockCodes.split(",").length);
+                String[]  stockCodeTemps = stockCodes.split(",");
+                list = new ArrayList<>(stockCodeTemps.length);
+                Collections.addAll(list, stockCodeTemps);
             } else {
                 list.add(stockCodes);
             }

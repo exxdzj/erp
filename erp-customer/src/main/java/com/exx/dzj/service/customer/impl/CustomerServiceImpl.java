@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -94,7 +95,9 @@ public class CustomerServiceImpl implements CustomerService {
             String comma = ",";
             List<String> list = new ArrayList<String>();
             if(custCodes.contains(comma)) {
-                list = new ArrayList<String>(custCodes.split(",").length);
+                String[]  custCodeTemps = custCodes.split(",");
+                list = new ArrayList<>(custCodeTemps.length);
+                Collections.addAll(list, custCodeTemps);
             } else {
                 list.add(custCodes);
             }
