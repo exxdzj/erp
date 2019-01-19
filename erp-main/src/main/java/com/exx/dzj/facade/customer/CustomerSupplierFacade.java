@@ -187,7 +187,7 @@ public class CustomerSupplierFacade {
             BeanUtils.copyProperties(bean, customerBean);
             BeanUtils.copyProperties(bean, contactWayBean);
             BeanUtils.copyProperties(bean, accountBean);
-
+            customerBean.setSource(custType);
             if(StringUtils.isNotBlank(customerBean.getCustCode())){
                 //修改
                 customerSupplierService.modifyCustomerSupplier(customerBean);
@@ -196,11 +196,17 @@ public class CustomerSupplierFacade {
                 accountBean.setCustCode(null);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(contactWayBean)){
                     contactWayBean.setCustCode(customerBean.getCustCode());
-                    contactwayService.modifyContactWay(contactWayBean);
+                    int count = contactwayService.modifyContactWay(contactWayBean);
+                    if(count == 0){
+                        contactwayService.saveContactWay(contactWayBean);
+                    }
                 }
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(accountBean)){
                     accountBean.setCustCode(customerBean.getCustCode());
-                    accountAttService.modifyAccountAttribute(accountBean);
+                    int count = accountAttService.modifyAccountAttribute(accountBean);
+                    if(count == 0) {
+                        accountAttService.saveAccountAttribute(accountBean);
+                    }
                 }
             }else{
                 String prefix = "";

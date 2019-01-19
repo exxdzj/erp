@@ -175,6 +175,9 @@
       <if test="remarks != null">
         remarks,
       </if>
+      <if test="source != null">
+        source,
+      </if>
         create_time,
       <if test="createUser != null">
         create_user,
@@ -192,7 +195,7 @@
         #{custName,jdbcType=VARCHAR},
       </if>
       <if test="custType != null">
-        #{custType,jdbcType=VARCHAR},
+        #{custType},
       </if>
       <if test="custLevel != null">
         #{custLevel,jdbcType=VARCHAR},
@@ -220,6 +223,9 @@
       </if>
       <if test="remarks != null">
         #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        #{source},
       </if>
         SYSDATE(),
       <if test="createUser != null">
@@ -405,9 +411,11 @@
     </if>
     <if test="custType != null and custType != '' and custType == '1'.toString()">
       AND cs.cust_type in (1, 3)
+      AND cs.source = #{custType}
     </if>
     <if test="custType != null and custType != '' and custType == '2'.toString()">
       AND cs.cust_type in (2, 3)
+      AND cs.source = #{custType}
     </if>
   </select>
 

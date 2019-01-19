@@ -101,7 +101,7 @@ public class CustomerController {
                                        @RequestBody CustomerSupplierInfo info,
                                        @PathVariable("custType") int custType){
         Result result = Result.responseSuccess();
-        if(null != info && StringUtils.isNotBlank(info.getCustName())){
+        if(null != info && !StringUtils.isNotBlank(info.getCustName())){
             result.setCode(400);
             result.setMsg("名称不可为空,请填写!");
             return result;

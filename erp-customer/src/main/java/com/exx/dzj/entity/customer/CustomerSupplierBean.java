@@ -21,7 +21,7 @@ public class CustomerSupplierBean implements Serializable {
     private String custName;
 
     //身份类型(1-客户  2-供应商  3-既是客户又是供应商 )
-    private String custType;
+    private int custType;
 
     //客户职级(保险家等<类别>)
     private String custLevel;
@@ -43,6 +43,9 @@ public class CustomerSupplierBean implements Serializable {
 
     //发货地址编码
     private String shipCode;
+
+    //来源
+    private int source;
 
     //发货地址
     private String shipAddress;
