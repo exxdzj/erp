@@ -92,10 +92,13 @@ public class CustomerServiceImpl implements CustomerService {
     public void delCustomerSupplier(String custCodes, int isEnable){
         try{
             String comma = ",";
-            if(custCodes.contains(comma)){
-                List<String> list = new ArrayList<String>(custCodes.split(",").length);
-                csMapper.modifyCustomerSupplierDataStatus(list, isEnable);
+            List<String> list = new ArrayList<String>();
+            if(custCodes.contains(comma)) {
+                list = new ArrayList<String>(custCodes.split(",").length);
+            } else {
+                list.add(custCodes);
             }
+            csMapper.modifyCustomerSupplierDataStatus(list, isEnable);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", CustomerServiceImpl.class.getName()+".delCustomerSupplier", ex.getMessage());
             throw new ErpException(400, "删除客户或供应商基础信息失败!");

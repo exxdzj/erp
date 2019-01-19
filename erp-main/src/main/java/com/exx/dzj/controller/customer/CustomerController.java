@@ -114,18 +114,18 @@ public class CustomerController {
      * 删除 客户或供应商的数据
      * @param request
      * @param response
-     * @param custCodes
+     * @param custCode
      * @return
      */
     @PostMapping("delCustomerSupplier")
-    public Result delCustomerSupplier(HttpServletRequest request, HttpServletResponse response, String custCodes){
+    public Result delCustomerSupplier(HttpServletRequest request, HttpServletResponse response, @RequestParam String custCode){
         Result result = Result.responseSuccess();
-        if(!StringUtils.isNotBlank(custCodes)){
+        if(!StringUtils.isNotBlank(custCode)){
             result.setCode(400);
             result.setMsg("请选择要删除的数据!");
             return result;
         }
-        result = customerSupplierFacade.delCustomerSupplier(custCodes);
+        result = customerSupplierFacade.delCustomerSupplier(custCode);
         return result;
     }
 

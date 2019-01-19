@@ -6,6 +6,7 @@ import com.exx.dzj.entity.stock.StockQuery;
 import com.exx.dzj.facade.stock.StockFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,7 +73,13 @@ public class StockController {
      * @return
      */
     @PostMapping("delStockInfo")
-    public Result delStockInfo(HttpServletRequest request, HttpServletResponse response, @RequestParam String stockCode) {
+    public Result delStockInfo(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="stockCode") String stockCode) {
+        Result result = Result.responseSuccess();
+        if(!StringUtils.isNotBlank(stockCode)){
+            result.setCode(400);
+            result.setMsg("请选择要删除的数据!");
+            return result;
+        }
         return stockFacade.delStockInfo(stockCode);
     }
 

@@ -402,7 +402,7 @@
     LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code
     LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code
     WHERE
-        1 = 1
+      cs.is_enable = 1
     <if test="custName != null and custName != ''">
       AND cs.cust_name LIKE CONCAT('%',#{custName},'%')
     </if>

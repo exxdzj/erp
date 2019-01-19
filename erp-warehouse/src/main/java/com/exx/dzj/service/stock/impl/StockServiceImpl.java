@@ -144,10 +144,13 @@ public class StockServiceImpl implements StockService {
     public void shelvesStock(String isShelves, String stockCodes){
         try{
             String comma = ",";
+            List<String> list = new ArrayList<String>();
             if(stockCodes.contains(comma)){
-                List<String> list = new ArrayList<String>(stockCodes.split(",").length);
-                stockMapper.shelvesStock(isShelves, null, list);
+                list = new ArrayList<String>(stockCodes.split(",").length);
+            } else {
+                list.add(stockCodes);
             }
+            stockMapper.shelvesStock(isShelves, null, list);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", StockServiceImpl.class.getName()+".shelvesStock", ex.getMessage());
             throw new ErpException(400, "删除存货数据失败!");
