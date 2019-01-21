@@ -411,11 +411,12 @@
     ELSE
         '未知'
     END natureName,
+        ti.is_shelves isShelves,
       CASE
     WHEN ti.is_shelves = 1 THEN
       '上架'
     WHEN ti.is_shelves = 0 THEN
-      '上架'
+      '下架'
     ELSE
       '未知'
     END shelvesName
@@ -432,6 +433,7 @@
     <if test="stockClass!=null and stockClass!=''">
       AND ti.stock_class = #{stockClass}
     </if>
+    ORDER BY ti.create_time DESC
   </select>
 
   <!-- SQL 片段 -->

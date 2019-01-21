@@ -20,5 +20,6 @@ public class StockModel implements Serializable {
     private BigDecimal standardBuyPrice;
     private BigDecimal standardSellPrice;
     private String natureName;
+    private int isShelves;
     private String shelvesName;
 }

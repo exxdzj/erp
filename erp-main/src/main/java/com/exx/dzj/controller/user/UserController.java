@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 /**
  * @Author
  * @Date 2019/1/8 0008 17:18
@@ -24,8 +27,11 @@ public class UserController {
      * @return
      */
     @GetMapping("getUserInfo")
-    public Result getUserInfo(String token){
+    public Result getUserInfo(HttpServletRequest request){
         Result result = Result.responseSuccess();
+        HttpSession session = request.getSession(true);
+        //分布式环境下不要将 token 放在 session 对象中, 最好是放在分布式缓存中间件,例如 redis
+        String token = (String)session.getAttribute("userToken");
         result.setData(userFacade.getUserInfo(token));
         return result;
     }

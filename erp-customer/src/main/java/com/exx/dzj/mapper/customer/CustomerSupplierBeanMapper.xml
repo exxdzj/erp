@@ -417,6 +417,7 @@
       AND cs.cust_type in (2, 3)
       AND cs.source = #{custType}
     </if>
+    ORDER BY cs.create_time DESC
   </select>
 
   <!-- 查询  客户和供应商详细信息 -->

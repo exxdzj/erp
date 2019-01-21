@@ -43,6 +43,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -72,6 +73,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List">
     id, dict_code, dict_name, seq, img, data_type, is_enable, create_time, create_user, 
     update_time, update_user
@@ -321,5 +323,6 @@
     <if test="dataType != null and dataType !=''">
       AND di.data_type = #{dataType}
     </if>
+    order by di.seq desc
   </select>
 </mapper>
