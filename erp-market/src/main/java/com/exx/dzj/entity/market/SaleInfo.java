@@ -88,4 +88,10 @@ public class SaleInfo implements Serializable {
 
     /*已收款总金额*/
     private BigDecimal sumCollectedAmount;
+
+    /**收款方式**/
+    private String paymentTerm;
+
+    /*收款账户*/
+    private String collectedAmounts;
 }

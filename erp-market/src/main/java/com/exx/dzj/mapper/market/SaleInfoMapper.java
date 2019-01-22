@@ -6,6 +6,7 @@ import com.exx.dzj.entity.market.SaleInfoExample;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 

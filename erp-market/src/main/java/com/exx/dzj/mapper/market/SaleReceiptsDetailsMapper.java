@@ -4,6 +4,7 @@ import com.exx.dzj.entity.market.SaleReceiptsDetails;
 import com.exx.dzj.entity.market.SaleReceiptsDetailsExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface SaleReceiptsDetailsMapper {
@@ -34,4 +35,6 @@ public interface SaleReceiptsDetailsMapper {
     void batchUpdateSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails);
 
     void batchDeleteSalesReceiptsDeail(List<Integer> srdIds);
+
+    List<SaleReceiptsDetails> querySaleReceviptDetailList(String saleCode);
 }

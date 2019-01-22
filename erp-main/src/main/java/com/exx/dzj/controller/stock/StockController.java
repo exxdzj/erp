@@ -2,9 +2,11 @@ package com.exx.dzj.controller.stock;
 
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.stock.StockBean;
+import com.exx.dzj.entity.stock.StockInfo;
 import com.exx.dzj.entity.stock.StockQuery;
 import com.exx.dzj.facade.stock.StockFacade;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.unique.SingletonGeneratorConfig;
 import com.exx.dzj.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,5 +98,36 @@ public class StockController {
                                @RequestParam String stockCode,
                                @PathVariable("isShelves") String isShelves) {
         return stockFacade.shelvesStock(isShelves, stockCode);
+    }
+
+    /**
+     * @description 存货编码生成
+     * @author yangyun
+     * @date 2019/1/19 0019
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("generatorstockcode")
+    public Result generatorStockCode(){
+        Result result = Result.responseSuccess();
+        String saleCode = "STOCKCODE" + SingletonGeneratorConfig.getSingleton().next();
+        result.setData(saleCode);
+        return result;
+    }
+
+    /**
+     * @description
+     * @author yangyun
+     * @date 2019/1/19 0019
+     * @param request
+     * @param response
+     * @param stockInfo
+     * @return com.exx.dzj.result.Result
+     */
+    @PostMapping("addinventoryservice")
+    public Result addInventoryService(HttpServletRequest request, HttpServletResponse response, @RequestBody StockInfo stockInfo){
+        Result result = Result.responseSuccess();
+        stockFacade.insertStockInfo(stockInfo);
+        return result;
     }
 }

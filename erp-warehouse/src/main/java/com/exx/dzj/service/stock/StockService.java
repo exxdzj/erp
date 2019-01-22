@@ -1,6 +1,7 @@
 package com.exx.dzj.service.stock;
 
 import com.exx.dzj.entity.stock.StockBean;
+import com.exx.dzj.entity.stock.StockInfo;
 import com.exx.dzj.entity.stock.StockQuery;
 import com.exx.dzj.result.Result;
 import org.apache.ibatis.annotations.Param;
@@ -45,4 +46,6 @@ public interface StockService {
      * @return
      */
     void shelvesStock(String isShelves, String stockCodes);
+
+    void insertStockInfo(StockInfo stockInfo);
 }

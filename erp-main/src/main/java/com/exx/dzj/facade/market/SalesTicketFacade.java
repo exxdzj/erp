@@ -11,6 +11,7 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -126,14 +127,18 @@ public class SalesTicketFacade {
         List<SaleReceiptsDetails> saleReceiptsDetails = Optional.of(saleInfo.getSaleReceiptsDetailsList()).get();
         Stream<SaleReceiptsDetails> stream = saleReceiptsDetails.stream();
         List<Integer> srdIds = stream.map(s -> s.getId()).collect(Collectors.toList());
-        if(Optional.of(srdIds).isPresent()){
+        if(!CollectionUtils.isEmpty(srdIds)){
             saleReceiptsDetailService.batchDeleteSalesReceiptsDeail(srdIds);
         }
 
         List<SaleGoodsDetailBean> saleGoodsDetailBeans = Optional.of(saleInfo.getSaleGoodsDetailBeanList()).get();
         List<Integer> sgbIds = saleGoodsDetailBeans.stream().map((s) -> s.getId()).collect(Collectors.toList());
-        if(Optional.of(sgbIds).isPresent()){
+        if(!CollectionUtils.isEmpty(sgbIds)){
             salesGoodsDetailService.batchDeleteSalesGoodsDetail(sgbIds);
         }
+    }
+
+    public List<SaleReceiptsDetails> querySaleReceviptDetailList(String saleCode){
+        return saleReceiptsDetailService.querySaleReceviptDetailList(saleCode);
     }
 }

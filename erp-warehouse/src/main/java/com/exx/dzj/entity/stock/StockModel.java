@@ -22,4 +22,5 @@ public class StockModel implements Serializable {
     private String natureName;
     private int isShelves;
     private String shelvesName;
+    private String stockAddress;
 }

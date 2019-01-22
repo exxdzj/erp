@@ -164,4 +164,11 @@ public class StockServiceImpl implements StockService {
             throw new ErpException(400, "删除存货数据失败!");
         }
     }
+
+
+    public void insertStockInfo(StockInfo stockInfo) {
+        stockMapper.insertSelective(stockInfo);
+    }
+
+
 }

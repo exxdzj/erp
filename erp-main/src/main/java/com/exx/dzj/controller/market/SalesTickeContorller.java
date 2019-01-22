@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author yangyun
@@ -98,7 +100,7 @@ public class SalesTickeContorller {
     public Result updateSaleTicket(HttpServletRequest request, HttpServletResponse response, @RequestBody SaleInfo saleInfo){
         Result result = Result.responseSuccess();
         try {
-            salesTicketFacade.updateSalesTicket(saleInfo);
+//            salesTicketFacade.updateSalesTicket(saleInfo);
         } catch (ErpException e){
             e.printStackTrace();
             result.setCode(Result.FAIL_CODE);
@@ -139,9 +141,25 @@ public class SalesTickeContorller {
     @GetMapping("salecodegenerator")
     public Result querySaleTicketCode(){
         Result result = Result.responseSuccess();
-        String saleCode = "SC" + SingletonGeneratorConfig.getSingleton().next();
+        String saleCode = "SALECODE" + SingletonGeneratorConfig.getSingleton().next();
         result.setData(saleCode);
         return result;
     }
 
+    /**
+     * @description 根据销售单号查询收款详情
+     * @author yangyun
+     * @date 2019/1/21 0021
+     * @param request
+     * @param response
+     * @param saleCode
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querySaleReceviptDetailList/{saleCode}")
+    public Result querySaleReceviptDetailList (HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "saleCode", required = true) String saleCode){
+        Result result = Result.responseSuccess();
+        List<SaleReceiptsDetails> saleReceiptsDetailsList = salesTicketFacade.querySaleReceviptDetailList(saleCode);
+        result.setData(saleReceiptsDetailsList);
+        return result;
+    }
 }

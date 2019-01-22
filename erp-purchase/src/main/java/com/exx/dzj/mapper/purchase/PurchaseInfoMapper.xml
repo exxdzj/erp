@@ -117,7 +117,7 @@
       PINFO.remarks AS remarks
     FROM
         tab_purchase_info PINFO
-    LEFT JOIN tab_customer_supplier SUPPLIER ON SUPPLIER.cust_type=3 AND SUPPLIER.cust_code=PINFO.cust_code
+    LEFT JOIN tab_customer_supplier SUPPLIER ON SUPPLIER.cust_type IN (2,3) AND SUPPLIER.cust_code=PINFO.cust_code
     LEFT JOIN tab_user_info UINFO ON UINFO.user_code=PINFO.user_code
     /*WHERE*/
   </select>

@@ -2,6 +2,7 @@ package com.exx.dzj.service.salesreceiptsdetail;
 
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -23,4 +24,6 @@ public interface SaleReceiptsDetailService {
     void batchUpdateSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails);
 
     void batchDeleteSalesReceiptsDeail(List<Integer> srdIds);
+
+    List<SaleReceiptsDetails> querySaleReceviptDetailList(String saleCode);
 }

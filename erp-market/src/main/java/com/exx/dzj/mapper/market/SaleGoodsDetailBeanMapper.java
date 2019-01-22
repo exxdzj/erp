@@ -2,6 +2,7 @@ package com.exx.dzj.mapper.market;
 
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleGoodsDetailBeanExample;
+import com.exx.dzj.entity.market.SaleReceiptsDetails;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -3,6 +3,7 @@ package com.exx.dzj.facade.stock;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.stock.StockBean;
+import com.exx.dzj.entity.stock.StockInfo;
 import com.exx.dzj.entity.stock.StockQuery;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.dictionary.DictionaryService;
@@ -120,5 +121,9 @@ public class StockFacade {
             result.setMsg("操作失败!");
         }
         return result;
+    }
+
+    public void insertStockInfo(StockInfo stockInfo){
+        stockInfoService.insertStockInfo(stockInfo);
     }
 }

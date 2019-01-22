@@ -79,4 +79,7 @@ public class PurchaseInfo implements Serializable {
     /**供应商名称**/
     private String supplierName;
 
+    /***采购员名称***/
+    private String purchaseName;
+
 }
