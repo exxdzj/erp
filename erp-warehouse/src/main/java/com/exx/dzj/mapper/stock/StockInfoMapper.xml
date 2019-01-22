@@ -391,6 +391,7 @@
           parameterType="com.exx.dzj.entity.stock.StockQuery">
     SELECT
       ti.stock_code stockCode,
+      ti.stock_address stockAddress,
       concat_ws(
           '/',
           ti.stock_name,
