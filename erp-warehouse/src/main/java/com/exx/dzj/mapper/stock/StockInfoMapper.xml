@@ -392,6 +392,7 @@
     SELECT
       ti.stock_code stockCode,
       ti.stock_address stockAddress,
+      DICTINFO.dict_name warehouseName,
       concat_ws(
           '/',
           ti.stock_name,
@@ -424,6 +425,7 @@
     FROM
       tab_stock_info ti
     LEFT JOIN tab_stock_num_price sn ON ti.stock_code = sn.stock_code
+    LEFT JOIN tab_dictionary_info DICTINFO ON DICTINFO.dict_code=ti.stock_address AND DICTINFO.data_type='inventory_ship_address'
     WHERE ti.is_enable = 1
     <if test="stockName!=null and stockName!=''">
       AND ti.stock_name LIKE CONCAT('%', #{stockName}, '%')
