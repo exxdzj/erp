@@ -5,6 +5,7 @@ import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.result.Result;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -52,4 +53,11 @@ public interface CustomerService {
     List<CustomerSupplierInfo> getCustomerSupplierExcelList(CustomerSupplierQuery query);
 
     List<CustomerSupplierInfo> queryCustomerPullDownInfo();
+
+    /**
+     * 导入 excel 数据
+     * @param inputStream
+     * @return
+     */
+    Result importCustomerSupplier(InputStream inputStream);
 }

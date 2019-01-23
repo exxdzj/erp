@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -159,6 +160,27 @@ public class CustomerController {
         Result result = Result.responseSuccess();
         List<CustomerSupplierInfo> customers = customerSupplierFacade.queryCustomerPullDownInfo();
         result.setData(customers);
+        return result;
+    }
+
+    /**
+     * 导入客户或供应商的数据
+     * @param request
+     * @param file
+     * @return
+     */
+    public Result importCustomerSupplier(HttpServletRequest request, @RequestParam(value="file") MultipartFile file) {
+        Result result = Result.responseSuccess();
+        //获取上传的文件名称；
+        String name = file.getOriginalFilename();
+        //判断是否为excel类型文件
+        if(!name.endsWith(CommonConstant.EXCEL_XLS) && !name.endsWith(CommonConstant.EXCEL_XLSX)){
+            LOGGER.info("执行方法:{}异常信息:{}", CustomerController.class.getName()+".importCustomerSupplier", "导入的文件不是excel类型!");
+            result.setCode(400);
+            result.setMsg("导入的文件不是excel类型");
+            return result;
+        }
+        result = customerSupplierFacade.importCustomerSupplier(file);
         return result;
     }
 }

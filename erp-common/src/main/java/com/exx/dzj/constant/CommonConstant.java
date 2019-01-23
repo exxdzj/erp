@@ -16,6 +16,17 @@ public class CommonConstant {
     public final static int DEFAULT_VALUE_THREE = 3;
 
     /**
+     * Excel 文件后缀
+     */
+    public final static String EXCEL_XLS = ".xls";
+    public final static String EXCEL_XLSX = ".xlsx";
+
+    /**
+     * 定义集合的默认大小
+     */
+    public final static int DEFAULT_SIZE = 1000;
+
+    /**
      * 默认 页码
      */
     public final static int DEFAULT_PAGE_NUM = 1;

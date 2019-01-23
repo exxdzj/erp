@@ -28,7 +28,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -262,5 +264,22 @@ public class CustomerSupplierFacade {
 
     public List<CustomerSupplierInfo> queryCustomerPullDownInfo(){
         return customerSupplierService.queryCustomerPullDownInfo();
+    }
+
+    /**
+     * 导入客户或供应商的数据
+     * @param file
+     * @return
+     */
+    public Result importCustomerSupplier(MultipartFile file) {
+        Result result = Result.responseSuccess();
+        try {
+            result = customerSupplierService.importCustomerSupplier(file.getInputStream());
+        } catch(IOException ex) {
+            LOGGER.error("异常方法:{}异常信息:{}", CustomerSupplierFacade.class.getName()+".importCustomerSupplier", ex.getMessage());
+            result.setCode(400);
+            result.setMsg("导入数据失败!");
+        }
+        return result;
     }
 }

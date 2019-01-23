@@ -24,7 +24,7 @@ public class TestStandaloneIdGenerator {
         }
     }
 
-    @Test
+    /*@Test
     public void test2(){
         IdGenerator idGenerator = new DefaultIdGenerator();
 
@@ -166,5 +166,5 @@ public class TestStandaloneIdGenerator {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 }

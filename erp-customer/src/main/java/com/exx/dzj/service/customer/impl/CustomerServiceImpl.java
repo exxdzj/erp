@@ -1,10 +1,10 @@
 package com.exx.dzj.service.customer.impl;
 
-import com.exx.dzj.entity.customer.CustomerSupplierBean;
-import com.exx.dzj.entity.customer.CustomerSupplierInfo;
-import com.exx.dzj.entity.customer.CustomerSupplierModel;
-import com.exx.dzj.entity.customer.CustomerSupplierQuery;
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.metadata.Sheet;
+import com.exx.dzj.entity.customer.*;
 import com.exx.dzj.excepte.ErpException;
+import com.exx.dzj.listen.ExcelListener;
 import com.exx.dzj.mapper.customer.CustomerSupplierBeanMapper;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
@@ -14,7 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.util.resources.th.CalendarData_th;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -120,5 +123,32 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerSupplierInfo> queryCustomerPullDownInfo() {
         return csMapper.queryCustomerPullDownInfo();
+    }
+
+    /**
+     * 导入 excel 数据
+     * @param inputStream
+     * @return
+     */
+    @Override
+    public Result importCustomerSupplier(InputStream inputStream) {
+        Result result = Result.responseSuccess();
+        try {
+            ExcelListener excelListener = new ExcelListener();
+            EasyExcelFactory.readBySax(inputStream, new Sheet(1, 1, CustomerForExcelModel.class), excelListener);
+        } catch(Exception ex) {
+            LOGGER.error("异常方法:{}异常信息:{}", CustomerServiceImpl.class.getName()+".importCustomerSupplier", ex.getMessage());
+            result.setCode(400);
+            result.setMsg("导入数据失败!");
+        } finally {
+            if(null != inputStream){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    LOGGER.error("异常方法:{}异常信息:{}", CustomerServiceImpl.class.getName()+".importCustomerSupplier", e.getMessage());
+                }
+            }
+        }
+        return result;
     }
 }
