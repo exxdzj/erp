@@ -426,7 +426,8 @@
     <result property="stockAddressCode" jdbcType="VARCHAR" column="stock_address_code" />
     <result property="stockAddress" jdbcType="VARCHAR" column="stock_address" />
     <result property="goodsNum" jdbcType="INTEGER" column="goods_num" />
-    <result property="priceType" jdbcType="VARCHAR" column="unit_price" />
+    <result property="unitPrice" jdbcType="VARCHAR" column="unit_price" />
+    <result property="priceType" jdbcType="VARCHAR" column="price_type" />
     <result property="discountRate" jdbcType="DECIMAL" column="discount_rate" />
     <result property="discountAmount" jdbcType="DECIMAL" column="discount_amount" />
     <result property="salesVolume" jdbcType="DECIMAL" column="sales_volume" />

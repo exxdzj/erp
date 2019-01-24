@@ -26,4 +26,8 @@ public class DictionaryFacade {
     public List<DictionaryInfo> queryDictionary(String dataType){
         return dictService.queryDictionary(dataType);
     }
+
+    public String queryDictName(String dateType, String dictCode){
+        return dictService.queryDictName(dictCode, dateType);
+    }
 }

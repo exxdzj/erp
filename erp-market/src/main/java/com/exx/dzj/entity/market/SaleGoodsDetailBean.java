@@ -1,6 +1,7 @@
 package com.exx.dzj.entity.market;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Data
 @ToString
+@EqualsAndHashCode(of = "id")
 public class SaleGoodsDetailBean implements Serializable {
     private Integer id;
 

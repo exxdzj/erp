@@ -82,4 +82,16 @@ public class PurchaseInfo implements Serializable {
     /***采购员名称***/
     private String purchaseName;
 
+    /*已收款总金额*/
+    private BigDecimal sumCollectedAmount;
+
+    /*收款账户*/
+    private String collectedAmounts;
+
+    /**客户名称**/
+    private String custName;
+
+    /**收款方式**/
+    private String paymentTerm;
+
 }

@@ -13,4 +13,5 @@ import java.io.Serializable;
 public class BaseModule implements Serializable {
     private Integer pageNum;
     private Integer pageSize;
+    private Integer total;
 }

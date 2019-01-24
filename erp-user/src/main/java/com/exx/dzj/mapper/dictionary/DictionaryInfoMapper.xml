@@ -325,4 +325,11 @@
     </if>
     order by di.seq desc
   </select>
+  
+  <select id="queryDictName" resultType="java.lang.String">
+    select
+      dict_name
+    from tab_dictionary_info
+    where data_type=#{dataType} and dict_code=#{dictCode}
+  </select>
 </mapper>

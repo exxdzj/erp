@@ -35,4 +35,6 @@ public interface DictionaryInfoMapper {
      * @return
      */
     List<DictionaryInfo> queryDictionary(@Param("dataType") String dataType);
+
+    String queryDictName(@Param("dictCode") String dictCode, @Param("dataType") String dataType);
 }

@@ -336,4 +336,14 @@
         #{id}
       </foreach>
   </delete>
+
+  <select id="queryPurchaseReceviptDetailList" parameterType="java.lang.String" resultType="com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean">
+    SELECT
+    id AS id,
+    purchase_code AS purchaseCode,
+    collection_account AS collectionAccount,
+    collected_amount AS collectedAmount,
+    payment_method AS paymentMethod
+    FROM tab_purchase_receipts_details WHERE purchase_code=#{purchaseCode}
+  </select>
 </mapper>

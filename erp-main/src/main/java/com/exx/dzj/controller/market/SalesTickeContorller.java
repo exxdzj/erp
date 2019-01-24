@@ -100,7 +100,7 @@ public class SalesTickeContorller {
     public Result updateSaleTicket(HttpServletRequest request, HttpServletResponse response, @RequestBody SaleInfo saleInfo){
         Result result = Result.responseSuccess();
         try {
-//            salesTicketFacade.updateSalesTicket(saleInfo);
+            salesTicketFacade.updateSalesTicket(saleInfo);
         } catch (ErpException e){
             e.printStackTrace();
             result.setCode(Result.FAIL_CODE);
@@ -141,7 +141,7 @@ public class SalesTickeContorller {
     @GetMapping("salecodegenerator")
     public Result querySaleTicketCode(){
         Result result = Result.responseSuccess();
-        String saleCode = "SALECODE" + SingletonGeneratorConfig.getSingleton().next();
+        String saleCode = "SCODE" + SingletonGeneratorConfig.getSingleton().next();
         result.setData(saleCode);
         return result;
     }

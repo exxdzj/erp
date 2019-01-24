@@ -37,4 +37,9 @@ public class DictionaryServiceImpl implements DictionaryService {
     public void saveDictionary(DictionaryInfo info) {
 
     }
+
+    @Override
+    public String queryDictName(String dictCode, String dataType) {
+        return dictionaryMapper.queryDictName(dictCode,dataType);
+    }
 }

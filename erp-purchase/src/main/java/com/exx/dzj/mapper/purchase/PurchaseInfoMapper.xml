@@ -101,6 +101,7 @@
   <!-- 采购单列表查询 -->
   <select id="queryPurchaseTickets" parameterType="com.exx.dzj.entity.purchase.PurchaseInfo" resultType="com.exx.dzj.entity.purchase.PurchaseInfo">
     SELECT
+      PINFO.id AS id,
       PINFO.purchase_code AS purchaseCode,
       PINFO.purchase_date AS purchaseDate,
       SUPPLIER.cust_name AS supplierName,
@@ -112,48 +113,60 @@
       PINFO.due_date AS dueDate,
       PINFO.payment_status AS paymentStatus,
       PINFO.invoice_code AS invoiceCode,
-      UINFO.user_name AS purchaseName,
+      UINFO.real_name AS purchaseName,
       PINFO.create_user AS createUser,
       PINFO.remarks AS remarks
     FROM
         tab_purchase_info PINFO
     LEFT JOIN tab_customer_supplier SUPPLIER ON SUPPLIER.cust_type IN (2,3) AND SUPPLIER.cust_code=PINFO.cust_code
-    LEFT JOIN tab_user_info UINFO ON UINFO.user_code=PINFO.user_code
+    LEFT JOIN tab_user_info UINFO ON UINFO.salesman_code=PINFO.salesman_code
     /*WHERE*/
   </select>
 
   <!-- 采购单详情 -->
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="purchaseMap">
     SELECT
-      id,
-      purchase_code ,
-      user_code ,
-      salesman_code A,
-      cust_code ,
-      purchase_project ,
-      purchase_date ,
-      exchange_rate ,
-      purchase_order_code ,
-      currency AS currency,
-      delivery_order_code ,
-      cust_order_code ,
-      delivery_address ,
-      invoice_code ,
-      bill_type ,
-      total_sum ,
-      discount_amount ,
-      receivable_accoun ,
-      received_amoun ,
-      receipt_num ,
-      collection_terms ,
-      account_period ,
-      due_date ,
-      is_enable ,
-      remarks ,
-      create_user ,
-      create_time
+      PINFO.id,
+      PINFO.purchase_code ,
+      PINFO.user_code ,
+      PINFO.salesman_code ,
+      PINFO.cust_code ,
+      PINFO.payment_term ,
+      CSUPPLIER.cust_name AS custName,
+      UINFO.user_name AS userName,
+      PINFO.purchase_project ,
+      PINFO.purchase_date ,
+      PINFO.exchange_rate ,
+      PINFO.purchase_order_code ,
+      PINFO.currency AS currency,
+      PINFO.delivery_order_code ,
+      IFNULL(SUM(SRDETAIL.collected_amount),0) AS sumCollectedAmount,
+      PINFO.cust_order_code ,
+      PINFO.delivery_address ,
+      PINFO.invoice_code ,
+      PINFO.bill_type ,
+      PINFO.total_sum ,
+      PINFO.discount_amount ,
+      PINFO.receivable_accoun ,
+      PINFO.received_amoun ,
+      PINFO.receipt_num ,
+      PINFO.collection_terms ,
+      PINFO.account_period ,
+      PINFO.due_date ,
+      PINFO.is_enable ,
+      PINFO.remarks ,
+      PINFO.create_user ,
+      PINFO.create_time,
+      CASE
+        WHEN COUNT(SRDETAIL.purchase_code) > 1
+        THEN '1719240000000034'
+        ELSE SRDETAIL.collection_account
+        END collectedAmounts
     FROM tab_purchase_info PINFO
-    WHERE id = #{id,jdbcType=INTEGER}
+    LEFT JOIN tab_purchase_receipts_details SRDETAIL ON PINFO.purchase_code=SRDETAIL.purchase_code
+    LEFT JOIN tab_customer_supplier CSUPPLIER ON PINFO.cust_code=CSUPPLIER.cust_code
+    LEFT JOIN tab_user_info UINFO ON PINFO.salesman_code = UINFO.salesman_code
+    WHERE PINFO.id = #{id,jdbcType=INTEGER}
   </select>
   <resultMap id="purchaseMap" type="com.exx.dzj.entity.purchase.PurchaseInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
@@ -183,6 +196,7 @@
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="payment_term" jdbcType="VARCHAR" property="paymentTerm" />
     <!-- 采购单关联采购收款单 -->
     <collection property="purchaseReceiptsDetailsBeans" column="purchase_code" ofType="com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean" javaType="java.util.List"
                 select="com.exx.dzj.mapper.purchase.PurchaseReceiptsDetailsBeanMapper.queryPurchaseTicketRelevanceReceipts" />
@@ -213,7 +227,7 @@
       received_amoun, receipt_num, collection_terms, 
       account_period, due_date, is_enable, 
       remarks, create_time, create_user, 
-      update_time, update_user)
+      update_time, update_user,payment_term)
     values (#{id,jdbcType=INTEGER}, #{purchaseCode,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, 
       #{salesmanCode,jdbcType=VARCHAR}, #{custCode,jdbcType=VARCHAR}, #{purchaseProject,jdbcType=VARCHAR}, 
       #{purchaseDate,jdbcType=DATE}, #{purchaseOrderCode,jdbcType=VARCHAR}, #{currency,jdbcType=VARCHAR}, 
@@ -223,7 +237,7 @@
       #{receivedAmoun,jdbcType=DECIMAL}, #{receiptNum,jdbcType=VARCHAR}, #{collectionTerms,jdbcType=VARCHAR}, 
       #{accountPeriod,jdbcType=INTEGER}, #{dueDate,jdbcType=DATE}, #{isEnable,jdbcType=INTEGER}, 
       #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},#{paymentTerm})
   </insert>
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.purchase.PurchaseInfo">
     insert into tab_purchase_info
@@ -311,6 +325,9 @@
       </if>
       <if test="updateUser != null">
         update_user,
+      </if>
+      <if test="paymentTerm != null">
+        payment_term,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -400,6 +417,9 @@
       </if>
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTerm != null">
+        #{paymentTerm,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -625,6 +645,9 @@
       </if>
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTerm != null">
+        payment_term = #{paymentTerm,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

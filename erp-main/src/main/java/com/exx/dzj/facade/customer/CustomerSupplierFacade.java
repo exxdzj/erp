@@ -262,8 +262,8 @@ public class CustomerSupplierFacade {
     }
 
 
-    public List<CustomerSupplierInfo> queryCustomerPullDownInfo(){
-        return customerSupplierService.queryCustomerPullDownInfo();
+    public List<CustomerSupplierInfo> queryCustomerPullDownInfo(Integer type){
+        return customerSupplierService.queryCustomerPullDownInfo(type);
     }
 
     /**

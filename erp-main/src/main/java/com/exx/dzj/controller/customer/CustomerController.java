@@ -155,10 +155,10 @@ public class CustomerController {
      * @param
      * @return com.exx.dzj.result.Result
      */
-    @GetMapping("querycustomerpulldowninfo")
-    public Result queryCustomerPullDownInfo(){
+    @GetMapping("querycustomerpulldowninfo/{type}")
+    public Result queryCustomerPullDownInfo(@PathVariable("type") Integer type){
         Result result = Result.responseSuccess();
-        List<CustomerSupplierInfo> customers = customerSupplierFacade.queryCustomerPullDownInfo();
+        List<CustomerSupplierInfo> customers = customerSupplierFacade.queryCustomerPullDownInfo(type);
         result.setData(customers);
         return result;
     }

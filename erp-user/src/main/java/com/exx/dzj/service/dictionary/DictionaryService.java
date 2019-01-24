@@ -23,4 +23,6 @@ public interface DictionaryService {
      * @param info
      */
     void saveDictionary(DictionaryInfo info);
+
+    String queryDictName(String dictCode, String dataType);
 }

@@ -15,4 +15,7 @@ public interface PurchaseReceiptsService {
     void batchUpdatePurchaseReceiptsDetails(List<PurchaseReceiptsDetailsBean> purchaseReceiptsDetailsBeans);
 
     void batchDeletePurchaseReceipts(List<Integer> receiptIds);
+
+    List<PurchaseReceiptsDetailsBean> queryPurchaseReceviptDetailList(String purchaseCode);
+
 }

@@ -33,4 +33,9 @@ public class PurchaseReceiptsServiceImpl implements PurchaseReceiptsService {
     public void batchDeletePurchaseReceipts(List<Integer> receiptIds) {
         purchaseReceiptsDetailsBeanMapper.batchDeletePurchaseReceipts(receiptIds);
     }
+
+    @Override
+    public List<PurchaseReceiptsDetailsBean> queryPurchaseReceviptDetailList(String purchaseCode) {
+        return purchaseReceiptsDetailsBeanMapper.queryPurchaseReceviptDetailList(purchaseCode);
+    }
 }

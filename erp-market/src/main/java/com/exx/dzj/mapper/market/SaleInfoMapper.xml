@@ -114,7 +114,7 @@
       DICTIONPAY.dict_name AS paymentStatus,
       SINFO.invoice_code AS invoiceCode,
       DICTIONPRO.dict_name AS saleProject,
-      UINFO.user_name AS userName,
+      UINFO.real_name AS userName,
       SINFO.user_code AS userCode,
       SINFO.create_user AS createUser,
       SINFO.remarks AS remarks
@@ -122,7 +122,7 @@
     LEFT JOIN tab_dictionary_info DICTIONPAY ON SINFO.payment_status=DICTIONPAY.dict_code AND DICTIONPAY.data_type='collection_status'
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code
-    LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
+    LEFT JOIN tab_user_info UINFO ON SINFO.salesman_code = UINFO.salesman_code
     WHERE 1=1
       <if test="saleCode != null and saleCode != ''">
         AND  SINFO.sale_code = #{saleCode}
@@ -164,6 +164,7 @@
       SINFO.create_time ,
       SINFO.remarks ,
       SINFO.create_user ,
+      SINFO.payment_term ,
       SINFO.payment_status,
       CASE
         WHEN COUNT(SRDETAIL.sale_code) > 1
@@ -203,6 +204,7 @@
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
     <result column="create_user" jdbcType="VARCHAR" property="createUser" />
     <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+    <result column="payment_term" jdbcType="VARCHAR" property="paymentTerm" />
     <!-- 查询关联收款记录 -->
     <collection property="saleReceiptsDetailsList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleReceiptsDetails" javaType="java.util.List"
       select="com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper.querySaleReceiptsDetailsList" />
@@ -332,6 +334,9 @@
       <if test="updateUser != null">
         update_user,
       </if>
+      <if test="paymentTerm != null">
+        payment_term,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -420,6 +425,9 @@
       </if>
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTerm != null">
+        #{paymentTerm,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

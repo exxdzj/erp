@@ -52,7 +52,7 @@ public interface CustomerService {
      */
     List<CustomerSupplierInfo> getCustomerSupplierExcelList(CustomerSupplierQuery query);
 
-    List<CustomerSupplierInfo> queryCustomerPullDownInfo();
+    List<CustomerSupplierInfo> queryCustomerPullDownInfo(Integer type);
 
     /**
      * 导入 excel 数据
