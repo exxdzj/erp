@@ -54,6 +54,7 @@ public class SalesTicketFacade {
         Optional.of(saleInfo);
         List<SaleGoodsDetailBean> goodsDetailBeanList = saleInfo.getSaleGoodsDetailBeanList();
         List<SaleReceiptsDetails> receiptsDetailsList = saleInfo.getSaleReceiptsDetailsList();
+        setPaymentStatus(saleInfo);
         salesTicketService.saveSaleInfo(saleInfo);
         if(!CollectionUtils.isEmpty(goodsDetailBeanList)){
             goodsDetailBeanList = setGoodsSaleCode(goodsDetailBeanList, saleInfo.getSaleCode());
@@ -90,6 +91,17 @@ public class SalesTicketFacade {
         return saleReceiptsDetails;
     }
 
+    private SaleInfo setPaymentStatus (SaleInfo saleInfo){
+        if (saleInfo.getSumCollectedAmount().doubleValue() == 0){
+            saleInfo.setPaymentStatus("cs01");
+        } else if (saleInfo.getSumCollectedAmount().doubleValue() == saleInfo.getReceivableAccoun().doubleValue()){
+            saleInfo.setPaymentStatus("cs03");
+        } else {
+            saleInfo.setPaymentStatus("cs02");
+        }
+        return saleInfo;
+    }
+
     /**
      * @description 更新
      * @author yangyun
@@ -101,6 +113,7 @@ public class SalesTicketFacade {
     public void updateSalesTicket(SaleInfo saleInfo){
 //        saleInfo = calculatePrice(saleInfo);
         Optional.ofNullable(saleInfo);
+        setPaymentStatus(saleInfo);
         salesTicketService.updateSalesTicketById(saleInfo);
 
         SaleInfo oldSaleInfo = querySalesTicketById(saleInfo.getId());
@@ -198,7 +211,7 @@ public class SalesTicketFacade {
     }
 
     /**
-     * @description 用于价格计算
+     * @description 用于判断状态
      * @author yangyun
      * @date 2019/1/11 0011
      * @param saleInfo
@@ -208,11 +221,11 @@ public class SalesTicketFacade {
         // 计算已收款金额
         List<SaleReceiptsDetails> saleReceiptsDetailsList = saleInfo.getSaleReceiptsDetailsList();
         double sumCollectedAmount = 0.00;
-        if(Optional.of(saleReceiptsDetailsList).isPresent()) {
+        if(Optional.ofNullable(saleReceiptsDetailsList).isPresent()) {
             sumCollectedAmount = saleReceiptsDetailsList.stream()
                     .mapToDouble((o) -> o.getCollectedAmount().doubleValue())
                     .sum();
-            saleInfo.setReceivedAmoun(new BigDecimal(sumCollectedAmount));
+//            if
         }
         List<SaleGoodsDetailBean> saleGoodsDetailBeanList = saleInfo.getSaleGoodsDetailBeanList();
         return saleInfo;

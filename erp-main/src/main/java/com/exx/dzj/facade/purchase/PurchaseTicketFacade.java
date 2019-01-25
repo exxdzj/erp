@@ -47,6 +47,14 @@ public class PurchaseTicketFacade {
         Optional.of(purchaseInfo);
         List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans = purchaseInfo.getPurchaseGoodsDetailBeans();
         List<PurchaseReceiptsDetailsBean> purchaseReceiptsDetailsBeans = purchaseInfo.getPurchaseReceiptsDetailsBeans();
+        setStatus(purchaseInfo);
+//        if (purchaseInfo.getSumCollectedAmount().doubleValue() == 0){
+//            purchaseInfo.setPaymentStatus("cs01");
+//        } else if (purchaseInfo.getSumCollectedAmount().doubleValue() == purchaseInfo.getReceivableAccoun().doubleValue()){
+//            purchaseInfo.setPaymentStatus("cs03");
+//        } else {
+//            purchaseInfo.setPaymentStatus("cs02");
+//        }
         purchaseTicketService.savePurchaseTicket(purchaseInfo);
 
         if (!CollectionUtils.isEmpty(purchaseGoodsDetailBeans)){
@@ -74,6 +82,17 @@ public class PurchaseTicketFacade {
         return purchaseReceiptsDetailsBeans;
     }
 
+    private PurchaseInfo setStatus (PurchaseInfo purchaseInfo){
+        if (purchaseInfo.getSumCollectedAmount().doubleValue() == 0){
+            purchaseInfo.setPaymentStatus("cs01");
+        } else if (purchaseInfo.getSumCollectedAmount().doubleValue() == purchaseInfo.getReceivableAccoun().doubleValue()){
+            purchaseInfo.setPaymentStatus("cs03");
+        } else {
+            purchaseInfo.setPaymentStatus("cs02");
+        }
+        return purchaseInfo;
+    }
+
     /**
      * @description 采购单列表查询
      * @author yangyun
@@ -97,6 +116,7 @@ public class PurchaseTicketFacade {
     @Transactional
     public void updatePurchaseTicket(PurchaseInfo purchaseInfo){
         Optional.of(purchaseInfo);
+        setStatus(purchaseInfo);
         purchaseTicketService.updatePurchaseTicket(purchaseInfo);
 
         PurchaseInfo oldPurchaseInfo = purchaseTicketService.queryPurchaseTicketDetail(purchaseInfo.getId());
