@@ -1,7 +1,7 @@
 spring:
     datasource:
         name: dzj
-        url: jdbc:mysql://192.168.0.134:3306/erp?useUnicode=true&amp;characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=true
+        url: jdbc:mysql://192.168.5.89:3306/erp?useUnicode=true&amp;characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=true
         username: dzj-app
         password: dzjapp
         # \u4F7F\u7528druid\u6570\u636E\u6E90
