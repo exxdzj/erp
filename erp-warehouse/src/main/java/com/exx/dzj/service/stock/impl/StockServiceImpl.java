@@ -119,7 +119,7 @@ public class StockServiceImpl implements StockService {
      * @return
      */
     @Override
-    public void delStockInfo(String stockCodes, int isEnable) {
+    public void delStockInfo(String stockCodes, int isEnable, String userCode) {
         try{
             String comma = ",";
             List<String> list = new ArrayList<>();
@@ -130,7 +130,7 @@ public class StockServiceImpl implements StockService {
             } else {
                 list.add(stockCodes);
             }
-            stockMapper.shelvesStock(null, isEnable, list);
+            stockMapper.shelvesStock(null, isEnable, list, userCode);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", StockServiceImpl.class.getName()+".delStockInfo", ex.getMessage());
             throw new ErpException(400, "删除存货数据失败!");
@@ -147,7 +147,7 @@ public class StockServiceImpl implements StockService {
      */
     @Override
     @Transactional(rollbackFor = ErpException.class)
-    public void shelvesStock(String isShelves, String stockCodes){
+    public void shelvesStock(String isShelves, String stockCodes, String userCode){
         try{
             String comma = ",";
             List<String> list = new ArrayList<String>();
@@ -158,14 +158,18 @@ public class StockServiceImpl implements StockService {
             } else {
                 list.add(stockCodes);
             }
-            stockMapper.shelvesStock(isShelves, null, list);
+            stockMapper.shelvesStock(isShelves, null, list, userCode);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", StockServiceImpl.class.getName()+".shelvesStock", ex.getMessage());
             throw new ErpException(400, "删除存货数据失败!");
         }
     }
 
-
+    /**
+     * 保存 存货数据
+     * @param stockInfo
+     */
+    @Override
     public void insertStockInfo(StockInfo stockInfo) {
         stockMapper.insertSelective(stockInfo);
     }

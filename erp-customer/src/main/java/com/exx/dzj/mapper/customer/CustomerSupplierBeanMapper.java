@@ -49,7 +49,7 @@ public interface CustomerSupplierBeanMapper {
      * @param isEnable
      * @return
      */
-    int modifyCustomerSupplierDataStatus(@Param("custCodes")List<String> custCodes, @Param("isEnable")int isEnable);
+    int modifyCustomerSupplierDataStatus(@Param("custCodes")List<String> custCodes, @Param("isEnable")int isEnable, @Param("userCode") String userCode);
 
     /**
      * 查询 需要导出的 excel 数据

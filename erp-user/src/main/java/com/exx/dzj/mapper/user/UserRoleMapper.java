@@ -28,4 +28,6 @@ public interface UserRoleMapper {
     int updateByPrimaryKeySelective(UserRole record);
 
     int updateByPrimaryKey(UserRole record);
+
+    List<String> queryUserRoles(@Param("userCode")String userCode);
 }

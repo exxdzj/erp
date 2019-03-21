@@ -5,6 +5,7 @@ import com.exx.dzj.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,16 +24,13 @@ public class UserController {
     private UserFacade userFacade;
 
     /**
-     * 当用户登录成功后,进入主页获取用户信息
+     * 当用户登录成功后,进入主页通过 token 获取用户信息和用户角色
      * @return
      */
-    @GetMapping("getUserInfo")
-    public Result getUserInfo(HttpServletRequest request){
+    @GetMapping("getUserRoles")
+    public Result getUserInfo(HttpServletRequest request, @RequestParam(value="token") String token){
         Result result = Result.responseSuccess();
-        HttpSession session = request.getSession(true);
-        //分布式环境下不要将 token 放在 session 对象中, 最好是放在分布式缓存中间件,例如 redis
-        String token = (String)session.getAttribute("userToken");
-        result.setData(userFacade.getUserInfo(token));
+        result.setData(userFacade.getUserRoles(token));
         return result;
     }
 

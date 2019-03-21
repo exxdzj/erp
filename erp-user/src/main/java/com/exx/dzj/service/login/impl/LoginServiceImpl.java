@@ -3,6 +3,7 @@ package com.exx.dzj.service.login.impl;
 import com.exx.dzj.entity.login.LoginInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.entity.user.UserInfoExample;
+import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.mapper.user.UserInfoMapper;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.login.LoginService;
@@ -41,20 +42,18 @@ public class LoginServiceImpl implements LoginService {
         Result result = Result.responseSuccess();
 
         //首先判断用户是否存在，用户名和密码是否错误
-        UserInfoExample example = new UserInfoExample();
-        UserInfoExample.Criteria criteria = example.createCriteria();
-        criteria.andUserNameEqualTo(loginInfo.getUsername());
-        criteria.andPassWordEqualTo(loginInfo.getPassword());
-        List<UserInfo> userList = userMapper.selectByExample(example);
-        if(null == userList || userList.isEmpty()){
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName(loginInfo.getUsername());
+        userInfo.setPassWord(loginInfo.getPassword());
+        UserVo userVo = userMapper.queryUserInfo(userInfo);
+        if(null == userVo){
             result.setCode(400);
             result.setMsg("用户或密码错误!");
             return result;
         }
 
-        UserInfo userInfo = userList.get(0);
-        //用户存在, 则生成 userToken, 并保存到数据库重
-        String userToken = tokenService.getUserToken(userInfo.getUserCode());
+        //用户存在, 则生成 userToken, 并保存到数据库
+        String userToken = tokenService.getUserToken(userVo.getUserCode());
         if(StringUtils.isNotBlank(userToken)){
             loginInfo.setUsertoken(userToken);
         }

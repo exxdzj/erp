@@ -5,6 +5,7 @@ import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockInfo;
 import com.exx.dzj.entity.stock.StockQuery;
+import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.dictionary.DictionaryService;
 import com.exx.dzj.service.stock.StockService;
@@ -28,6 +29,8 @@ public class StockFacade {
     private StockService stockInfoService;
     @Autowired
     private DictionaryService dictService;
+    @Autowired
+    UserTokenFacade userTokenFacade;
 
     /**
      * 查询 客户或供应商列表数据
@@ -57,19 +60,6 @@ public class StockFacade {
             stockBean.setImages(stockBean.getPictures().split(","));
         }
 
-        /**
-         * 存货类别
-         */
-        //List<DictionaryInfo> inventoryTypes = dictService.queryDictionary(CommonConstant.INVENTORY_TYPE);
-        /**
-         * 存货地址
-         */
-        //List<DictionaryInfo> inventoryAdds = dictService.queryDictionary(CommonConstant.INVENTORY_SHIP_ADDRESS);
-
-        /*map.put("stockBean", stockBean);
-        map.put("inventoryTypes", inventoryTypes);
-        map.put("inventoryAdds", inventoryAdds);
-        result.setData(map);*/
         result.setData(stockBean);
         return result;
     }
@@ -82,6 +72,9 @@ public class StockFacade {
     public Result saveStockInfo(StockBean bean) {
         Result result = Result.responseSuccess();
         try{
+            String userCode = userTokenFacade.queryUserCodeForToken(null);
+            bean.setCreateUser(userCode);
+            bean.setUpdateUser(userCode);
             stockInfoService.saveStockInfo(bean);
         } catch (Exception ex){
             result.setCode(400);
@@ -98,7 +91,8 @@ public class StockFacade {
     public Result delStockInfo(String stockCode) {
         Result result = Result.responseSuccess();
         try{
-            stockInfoService.delStockInfo(stockCode, CommonConstant.DEFAULT_VALUE_ZERO);
+            String userCode = userTokenFacade.queryUserCodeForToken(null);
+            stockInfoService.delStockInfo(stockCode, CommonConstant.DEFAULT_VALUE_ZERO, userCode);
         }catch(Exception ex){
             result.setCode(400);
             result.setMsg("删除数据失败!");
@@ -115,7 +109,8 @@ public class StockFacade {
     public Result shelvesStock(String isShelves, String stockCode) {
         Result result = Result.responseSuccess();
         try{
-            stockInfoService.shelvesStock(isShelves, stockCode);
+            String userCode = userTokenFacade.queryUserCodeForToken(null);
+            stockInfoService.shelvesStock(isShelves, stockCode, userCode);
         }catch(Exception ex){
             result.setCode(400);
             result.setMsg("操作失败!");

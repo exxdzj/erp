@@ -44,7 +44,7 @@ public interface CustomerService {
      * 删除 客户或供应商数据
      * @param custCodes
      */
-    void delCustomerSupplier(String custCodes, int isEnable);
+    void delCustomerSupplier(String custCodes, int isEnable, String userCode);
 
     /**
      * 查询 导出 excel 的数据

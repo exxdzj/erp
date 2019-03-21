@@ -93,7 +93,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param custCodes
      */
     @Override
-    public void delCustomerSupplier(String custCodes, int isEnable){
+    public void delCustomerSupplier(String custCodes, int isEnable, String userCode){
         try{
             String comma = ",";
             List<String> list = new ArrayList<String>();
@@ -104,7 +104,7 @@ public class CustomerServiceImpl implements CustomerService {
             } else {
                 list.add(custCodes);
             }
-            csMapper.modifyCustomerSupplierDataStatus(list, isEnable);
+            csMapper.modifyCustomerSupplierDataStatus(list, isEnable, userCode);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", CustomerServiceImpl.class.getName()+".delCustomerSupplier", ex.getMessage());
             throw new ErpException(400, "删除客户或供应商基础信息失败!");

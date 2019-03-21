@@ -37,7 +37,7 @@ public interface StockService {
      * 删除 存货
      * @return
      */
-    void delStockInfo(String stockCodes, int isEnable);
+    void delStockInfo(String stockCodes, int isEnable, String userCode);
 
     /**
      * 上架-下架
@@ -45,7 +45,11 @@ public interface StockService {
      * @param stockCodes
      * @return
      */
-    void shelvesStock(String isShelves, String stockCodes);
+    void shelvesStock(String isShelves, String stockCodes, String userCode);
 
+    /**
+     * 保存 存货数据
+     * @param stockInfo
+     */
     void insertStockInfo(StockInfo stockInfo);
 }

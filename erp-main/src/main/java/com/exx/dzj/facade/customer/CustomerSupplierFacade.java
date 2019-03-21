@@ -9,6 +9,7 @@ import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.excepte.ErpException;
+import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.accountatt.AccountAttributeService;
 import com.exx.dzj.service.accountatt.impl.AccountAttributeServiceImpl;
@@ -54,19 +55,8 @@ public class CustomerSupplierFacade {
     private DictionaryService dictService;
     @Autowired
     private UserService salesmanService;
-
-    /**@Autowired
-    public  CustomerSupplierFacade(CustomerService customerService,
-                                        ContactWayService contactWayService,
-                                        AccountAttributeService accountAttributeService,
-                                        DictionaryService dictionaryService,
-                                        UserService userService){
-        this.customerService = customerService;
-        this.contactWayService = contactWayService;
-        this.accountAttributeService = accountAttributeService;
-        this.dictionaryService = dictionaryService;
-        this.userService = userService;
-    }*/
+    @Autowired
+    private UserTokenFacade userTokenFacade;
 
     /**
      * 查询 客户或供应商列表数据
@@ -86,46 +76,8 @@ public class CustomerSupplierFacade {
     public Result queryCustomerSupplierInfo(int custType, String custCode) {
         Result result = Result.responseSuccess();
 
-
         //查询详细信息
-        CustomerSupplierInfo customerInfo = customerSupplierService.queryCustomerSupplierInfo(custCode);
-
-        //在查询详细信息时把下拉框数据一起查询,可以减少后台请求次数
-        /** Map<String, Object> map = new HashMap<>();
-        map.put("customerInfo", customerInfo);
-        if(custType == CommonConstant.DEFAULT_VALUE_ONE){
-            //查询-类别(客户)
-            List<DictionaryInfo> customerClasses = dictService.queryDictionary(CommonConstant.CUSTOMER_CATEGORY);
-            map.put("customerClasses", customerClasses);
-
-            //查询-发货地点(客户)<暂时没有数据>
-            List<DictionaryInfo> shipAddress = dictService.queryDictionary(CommonConstant.INVENTORY_SHIP_ADDRESS);
-            map.put("shipAddress", shipAddress);
-
-            //查询-开票类型(客户)
-            List<DictionaryInfo> billingTypes = dictService.queryDictionary(CommonConstant.BILLING_TYPE);
-            map.put("billingTypes", billingTypes);
-        }
-
-        if(custType == CommonConstant.DEFAULT_VALUE_TWO){
-            //查询-类别(供应商)
-            List<DictionaryInfo> supplierClasses = dictService.queryDictionary(CommonConstant.SUPPLIER_SATEGORY);
-            map.put("supplierClasses", supplierClasses);
-        }
-
-        //查询-地区
-        List<DictionaryInfo> regions = dictService.queryDictionary(CommonConstant.ERP_REGION);
-        map.put("regions", regions);
-
-        //查询-收付款方式
-        List<DictionaryInfo> paymentMethods = dictService.queryDictionary(CommonConstant.RECEIVABLES_PAYMENT_METHOD);
-        map.put("paymentMethods", paymentMethods);
-
-        //查询-业务员
-        List<UserInfo> salesmans = salesmanService.querySalesman();
-        map.put("salesmans", salesmans);
-        result.setData(map);*/
-        result.setData(customerInfo);
+        result.setData(customerSupplierService.queryCustomerSupplierInfo(custCode));
         return result;
     }
 
@@ -182,6 +134,7 @@ public class CustomerSupplierFacade {
                                        int custType) throws ErpException{
         Result result = Result.responseSuccess();
         try{
+            String userCode = userTokenFacade.queryUserCodeForToken(null);
             CustomerSupplierBean customerBean = new CustomerSupplierBean();
             ContactWayBean contactWayBean = new ContactWayBean();
             AccountAttributeBean accountBean = new AccountAttributeBean();
@@ -191,6 +144,8 @@ public class CustomerSupplierFacade {
             BeanUtils.copyProperties(bean, accountBean);
             customerBean.setSource(custType);
             if(StringUtils.isNotBlank(customerBean.getCustCode())){
+                customerBean.setCreateUser(userCode);
+                customerBean.setUpdateUser(userCode);
                 //修改
                 customerSupplierService.modifyCustomerSupplier(customerBean);
 
@@ -198,6 +153,8 @@ public class CustomerSupplierFacade {
                 accountBean.setCustCode(null);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(contactWayBean)){
                     contactWayBean.setCustCode(customerBean.getCustCode());
+                    contactWayBean.setCreateUser(userCode);
+                    contactWayBean.setUpdateUser(userCode);
                     int count = contactwayService.modifyContactWay(contactWayBean);
                     if(count == 0){
                         contactwayService.saveContactWay(contactWayBean);
@@ -205,6 +162,8 @@ public class CustomerSupplierFacade {
                 }
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(accountBean)){
                     accountBean.setCustCode(customerBean.getCustCode());
+                    accountBean.setCreateUser(userCode);
+                    accountBean.setUpdateUser(userCode);
                     int count = accountAttService.modifyAccountAttribute(accountBean);
                     if(count == 0) {
                         accountAttService.saveAccountAttribute(accountBean);
@@ -222,13 +181,19 @@ public class CustomerSupplierFacade {
                 IdGenerator idGenerator = new DefaultIdGenerator(config);
                 String custCode = idGenerator.next();
                 customerBean.setCustCode(custCode);
+                customerBean.setCreateUser(userCode);
+                customerBean.setUpdateUser(userCode);
                 //新增
                 customerSupplierService.saveCustomerSupplier(customerBean);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(contactWayBean)){
+                    contactWayBean.setCreateUser(userCode);
+                    contactWayBean.setUpdateUser(userCode);
                     contactWayBean.setCustCode(custCode);
                     contactwayService.saveContactWay(contactWayBean);
                 }
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(accountBean)){
+                    accountBean.setCreateUser(userCode);
+                    accountBean.setUpdateUser(userCode);
                     accountBean.setCustCode(custCode);
                     accountAttService.saveAccountAttribute(accountBean);
                 }
@@ -257,7 +222,8 @@ public class CustomerSupplierFacade {
      */
     public Result delCustomerSupplier(String custCodes){
         Result result = Result.responseSuccess();
-        customerSupplierService.delCustomerSupplier(custCodes, CommonConstant.DEFAULT_VALUE_ZERO);
+        String userCode = userTokenFacade.queryUserCodeForToken(null);
+        customerSupplierService.delCustomerSupplier(custCodes, CommonConstant.DEFAULT_VALUE_ZERO, userCode);
         return result;
     }
 

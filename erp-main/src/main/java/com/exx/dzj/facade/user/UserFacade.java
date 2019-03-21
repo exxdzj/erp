@@ -1,7 +1,9 @@
 package com.exx.dzj.facade.user;
 
 import com.exx.dzj.entity.user.UserInfo;
+import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.service.user.UserRoleService;
 import com.exx.dzj.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,14 +24,33 @@ public class UserFacade {
     @Autowired
     private UserService salesmanService;
 
+    @Autowired
+    private UserRoleService userRolesService;
+
+    /**
+     * 获取用户信息和用户角色
+     * @param userToken
+     * @return
+     */
+    public UserVo getUserRoles(String userToken){
+        UserVo userVo = this.getUserInfo(userToken);
+        // 查询用户角色
+        if(null != userVo){
+            userVo.setRoles(userRolesService.queryUserRoles(userVo.getUserCode()));
+        }
+        return userVo;
+    }
+
     /**
      * 获取 用户信息
      * @return
      */
-    public UserInfo getUserInfo(String userToken){
-
+    public UserVo getUserInfo(String userToken){
+        // 通过 userToken 获取用户信息
         String userCode = userTokenFacade.queryUserCodeForToken(userToken);
-        return salesmanService.queryUserInfo(userCode);
+        UserInfo info = new UserInfo();
+        info.setUserCode(userCode);
+        return salesmanService.queryUserInfo(info);
     }
 
     /**

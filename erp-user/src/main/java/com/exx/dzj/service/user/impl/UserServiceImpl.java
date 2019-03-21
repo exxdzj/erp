@@ -1,6 +1,7 @@
 package com.exx.dzj.service.user.impl;
 
 import com.exx.dzj.entity.user.UserInfo;
+import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.mapper.user.UserInfoMapper;
 import com.exx.dzj.service.user.UserService;
@@ -49,12 +50,12 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 查询 用户详细信息
-     * @param userCode
+     * 通过 用户名和密码获取用户信息
+     * @param info
      * @return
      */
     @Override
-    public UserInfo queryUserInfo(String userCode){
-        return userMapper.selectByPrimaryKey(userCode);
+    public UserVo queryUserInfo(UserInfo info) {
+        return userMapper.queryUserInfo(info);
     }
 }

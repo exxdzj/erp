@@ -2,6 +2,7 @@ package com.exx.dzj.mapper.user;
 
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.entity.user.UserInfoExample;
+import com.exx.dzj.entity.user.UserVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public interface UserInfoMapper {
     int insertSelective(UserInfo record);
 
     List<UserInfo> selectByExample(UserInfoExample example);
+
+    UserVo queryUserInfo(UserInfo record);
 
     UserInfo selectByPrimaryKey(String userCode);
 

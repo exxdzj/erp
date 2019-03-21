@@ -17,6 +17,22 @@
     <result column="last_signin_time" jdbcType="TIMESTAMP" property="lastSigninTime" />
     <result column="last_signout_time" jdbcType="TIMESTAMP" property="lastSignoutTime" />
   </resultMap>
+
+  <resultMap id="UserBaseResultMap" type="com.exx.dzj.entity.user.UserVo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_code" jdbcType="VARCHAR" property="userCode" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="pass_word" jdbcType="VARCHAR" property="passWord" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="dept_code" jdbcType="VARCHAR" property="deptCode" />
+    <result column="salesman_code" jdbcType="VARCHAR" property="salesmanCode" />
+    <result column="head_img" jdbcType="VARCHAR" property="headImg" />
+    <result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="is_quit" jdbcType="INTEGER" property="isQuit" />
+    <result column="login_status" jdbcType="INTEGER" property="loginStatus" />
+  </resultMap>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -46,6 +62,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -75,6 +92,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List">
     id, user_code, user_name, pass_word, real_name, dept_code, salesman_code, head_img, 
     phone_num, email, is_quit, login_status, last_signin_time, last_signout_time
@@ -93,6 +111,23 @@
     <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
+  </select>
+
+  <select id="queryUserInfo" parameterType="com.exx.dzj.entity.user.UserInfo" resultMap="UserBaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tab_user_info
+    where is_quit = 1
+    <if test="userCode != null and userCode!=''">
+      and user_code = #{userCode,jdbcType=VARCHAR}
+    </if>
+    <if test="userName != null and userName!=''">
+      and user_name = #{userName,jdbcType=VARCHAR}
+    </if>
+    <if test="passWord != null and passWord!=''">
+      and pass_word = #{passWord,jdbcType=VARCHAR}
+    </if>
+    LIMIT 1
   </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">

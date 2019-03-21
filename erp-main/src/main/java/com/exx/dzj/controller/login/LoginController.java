@@ -43,12 +43,6 @@ public class LoginController {
             return result;
         }
         result = loginFacade.signIn(loginInfo);
-        //前期处理(实际上应该放在 header域或者 redis)
-        loginInfo = (LoginInfo)result.getData();
-        if(null != loginInfo && StringUtils.isNotBlank(loginInfo.getUsername())) {
-            HttpSession session = request.getSession(true);
-            session.setAttribute("userToken", loginInfo.getUsername());
-        }
         return result;
     }
 

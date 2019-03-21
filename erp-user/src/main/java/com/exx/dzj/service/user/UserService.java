@@ -1,6 +1,7 @@
 package com.exx.dzj.service.user;
 
 import com.exx.dzj.entity.user.UserInfo;
+import com.exx.dzj.entity.user.UserVo;
 
 import java.util.List;
 
@@ -25,8 +26,8 @@ public interface UserService {
 
     /**
      * 查询 用户详细信息
-     * @param userCode
+     * @param info
      * @return
      */
-    UserInfo queryUserInfo(String userCode);
+    UserVo queryUserInfo(UserInfo info);
 }

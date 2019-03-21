@@ -526,7 +526,7 @@
 
   <!-- 修改数据状态 -->
   <update id="modifyCustomerSupplierDataStatus">
-    update tab_customer_supplier cs set cs.is_enable = #{isEnable}
+    update tab_customer_supplier cs set cs.is_enable = #{isEnable}, cs.update_user = #{userCode}
     <choose>
       <when test="custCodes!=null">
         where cs.cust_code in
