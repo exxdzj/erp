@@ -16,5 +16,10 @@ import java.util.List;
 @ToString
 public class UserVo extends UserInfo implements Serializable {
 
+    /**
+     * 角色
+     */
     private List<String> roles;
+
+    private String userToken;
 }

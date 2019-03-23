@@ -2,7 +2,6 @@ package com.exx.dzj.service.login.impl;
 
 import com.exx.dzj.entity.login.LoginInfo;
 import com.exx.dzj.entity.user.UserInfo;
-import com.exx.dzj.entity.user.UserInfoExample;
 import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.mapper.user.UserInfoMapper;
 import com.exx.dzj.result.Result;
@@ -55,9 +54,10 @@ public class LoginServiceImpl implements LoginService {
         //用户存在, 则生成 userToken, 并保存到数据库
         String userToken = tokenService.getUserToken(userVo.getUserCode());
         if(StringUtils.isNotBlank(userToken)){
-            loginInfo.setUsertoken(userToken);
+            //loginInfo.setUsertoken(userToken);
+            userVo.setUserToken(userToken);
         }
-        result.setData(loginInfo);
+        result.setData(userVo);
         return result;
     }
 

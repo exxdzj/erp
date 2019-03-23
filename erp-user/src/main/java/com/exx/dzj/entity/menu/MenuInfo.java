@@ -3,30 +3,43 @@ package com.exx.dzj.entity.menu;
 import lombok.Data;
 import lombok.ToString;
 
-import java.io.Serializable;
-
 @Data
 @ToString
-public class MenuInfo implements Serializable {
+public class MenuInfo {
     private Integer id;
 
     private String menuCode;
+
+    private String parentCode;
 
     private String menuName;
 
     private String menuUrl;
 
-    private String menuDict;
+    private String component;
 
-    private String parentCode;
+    private String redirect;
 
-    private Integer isEnable;
+    private Integer menuType;
 
-    private String iconid;
+    private String perms;
+
+    private String icon;
 
     private String deskIconid;
+
+    private boolean alwaysShow;
+
+    private Integer isLeaf;
+
+    private boolean hidden;
+
+    private String menuDict;
 
     private Integer seq;
 
     private Integer menuLevel;
+
+    private Integer isEnable;
+
 }

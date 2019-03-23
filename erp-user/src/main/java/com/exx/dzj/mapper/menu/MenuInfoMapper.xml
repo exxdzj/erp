@@ -4,15 +4,22 @@
   <resultMap id="BaseResultMap" type="com.exx.dzj.entity.menu.MenuInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="menu_code" jdbcType="VARCHAR" property="menuCode" />
+    <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
     <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
     <result column="menu_url" jdbcType="VARCHAR" property="menuUrl" />
-    <result column="menu_dict" jdbcType="VARCHAR" property="menuDict" />
-    <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
-    <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
-    <result column="iconid" jdbcType="VARCHAR" property="iconid" />
+    <result column="component" jdbcType="VARCHAR" property="component" />
+    <result column="redirect" jdbcType="VARCHAR" property="redirect" />
+    <result column="menu_type" jdbcType="INTEGER" property="menuType" />
+    <result column="perms" jdbcType="VARCHAR" property="perms" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="desk_iconid" jdbcType="VARCHAR" property="deskIconid" />
+    <result column="always_show" jdbcType="INTEGER" property="alwaysShow" />
+    <result column="is_leaf" jdbcType="INTEGER" property="isLeaf" />
+    <result column="hidden" jdbcType="INTEGER" property="hidden" />
+    <result column="menu_dict" jdbcType="VARCHAR" property="menuDict" />
     <result column="seq" jdbcType="INTEGER" property="seq" />
     <result column="menu_level" jdbcType="INTEGER" property="menuLevel" />
+    <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,8 +80,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, menu_code, menu_name, menu_url, menu_dict, parent_code, is_enable, iconid, desk_iconid, 
-    seq, menu_level
+    id, menu_code, parent_code, menu_name, menu_url, component, redirect, menu_type,
+    perms, icon, desk_iconid, always_show, is_leaf, hidden, menu_dict, seq, menu_level,
+    is_enable
   </sql>
   <select id="selectByExample" parameterType="com.exx.dzj.entity.menu.MenuInfoExample" resultMap="BaseResultMap">
     select
@@ -91,7 +99,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from tab_menu_info
     where id = #{id,jdbcType=INTEGER}
@@ -107,14 +115,20 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.exx.dzj.entity.menu.MenuInfo">
-    insert into tab_menu_info (id, menu_code, menu_name, 
-      menu_url, menu_dict, parent_code, 
-      is_enable, iconid, desk_iconid, 
-      seq, menu_level)
-    values (#{id,jdbcType=INTEGER}, #{menuCode,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR}, 
-      #{menuUrl,jdbcType=VARCHAR}, #{menuDict,jdbcType=VARCHAR}, #{parentCode,jdbcType=VARCHAR}, 
-      #{isEnable,jdbcType=INTEGER}, #{iconid,jdbcType=VARCHAR}, #{deskIconid,jdbcType=VARCHAR}, 
-      #{seq,jdbcType=INTEGER}, #{menuLevel,jdbcType=INTEGER})
+    insert into tab_menu_info (id, menu_code, parent_code,
+      menu_name, menu_url, component,
+      redirect, menu_type, perms,
+      icon, desk_iconid, always_show,
+      is_leaf, hidden, menu_dict,
+      seq, menu_level, is_enable
+      )
+    values (#{id,jdbcType=INTEGER}, #{menuCode,jdbcType=VARCHAR}, #{parentCode,jdbcType=VARCHAR},
+      #{menuName,jdbcType=VARCHAR}, #{menuUrl,jdbcType=VARCHAR}, #{component,jdbcType=VARCHAR},
+      #{redirect,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER}, #{perms,jdbcType=VARCHAR},
+      #{icon,jdbcType=VARCHAR}, #{deskIconid,jdbcType=VARCHAR}, #{alwaysShow,jdbcType=INTEGER},
+      #{isLeaf,jdbcType=INTEGER}, #{hidden,jdbcType=INTEGER}, #{menuDict,jdbcType=VARCHAR},
+      #{seq,jdbcType=INTEGER}, #{menuLevel,jdbcType=INTEGER}, #{isEnable,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.menu.MenuInfo">
     insert into tab_menu_info
@@ -125,32 +139,53 @@
       <if test="menuCode != null">
         menu_code,
       </if>
+      <if test="parentCode != null">
+        parent_code,
+      </if>
       <if test="menuName != null">
         menu_name,
       </if>
       <if test="menuUrl != null">
         menu_url,
       </if>
-      <if test="menuDict != null">
-        menu_dict,
+      <if test="component != null">
+        component,
       </if>
-      <if test="parentCode != null">
-        parent_code,
+      <if test="redirect != null">
+        redirect,
       </if>
-      <if test="isEnable != null">
-        is_enable,
+      <if test="menuType != null">
+        menu_type,
       </if>
-      <if test="iconid != null">
-        iconid,
+      <if test="perms != null">
+        perms,
+      </if>
+      <if test="icon != null">
+        icon,
       </if>
       <if test="deskIconid != null">
         desk_iconid,
+      </if>
+      <if test="alwaysShow != null">
+        always_show,
+      </if>
+      <if test="isLeaf != null">
+        is_leaf,
+      </if>
+      <if test="hidden != null">
+        hidden,
+      </if>
+      <if test="menuDict != null">
+        menu_dict,
       </if>
       <if test="seq != null">
         seq,
       </if>
       <if test="menuLevel != null">
         menu_level,
+      </if>
+      <if test="isEnable != null">
+        is_enable,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -160,32 +195,53 @@
       <if test="menuCode != null">
         #{menuCode,jdbcType=VARCHAR},
       </if>
+      <if test="parentCode != null">
+        #{parentCode,jdbcType=VARCHAR},
+      </if>
       <if test="menuName != null">
         #{menuName,jdbcType=VARCHAR},
       </if>
       <if test="menuUrl != null">
         #{menuUrl,jdbcType=VARCHAR},
       </if>
-      <if test="menuDict != null">
-        #{menuDict,jdbcType=VARCHAR},
+      <if test="component != null">
+        #{component,jdbcType=VARCHAR},
       </if>
-      <if test="parentCode != null">
-        #{parentCode,jdbcType=VARCHAR},
+      <if test="redirect != null">
+        #{redirect,jdbcType=VARCHAR},
       </if>
-      <if test="isEnable != null">
-        #{isEnable,jdbcType=INTEGER},
+      <if test="menuType != null">
+        #{menuType,jdbcType=INTEGER},
       </if>
-      <if test="iconid != null">
-        #{iconid,jdbcType=VARCHAR},
+      <if test="perms != null">
+        #{perms,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
       </if>
       <if test="deskIconid != null">
         #{deskIconid,jdbcType=VARCHAR},
+      </if>
+      <if test="alwaysShow != null">
+        #{alwaysShow,jdbcType=INTEGER},
+      </if>
+      <if test="isLeaf != null">
+        #{isLeaf,jdbcType=INTEGER},
+      </if>
+      <if test="hidden != null">
+        #{hidden,jdbcType=INTEGER},
+      </if>
+      <if test="menuDict != null">
+        #{menuDict,jdbcType=VARCHAR},
       </if>
       <if test="seq != null">
         #{seq,jdbcType=INTEGER},
       </if>
       <if test="menuLevel != null">
         #{menuLevel,jdbcType=INTEGER},
+      </if>
+      <if test="isEnable != null">
+        #{isEnable,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -204,32 +260,53 @@
       <if test="record.menuCode != null">
         menu_code = #{record.menuCode,jdbcType=VARCHAR},
       </if>
+      <if test="record.parentCode != null">
+        parent_code = #{record.parentCode,jdbcType=VARCHAR},
+      </if>
       <if test="record.menuName != null">
         menu_name = #{record.menuName,jdbcType=VARCHAR},
       </if>
       <if test="record.menuUrl != null">
         menu_url = #{record.menuUrl,jdbcType=VARCHAR},
       </if>
-      <if test="record.menuDict != null">
-        menu_dict = #{record.menuDict,jdbcType=VARCHAR},
+      <if test="record.component != null">
+        component = #{record.component,jdbcType=VARCHAR},
       </if>
-      <if test="record.parentCode != null">
-        parent_code = #{record.parentCode,jdbcType=VARCHAR},
+      <if test="record.redirect != null">
+        redirect = #{record.redirect,jdbcType=VARCHAR},
       </if>
-      <if test="record.isEnable != null">
-        is_enable = #{record.isEnable,jdbcType=INTEGER},
+      <if test="record.menuType != null">
+        menu_type = #{record.menuType,jdbcType=INTEGER},
       </if>
-      <if test="record.iconid != null">
-        iconid = #{record.iconid,jdbcType=VARCHAR},
+      <if test="record.perms != null">
+        perms = #{record.perms,jdbcType=VARCHAR},
+      </if>
+      <if test="record.icon != null">
+        icon = #{record.icon,jdbcType=VARCHAR},
       </if>
       <if test="record.deskIconid != null">
         desk_iconid = #{record.deskIconid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.alwaysShow != null">
+        always_show = #{record.alwaysShow,jdbcType=INTEGER},
+      </if>
+      <if test="record.isLeaf != null">
+        is_leaf = #{record.isLeaf,jdbcType=INTEGER},
+      </if>
+      <if test="record.hidden != null">
+        hidden = #{record.hidden,jdbcType=INTEGER},
+      </if>
+      <if test="record.menuDict != null">
+        menu_dict = #{record.menuDict,jdbcType=VARCHAR},
       </if>
       <if test="record.seq != null">
         seq = #{record.seq,jdbcType=INTEGER},
       </if>
       <if test="record.menuLevel != null">
         menu_level = #{record.menuLevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.isEnable != null">
+        is_enable = #{record.isEnable,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -240,15 +317,22 @@
     update tab_menu_info
     set id = #{record.id,jdbcType=INTEGER},
       menu_code = #{record.menuCode,jdbcType=VARCHAR},
+      parent_code = #{record.parentCode,jdbcType=VARCHAR},
       menu_name = #{record.menuName,jdbcType=VARCHAR},
       menu_url = #{record.menuUrl,jdbcType=VARCHAR},
-      menu_dict = #{record.menuDict,jdbcType=VARCHAR},
-      parent_code = #{record.parentCode,jdbcType=VARCHAR},
-      is_enable = #{record.isEnable,jdbcType=INTEGER},
-      iconid = #{record.iconid,jdbcType=VARCHAR},
+      component = #{record.component,jdbcType=VARCHAR},
+      redirect = #{record.redirect,jdbcType=VARCHAR},
+      menu_type = #{record.menuType,jdbcType=INTEGER},
+      perms = #{record.perms,jdbcType=VARCHAR},
+      icon = #{record.icon,jdbcType=VARCHAR},
       desk_iconid = #{record.deskIconid,jdbcType=VARCHAR},
+      always_show = #{record.alwaysShow,jdbcType=INTEGER},
+      is_leaf = #{record.isLeaf,jdbcType=INTEGER},
+      hidden = #{record.hidden,jdbcType=INTEGER},
+      menu_dict = #{record.menuDict,jdbcType=VARCHAR},
       seq = #{record.seq,jdbcType=INTEGER},
-      menu_level = #{record.menuLevel,jdbcType=INTEGER}
+      menu_level = #{record.menuLevel,jdbcType=INTEGER},
+      is_enable = #{record.isEnable,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -259,26 +343,44 @@
       <if test="menuCode != null">
         menu_code = #{menuCode,jdbcType=VARCHAR},
       </if>
+      <if test="parentCode != null">
+        parent_code = #{parentCode,jdbcType=VARCHAR},
+      </if>
       <if test="menuName != null">
         menu_name = #{menuName,jdbcType=VARCHAR},
       </if>
       <if test="menuUrl != null">
         menu_url = #{menuUrl,jdbcType=VARCHAR},
       </if>
-      <if test="menuDict != null">
-        menu_dict = #{menuDict,jdbcType=VARCHAR},
+      <if test="component != null">
+        component = #{component,jdbcType=VARCHAR},
       </if>
-      <if test="parentCode != null">
-        parent_code = #{parentCode,jdbcType=VARCHAR},
+      <if test="redirect != null">
+        redirect = #{redirect,jdbcType=VARCHAR},
       </if>
-      <if test="isEnable != null">
-        is_enable = #{isEnable,jdbcType=INTEGER},
+      <if test="menuType != null">
+        menu_type = #{menuType,jdbcType=INTEGER},
       </if>
-      <if test="iconid != null">
-        iconid = #{iconid,jdbcType=VARCHAR},
+      <if test="perms != null">
+        perms = #{perms,jdbcType=VARCHAR},
+      </if>
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
       </if>
       <if test="deskIconid != null">
         desk_iconid = #{deskIconid,jdbcType=VARCHAR},
+      </if>
+      <if test="alwaysShow != null">
+        always_show = #{alwaysShow,jdbcType=INTEGER},
+      </if>
+      <if test="isLeaf != null">
+        is_leaf = #{isLeaf,jdbcType=INTEGER},
+      </if>
+      <if test="hidden != null">
+        hidden = #{hidden,jdbcType=INTEGER},
+      </if>
+      <if test="menuDict != null">
+        menu_dict = #{menuDict,jdbcType=VARCHAR},
       </if>
       <if test="seq != null">
         seq = #{seq,jdbcType=INTEGER},
@@ -286,21 +388,31 @@
       <if test="menuLevel != null">
         menu_level = #{menuLevel,jdbcType=INTEGER},
       </if>
+      <if test="isEnable != null">
+        is_enable = #{isEnable,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.menu.MenuInfo">
     update tab_menu_info
     set menu_code = #{menuCode,jdbcType=VARCHAR},
+      parent_code = #{parentCode,jdbcType=VARCHAR},
       menu_name = #{menuName,jdbcType=VARCHAR},
       menu_url = #{menuUrl,jdbcType=VARCHAR},
-      menu_dict = #{menuDict,jdbcType=VARCHAR},
-      parent_code = #{parentCode,jdbcType=VARCHAR},
-      is_enable = #{isEnable,jdbcType=INTEGER},
-      iconid = #{iconid,jdbcType=VARCHAR},
+      component = #{component,jdbcType=VARCHAR},
+      redirect = #{redirect,jdbcType=VARCHAR},
+      menu_type = #{menuType,jdbcType=INTEGER},
+      perms = #{perms,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
       desk_iconid = #{deskIconid,jdbcType=VARCHAR},
+      always_show = #{alwaysShow,jdbcType=INTEGER},
+      is_leaf = #{isLeaf,jdbcType=INTEGER},
+      hidden = #{hidden,jdbcType=INTEGER},
+      menu_dict = #{menuDict,jdbcType=VARCHAR},
       seq = #{seq,jdbcType=INTEGER},
-      menu_level = #{menuLevel,jdbcType=INTEGER}
+      menu_level = #{menuLevel,jdbcType=INTEGER},
+      is_enable = #{isEnable,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
