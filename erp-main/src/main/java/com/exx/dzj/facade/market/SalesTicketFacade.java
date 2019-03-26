@@ -92,12 +92,14 @@ public class SalesTicketFacade {
     }
 
     private SaleInfo setPaymentStatus (SaleInfo saleInfo){
-        if (saleInfo.getSumCollectedAmount().doubleValue() == 0){
-            saleInfo.setPaymentStatus("cs01");
-        } else if (saleInfo.getSumCollectedAmount().doubleValue() == saleInfo.getReceivableAccoun().doubleValue()){
-            saleInfo.setPaymentStatus("cs03");
-        } else {
-            saleInfo.setPaymentStatus("cs02");
+        if (StringUtils.isEmpty(saleInfo.getPaymentStatus())){
+            if (saleInfo.getSumCollectedAmount().doubleValue() == 0){
+                saleInfo.setPaymentStatus("cs01");
+            } else if (saleInfo.getSumCollectedAmount().doubleValue() == saleInfo.getReceivableAccoun().doubleValue()){
+                saleInfo.setPaymentStatus("cs03");
+            } else {
+                saleInfo.setPaymentStatus("cs02");
+            }
         }
         return saleInfo;
     }
@@ -260,5 +262,17 @@ public class SalesTicketFacade {
 
     public List<SaleReceiptsDetails> querySaleReceviptDetailList(String saleCode){
         return saleReceiptsDetailService.querySaleReceviptDetailList(saleCode);
+    }
+
+    @Transactional
+    public void importData (List<SaleInfo> saleInfos){
+        List<SaleInfo> importFailData = new ArrayList<>();
+        for (SaleInfo s : saleInfos){
+            try {
+                saveSalesTicket(s);
+            } catch (Exception e){
+                importFailData.add(s);
+            }
+        }
     }
 }

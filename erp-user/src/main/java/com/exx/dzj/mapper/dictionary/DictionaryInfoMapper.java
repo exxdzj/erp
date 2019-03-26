@@ -5,6 +5,7 @@ import com.exx.dzj.entity.dictionary.DictionaryInfoExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DictionaryInfoMapper {
     long countByExample(DictionaryInfoExample example);
@@ -37,4 +38,6 @@ public interface DictionaryInfoMapper {
     List<DictionaryInfo> queryDictionary(@Param("dataType") String dataType);
 
     String queryDictName(@Param("dictCode") String dictCode, @Param("dataType") String dataType);
+
+    List<Map<String, String>> queryDictionaryCodeAndName();
 }

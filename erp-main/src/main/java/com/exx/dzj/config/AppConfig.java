@@ -1,10 +1,14 @@
 package com.exx.dzj.config;
 
 import com.exx.dzj.interceptors.ProcessInterceptor;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import javax.servlet.MultipartConfigElement;
 
 /**
  * @ClassName:
@@ -27,4 +31,15 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 
         return adapter;
     }*/
+
+    @Bean
+    public MultipartConfigElement multipartConfigFactory (){
+
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+
+        factory.setMaxFileSize("102400KB");
+        factory.setMaxRequestSize("1024000KB");
+
+        return factory.createMultipartConfig();
+    }
 }

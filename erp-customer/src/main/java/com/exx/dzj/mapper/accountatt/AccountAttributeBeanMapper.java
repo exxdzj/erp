@@ -28,4 +28,6 @@ public interface AccountAttributeBeanMapper {
     int updateByPrimaryKeySelective(AccountAttributeBean record);
 
     int updateByPrimaryKey(AccountAttributeBean record);
+
+    void batchAccountAttribute(List<AccountAttributeBean> attributeList);
 }

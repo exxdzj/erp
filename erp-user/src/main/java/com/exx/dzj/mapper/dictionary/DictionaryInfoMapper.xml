@@ -332,4 +332,9 @@
     from tab_dictionary_info
     where data_type=#{dataType} and dict_code=#{dictCode}
   </select>
+  
+  <select id="queryDictionaryCodeAndName" resultType="java.util.HashMap">
+    SELECT dict_name, dict_code
+      FROM tab_dictionary_info
+  </select>
 </mapper>

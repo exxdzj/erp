@@ -24,7 +24,7 @@ public class SaleGoodsDetailBean implements Serializable {
 
     private String stockAddress;
 
-    private Integer goodsNum;
+    private Double goodsNum;
 
     private BigDecimal unitPrice;
 

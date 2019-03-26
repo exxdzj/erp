@@ -1,5 +1,7 @@
 package com.exx.dzj.entity.customer;
 
+import com.exx.dzj.entity.accountatt.AccountAttributeBean;
+import com.exx.dzj.entity.contactway.ContactWayBean;
 import lombok.Data;
 import lombok.ToString;
 
@@ -60,4 +62,7 @@ public class CustomerSupplierBean implements Serializable {
     private Date updateTime;
 
     private String updateUser;
+
+    // 是否有效
+    private Integer isEnable;
 }

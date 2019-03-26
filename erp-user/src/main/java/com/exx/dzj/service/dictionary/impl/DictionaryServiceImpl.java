@@ -6,9 +6,11 @@ import com.exx.dzj.service.dictionary.DictionaryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author
@@ -41,5 +43,11 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Override
     public String queryDictName(String dictCode, String dataType) {
         return dictionaryMapper.queryDictName(dictCode,dataType);
+    }
+
+    @Override
+    @Cacheable(value = {"dictionary"}, keyGenerator = "myKeyGenerator")
+    public List<Map<String, String>> queryDictionaryCodeAndName() {
+        return dictionaryMapper.queryDictionaryCodeAndName();
     }
 }

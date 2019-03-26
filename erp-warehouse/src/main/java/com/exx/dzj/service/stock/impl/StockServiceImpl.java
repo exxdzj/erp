@@ -1,6 +1,5 @@
 package com.exx.dzj.service.stock.impl;
 
-import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.stock.*;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.mapper.stock.StockInfoMapper;

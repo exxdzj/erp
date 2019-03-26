@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Author
  * @Date 2019/1/7 0007 13:53
@@ -48,5 +50,10 @@ public class ContactWayServiceImpl implements ContactWayService {
             LOGGER.error("异常方法:{}异常信息:{}", ContactWayServiceImpl.class.getName()+".modifyContactWay", ex.getMessage());
             throw new ErpException(400, "修改客户或供应商联系信息失败!");
         }
+    }
+
+    @Override
+    public void batchContactWay(List<ContactWayBean> contactWayList) {
+        contactWayMapper.batchContactWay(contactWayList);
     }
 }

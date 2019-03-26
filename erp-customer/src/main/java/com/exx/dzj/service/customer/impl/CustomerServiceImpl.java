@@ -1,6 +1,6 @@
 package com.exx.dzj.service.customer.impl;
 
-import com.alibaba.excel.EasyExcelFactory;
+//import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.metadata.Sheet;
 import com.exx.dzj.entity.customer.*;
 import com.exx.dzj.excepte.ErpException;
@@ -13,8 +13,8 @@ import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import sun.util.resources.th.CalendarData_th;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -135,7 +135,7 @@ public class CustomerServiceImpl implements CustomerService {
         Result result = Result.responseSuccess();
         try {
             ExcelListener excelListener = new ExcelListener();
-            EasyExcelFactory.readBySax(inputStream, new Sheet(1, 1, CustomerForExcelModel.class), excelListener);
+//            EasyExcelFactory.readBySax(inputStream, new Sheet(1, 1, CustomerForExcelModel.class), excelListener);
         } catch(Exception ex) {
             LOGGER.error("异常方法:{}异常信息:{}", CustomerServiceImpl.class.getName()+".importCustomerSupplier", ex.getMessage());
             result.setCode(400);
@@ -150,5 +150,15 @@ public class CustomerServiceImpl implements CustomerService {
             }
         }
         return result;
+    }
+
+    @Override
+    public void batchInsertCustomerSupplier(List<CustomerSupplierBean> customerSupplierList) {
+        csMapper.batchInsertCustomerSupplier(customerSupplierList);
+    }
+
+    @Cacheable(value = "{customersupplierlist}", keyGenerator = "myKeyGenerator")
+    public List<CustomerSupplierBean> queryCustomerSupplierBeanList () {
+        return csMapper.queryCustomerSupplierBeanList();
     }
 }

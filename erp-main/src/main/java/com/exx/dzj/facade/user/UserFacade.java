@@ -8,7 +8,10 @@ import com.exx.dzj.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author
@@ -78,5 +81,11 @@ public class UserFacade {
      */
     public List<UserInfo> querySalesman(){
         return salesmanService.querySalesman();
+    }
+
+    public Map<String, UserInfo> querySaleManCodeName (){
+        List<UserInfo> userInfos = querySalesman();
+        Map<String, UserInfo> userInfoMap = userInfos.stream().collect(Collectors.toMap(UserInfo::getRealName, u -> u, (k1, k2) -> k1));
+        return userInfoMap;
     }
 }

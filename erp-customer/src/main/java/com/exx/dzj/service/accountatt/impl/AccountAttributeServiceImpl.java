@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Author
  * @Date 2019/1/7 0007 13:54
@@ -48,5 +50,10 @@ public class AccountAttributeServiceImpl implements AccountAttributeService {
             LOGGER.error("异常方法:{}异常信息:{}", AccountAttributeServiceImpl.class.getName()+".modifyAccountAttribute", ex.getMessage());
             throw new ErpException(400, "属性会计属性信息失败!");
         }
+    }
+
+    @Override
+    public void batchAccountAttribute(List<AccountAttributeBean> attributeList) {
+        accountAttributeMapper.batchAccountAttribute(attributeList);
     }
 }

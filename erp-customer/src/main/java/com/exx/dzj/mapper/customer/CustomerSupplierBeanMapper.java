@@ -58,4 +58,8 @@ public interface CustomerSupplierBeanMapper {
     List<CustomerSupplierInfo> getCustomerSupplierExcelList(CustomerSupplierQuery query);
 
     List<CustomerSupplierInfo> queryCustomerPullDownInfo(@Param("type") Integer type);
+
+    void batchInsertCustomerSupplier(List<CustomerSupplierBean> customerSupplierList);
+
+    public List<CustomerSupplierBean> queryCustomerSupplierBeanList ();
 }

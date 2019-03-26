@@ -3,9 +3,9 @@ package com.exx.dzj.service.dictionary;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * @Author
  * @Date 2019/1/7 0007 14:32
  * @Description 字典表数据
  */
@@ -25,4 +25,6 @@ public interface DictionaryService {
     void saveDictionary(DictionaryInfo info);
 
     String queryDictName(String dictCode, String dataType);
+
+    List<Map<String, String>> queryDictionaryCodeAndName ();
 }

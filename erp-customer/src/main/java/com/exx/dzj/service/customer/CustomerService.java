@@ -60,4 +60,8 @@ public interface CustomerService {
      * @return
      */
     Result importCustomerSupplier(InputStream inputStream);
+
+    public void batchInsertCustomerSupplier(List<CustomerSupplierBean> customerSupplierList);
+
+    public List<CustomerSupplierBean> queryCustomerSupplierBeanList ();
 }

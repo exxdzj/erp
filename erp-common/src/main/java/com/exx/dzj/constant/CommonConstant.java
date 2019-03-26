@@ -108,4 +108,16 @@ public class CommonConstant {
      * 存货类别
      */
     public final static String INVENTORY_TYPE = "inventory_type";
+
+    /**
+     * @description 请求结果码
+
+     */
+    public  final static Integer FAIL_CODE = 400;
+    public final static Integer SUCCESS_CODE = 200;
+
+    /*********************客户供应商标识*********************/
+    public static final Integer CUST_TYPE_OF_CUSTOMER = 1;
+    public static final Integer CUST_TYPE_OF_SUPPLIER = 2;
+    public static final Integer CUST_TYPE_OF_ALL = 3;
 }

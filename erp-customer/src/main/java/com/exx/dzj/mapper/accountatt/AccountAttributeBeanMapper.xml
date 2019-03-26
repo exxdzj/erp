@@ -350,4 +350,18 @@
       update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <insert id="batchAccountAttribute">
+    INSERT INTO tab_account_attribute
+      (cust_code, payment_method, discount_rate, account_period, line_credit, pay_taxes_num, bill_type,
+       bank_deposit, open_account, is_enable, create_time, create_user, update_time, update_user)
+    VALUES
+      <foreach collection="list" item="item" separator=",">
+        (
+          #{item.custCode}, #{item.paymentMethod}, #{item.discountRate}, #{item.accountPeriod}, #{item.lineCredit}, #{item.payTaxesNum}, #{item.billType},
+          #{item.bankDeposit}, #{item.openAccount}, #{item.isEnable}, #{item.createTime}, #{item.createUser}, #{item.updateTime}, #{item.updateUser}
+        )
+      </foreach>
+
+  </insert>
 </mapper>

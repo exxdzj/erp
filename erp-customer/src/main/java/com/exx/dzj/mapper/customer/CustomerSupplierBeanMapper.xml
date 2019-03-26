@@ -552,4 +552,26 @@
     <result column="cust_name" property="custName"/>
   </resultMap>
 
+  <!-- 批量添加客户信息, 用于数据导入 -->
+  <insert id="batchInsertCustomerSupplier">
+    INSERT INTO tab_customer_supplier(
+        cust_code, cust_name, cust_type,cust_level,level_name,salesman_code,user_code,region_code,
+        region_name,ship_code,source,ship_address,remarks,create_time, create_user, is_enable, update_user)
+    VALUES
+      <foreach collection="list" item="item" separator="," >
+        (
+          #{item.custCode}, #{item.custName}, #{item.custType}, #{item.custLevel}, #{item.levelName}, #{item.salesmanCode}, #{item.userCode}, #{item.regionCode},
+        #{item.regionName}, #{item.shipCode}, #{item.source}, #{item.shipAddress}, #{item.remarks}, #{item.createTime}, #{item.createUser}, #{item.isEnable}, #{item.updateUser}
+        )
+      </foreach>
+  </insert>
+  
+  <select id="queryCustomerSupplierBeanList" resultType="com.exx.dzj.entity.customer.CustomerSupplierBean">
+    SELECT
+      cust_code AS custCode,
+      cust_name AS custName
+    FROM tab_customer_supplier
+    WHERE  1=1
+  </select>
+
 </mapper>

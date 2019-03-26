@@ -2,6 +2,8 @@ package com.exx.dzj.service.contactway;
 
 import com.exx.dzj.entity.contactway.ContactWayBean;
 
+import java.util.List;
+
 /**
  * @Author 天刀
  * @Date 2019/1/5 0005 16:58
@@ -20,4 +22,7 @@ public interface ContactWayService {
      * @param bean
      */
     int modifyContactWay(ContactWayBean bean);
+
+
+    void batchContactWay(List<ContactWayBean> contactWayList);
 }

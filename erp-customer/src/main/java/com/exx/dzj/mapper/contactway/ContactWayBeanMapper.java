@@ -28,4 +28,6 @@ public interface ContactWayBeanMapper {
     int updateByPrimaryKeySelective(ContactWayBean record);
 
     int updateByPrimaryKey(ContactWayBean record);
+
+    void batchContactWay(List<ContactWayBean> contactWayList);
 }

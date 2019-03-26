@@ -5,6 +5,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -67,15 +68,20 @@ public class SaleInfo implements Serializable {
 
     private String createUser;
 
+    /**
+     * @description 收款人
+     */
+    private String collectionUserName;
+
     private Date updateTime;
 
     private String updateUser;
 
     /**销售单关联收款记录详情**/
-    private List<SaleReceiptsDetails> saleReceiptsDetailsList;
+    private List<SaleReceiptsDetails> saleReceiptsDetailsList = new ArrayList<>();
 
     /**销售关联单商品详情**/
-    private List<SaleGoodsDetailBean> saleGoodsDetailBeanList;
+    private List<SaleGoodsDetailBean> saleGoodsDetailBeanList = new ArrayList<>();
 
     /**客户名称**/
     private String custName;

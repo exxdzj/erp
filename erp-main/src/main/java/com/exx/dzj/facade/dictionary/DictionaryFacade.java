@@ -3,9 +3,13 @@ package com.exx.dzj.facade.dictionary;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.service.dictionary.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author
@@ -29,5 +33,14 @@ public class DictionaryFacade {
 
     public String queryDictName(String dateType, String dictCode){
         return dictService.queryDictName(dictCode, dateType);
+    }
+
+    public Map<String, String> queryDictionaryCodeAndName (){
+        Map<String, String> map = new HashMap<>();
+        List<Map<String, String>> mapList = dictService.queryDictionaryCodeAndName();
+        for (Map<String, String> mapi : mapList){
+            map.put(mapi.get("dict_name"), mapi.get("dict_code"));
+        }
+        return map;
     }
 }

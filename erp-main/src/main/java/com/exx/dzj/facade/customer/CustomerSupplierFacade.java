@@ -12,7 +12,6 @@ import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.accountatt.AccountAttributeService;
-import com.exx.dzj.service.accountatt.impl.AccountAttributeServiceImpl;
 import com.exx.dzj.service.contactway.ContactWayService;
 import com.exx.dzj.service.customer.CustomerService;
 import com.exx.dzj.service.dictionary.DictionaryService;
@@ -35,6 +34,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author
@@ -247,5 +247,29 @@ public class CustomerSupplierFacade {
             result.setMsg("导入数据失败!");
         }
         return result;
+    }
+
+    @Transactional
+    public void batchInsertCustomerSupplier (Map<String, List> map){
+        try {
+            List<CustomerSupplierBean> customerSupplierList = map.get("customerSupplierList");
+            customerSupplierService.batchInsertCustomerSupplier(customerSupplierList);
+
+            List<AccountAttributeBean> accountAttributeList = map.get("accountAttributeList");
+            accountAttService.batchAccountAttribute(accountAttributeList);
+
+            List<ContactWayBean> contactWayList = map.get("contactWayList");
+            contactwayService.batchContactWay(contactWayList);
+
+        } catch (Exception ex){
+            LOGGER.error("异常方法:{}异常信息:{}", CustomerSupplierFacade.class.getName()+".importCustomerSupplier", ex.getMessage());
+            throw new ErpException(CommonConstant.FAIL_CODE, "excel import data fail");
+        }
+    }
+
+    public Map<String, CustomerSupplierBean> queryCustomerSupplierBeanList (){
+        List<CustomerSupplierBean> customerSuppliers = customerSupplierService.queryCustomerSupplierBeanList();
+        Map<String, CustomerSupplierBean> collect = customerSuppliers.stream().collect(Collectors.toMap(CustomerSupplierBean::getCustName, u -> u, (k1, k2) -> k1));
+        return collect;
     }
 }
