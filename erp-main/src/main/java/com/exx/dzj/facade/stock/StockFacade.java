@@ -4,6 +4,7 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockInfo;
+import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.entity.stock.StockQuery;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.result.Result;
@@ -12,6 +13,7 @@ import com.exx.dzj.service.stock.StockService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -120,5 +122,17 @@ public class StockFacade {
 
     public void insertStockInfo(StockInfo stockInfo){
         stockInfoService.insertStockInfo(stockInfo);
+    }
+
+    /**
+     * @description excel 存货导入数据批量操作
+     * @author yangyun
+     * @date 2019/3/27 0027
+     * @param map
+     * @return void
+     */
+    public void batchInventoryDataProccess (Map<String, List> map){
+
+        stockInfoService.batchInventoryDataProccess(map);
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author
@@ -173,5 +174,21 @@ public class StockServiceImpl implements StockService {
         stockMapper.insertSelective(stockInfo);
     }
 
+    @Transactional
+    public void batchInventoryDataProccess (Map<String, List> map) {
+        List<StockInfo> stockInfoList = map.get("stockInfoList");
+        List<StockNumPrice> stockNumPriceList = map.get("stockNumPriceList");
+
+        batchInsertStockInfo(stockInfoList);
+        batchInsertStockNumPrice(stockNumPriceList);
+    }
+
+    public void batchInsertStockInfo (List<StockInfo> stockInfoList){
+        stockMapper.batchInsertStockInfo(stockInfoList);
+    }
+
+    public void batchInsertStockNumPrice (List<StockNumPrice> stockNumPriceList){
+        stockMapper.batchInsertStockNumPrice(stockNumPriceList);
+    }
 
 }

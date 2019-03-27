@@ -49,4 +49,8 @@ public interface StockInfoMapper {
      * @return
      */
     int shelvesStock(@Param("isShelves") String isShelves, @Param("isEnable") Integer isEnable, @Param("stockCodes") List<String> stockCodes, String userCode);
+
+    void batchInsertStockInfo (List<StockInfo> stockInfoList);
+
+    void batchInsertStockNumPrice (List<StockNumPrice> stockNumPriceList);
 }

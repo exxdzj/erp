@@ -7,11 +7,14 @@ import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
+import com.exx.dzj.entity.stock.StockInfo;
+import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.enummodel.PayStatusEnum;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.model.CustomerModel;
 import com.exx.dzj.model.SaleModel;
+import com.exx.dzj.model.StockModel;
 import com.exx.dzj.util.enums.EnumsUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -252,6 +255,16 @@ public class ProccessImportDataUtil {
         contactWay.setSource(source);
     }
 
+    /**
+     * @description 设置客户供应商 地区编码, 关联用户和销售员
+     * @author yangyun
+     * @date 2019/3/27 0027
+     * @param customerSupplier
+     * @param salesMan
+     * @param userInfoMap
+     * @param cm
+     * @return void
+     */
     private static void customerSupplier(CustomerSupplierBean customerSupplier, String salesMan, Map<String, UserInfo> userInfoMap, CustomerModel cm){
         customerSupplier.setIsEnable(CommonConstant.DEFAULT_VALUE_ONE);
 
@@ -265,6 +278,77 @@ public class ProccessImportDataUtil {
                 customerSupplier.setUserCode(userInfo.getUserCode());
                 customerSupplier.setSalesmanCode(userInfo.getSalesmanCode());
             }
+        }
+    }
+
+    /**
+     * @description 存货数据导入处理
+     * @author yangyun
+     * @date 2019/3/27 0027
+     * @param stockList
+     * @return java.util.Map<java.lang.String,java.util.List>
+     */
+    public static Map<String, List> proccessStockInfo (List<Object> stockList){
+        Map<String, List> map = new ConcurrentHashMap<>();
+        List<StockInfo> stockInfoList = new ArrayList<>();
+        List<StockNumPrice> stockNumPriceList = new ArrayList<>();
+
+        StockModel model = null;
+        for (Object o : stockList) {
+            model = (StockModel) o;
+            StockInfo stockInfo = new StockInfo();
+            StockNumPrice stockNumPrice = new StockNumPrice();
+
+            BeanUtils.copyProperties(model, stockInfo);
+            BeanUtils.copyProperties(model, stockNumPrice);
+
+            setStockNatureStatu(model, stockInfo);
+
+            stockInfoList.add(stockInfo);
+            stockNumPriceList.add(stockNumPrice);
+        }
+
+        map.put("stockInfoList", stockInfoList);
+        map.put("stockNumPriceList", stockNumPriceList);
+
+        return map;
+    }
+
+    /**
+     * @description 设置存货性质和状态
+     * @author yangyun
+     * @date 2019/3/27 0027
+     * @param model
+     * @param stockInfo
+     * @return void
+     */
+    private static void setStockNatureStatu (StockModel model, StockInfo stockInfo){
+        String modelNature = model.getNature();
+        String nature = null;
+        if (StringUtils.isNotEmpty(modelNature)){
+            switch (modelNature){
+                case "原材料" :
+                    nature = "1";
+                    break;
+                case "在产品" :
+                    nature = "2";
+                    break;
+                case "产成品" :
+                    nature = "3";
+                    break;
+                case "服务项目" :
+                    nature = "4";
+                    break;
+            }
+
+            stockInfo.setNature(nature);
+        }
+
+        String status = model.getStatus();
+        if (StringUtils.isNotEmpty(status)){
+            int isEnable = "使用中".equals(status) ? CommonConstant.DEFAULT_VALUE_ONE : CommonConstant.DEFAULT_VALUE_ZERO;
+            stockInfo.setIsEnable(isEnable);
+            stockInfo.setIsShelves(isEnable);
         }
     }
 }

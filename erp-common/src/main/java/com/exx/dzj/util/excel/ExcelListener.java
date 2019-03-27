@@ -13,6 +13,13 @@ import java.util.List;
  */
 public class ExcelListener extends AnalysisEventListener {
 
+    /**
+     * @description 用于保存数据
+     * @author yangyun
+     * @date 2019/3/27 0027
+     * @param null
+     * @return
+     */
     private List<Object> datas = Collections.synchronizedList(new ArrayList<>());
 
     /**
@@ -28,6 +35,13 @@ public class ExcelListener extends AnalysisEventListener {
         datas.add(o);
     }
 
+    /**
+     * @description excel 读取完之后的操作
+     * @author yangyun
+     * @date 2019/3/27 0027
+     * @param analysisContext
+     * @return void
+     */
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
 //        analysisContext.

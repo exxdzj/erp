@@ -10,9 +10,11 @@ import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.facade.customer.CustomerSupplierFacade;
 import com.exx.dzj.facade.dictionary.DictionaryFacade;
 import com.exx.dzj.facade.market.SalesTicketFacade;
+import com.exx.dzj.facade.stock.StockFacade;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.model.CustomerModel;
 import com.exx.dzj.model.SaleModel;
+import com.exx.dzj.model.StockModel;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.excel.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ public class DataImportController {
 
     @Autowired
     private SalesTicketFacade salesTicketFacade;
+
+    @Autowired
+    private StockFacade stockFacade;
 
     @PostMapping("dataimport")
     public Result dataImport(@RequestParam("excelFile") MultipartFile excelFile, @RequestParam("type") Integer type){
@@ -75,7 +80,11 @@ public class DataImportController {
                 case 2: // 采购单
 
                     break;
-                case 3:
+                case 3: // 存货
+                    List<Object> stockList = ExcelUtil.readExcel(excelFile, new StockModel(), CommonConstant.DEFAULT_VALUE_ONE);
+                    Map<String, List> listMap = ProccessImportDataUtil.proccessStockInfo(stockList);
+
+                    stockFacade.batchInventoryDataProccess(listMap);
                     break;
                 case 4:
                     break;

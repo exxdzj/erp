@@ -7,6 +7,7 @@ import com.exx.dzj.result.Result;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author
@@ -52,4 +53,6 @@ public interface StockService {
      * @param stockInfo
      */
     void insertStockInfo(StockInfo stockInfo);
+
+    void batchInventoryDataProccess (Map<String, List> map);
 }

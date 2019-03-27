@@ -493,4 +493,24 @@
       </otherwise>
     </choose>
   </update>
+  
+  <insert id="batchInsertStockInfo">
+    INSERT INTO tab_stock_info
+      (stock_code, nature, stock_name, specificate_type, stock_class, stock_class_name, stock_address, meter_unit, pictures,
+        bar_code, is_shelves, is_enable, is_comm_sale, create_user, update_user, create_time, update_time)
+    VALUES 
+    <foreach collection="list" item="item" separator=",">
+      (#{item.stockCode}, #{item.nature}, #{item.stockName}, #{item.specificateType}, #{item.stockClass}, #{item.stockClassName}, #{item.stockAddress}, #{item.meterUnit}, #{item.pictures},
+      #{item.barCode}, #{item.isShelves}, #{item.isEnable}, #{item.isCommSale}, #{item.createUser}, #{item.updateUser}, #{item.createTime}, #{item.updateTime})
+    </foreach>
+  </insert>
+
+  <insert id="batchInsertStockNumPrice">
+    INSERT INTO tab_stock_num_price
+      (stock_code, standard_buy_price, standard_sell_price, max_purchase_price, min_sell_price, min_inventory, is_enable, create_time, create_user, update_time, update_user)
+    VALUES
+    <foreach collection="list" item="item" separator=",">
+      (#{item.stockCode}, #{item.standardBuyPrice}, #{item.standardSellPrice}, #{item.maxPurchasePrice}, #{item.minSellPrice}, #{item.minInventory}, #{item.isEnable}, #{item.createTime}, #{item.createUser}, #{item.updateTime}, #{item.updateUser})
+    </foreach>
+  </insert>
 </mapper>
