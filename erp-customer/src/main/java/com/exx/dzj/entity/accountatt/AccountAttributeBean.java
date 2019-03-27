@@ -68,4 +68,6 @@ public class AccountAttributeBean implements Serializable {
     private Date updateTime;
 
     private String updateUser;
+
+    private Integer source;
 }

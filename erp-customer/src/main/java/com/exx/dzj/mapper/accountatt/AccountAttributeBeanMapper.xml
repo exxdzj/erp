@@ -177,6 +177,9 @@
       <if test="updateUser != null">
         update_user,
       </if>
+      <if test="source != null">
+        source,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -219,6 +222,9 @@
         SYSDATE(),
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        #{source},
       </if>
     </trim>
   </insert>
@@ -329,6 +335,9 @@
         update_time = SYSDATE(),
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        source = #{source},
       </if>
     </set>
     where cust_code = #{custCode,jdbcType=VARCHAR}

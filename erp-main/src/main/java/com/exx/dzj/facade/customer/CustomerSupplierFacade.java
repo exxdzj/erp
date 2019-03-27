@@ -155,6 +155,7 @@ public class CustomerSupplierFacade {
                     contactWayBean.setCustCode(customerBean.getCustCode());
                     contactWayBean.setCreateUser(userCode);
                     contactWayBean.setUpdateUser(userCode);
+                    contactWayBean.setSource(custType);
                     int count = contactwayService.modifyContactWay(contactWayBean);
                     if(count == 0){
                         contactwayService.saveContactWay(contactWayBean);
@@ -164,6 +165,7 @@ public class CustomerSupplierFacade {
                     accountBean.setCustCode(customerBean.getCustCode());
                     accountBean.setCreateUser(userCode);
                     accountBean.setUpdateUser(userCode);
+                    accountBean.setSource(custType);
                     int count = accountAttService.modifyAccountAttribute(accountBean);
                     if(count == 0) {
                         accountAttService.saveAccountAttribute(accountBean);
@@ -189,12 +191,14 @@ public class CustomerSupplierFacade {
                     contactWayBean.setCreateUser(userCode);
                     contactWayBean.setUpdateUser(userCode);
                     contactWayBean.setCustCode(custCode);
+                    contactWayBean.setSource(custType);
                     contactwayService.saveContactWay(contactWayBean);
                 }
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(accountBean)){
                     accountBean.setCreateUser(userCode);
                     accountBean.setUpdateUser(userCode);
                     accountBean.setCustCode(custCode);
+                    accountBean.setSource(custType);
                     accountAttService.saveAccountAttribute(accountBean);
                 }
             }

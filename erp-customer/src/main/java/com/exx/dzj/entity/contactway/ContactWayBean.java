@@ -81,4 +81,6 @@ public class ContactWayBean implements Serializable {
     private Date updateTime;
 
     private String updateUser;
+
+    private Integer source;
 }

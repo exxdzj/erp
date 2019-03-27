@@ -138,6 +138,16 @@ public class ProccessImportDataUtil {
         saleGoodsDetail.setStockAddressCode(stockAddressCode);
     }
 
+    /**
+     * @description 设置关联销售员信息, 项目信息
+     * @author yangyun
+     * @date 2019/3/27 0027
+     * @param saleInfo 销售单信息
+     * @param userInfoMap 用户信息
+     * @param stringMap 客户信息
+     * @param customerSupplierBeanMap 客户供应商信息
+     * @return void
+     */
     public static void setSalesInfo (SaleInfo saleInfo, Map<String, UserInfo> userInfoMap, Map<String, String> stringMap, Map<String, CustomerSupplierBean> customerSupplierBeanMap){
         if (StringUtils.isNotEmpty(saleInfo.getSaleCode())){
             UserInfo userInfo = userInfoMap.get(saleInfo.getUserCode());
@@ -161,6 +171,15 @@ public class ProccessImportDataUtil {
         }
     }
 
+    /**
+     * @description excel 数据导入, 客户 或 供应商 数据处理
+     * @author yangyun
+     * @date 2019/3/27 0027
+     * @param data excel 解析后数据
+     * @param stringMap 客户或供应商 等级信息
+     * @param userInfoMap 用户销售员信息
+     * @return java.util.Map<java.lang.String,java.util.List>
+     */
     public static Map<String, List> proccessCustomerData(List<Object> data, Map<String, String> stringMap, Map<String, UserInfo> userInfoMap){
         Map<String, List> map = new HashMap<>();
 
@@ -187,6 +206,8 @@ public class ProccessImportDataUtil {
 
             BeanUtils.copyProperties(cm, contactWay);
             contactWayList.add(contactWay);
+
+            setTypeSource(customerSupplier, accountAttribute, contactWay, cm.getCustType());
         }
 
         map.put("customerSupplierList", customerSupplierList);
@@ -195,12 +216,45 @@ public class ProccessImportDataUtil {
         return map;
     }
 
+    /**
+     * @description 设置类别: 供应商或客户, 设置所属关系
+     * @author yangyun
+     * @date 2019/3/27 0027
+     * @param customerSupplier 客户或供应商
+     * @param accountAttribute 关联账号信息
+     * @param contactWay 关联联系信息
+     * @param type excel 中每行数据类别
+     * @return void
+     */
+    private static void setTypeSource (CustomerSupplierBean customerSupplier, AccountAttributeBean accountAttribute, ContactWayBean contactWay, String type){
+        int custType = 0;
+        int source = 0;
+        if (StringUtils.isNotEmpty(type)){
+            switch (type){
+                case "既是供应商又是客户" :
+                    custType = CommonConstant.CUST_TYPE_OF_ALL;
+                    source = CommonConstant.CUST_TYPE_OF_ALL;
+                    break;
+                case "供应商" :
+                    custType = CommonConstant.CUST_TYPE_OF_SUPPLIER;
+                    source = CommonConstant.CUST_TYPE_OF_SUPPLIER;
+                    break;
+                case "客户" :
+                    custType = CommonConstant.CUST_TYPE_OF_CUSTOMER;
+                    source = CommonConstant.CUST_TYPE_OF_CUSTOMER;
+                    break;
+            }
+        }
+        customerSupplier.setCustType(custType);
+        customerSupplier.setSource(source);
+
+        accountAttribute.setSource(source);
+        contactWay.setSource(source);
+    }
 
     private static void customerSupplier(CustomerSupplierBean customerSupplier, String salesMan, Map<String, UserInfo> userInfoMap, CustomerModel cm){
-
-        customerSupplier.setCustType(CommonConstant.CUST_TYPE_OF_CUSTOMER);
-        customerSupplier.setSource(CommonConstant.DEFAULT_VALUE_ONE);
         customerSupplier.setIsEnable(CommonConstant.DEFAULT_VALUE_ONE);
+
         if (StringUtils.isNotEmpty(cm.getRegionCodeName())){
             customerSupplier.setRegionCode(cm.getRegionCodeName().substring(0, 3));
             customerSupplier.setRegionName(cm.getRegionCodeName().substring(3, cm.getRegionCodeName().length()));

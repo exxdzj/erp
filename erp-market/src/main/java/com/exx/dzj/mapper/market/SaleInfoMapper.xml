@@ -164,6 +164,7 @@
       SINFO.create_time ,
       SINFO.remarks ,
       SINFO.create_user ,
+      SINFO.collection_user_name,
       SINFO.payment_term ,
       SINFO.payment_status,
       CASE
@@ -203,6 +204,7 @@
     <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
     <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="collection_user_name" jdbcType="VARCHAR" property="collectionUserName" />
     <result column="create_time" jdbcType="VARCHAR" property="createTime" />
     <result column="payment_term" jdbcType="VARCHAR" property="paymentTerm" />
     <!-- 查询关联收款记录 -->

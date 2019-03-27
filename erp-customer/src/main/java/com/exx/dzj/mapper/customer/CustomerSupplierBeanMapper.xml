@@ -399,8 +399,8 @@
         tab_customer_supplier cs
     LEFT JOIN tab_user_info ui ON cs.salesman_code = ui.salesman_code
     AND cs.user_code = ui.user_code
-    LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code
-    LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code
+    LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code AND cs.source = cw.source
+    LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code AND cs.source = ta.source
     WHERE
       cs.is_enable = 1
     <if test="custName != null and custName != ''">
@@ -411,11 +411,11 @@
     </if>
     <if test="custType != null and custType != '' and custType == '1'.toString()">
       AND cs.cust_type in (1, 3)
-      AND cs.source = #{custType}
+      <!--AND cs.source = #{custType}-->
     </if>
     <if test="custType != null and custType != '' and custType == '2'.toString()">
       AND cs.cust_type in (2, 3)
-      AND cs.source = #{custType}
+      <!--AND cs.source = #{custType}-->
     </if>
     ORDER BY cs.create_time DESC
   </select>
