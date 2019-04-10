@@ -22,8 +22,8 @@ public class SysPermissionFacade {
     @Autowired
     private SysPermissionService sysPermissionService;
 
-    public JSONArray queryPermissionsByUser(){
-        String userCode = userTokenFacade.queryUserCodeForToken(null);
+    public JSONArray queryPermissionsByUser(String userToken){
+        String userCode = userTokenFacade.queryUserCodeForToken(userToken);
         return sysPermissionService.queryPermissionsByUser(userCode);
     }
 }

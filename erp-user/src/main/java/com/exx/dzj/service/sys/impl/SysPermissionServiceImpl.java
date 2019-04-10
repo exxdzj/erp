@@ -100,7 +100,7 @@ public class SysPermissionServiceImpl implements SysPermissionService {
             json.put("action", permission.getPerms());
             json.put("describe", permission.getMenuName());
         }else if(permission.getMenuType()==0||permission.getMenuType()==1) {
-            json.put("id", permission.getId());
+            json.put("id", permission.getMenuCode());
             if(permission.getMenuUrl()!=null&&(permission.getMenuUrl().startsWith("http://")||permission.getMenuUrl().startsWith("https://"))) {
                 json.put("path", MD5Util.MD5Encode(permission.getMenuUrl(), "utf-8"));
             }else {

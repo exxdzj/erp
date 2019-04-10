@@ -30,4 +30,6 @@ public interface UserRoleMapper {
     int updateByPrimaryKey(UserRole record);
 
     List<String> queryUserRoles(@Param("userCode")String userCode);
+
+    int saveBatchUserRole(List<UserRole> list);
 }

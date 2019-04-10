@@ -25,11 +25,10 @@ public class UserTokenFacade {
      * @return
      */
     public String queryUserCodeForToken(String userToken) {
-        if(StringUtils.isEmpty(userToken)){
-            return null;
+        if(!StringUtils.isNotBlank(userToken)){
+            HttpServletRequest request =  ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+            userToken = request.getHeader("user-token");
         }
-        HttpServletRequest request =  ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-        userToken = request.getHeader("user-token");
         return tokenService.queryUserCodeForToken(userToken);
     }
 }

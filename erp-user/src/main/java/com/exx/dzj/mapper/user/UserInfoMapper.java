@@ -1,8 +1,6 @@
 package com.exx.dzj.mapper.user;
 
-import com.exx.dzj.entity.user.UserInfo;
-import com.exx.dzj.entity.user.UserInfoExample;
-import com.exx.dzj.entity.user.UserVo;
+import com.exx.dzj.entity.user.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -33,4 +31,10 @@ public interface UserInfoMapper {
     int updateByPrimaryKey(UserInfo record);
 
     List<UserInfo> querySalesman();
+
+    List<UserModel> queryUserList(UserQuery query);
+
+    UserVo queryUserBean(UserInfo info);
+
+    List<String> queryUserRoleList(@Param("userCode") String userCode);
 }

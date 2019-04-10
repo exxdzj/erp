@@ -1,17 +1,20 @@
 package com.exx.dzj.facade.user;
 
 import com.exx.dzj.entity.user.UserInfo;
+import com.exx.dzj.entity.user.UserQuery;
 import com.exx.dzj.entity.user.UserVo;
+import com.exx.dzj.excepte.ErpException;
+import com.exx.dzj.facade.sys.RoleFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.user.UserRoleService;
 import com.exx.dzj.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import sun.security.x509.CertificateIssuerName;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Author
@@ -23,6 +26,9 @@ public class UserFacade {
 
     @Autowired
     private UserTokenFacade userTokenFacade;
+
+    @Autowired
+    private RoleFacade roleFacade;
 
     @Autowired
     private UserService salesmanService;
@@ -57,19 +63,30 @@ public class UserFacade {
     }
 
     /**
-     * 保存业务员信息
-     * @param userInfo
+     * 查询用户信息
+     * @param userCode
      * @return
      */
-    public Result saveUserInfo(UserInfo userInfo){
-        Result result = Result.responseSuccess();
+    public UserVo queryUserBean(String userCode) {
+        return salesmanService.queryUserBean(userCode);
+    }
+
+    /**
+     * 保存业务员信息 (将不同服务间的调用放在 facade 层，到时候系统整体拆分更方便)
+     * @param bean
+     * @return
+     */
+    @Transactional(rollbackFor = ErpException.class)
+    public void saveUserInfo(UserVo bean) throws ErpException{
         try{
-            salesmanService.saveSalesman(userInfo);
-        }catch(Exception ex){
-            result.setCode(400);
-            result.setMsg("保存业务员信息失败!");
+            String userCode = salesmanService.saveSalesman(bean);
+            if(!CollectionUtils.isEmpty(bean.getRoles())){
+                roleFacade.delByUserCode(userCode);
+                roleFacade.saveUserRole(userCode, bean.getRoles());
+            }
+        }catch(ErpException ex){
+            throw new ErpException(400, "保存用户信息失败!");
         }
-        return result;
     }
 
     /**
@@ -87,5 +104,43 @@ public class UserFacade {
         List<UserInfo> userInfos = querySalesman();
         Map<String, UserInfo> userInfoMap = userInfos.stream().collect(Collectors.toMap(UserInfo::getRealName, u -> u, (k1, k2) -> k1));
         return userInfoMap;
+    }
+
+    /**
+     * 查询公司员工列表数据
+     * @param pageNum
+     * @param pageSize
+     * @param query
+     * @return
+     */
+    public Result list(int pageNum, int pageSize, UserQuery query) {
+        return salesmanService.list(pageNum, pageSize, query);
+    }
+
+    /**
+     * 检查 用户账号是否被注册
+     * @param userName
+     * @return
+     */
+    public Result checkUserName(String userName) {
+        return  salesmanService.checkUserName(userName);
+    }
+
+    /**
+     * 判断当前的业务编码是否有人使用
+     * @param salesmanCode
+     * @return
+     */
+    public Result checkSalesmanCode(String salesmanCode) {
+        return salesmanService.checkSalesmanCode(salesmanCode);
+    }
+
+    /**
+     *  用户 离职操作
+     * @param userCode
+     * @return
+     */
+    public Result quitUser(String userCode) {
+        return salesmanService.quitUser(userCode);
     }
 }

@@ -29,6 +29,10 @@ public class UserInfo implements Serializable {
 
     private String email;
 
+    private Date birthday;
+
+    private Integer gender;
+
     private Integer isQuit;
 
     private Integer loginStatus;

@@ -255,4 +255,13 @@
   <select id="queryUserRoles" parameterType="string" resultType="string">
     select tr.role_code role from tab_user_role tr where user_code = #{userCode}
   </select>
+
+  <!-- 批量写入数据 -->
+  <insert id="saveBatchUserRole">
+    INSERT INTO tab_user_role (user_code, role_code, create_time, create_user, update_time, update_user)
+    VALUES
+    <foreach collection ="list" item="userRole" separator =",">
+      (#{userRole.userCode}, #{userRole.roleCode}, SYSDATE(), #{userRole.createUser}, SYSDATE(), #{userRole.updateUser})
+    </foreach >
+  </insert>
 </mapper>

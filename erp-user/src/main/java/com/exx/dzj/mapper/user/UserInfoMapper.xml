@@ -192,18 +192,13 @@
       <if test="email != null">
         email,
       </if>
-      <if test="isQuit != null">
-        is_quit,
+      <if test="birthday != null">
+        birthday,
       </if>
-      <if test="loginStatus != null">
-        login_status,
+      <if test="gender != null">
+        gender,
       </if>
-      <if test="lastSigninTime != null">
-        last_signin_time,
-      </if>
-      <if test="lastSignoutTime != null">
-        last_signout_time,
-      </if>
+      create_time,
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="userCode != null">
@@ -233,18 +228,13 @@
       <if test="email != null">
         #{email,jdbcType=VARCHAR},
       </if>
-      <if test="isQuit != null">
-        #{isQuit,jdbcType=INTEGER},
+      <if test="birthday != null">
+        #{birthday,jdbcType=VARCHAR},
       </if>
-      <if test="loginStatus != null">
-        #{loginStatus,jdbcType=INTEGER},
+      <if test="gender != null">
+        #{gender,jdbcType=VARCHAR},
       </if>
-      <if test="lastSigninTime != null">
-        #{lastSigninTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastSignoutTime != null">
-        #{lastSignoutTime,jdbcType=TIMESTAMP},
-      </if>
+      SYSDATE(),
     </trim>
   </insert>
 
@@ -330,9 +320,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.user.UserInfo">
     update tab_user_info
     <set>
-      <if test="userCode != null">
-        user_code = #{userCode,jdbcType=VARCHAR},
-      </if>
       <if test="userName != null">
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
@@ -357,20 +344,24 @@
       <if test="email != null">
         email = #{email,jdbcType=VARCHAR},
       </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
       <if test="isQuit != null">
         is_quit = #{isQuit,jdbcType=INTEGER},
       </if>
-      <if test="loginStatus != null">
-        login_status = #{loginStatus,jdbcType=INTEGER},
-      </if>
-      <if test="lastSigninTime != null">
-        last_signin_time = #{lastSigninTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastSignoutTime != null">
-        last_signout_time = #{lastSignoutTime,jdbcType=TIMESTAMP},
-      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="userCode != null">
+        and user_code = #{userCode, jdbcType=VARCHAR}
+      </if>
+    </where>
   </update>
 
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.user.UserInfo">
@@ -401,5 +392,80 @@
         tab_user_info ui
     WHERE
         ui.is_quit = 1
+  </select>
+
+  <!-- 查询公司员工列表数据 -->
+  <select id="queryUserList" resultType="com.exx.dzj.entity.user.UserModel">
+    SELECT
+        tu.user_code userCode,
+        tu.user_name userName,
+        tu.real_name realName,
+        tu.salesman_code salesmanCode,
+        tu.head_img headImg,
+        tu.phone_num phoneNum,
+        td.dept_name deptName,
+        tu.email,
+        CASE
+    WHEN tu.gender = 0 THEN
+        '女'
+    WHEN tu.gender = 1 THEN
+        '男'
+    ELSE
+        '未知'
+    END genderName,
+     tu.is_quit isQuit,
+     CASE
+    WHEN tu.is_quit = 1 THEN
+        '在职'
+    WHEN tu.is_quit = 0 THEN
+        '离职'
+    ELSE
+        '未知'
+    END quitDesc
+    FROM
+        tab_user_info tu
+    LEFT JOIN tab_dept_info td ON tu.dept_code = td.dept_code
+    WHERE 1 = 1
+    <if test="userName != null and userName!=''">
+      and tu.user_name like concat(#{userName}, '%')
+    </if>
+    <if test="realName != null and realName!=''">
+      and tu.real_name like concat(#{realName}, '%')
+    </if>
+    <if test="salesmanCode != null and salesmanCode!=''">
+      and tu.salesman_code = #{salesmanCode}
+    </if>
+  </select>
+
+  <!-- 用户信息 -->
+  <resultMap id="UserInfoResultMap" type="com.exx.dzj.entity.user.UserVo">
+    <collection property="roles" column="{userCode=userCode}" select="com.exx.dzj.mapper.user.UserInfoMapper.queryUserRoleList"></collection>
+  </resultMap>
+
+  <!-- 查询用户信息，包括用户角色 -->
+  <select id="queryUserBean" parameterType="com.exx.dzj.entity.user.UserInfo" resultMap="UserInfoResultMap">
+    SELECT
+      tb.user_code userCode,
+      tb.user_name userName,
+      tb.pass_word passWord,
+      tb.real_name realName,
+      tb.dept_code deptCode,
+      td.dept_name deptName,
+      tb.salesman_code salesmanCode,
+      tb.head_img headImg,
+      tb.phone_num phoneNum,
+      tb.email email,
+      tb.birthday birthday,
+      tb.gender
+    FROM tab_user_info tb
+    LEFT JOIN tab_dept_info td ON tb.dept_code = td.dept_code
+    WHERE 1 = 1
+    <if test="userCode != null and userCode!=''">
+      AND tb.user_code = #{userCode}
+    </if>
+  </select>
+
+  <select id="queryUserRoleList" resultType="java.lang.String">
+    SELECT role_code FROM tab_user_role t WHERE 1 = 1 AND user_code = #{userCode}
   </select>
 </mapper>

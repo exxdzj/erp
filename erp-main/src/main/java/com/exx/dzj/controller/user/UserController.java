@@ -1,12 +1,16 @@
 package com.exx.dzj.controller.user;
 
+import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.user.UserBean;
+import com.exx.dzj.entity.user.UserInfo;
+import com.exx.dzj.entity.user.UserQuery;
+import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.util.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,5 +48,93 @@ public class UserController {
         Result result = Result.responseSuccess();
         result.setData(userFacade.querySalesman());
         return result;
+    }
+
+    /**
+     * 查询用户(公司员工)列表数据
+     * @param request
+     * @param response
+     * @param query
+     * @return
+     */
+    @GetMapping("list")
+    public Result list(HttpServletRequest request, HttpServletResponse response, String query) {
+        Result result = Result.responseSuccess();
+        UserQuery queryParam = JsonUtils.jsonToPojo(query, UserQuery.class);
+        int pageNum = queryParam != null ? queryParam.getPage() : CommonConstant.DEFAULT_PAGE_NUM;
+        int pageSize = queryParam != null ? queryParam.getLimit() : CommonConstant.DEFAULT_PAGE_SIZE;
+        result = userFacade.list(pageNum, pageSize, queryParam);
+        return result;
+    }
+
+    /**
+     * 保存 用户信息
+     * @param request
+     * @param response
+     * @param bean
+     * @return
+     */
+    @PostMapping("saveUserInfo")
+    public Result saveUserInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody UserVo bean) {
+        Result result = Result.responseSuccess();
+        if(null == bean) {
+            result.setCode(400);
+            result.setMsg("请填写用户数据!");
+            return result;
+        }
+        if(StringUtils.isBlank(bean.getUserName())){
+            result.setCode(400);
+            result.setMsg("请填写用户账号!");
+            return result;
+        }
+        try {
+            userFacade.saveUserInfo(bean);
+        } catch (Exception ex) {
+            result.setCode(400);
+            result.setMsg("保存用户信息失败!");
+        }
+        return result;
+    }
+
+    /**
+     * 查询 用户信息
+     * @param userCode
+     * @return
+     */
+    @GetMapping("queryUserInfo")
+    public Result queryUserInfo(@RequestParam(value = "userCode") String userCode) {
+        Result result = Result.responseSuccess();
+        result.setData(userFacade.queryUserBean(userCode));
+        return  result;
+    }
+
+    /**
+     * 检查 用户的账号是否被注册
+     * @param userName
+     * @return
+     */
+    @GetMapping("checkUserName")
+    public Result checkUserName(String userName) {
+        return userFacade.checkUserName(userName);
+    }
+
+    /**
+     * 判断当前的业务编码是否有人使用
+     * @param salesmanCode
+     * @return
+     */
+    @GetMapping("checkSalesmanCode")
+    public Result checkSalesmanCode(String salesmanCode) {
+        return userFacade.checkSalesmanCode(salesmanCode);
+    }
+
+    /**
+     * 离职操作
+     * @param userCode
+     * @return
+     */
+    @PostMapping("quitUser")
+    public Result quitUser(@RequestParam String userCode) {
+        return userFacade.quitUser(userCode);
     }
 }
