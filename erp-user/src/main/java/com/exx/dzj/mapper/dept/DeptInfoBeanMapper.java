@@ -28,4 +28,6 @@ public interface DeptInfoBeanMapper {
     int updateByPrimaryKeySelective(DeptInfoBean record);
 
     int updateByPrimaryKey(DeptInfoBean record);
+
+    List<DeptInfoBean> queryDeptList();
 }

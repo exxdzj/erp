@@ -109,6 +109,8 @@ public class CommonConstant {
      */
     public final static String INVENTORY_TYPE = "inventory_type";
 
+    public final static String HOME_MENU = "201901010201021";
+
     /**
      * @description 请求结果码
 

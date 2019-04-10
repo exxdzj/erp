@@ -289,6 +289,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.dept.DeptInfoBean">
     update tab_dept_info
     set dept_code = #{deptCode,jdbcType=VARCHAR},
@@ -303,4 +304,9 @@
       update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 查询部门下拉框数据 -->
+  <select id="queryDeptList" resultType="com.exx.dzj.entity.dept.DeptInfoBean">
+    select td.dept_code deptCode, td.dept_name deptName, td.parent_code parentCode from tab_dept_info td where td.is_enable = 1
+  </select>
 </mapper>
