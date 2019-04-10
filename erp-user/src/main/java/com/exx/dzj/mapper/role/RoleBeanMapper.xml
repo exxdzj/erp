@@ -115,12 +115,10 @@
       #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateUser,jdbcType=VARCHAR})
   </insert>
+
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.role.RoleBean">
     insert into tab_role
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="roleCode != null">
         role_code,
       </if>
@@ -130,29 +128,19 @@
       <if test="roleDict != null">
         role_dict,
       </if>
-      <if test="isEnable != null">
-        is_enable,
-      </if>
       <if test="seq != null">
         seq,
       </if>
-      <if test="createTime != null">
         create_time,
-      </if>
       <if test="createUser != null">
         create_user,
       </if>
-      <if test="updateTime != null">
         update_time,
-      </if>
       <if test="updateUser != null">
         update_user,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="roleCode != null">
         #{roleCode,jdbcType=VARCHAR},
       </if>
@@ -162,41 +150,30 @@
       <if test="roleDict != null">
         #{roleDict,jdbcType=VARCHAR},
       </if>
-      <if test="isEnable != null">
-        #{isEnable,jdbcType=INTEGER},
-      </if>
       <if test="seq != null">
         #{seq,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="createUser != null">
         #{createUser,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
+
   <select id="countByExample" parameterType="com.exx.dzj.entity.role.RoleBeanExample" resultType="java.lang.Long">
     select count(*) from tab_role
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update tab_role
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.roleCode != null">
-        role_code = #{record.roleCode,jdbcType=VARCHAR},
-      </if>
       <if test="record.roleName != null">
         role_name = #{record.roleName,jdbcType=VARCHAR},
       </if>
@@ -209,15 +186,7 @@
       <if test="record.seq != null">
         seq = #{record.seq,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.createUser != null">
-        create_user = #{record.createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="record.updateUser != null">
         update_user = #{record.updateUser,jdbcType=VARCHAR},
       </if>
@@ -226,6 +195,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByExample" parameterType="map">
     update tab_role
     set id = #{record.id,jdbcType=INTEGER},
@@ -242,39 +212,24 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.role.RoleBean">
     update tab_role
     <set>
-      <if test="roleCode != null">
-        role_code = #{roleCode,jdbcType=VARCHAR},
-      </if>
       <if test="roleName != null">
         role_name = #{roleName,jdbcType=VARCHAR},
       </if>
       <if test="roleDict != null">
         role_dict = #{roleDict,jdbcType=VARCHAR},
       </if>
-      <if test="isEnable != null">
-        is_enable = #{isEnable,jdbcType=INTEGER},
-      </if>
-      <if test="seq != null">
-        seq = #{seq,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.role.RoleBean">
     update tab_role
     set role_code = #{roleCode,jdbcType=VARCHAR},
@@ -288,4 +243,9 @@
       update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 查询最大的排序字段值 -->
+  <select id="queryMaxSeq" resultType="int">
+    SELECT MAX(seq) FROM tab_role
+  </select>
 </mapper>

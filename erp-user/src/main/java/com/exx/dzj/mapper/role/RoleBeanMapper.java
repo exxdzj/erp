@@ -2,6 +2,7 @@ package com.exx.dzj.mapper.role;
 
 import com.exx.dzj.entity.role.RoleBean;
 import com.exx.dzj.entity.role.RoleBeanExample;
+import com.exx.dzj.entity.role.RoleMenuBean;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface RoleBeanMapper {
     int updateByPrimaryKeySelective(RoleBean record);
 
     int updateByPrimaryKey(RoleBean record);
+
+    int queryMaxSeq();
 }

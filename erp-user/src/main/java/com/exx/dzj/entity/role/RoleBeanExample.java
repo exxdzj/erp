@@ -206,7 +206,7 @@ public class RoleBeanExample {
         }
 
         public Criteria andRoleCodeLike(String value) {
-            addCriterion("role_code like", value, "roleCode");
+            addCriterion("role_code like", "%" + value + "%", "roleCode");
             return (Criteria) this;
         }
 
@@ -276,7 +276,7 @@ public class RoleBeanExample {
         }
 
         public Criteria andRoleNameLike(String value) {
-            addCriterion("role_name like", value, "roleName");
+            addCriterion("role_name like ",  "%" + value + "%", "roleName");
             return (Criteria) this;
         }
 

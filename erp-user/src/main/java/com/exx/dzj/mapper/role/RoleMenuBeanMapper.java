@@ -28,4 +28,8 @@ public interface RoleMenuBeanMapper {
     int updateByPrimaryKeySelective(RoleMenuBean record);
 
     int updateByPrimaryKey(RoleMenuBean record);
+
+    List<String> queryRolePermission(@Param("roleCode") String roleCode);
+
+    int grantAuth(List<RoleMenuBean> list);
 }

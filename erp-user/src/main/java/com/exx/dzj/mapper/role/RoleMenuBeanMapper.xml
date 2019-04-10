@@ -85,22 +85,26 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from tab_role_menu
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tab_role_menu
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.role.RoleMenuBeanExample">
     delete from tab_role_menu
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.exx.dzj.entity.role.RoleMenuBean">
     insert into tab_role_menu (id, role_code, menu_code, 
       create_time, create_user, update_time, 
@@ -109,6 +113,7 @@
       #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateUser,jdbcType=VARCHAR})
   </insert>
+
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.role.RoleMenuBean">
     insert into tab_role_menu
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -158,12 +163,14 @@
       </if>
     </trim>
   </insert>
+  
   <select id="countByExample" parameterType="com.exx.dzj.entity.role.RoleMenuBeanExample" resultType="java.lang.Long">
     select count(*) from tab_role_menu
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update tab_role_menu
     <set>
@@ -193,6 +200,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByExample" parameterType="map">
     update tab_role_menu
     set id = #{record.id,jdbcType=INTEGER},
@@ -206,6 +214,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.role.RoleMenuBean">
     update tab_role_menu
     <set>
@@ -230,6 +239,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.role.RoleMenuBean">
     update tab_role_menu
     set role_code = #{roleCode,jdbcType=VARCHAR},
@@ -240,4 +250,18 @@
       update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 查询 角色拥有的菜单权限数据 -->
+  <select id="queryRolePermission" resultType="java.lang.String">
+    SELECT menu_code menuCode FROM tab_role_menu WHERE role_code = #{roleCode}
+  </select>
+
+  <!-- 批量写入数据 -->
+  <insert id="grantAuth">
+    insert into tab_role_menu (role_code, menu_code, create_time, create_user, update_time, update_user)
+    values
+    <foreach collection="list" item="bean" separator=",">
+      (#{bean.roleCode}, #{bean.menuCode}, SYSDATE(), #{bean.createUser}, SYSDATE(), #{bean.updateUser})
+    </foreach>
+  </insert>
 </mapper>
