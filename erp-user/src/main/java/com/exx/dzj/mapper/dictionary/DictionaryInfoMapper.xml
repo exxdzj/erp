@@ -14,6 +14,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
   </resultMap>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -115,11 +116,11 @@
 
   <insert id="insert" parameterType="com.exx.dzj.entity.dictionary.DictionaryInfo">
     insert into tab_dictionary_info (dict_code, dict_name,
-      seq, img, data_type, 
+      seq, img, data_type, remarks,
       is_enable, create_time, create_user, 
       update_time, update_user)
     values (#{dictCode,jdbcType=VARCHAR}, #{dictName,jdbcType=VARCHAR},
-      #{seq,jdbcType=INTEGER}, #{img,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR}, 
+      #{seq,jdbcType=INTEGER}, #{img,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR},
       #{isEnable,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
   </insert>
@@ -142,18 +143,17 @@
       <if test="dataType != null">
         data_type,
       </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
       <if test="isEnable != null">
         is_enable,
       </if>
-      <if test="createTime != null">
         create_time,
-      </if>
       <if test="createUser != null">
         create_user,
       </if>
-      <if test="updateTime != null">
         update_time,
-      </if>
       <if test="updateUser != null">
         update_user,
       </if>
@@ -174,18 +174,17 @@
       <if test="dataType != null">
         #{dataType,jdbcType=VARCHAR},
       </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
       <if test="isEnable != null">
         #{isEnable,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="createUser != null">
         #{createUser,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
       </if>
@@ -262,9 +261,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.dictionary.DictionaryInfo">
     update tab_dictionary_info
     <set>
-      <if test="dictCode != null">
-        dict_code = #{dictCode,jdbcType=VARCHAR},
-      </if>
       <if test="dictName != null">
         dict_name = #{dictName,jdbcType=VARCHAR},
       </if>
@@ -277,23 +273,18 @@
       <if test="dataType != null">
         data_type = #{dataType,jdbcType=VARCHAR},
       </if>
+      <if test="remarks != null and remarks!=''">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
       <if test="isEnable != null">
         is_enable = #{isEnable,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = SYSDATE(),
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where dict_code = #{dictCode,jdbcType=VARCHAR}
   </update>
 
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.dictionary.DictionaryInfo">
@@ -304,6 +295,7 @@
       img = #{img,jdbcType=VARCHAR},
       data_type = #{dataType,jdbcType=VARCHAR},
       is_enable = #{isEnable,jdbcType=INTEGER},
+      remarks = #{remarks,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user = #{createUser,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -336,5 +328,29 @@
   <select id="queryDictionaryCodeAndName" resultType="java.util.HashMap">
     SELECT dict_name, dict_code
       FROM tab_dictionary_info
+  </select>
+
+  <!-- 查询 字典数据列表 -->
+  <select id="queryDictDataList" parameterType="com.exx.dzj.entity.dictionary.DictionaryInfo" resultType="com.exx.dzj.entity.dictionary.DictionaryBean">
+    SELECT
+        td.dict_code dictCode,
+        td.dict_name dictName,
+        td.data_type dataType,
+        td.img,
+        td.remarks,
+        tb.`describe`
+    FROM
+        tab_dictionary_info td
+    INNER JOIN tab_dictionary_type tb ON td.data_type = tb.data_type
+    WHERE
+        td.is_enable = 1
+        <if test="dataType != null and dataType !=''">
+          AND td.data_type = #{dataType}
+        </if>
+  </select>
+
+  <!-- 获取最大排序值 -->
+  <select id="queryMaxSeq" resultType="java.lang.Integer">
+    SELECT MAX(seq) FROM tab_dictionary_info
   </select>
 </mapper>

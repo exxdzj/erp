@@ -44,7 +44,15 @@ public class DefaultIdGenerator implements IdGenerator, Runnable{
         thread.start();
     }
 
+    public DefaultIdGenerator(String prefix) {
+        this.config = new DefaultIdGeneratorConfig(prefix);
+        time = LocalDateTime.now().format(FORMATTER);
+        value = new AtomicInteger(config.getInitial());
 
+        thread = new Thread(this);
+        thread.setDaemon(true);
+        thread.start();
+    }
 
     @Override
     public String next() {

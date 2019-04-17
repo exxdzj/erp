@@ -96,12 +96,14 @@
     delete from tab_dictionary_type
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.dictionary.DictionaryTypeBeanExample">
     delete from tab_dictionary_type
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.exx.dzj.entity.dictionary.DictionaryTypeBean">
     insert into tab_dictionary_type (id, data_type, `describe`,
       is_enable, create_time, create_user, 
@@ -110,12 +112,10 @@
       #{isEnable,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
   </insert>
+
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.dictionary.DictionaryTypeBean">
     insert into tab_dictionary_type
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="dataType != null">
         data_type,
       </if>
@@ -125,23 +125,16 @@
       <if test="isEnable != null">
         is_enable,
       </if>
-      <if test="createTime != null">
         create_time,
-      </if>
       <if test="createUser != null">
         create_user,
       </if>
-      <if test="updateTime != null">
         update_time,
-      </if>
       <if test="updateUser != null">
         update_user,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="dataType != null">
         #{dataType,jdbcType=VARCHAR},
       </if>
@@ -151,26 +144,24 @@
       <if test="isEnable != null">
         #{isEnable,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="createUser != null">
         #{createUser,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        SYSDATE(),
       <if test="updateUser != null">
         #{updateUser,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
+
   <select id="countByExample" parameterType="com.exx.dzj.entity.dictionary.DictionaryTypeBeanExample" resultType="java.lang.Long">
     select count(*) from tab_dictionary_type
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update tab_dictionary_type
     <set>
@@ -217,12 +208,10 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.dictionary.DictionaryTypeBean">
     update tab_dictionary_type
     <set>
-      <if test="dataType != null">
-        data_type = #{dataType,jdbcType=VARCHAR},
-      </if>
       <if test="describe != null">
         `describe` = #{describe,jdbcType=VARCHAR},
       </if>
@@ -242,8 +231,9 @@
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where data_type = #{dataType,jdbcType=VARCHAR}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.dictionary.DictionaryTypeBean">
     update tab_dictionary_type
     set data_type = #{dataType,jdbcType=VARCHAR},

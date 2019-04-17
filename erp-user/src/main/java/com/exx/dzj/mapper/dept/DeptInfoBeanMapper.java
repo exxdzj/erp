@@ -1,5 +1,6 @@
 package com.exx.dzj.mapper.dept;
 
+import com.exx.dzj.entity.dept.DeptBean;
 import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.dept.DeptInfoBeanExample;
 import org.apache.ibatis.annotations.Param;
@@ -19,7 +20,7 @@ public interface DeptInfoBeanMapper {
 
     List<DeptInfoBean> selectByExample(DeptInfoBeanExample example);
 
-    DeptInfoBean selectByPrimaryKey(Integer id);
+    DeptInfoBean selectByPrimaryKey(String deptCode);
 
     int updateByExampleSelective(@Param("record") DeptInfoBean record, @Param("example") DeptInfoBeanExample example);
 
@@ -30,4 +31,8 @@ public interface DeptInfoBeanMapper {
     int updateByPrimaryKey(DeptInfoBean record);
 
     List<DeptInfoBean> queryDeptList();
+
+    int queryMaxSeq();
+
+    int delDept(DeptBean dept);
 }

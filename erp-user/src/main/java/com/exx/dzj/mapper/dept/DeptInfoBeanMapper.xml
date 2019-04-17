@@ -72,10 +72,12 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List">
     id, dept_code, dept_name, parent_code, dept_describe, seq, is_enable, create_time, 
     create_user, update_time, update_user
   </sql>
+
   <select id="selectByExample" parameterType="com.exx.dzj.entity.dept.DeptInfoBeanExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -90,22 +92,26 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from tab_dept_info
-    where id = #{id,jdbcType=INTEGER}
+    where dept_code = #{deptCode}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tab_dept_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.dept.DeptInfoBeanExample">
     delete from tab_dept_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.exx.dzj.entity.dept.DeptInfoBean">
     insert into tab_dept_info (id, dept_code, dept_name, 
       parent_code, dept_describe, seq, 
@@ -236,6 +242,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByExample" parameterType="map">
     update tab_dept_info
     set id = #{record.id,jdbcType=INTEGER},
@@ -253,12 +260,10 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.dept.DeptInfoBean">
     update tab_dept_info
     <set>
-      <if test="deptCode != null">
-        dept_code = #{deptCode,jdbcType=VARCHAR},
-      </if>
       <if test="deptName != null">
         dept_name = #{deptName,jdbcType=VARCHAR},
       </if>
@@ -271,15 +276,6 @@
       <if test="seq != null">
         seq = #{seq,jdbcType=INTEGER},
       </if>
-      <if test="isEnable != null">
-        is_enable = #{isEnable,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
@@ -287,7 +283,7 @@
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where dept_code = #{deptCode,jdbcType=VARCHAR},
   </update>
 
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.dept.DeptInfoBean">
@@ -309,4 +305,18 @@
   <select id="queryDeptList" resultType="com.exx.dzj.entity.dept.DeptInfoBean">
     select td.dept_code deptCode, td.dept_name deptName, td.parent_code parentCode from tab_dept_info td where td.is_enable = 1
   </select>
+
+  <!-- 查询 排序字段的最大值 -->
+  <select id="queryMaxSeq" resultType="integer">
+    SELECT MAX(seq) FROM tab_dept_info
+  </select>
+
+  <!-- 删除部门数据 -->
+  <update id="delDept" parameterType="com.exx.dzj.entity.dept.DeptBean">
+    UPDATE tab_dept_info SET is_enable = #{isEnable,jdbcType=INTEGER}
+    WHERE dept_code
+    <foreach collection="depts" item="code" open=" in (" close=")" separator=",">#{code}</foreach>
+    OR parent_code
+    <foreach collection="depts" item="code" open=" in (" close=")" separator=",">#{code}</foreach>
+  </update>
 </mapper>

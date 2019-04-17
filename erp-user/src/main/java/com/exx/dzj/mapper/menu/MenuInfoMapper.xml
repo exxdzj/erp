@@ -10,6 +10,7 @@
     <result column="component" jdbcType="VARCHAR" property="component" />
     <result column="redirect" jdbcType="VARCHAR" property="redirect" />
     <result column="menu_type" jdbcType="INTEGER" property="menuType" />
+    <result column="menu_type_name" jdbcType="VARCHAR" property="menuTypeName" />
     <result column="perms" jdbcType="VARCHAR" property="perms" />
     <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="desk_iconid" jdbcType="VARCHAR" property="deskIconid" />
@@ -21,6 +22,7 @@
     <result column="menu_level" jdbcType="INTEGER" property="menuLevel" />
     <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
   </resultMap>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -50,6 +52,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -79,11 +82,14 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List">
     id, menu_code, parent_code, menu_name, menu_url, component, redirect, menu_type,
+    CASE WHEN menu_type = 0 THEN '一级菜单' WHEN menu_type = 1 THEN '子菜单' WHEN menu_type = 2 THEN '按钮' ELSE '其他' END menu_type_name,
     perms, icon, desk_iconid, always_show, is_leaf, hidden, menu_dict, seq, menu_level,
     is_enable
   </sql>
+
   <select id="selectByExample" parameterType="com.exx.dzj.entity.menu.MenuInfoExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -98,22 +104,26 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from tab_menu_info
-    where id = #{id,jdbcType=INTEGER}
+    where menu_code = #{menuCode,jdbcType=VARCHAR}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tab_menu_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.menu.MenuInfoExample">
     delete from tab_menu_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.exx.dzj.entity.menu.MenuInfo">
     insert into tab_menu_info (id, menu_code, parent_code,
       menu_name, menu_url, component,
@@ -130,12 +140,10 @@
       #{seq,jdbcType=INTEGER}, #{menuLevel,jdbcType=INTEGER}, #{isEnable,jdbcType=INTEGER}
       )
   </insert>
+
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.menu.MenuInfo">
     insert into tab_menu_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="menuCode != null">
         menu_code,
       </if>
@@ -189,9 +197,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="menuCode != null">
         #{menuCode,jdbcType=VARCHAR},
       </if>
@@ -245,21 +250,17 @@
       </if>
     </trim>
   </insert>
+
   <select id="countByExample" parameterType="com.exx.dzj.entity.menu.MenuInfoExample" resultType="java.lang.Long">
     select count(*) from tab_menu_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update tab_menu_info
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.menuCode != null">
-        menu_code = #{record.menuCode,jdbcType=VARCHAR},
-      </if>
       <if test="record.parentCode != null">
         parent_code = #{record.parentCode,jdbcType=VARCHAR},
       </if>
@@ -313,6 +314,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByExample" parameterType="map">
     update tab_menu_info
     set id = #{record.id,jdbcType=INTEGER},
@@ -337,12 +339,10 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.menu.MenuInfo">
     update tab_menu_info
     <set>
-      <if test="menuCode != null">
-        menu_code = #{menuCode,jdbcType=VARCHAR},
-      </if>
       <if test="parentCode != null">
         parent_code = #{parentCode,jdbcType=VARCHAR},
       </if>
@@ -392,8 +392,9 @@
         is_enable = #{isEnable,jdbcType=INTEGER},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where menu_code = #{menuCode,jdbcType=VARCHAR}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.menu.MenuInfo">
     update tab_menu_info
     set menu_code = #{menuCode,jdbcType=VARCHAR},
@@ -414,5 +415,24 @@
       menu_level = #{menuLevel,jdbcType=INTEGER},
       is_enable = #{isEnable,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!-- 查询 子父级菜单是否交叉, 即 A 是 B 的父级，而 B 是 A 的父级 -->
+  <select id="queryOverlap" parameterType="com.exx.dzj.entity.menu.MenuInfo" resultType="java.lang.Integer">
+    SELECT count(*) FROM tab_menu_info WHERE 1 = 1
+    AND menu_code = #{menuCode,jdbcType=VARCHAR}
+    AND parent_code = #{parentCode,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 获取最大的排序值 -->
+  <select id="queryMaxSeq" resultType="java.lang.Integer">
+    SELECT max(seq) FROM tab_menu_info
+  </select>
+
+  <!-- 删除 菜单-->
+  <update id="cancelMenu" parameterType="com.exx.dzj.entity.menu.MenuInfo">
+    UPDATE tab_menu_info
+      SET is_enable = #{isEnable,jdbcType=INTEGER}
+    WHERE menu_code = #{menuCode,jdbcType=VARCHAR}
   </update>
 </mapper>

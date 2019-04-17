@@ -276,7 +276,7 @@ public class DeptInfoBeanExample {
         }
 
         public Criteria andDeptNameLike(String value) {
-            addCriterion("dept_name like", value, "deptName");
+            addCriterion("dept_name like", "%" + value + "%", "deptName");
             return (Criteria) this;
         }
 

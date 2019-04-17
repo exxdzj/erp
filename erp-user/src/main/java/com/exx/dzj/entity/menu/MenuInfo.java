@@ -22,6 +22,8 @@ public class MenuInfo {
 
     private Integer menuType;
 
+    private String menuTypeName;
+
     private String perms;
 
     private String icon;

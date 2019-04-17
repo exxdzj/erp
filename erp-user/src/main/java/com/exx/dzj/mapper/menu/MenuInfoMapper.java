@@ -19,7 +19,7 @@ public interface MenuInfoMapper {
 
     List<MenuInfo> selectByExample(MenuInfoExample example);
 
-    MenuInfo selectByPrimaryKey(Integer id);
+    MenuInfo selectByPrimaryKey(@Param("menuCode") String menuCode);
 
     int updateByExampleSelective(@Param("record") MenuInfo record, @Param("example") MenuInfoExample example);
 
@@ -28,4 +28,10 @@ public interface MenuInfoMapper {
     int updateByPrimaryKeySelective(MenuInfo record);
 
     int updateByPrimaryKey(MenuInfo record);
+
+    int queryOverlap(MenuInfo record);
+
+    int queryMaxSeq();
+
+    int cancelMenu(MenuInfo record);
 }

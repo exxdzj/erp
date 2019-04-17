@@ -1,5 +1,6 @@
 package com.exx.dzj.mapper.dictionary;
 
+import com.exx.dzj.entity.dictionary.DictionaryBean;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.dictionary.DictionaryInfoExample;
 import org.apache.ibatis.annotations.Param;
@@ -40,4 +41,8 @@ public interface DictionaryInfoMapper {
     String queryDictName(@Param("dictCode") String dictCode, @Param("dataType") String dataType);
 
     List<Map<String, String>> queryDictionaryCodeAndName();
+
+    List<DictionaryBean> queryDictDataList(DictionaryInfo record);
+
+    int queryMaxSeq();
 }

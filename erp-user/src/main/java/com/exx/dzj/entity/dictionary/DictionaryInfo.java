@@ -21,6 +21,8 @@ public class DictionaryInfo implements Serializable {
 
     private String dataType;
 
+    private String remarks;
+
     private Integer isEnable;
 
     private Date createTime;
