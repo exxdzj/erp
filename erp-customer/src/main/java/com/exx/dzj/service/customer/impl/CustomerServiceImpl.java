@@ -161,4 +161,12 @@ public class CustomerServiceImpl implements CustomerService {
     public List<CustomerSupplierBean> queryCustomerSupplierBeanList () {
         return csMapper.queryCustomerSupplierBeanList();
     }
+
+    @Override
+    public ERPage<CustomerSupplierBean> selectionCustomer(CustomerSupplierQuery query) {
+        PageHelper.startPage(query.getPage(), query.getLimit());
+        List<CustomerSupplierBean> list = csMapper.selectionCustomer(query);
+        ERPage<CustomerSupplierBean> pages = new ERPage<>(list);
+        return pages;
+    }
 }

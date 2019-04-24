@@ -468,4 +468,18 @@
   <select id="queryUserRoleList" resultType="java.lang.String">
     SELECT role_code FROM tab_user_role t WHERE 1 = 1 AND user_code = #{userCode}
   </select>
+  
+  <select id="selectionUserInfo" resultMap="selectionUserInfoMap">
+    SELECT deptInfo.dept_name, userInfo.user_code, userInfo.user_name, userInfo.real_name, userInfo.dept_code
+      FROM tab_user_info userInfo
+	  INNER JOIN tab_dept_info deptInfo ON userInfo.dept_code = deptInfo.dept_code
+      WHERE userInfo.is_quit=1
+  </select>
+  <resultMap id="selectionUserInfoMap" type="com.exx.dzj.entity.user.UserModel">
+    <result property="deptCode" column="dept_code"/>
+    <result property="userCode" column="user_code"/>
+    <result property="userName" column="user_name"/>
+    <result property="realName" column="real_name"/>
+    <result property="deptName" column="dept_name"/>
+  </resultMap>
 </mapper>

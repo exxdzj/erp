@@ -6,6 +6,10 @@ import com.alibaba.excel.metadata.BaseRowModel;
 import com.alibaba.excel.metadata.Sheet;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.excepte.ErpException;
+import com.exx.dzj.unique.DefaultIdGenerator;
+import com.exx.dzj.unique.DefaultIdGeneratorConfig;
+import com.exx.dzj.unique.IdGenerator;
+import com.exx.dzj.unique.IdGeneratorConfig;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
@@ -55,5 +59,10 @@ public class ExcelUtil {
         return new ExcelReader(is, null, excelListener, false);
     }
 
-
+    public static String getCode (){
+        IdGeneratorConfig config = new DefaultIdGeneratorConfig();
+        IdGenerator idGenerator = new DefaultIdGenerator(config);
+        String next = idGenerator.next();
+        return next.substring(next.length() - 6, next.length());
+    }
 }

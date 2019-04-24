@@ -7,6 +7,7 @@ import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.facade.customer.CustomerSupplierFacade;
+import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.JsonUtils;
 import com.exx.dzj.util.MathUtil;
@@ -181,6 +182,21 @@ public class CustomerController {
             return result;
         }
         result = customerSupplierFacade.importCustomerSupplier(file);
+        return result;
+    }
+
+    /**
+     * @description 客户列表
+     * @author yangyun
+     * @date 2019/4/22 0022
+     * @param query
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("selectioncustomer")
+    public Result selectionCustomer (CustomerSupplierQuery query){
+        Result result = Result.responseSuccess();
+        ERPage<CustomerSupplierBean> customerSupplierBeanERPage = customerSupplierFacade.selectionCustomer(query);
+        result.setData(customerSupplierBeanERPage);
         return result;
     }
 }

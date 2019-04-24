@@ -3,6 +3,7 @@ package com.exx.dzj.service.customer;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
+import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 
 import java.io.InputStream;
@@ -64,4 +65,7 @@ public interface CustomerService {
     public void batchInsertCustomerSupplier(List<CustomerSupplierBean> customerSupplierList);
 
     public List<CustomerSupplierBean> queryCustomerSupplierBeanList ();
+
+    ERPage<CustomerSupplierBean> selectionCustomer (CustomerSupplierQuery query);
+
 }

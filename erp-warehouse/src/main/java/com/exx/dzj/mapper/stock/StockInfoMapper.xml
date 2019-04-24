@@ -501,7 +501,7 @@
     VALUES 
     <foreach collection="list" item="item" separator=",">
       (#{item.stockCode}, #{item.nature}, #{item.stockName}, #{item.specificateType}, #{item.stockClass}, #{item.stockClassName}, #{item.stockAddress}, #{item.meterUnit}, #{item.pictures},
-      #{item.barCode}, #{item.isShelves}, #{item.isEnable}, #{item.isCommSale}, #{item.createUser}, #{item.updateUser}, #{item.createTime}, #{item.updateTime})
+      #{item.barCode}, #{item.isShelves}, #{item.isEnable}, #{item.isCommSale}, #{item.createUser}, #{item.updateUser}, IFNULL(#{item.createTime}, SYSDATE()), SYSDATE())
     </foreach>
   </insert>
 
@@ -510,7 +510,7 @@
       (stock_code, standard_buy_price, standard_sell_price, max_purchase_price, min_sell_price, min_inventory, is_enable, create_time, create_user, update_time, update_user)
     VALUES
     <foreach collection="list" item="item" separator=",">
-      (#{item.stockCode}, #{item.standardBuyPrice}, #{item.standardSellPrice}, #{item.maxPurchasePrice}, #{item.minSellPrice}, #{item.minInventory}, #{item.isEnable}, #{item.createTime}, #{item.createUser}, #{item.updateTime}, #{item.updateUser})
+      (#{item.stockCode}, #{item.standardBuyPrice}, #{item.standardSellPrice}, #{item.maxPurchasePrice}, #{item.minSellPrice}, #{item.minInventory}, #{item.isEnable}, IFNULL(#{item.createTime}, #{item.createUser}, SYSDATE(), #{item.updateUser})
     </foreach>
   </insert>
 </mapper>

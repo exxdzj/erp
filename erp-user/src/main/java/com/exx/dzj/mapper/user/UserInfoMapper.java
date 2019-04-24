@@ -37,4 +37,6 @@ public interface UserInfoMapper {
     UserVo queryUserBean(UserInfo info);
 
     List<String> queryUserRoleList(@Param("userCode") String userCode);
+
+    public List<UserModel> selectionUserInfo();
 }

@@ -37,7 +37,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 
         MultipartConfigFactory factory = new MultipartConfigFactory();
 
-        factory.setMaxFileSize("102400KB");
+        factory.setMaxFileSize("409600KB");
         factory.setMaxRequestSize("1024000KB");
 
         return factory.createMultipartConfig();

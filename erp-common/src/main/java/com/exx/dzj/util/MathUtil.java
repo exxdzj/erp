@@ -1,5 +1,6 @@
 package com.exx.dzj.util;
 
+import com.exx.dzj.constant.CommonConstant;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,6 +18,8 @@ import java.util.regex.Pattern;
 public class MathUtil {
     static String[] units = { "", "十", "百", "千", "万", "十万", "百万", "千万", "亿", "十亿", "百亿", "千亿", "万亿" };
     static char[] numArray = { '零', '一', '二', '三', '四', '五', '六', '七', '八', '九' };
+    private static final BigDecimal BIG_DECIMAL_HUNDRED = new BigDecimal(100);
+    private static final BigDecimal BIG_DECIMAL_ZERO = new BigDecimal(0);
 
     private MathUtil() {
     }
@@ -631,5 +634,20 @@ public class MathUtil {
     public static boolean isNumber(String str){
         String reg = "^[0-9]+(.[0-9]+)?$";
         return str.matches(reg);
+    }
+
+    /**
+     * @description 保留 Bigdecimal 精度
+     * @author yangyun
+     * @date 2019/4/16 0016
+     * @param divisor 除数
+     * @param dividend 被除数
+     * @param scale 精度位
+     * @return java.math.BigDecimal
+     */
+    public static BigDecimal keepTwoBigdecimal (BigDecimal divisor, BigDecimal dividend, int scale){
+        boolean flag = CommonConstant.BIGDECIMAL_ZERO.equals(dividend.toString()) || BIG_DECIMAL_ZERO.equals(dividend);
+
+        return flag ? divisor : divisor.divide(dividend, scale, BigDecimal.ROUND_HALF_UP).multiply(BIG_DECIMAL_HUNDRED);
     }
 }

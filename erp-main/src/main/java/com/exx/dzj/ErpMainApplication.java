@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableCaching //开启基于注解的缓存
 public class ErpMainApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ErpMainApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ErpMainApplication.class, args);
+    }
 
 }
 

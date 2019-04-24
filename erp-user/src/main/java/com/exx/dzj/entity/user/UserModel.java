@@ -23,4 +23,5 @@ public class UserModel implements Serializable {
     private String genderName;
     private Integer isQuit;
     private String quitDesc;
+    private String deptCode;
 }

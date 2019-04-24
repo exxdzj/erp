@@ -15,6 +15,8 @@ public class CommonConstant {
 
     public final static int DEFAULT_VALUE_THREE = 3;
 
+    public final static int DEFAULT_VALUE_FOUR = 4;
+
     /**
      * Excel 文件后缀
      */
@@ -122,4 +124,6 @@ public class CommonConstant {
     public static final Integer CUST_TYPE_OF_CUSTOMER = 1;
     public static final Integer CUST_TYPE_OF_SUPPLIER = 2;
     public static final Integer CUST_TYPE_OF_ALL = 3;
+
+    public static final String BIGDECIMAL_ZERO = "0.00";
 }

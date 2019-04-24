@@ -100,4 +100,6 @@ public class SaleInfo implements Serializable {
 
     /*收款账户*/
     private String collectedAmounts;
+
+    private Integer saleTicketType;
 }

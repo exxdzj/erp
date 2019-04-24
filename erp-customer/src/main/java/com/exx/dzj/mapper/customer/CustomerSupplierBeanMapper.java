@@ -62,4 +62,6 @@ public interface CustomerSupplierBeanMapper {
     void batchInsertCustomerSupplier(List<CustomerSupplierBean> customerSupplierList);
 
     public List<CustomerSupplierBean> queryCustomerSupplierBeanList ();
+
+    List<CustomerSupplierBean> selectionCustomer(CustomerSupplierQuery query);
 }

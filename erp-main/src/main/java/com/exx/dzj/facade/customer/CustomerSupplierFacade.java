@@ -10,6 +10,7 @@ import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.user.UserTokenFacade;
+import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.accountatt.AccountAttributeService;
 import com.exx.dzj.service.contactway.ContactWayService;
@@ -276,5 +277,12 @@ public class CustomerSupplierFacade {
         List<CustomerSupplierBean> customerSuppliers = customerSupplierService.queryCustomerSupplierBeanList();
         Map<String, CustomerSupplierBean> collect = customerSuppliers.stream().collect(Collectors.toMap(CustomerSupplierBean::getCustName, u -> u, (k1, k2) -> k1));
         return collect;
+    }
+
+
+    public ERPage<CustomerSupplierBean> selectionCustomer (CustomerSupplierQuery query){
+        ERPage<CustomerSupplierBean> customerSupplierBeanERPage = customerSupplierService.selectionCustomer(query);
+
+        return customerSupplierBeanERPage;
     }
 }

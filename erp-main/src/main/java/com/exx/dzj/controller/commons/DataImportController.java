@@ -56,7 +56,7 @@ public class DataImportController {
             // 查询用户销售员信息
             Map<String, UserInfo> userInfoMap = userFacade.querySaleManCodeName();
 
-            // 查询客户等级
+            // 字典信息
             Map<String, String> stringMap = dictionaryFacade.queryDictionaryCodeAndName();
 
             // 客户供应商信息信息
@@ -82,7 +82,7 @@ public class DataImportController {
                     break;
                 case 3: // 存货
                     List<Object> stockList = ExcelUtil.readExcel(excelFile, new StockModel(), CommonConstant.DEFAULT_VALUE_ONE);
-                    Map<String, List> listMap = ProccessImportDataUtil.proccessStockInfo(stockList);
+                    Map<String, List> listMap = ProccessImportDataUtil.proccessStockInfo(stockList, stringMap);
 
                     stockFacade.batchInventoryDataProccess(listMap);
                     break;

@@ -53,6 +53,7 @@
         <module>erp-warehouse</module>
         <module>erp-user</module>
         <module>erp-common</module>
+        <module>erp-report-forms</module>
     </modules>
 
     <build>

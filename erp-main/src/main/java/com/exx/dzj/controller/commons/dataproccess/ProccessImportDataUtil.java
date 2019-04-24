@@ -288,7 +288,7 @@ public class ProccessImportDataUtil {
      * @param stockList
      * @return java.util.Map<java.lang.String,java.util.List>
      */
-    public static Map<String, List> proccessStockInfo (List<Object> stockList){
+    public static Map<String, List> proccessStockInfo (List<Object> stockList, Map<String, String> stringMap){
         Map<String, List> map = new ConcurrentHashMap<>();
         List<StockInfo> stockInfoList = new ArrayList<>();
         List<StockNumPrice> stockNumPriceList = new ArrayList<>();
@@ -303,6 +303,7 @@ public class ProccessImportDataUtil {
             BeanUtils.copyProperties(model, stockNumPrice);
 
             setStockNatureStatu(model, stockInfo);
+            setStockClass(stockInfo, stringMap);
 
             stockInfoList.add(stockInfo);
             stockNumPriceList.add(stockNumPrice);
@@ -350,5 +351,15 @@ public class ProccessImportDataUtil {
             stockInfo.setIsEnable(isEnable);
             stockInfo.setIsShelves(isEnable);
         }
+    }
+
+    private static void setStockClass(StockInfo stockInfo, Map<String, String> stringMap) {
+        String aClass = stockInfo.getStockClass();
+        if (StringUtils.isNotEmpty(aClass)){
+            String value = stringMap.get(aClass);
+            stockInfo.setStockClass(value);
+            stockInfo.setStockClassName(aClass);
+        }
+
     }
 }

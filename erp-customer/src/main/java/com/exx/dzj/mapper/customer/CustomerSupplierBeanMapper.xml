@@ -561,7 +561,7 @@
       <foreach collection="list" item="item" separator="," >
         (
           #{item.custCode}, #{item.custName}, #{item.custType}, #{item.custLevel}, #{item.levelName}, #{item.salesmanCode}, #{item.userCode}, #{item.regionCode},
-        #{item.regionName}, #{item.shipCode}, #{item.source}, #{item.shipAddress}, #{item.remarks}, #{item.createTime}, #{item.createUser}, #{item.isEnable}, #{item.updateUser}
+        #{item.regionName}, #{item.shipCode}, #{item.source}, #{item.shipAddress}, #{item.remarks}, SYSDATE(), #{item.createUser}, #{item.isEnable}, #{item.updateUser}
         )
       </foreach>
   </insert>
@@ -572,6 +572,19 @@
       cust_name AS custName
     FROM tab_customer_supplier
     WHERE  1=1
+  </select>
+
+  <select id="selectionCustomer" parameterType="com.exx.dzj.entity.customer.CustomerSupplierQuery" resultType="com.exx.dzj.entity.customer.CustomerSupplierBean">
+    SELECT
+      id AS id,
+      cust_code AS custCode,
+      cust_name AS custName
+    FROM tab_customer_supplier
+    WHERE  1=1
+    AND cust_type IN (#{custType}, 3)
+    <if test="custName != null">
+      AND cust_name LIKE CONCAT('%',#{custName},'%')
+    </if>
   </select>
 
 </mapper>

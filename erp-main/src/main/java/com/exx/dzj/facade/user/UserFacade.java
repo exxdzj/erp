@@ -1,18 +1,22 @@
 package com.exx.dzj.facade.user;
 
 import com.exx.dzj.entity.user.UserInfo;
+import com.exx.dzj.entity.user.UserModel;
 import com.exx.dzj.entity.user.UserQuery;
 import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.sys.RoleFacade;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.result.SelectionSaleInfo;
 import com.exx.dzj.service.user.UserRoleService;
 import com.exx.dzj.service.user.UserService;
+import org.hibernate.sql.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -143,5 +147,35 @@ public class UserFacade {
      */
     public Result quitUser(String userCode) {
         return salesmanService.quitUser(userCode);
+    }
+
+    public List<SelectionSaleInfo> selectionUserInfo (){
+        List<UserModel> userModels = salesmanService.selectionUserInfo();
+        Map<String, Map<String, List<UserModel>>> collect = userModels.stream().collect(Collectors.groupingBy(UserModel::getDeptCode, Collectors.groupingBy(UserModel::getDeptName)));
+        List<SelectionSaleInfo> list = new ArrayList<>();
+        collect.keySet().stream().forEach(
+                deptCode -> {
+                    Map<String, List<UserModel>> stringListMap = collect.get(deptCode);
+                    stringListMap.keySet().stream().forEach(
+                            deptName -> {
+                                SelectionSaleInfo s = new SelectionSaleInfo();
+                                s.setCode(deptCode);
+                                s.setLabel(deptName);
+                                List<UserModel> userModels1 = stringListMap.get(deptName);
+                                userModels1.stream().forEach(
+                                    userModel -> {
+                                        SelectionSaleInfo s2 = new SelectionSaleInfo();
+                                        s2.setCode(userModel.getUserCode());
+                                        s2.setLabel(userModel.getRealName());
+                                        s.getChildren().add(s2);
+                                    }
+                                );
+                                list.add(s);
+                            }
+                    );
+                }
+        );
+
+        return list;
     }
 }

@@ -1,5 +1,6 @@
 package com.exx.dzj.facade.market;
 
+import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
@@ -55,6 +56,7 @@ public class SalesTicketFacade {
         List<SaleGoodsDetailBean> goodsDetailBeanList = saleInfo.getSaleGoodsDetailBeanList();
         List<SaleReceiptsDetails> receiptsDetailsList = saleInfo.getSaleReceiptsDetailsList();
         setPaymentStatus(saleInfo);
+        saleInfo.setSaleTicketType(CommonConstant.DEFAULT_VALUE_ONE);
         salesTicketService.saveSaleInfo(saleInfo);
         if(!CollectionUtils.isEmpty(goodsDetailBeanList)){
             goodsDetailBeanList = setGoodsSaleCode(goodsDetailBeanList, saleInfo.getSaleCode());

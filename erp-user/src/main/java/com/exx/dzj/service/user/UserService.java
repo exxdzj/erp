@@ -1,9 +1,6 @@
 package com.exx.dzj.service.user;
 
-import com.exx.dzj.entity.user.UserBean;
-import com.exx.dzj.entity.user.UserInfo;
-import com.exx.dzj.entity.user.UserQuery;
-import com.exx.dzj.entity.user.UserVo;
+import com.exx.dzj.entity.user.*;
 import com.exx.dzj.result.Result;
 
 import java.util.List;
@@ -70,4 +67,6 @@ public interface UserService {
      * @return
      */
     Result quitUser(String userCode);
+
+    public List<UserModel> selectionUserInfo ();
 }

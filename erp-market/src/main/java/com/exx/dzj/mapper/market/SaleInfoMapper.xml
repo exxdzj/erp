@@ -324,9 +324,6 @@
       <if test="remarks != null">
         remarks,
       </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
       <if test="createUser != null">
         create_user,
       </if>
@@ -345,11 +342,12 @@
       <if test="collectionUserName != null">
         collection_user_name,
       </if>
+      <if test="saleTicketType != null">
+        sale_ticket_type,
+      </if>
+      create_time
     </trim>
     <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="saleCode != null">
         #{saleCode,jdbcType=VARCHAR},
       </if>
@@ -422,9 +420,6 @@
       <if test="remarks != null">
         #{remarks,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUser != null">
         #{createUser,jdbcType=VARCHAR},
       </if>
@@ -443,6 +438,10 @@
       <if test="collectionUserName != null">
         #{collectionUserName,jdbcType=VARCHAR},
       </if>
+      <if test="saleTicketType != null">
+        #{saleTicketType},
+      </if>
+      sysdate()
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.exx.dzj.entity.market.SaleInfoExample" resultType="java.lang.Long">

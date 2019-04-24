@@ -47,6 +47,11 @@
 		<!-- 依赖模块 -->
 		<dependency>
 			<groupId>com.exx.dzj</groupId>
+			<artifactId>erp-report-forms</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!--<dependency>
+			<groupId>com.exx.dzj</groupId>
 			<artifactId>erp-customer</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
@@ -69,7 +74,7 @@
 			<groupId>com.exx.dzj</groupId>
 			<artifactId>erp-user</artifactId>
 			<version>1.0.0</version>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>

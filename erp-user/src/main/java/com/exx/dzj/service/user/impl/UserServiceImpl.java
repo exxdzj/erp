@@ -180,4 +180,13 @@ public class UserServiceImpl implements UserService {
         }
         return result;
     }
+
+    @Cacheable(value="selectionUserInfo", keyGenerator = "myKeyGenerator")
+    @Override
+    public List<UserModel> selectionUserInfo() {
+
+        return userMapper.selectionUserInfo();
+    }
+
+
 }
