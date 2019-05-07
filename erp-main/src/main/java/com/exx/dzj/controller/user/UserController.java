@@ -137,4 +137,16 @@ public class UserController {
     public Result quitUser(@RequestParam String userCode) {
         return userFacade.quitUser(userCode);
     }
+
+    /**
+     * @param request
+     * @param response
+     * @return 获取用户信息(登录后)
+     */
+    @GetMapping("getUserInfo")
+    public Result getUserInfo(HttpServletRequest request, HttpServletResponse response) {
+        Result result = Result.responseSuccess();
+        result.setData(userFacade.getUserInfo(null));
+        return result;
+    }
 }
