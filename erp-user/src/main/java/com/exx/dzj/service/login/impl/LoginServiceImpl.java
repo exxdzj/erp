@@ -51,12 +51,15 @@ public class LoginServiceImpl implements LoginService {
             return result;
         }
 
+        tokenService.saveUserToken(userVo.getUserCode(), loginInfo.getUsertoken());
+
         //用户存在, 则生成 userToken, 并保存到数据库
-        String userToken = tokenService.getUserToken(userVo.getUserCode());
+        /*String userToken = tokenService.getUserToken(userVo.getUserCode());
         if(StringUtils.isNotBlank(userToken)){
             //loginInfo.setUsertoken(userToken);
             userVo.setUserToken(userToken);
-        }
+        }*/
+        userVo.setUserToken(loginInfo.getUsertoken());
         result.setData(userVo);
         return result;
     }

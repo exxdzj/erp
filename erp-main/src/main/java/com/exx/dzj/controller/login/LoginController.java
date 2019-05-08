@@ -3,6 +3,7 @@ package com.exx.dzj.controller.login;
 import com.exx.dzj.entity.login.LoginInfo;
 import com.exx.dzj.facade.login.LoginFacade;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.shiro.util.JwtUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,9 @@ public class LoginController {
             result.setMsg("用户或密码不可为空!");
             return result;
         }
+        //生成token
+        String token = JwtUtil.sign(loginInfo.getUsername(), loginInfo.getPassword());
+        loginInfo.setUsertoken(token);
         result = loginFacade.signIn(loginInfo);
         return result;
     }

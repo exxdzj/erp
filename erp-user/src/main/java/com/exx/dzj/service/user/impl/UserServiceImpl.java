@@ -142,6 +142,7 @@ public class UserServiceImpl implements UserService {
         UserInfoExample example= new UserInfoExample();
         UserInfoExample.Criteria criteria = example.createCriteria();
         criteria.andUserCodeEqualTo(userCode);
+        criteria.andIsQuitEqualTo(CommonConstant.DEFAULT_VALUE_ONE);
         return userMapper.countByExample(example);
     }
 

@@ -7,6 +7,7 @@ import com.exx.dzj.entity.user.UserQuery;
 import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,7 +126,12 @@ public class UserController {
      */
     @GetMapping("checkSalesmanCode")
     public Result checkSalesmanCode(String salesmanCode) {
-        return userFacade.checkSalesmanCode(salesmanCode);
+        Result result = Result.responseSuccess();
+        if(ConvertUtils.isEmpty(salesmanCode)) {
+            return result;
+        }
+        result = userFacade.checkSalesmanCode(salesmanCode);
+        return result;
     }
 
     /**

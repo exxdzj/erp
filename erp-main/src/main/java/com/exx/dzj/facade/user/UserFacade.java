@@ -149,6 +149,17 @@ public class UserFacade {
         return salesmanService.quitUser(userCode);
     }
 
+    /**
+     * 根据用户名查询用户信息
+     * @param userName
+     * @return
+     */
+    public UserVo queryUserName(String userName) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName(userName);
+        return salesmanService.queryUserInfo(userInfo);
+    }
+
     public List<SelectionSaleInfo> selectionUserInfo (){
         List<UserModel> userModels = salesmanService.selectionUserInfo();
         Map<String, Map<String, List<UserModel>>> collect = userModels.stream().collect(Collectors.groupingBy(UserModel::getDeptCode, Collectors.groupingBy(UserModel::getDeptName)));

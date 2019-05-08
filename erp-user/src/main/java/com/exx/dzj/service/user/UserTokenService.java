@@ -8,6 +8,13 @@ package com.exx.dzj.service.user;
 public interface UserTokenService {
 
     /**
+     * 保存 user token
+     * @param userCode
+     * @param userToken
+     */
+    void saveUserToken(String userCode, String userToken);
+
+    /**
      * 根据 user token 获取 user code
      * @return
      */

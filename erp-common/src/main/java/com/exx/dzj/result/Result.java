@@ -97,4 +97,11 @@ public class Result {
         result.setMsg(msg);
         return result;
     }
+
+    public static Result error(int code, String msg) {
+        Result r = new Result();
+        r.setCode(code);
+        r.setMsg(msg);
+        return r;
+    }
 }

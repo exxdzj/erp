@@ -38,6 +38,25 @@ public class UserTokenServiceImpl implements UserTokenService {
     }
 
     /**
+     * 保存 user token
+     * @param userCode
+     * @param userToken
+     */
+    @Override
+    public void saveUserToken(String userCode, String userToken) {
+        try {
+            IdGenerator idGenerator = new DefaultIdGenerator();
+            UserTokenBean tokenBean = new UserTokenBean();
+            tokenBean.setId(idGenerator.next());
+            tokenBean.setUserCode(userCode);
+            tokenBean.setUserToken(userToken);
+            userTokenMapper.saveSelective(tokenBean);
+        } catch(Exception ex) {
+            LOGGER.error("异常方法:{}异常信息:{}", UserTokenServiceImpl.class.getName()+".saveUserToken", ex.getMessage());
+        }
+    }
+
+    /**
      * 获取 user token
      * @param userCode
      * @return
