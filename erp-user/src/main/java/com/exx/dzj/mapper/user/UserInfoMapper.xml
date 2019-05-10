@@ -435,6 +435,10 @@
     <if test="salesmanCode != null and salesmanCode!=''">
       and tu.salesman_code = #{salesmanCode}
     </if>
+    <if test="isQuit != null">
+      and tu.is_quit = #{isQuit}
+    </if>
+    ORDER BY tu.is_quit DESC
   </select>
 
   <!-- 用户信息 -->

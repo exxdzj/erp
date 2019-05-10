@@ -283,7 +283,7 @@
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
-    where dept_code = #{deptCode,jdbcType=VARCHAR},
+    where dept_code = #{deptCode,jdbcType=VARCHAR}
   </update>
 
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.dept.DeptInfoBean">

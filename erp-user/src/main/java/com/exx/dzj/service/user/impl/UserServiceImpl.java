@@ -166,6 +166,11 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    /**
+     * 离职操作
+     * @param userCode
+     * @return
+     */
     @Override
     public Result quitUser(String userCode) {
         Result result = Result.responseSuccess();
