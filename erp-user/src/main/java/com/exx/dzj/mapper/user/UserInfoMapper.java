@@ -39,4 +39,6 @@ public interface UserInfoMapper {
     List<String> queryUserRoleList(@Param("userCode") String userCode);
 
     public List<UserModel> selectionUserInfo();
+
+    List<UserInfo> querySalesmanList();
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @Author
@@ -153,6 +154,21 @@ public class UserController {
     public Result getUserInfo(HttpServletRequest request, HttpServletResponse response) {
         Result result = Result.responseSuccess();
         result.setData(userFacade.getUserInfo(null));
+        return result;
+    }
+
+    /**
+     * @description 获取销售单下拉人员信息
+     * @author yangyun
+     * @date 2019/5/11 0011
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querySalesmanList")
+    public Result querySalesmanList (){
+        Result result = Result.responseSuccess();
+        List<UserInfo> userInfoList = userFacade.querySalesmanList();
+        result.setData(userInfoList);
         return result;
     }
 }

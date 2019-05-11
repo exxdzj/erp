@@ -4,6 +4,7 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
+import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.market.SalesTicketFacade;
 import com.exx.dzj.page.ERPage;
@@ -163,6 +164,13 @@ public class SalesTickeContorller {
         return result;
     }
 
+    /**
+     * @description 新增或修改物流信息
+     * @author yangyun
+     * @date 2019/5/11 0011
+     * @param logisticsInfo
+     * @return com.exx.dzj.result.Result
+     */
     @PostMapping("addlogisticsinfo")
     public Result addLogisticsInfo (LogisticsInfo logisticsInfo){
         Result result = Result.responseSuccess();
@@ -174,6 +182,13 @@ public class SalesTickeContorller {
         return result;
     }
 
+    /**
+     * @description  物流详情
+     * @author yangyun
+     * @date 2019/5/11 0011
+     * @param saleId
+     * @return com.exx.dzj.result.Result
+     */
     @GetMapping("getlogisticsinfo/{saleId}")
     public Result getLogisticsInfo (@PathVariable(value = "saleId", required = true) String saleId){
         Result result = Result.responseSuccess();
@@ -181,4 +196,5 @@ public class SalesTickeContorller {
         result.setData(logisticsInfo);
         return result;
     }
+
 }

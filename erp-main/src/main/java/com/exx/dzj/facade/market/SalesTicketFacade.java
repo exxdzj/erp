@@ -5,6 +5,7 @@ import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
+import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.dictionary.DictionaryService;
 import com.exx.dzj.service.salesgoodsdetail.SalesGoodsDetailService;
@@ -305,5 +306,7 @@ public class SalesTicketFacade {
     public LogisticsInfo getLogisticsInfo (String saleId) {
         return saleReceiptsDetailService.getLogisticsInfo(saleId);
     }
+
+
 
 }

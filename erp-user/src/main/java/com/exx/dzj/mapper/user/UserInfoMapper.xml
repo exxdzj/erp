@@ -486,4 +486,28 @@
     <result property="realName" column="real_name"/>
     <result property="deptName" column="dept_name"/>
   </resultMap>
+
+
+  <select id="querySalesmanList" resultType="com.exx.dzj.entity.user.UserInfo">
+    SELECT
+      user_code userCode,
+      salesman_code salesmanCode,
+      concat(
+          IFNULL(salesman_code, ''),
+          IFNULL(real_name, '')
+      ) realName
+    FROM
+      tab_user_info ui
+    WHERE
+      ui.is_quit = 1
+    AND ui.salesman_code in
+    (
+      SELECT
+        salesman_code
+      FROM
+        tab_sale_info
+      GROUP BY
+        salesman_code
+    )
+  </select>
 </mapper>

@@ -194,5 +194,10 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectionUserInfo();
     }
 
+    @Override
+    public List<UserInfo> querySalesmanList() {
+        return userMapper.querySalesmanList();
+    }
+
 
 }

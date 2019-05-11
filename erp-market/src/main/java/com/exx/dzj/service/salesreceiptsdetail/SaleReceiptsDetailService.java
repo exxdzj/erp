@@ -33,4 +33,5 @@ public interface SaleReceiptsDetailService {
     void updateLogisticsInfo(LogisticsInfo logisticsInfo);
 
     LogisticsInfo getLogisticsInfo (String saleId);
+
 }

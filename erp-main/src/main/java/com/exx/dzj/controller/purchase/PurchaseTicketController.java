@@ -1,5 +1,6 @@
 package com.exx.dzj.controller.purchase;
 
+import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
 import com.exx.dzj.excepte.ErpException;
@@ -61,8 +62,8 @@ public class PurchaseTicketController {
     @GetMapping("querypurchaseticket")
     public Result queryPurchaseTickets(HttpServletRequest request, HttpServletResponse response, PurchaseInfo purchaseInfo){
         Result result = Result.responseSuccess();
-        int pageNum = MathUtil.toInt(request.getParameter("pageNum"));
-        int pageSize = MathUtil.toInt(request.getParameter("pageSize"));
+        int pageNum = MathUtil.toInt(request.getParameter("pageNum"), CommonConstant.DEFAULT_VALUE_ZERO);
+        int pageSize = MathUtil.toInt(request.getParameter("pageSize"), CommonConstant.DEFAULT_PAGE_SIZE);
         ERPage<PurchaseInfo> purchaseInfoERPage = purchaseTicketFacade.queryPurchaseTickets(pageNum, pageSize, purchaseInfo);
         result.setData(purchaseInfoERPage);
         return result;

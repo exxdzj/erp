@@ -189,4 +189,8 @@ public class UserFacade {
 
         return list;
     }
+
+    public List<UserInfo> querySalesmanList(){
+        return salesmanService.querySalesmanList();
+    }
 }

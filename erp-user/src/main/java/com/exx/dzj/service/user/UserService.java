@@ -69,4 +69,6 @@ public interface UserService {
     Result quitUser(String userCode);
 
     public List<UserModel> selectionUserInfo ();
+
+    List<UserInfo> querySalesmanList();
 }
