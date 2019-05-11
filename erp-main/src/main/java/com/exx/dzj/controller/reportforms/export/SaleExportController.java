@@ -8,6 +8,7 @@ import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.statistics.sales.StockTypeReport;
 import com.exx.dzj.entity.statistics.sales.UserInfoReport;
 import com.exx.dzj.facade.reportforms.sale.SaleTicketReportFacade;
+import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.enums.ExportFileNameEnum;
 import com.exx.dzj.util.excel.ExcelUtil;
@@ -34,6 +35,9 @@ public class SaleExportController {
     @Autowired
     private SaleTicketReportFacade inventoryReportFacade;
 
+    @Autowired
+    private UserFacade userFacade;
+
     @GetMapping("exportinventorysale")
     public void exportInventorySale (HttpServletRequest request, HttpServletResponse response, StockInfoQuery query){
 
@@ -47,7 +51,7 @@ public class SaleExportController {
             response.setHeader("Content-Disposition", "attachment;filename=" + new String((value + "-" + code +".xlsx").getBytes(), "ISO-8859-1"));
 
             ServletOutputStream outputStream = response.getOutputStream();
-            ExcelWriter excelWriter = SaleExportUtils.inventorySaleExport(outputStream, stockTypeReports, query);
+            ExcelWriter excelWriter = SaleExportUtils.inventorySaleExport(outputStream, stockTypeReports, query, userFacade.getUserInfo(null));
             excelWriter.finish();
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,7 +78,7 @@ public class SaleExportController {
 
             ServletOutputStream outputStream = response.getOutputStream();
 
-            ExcelWriter writer = SaleExportUtils.salesManSaleExport(outputStream, mapData, query);
+            ExcelWriter writer = SaleExportUtils.salesManSaleExport(outputStream, mapData, query, userFacade.getUserInfo(null));
             writer.finish();
         } catch (IOException e){
             e.printStackTrace();
@@ -101,10 +105,39 @@ public class SaleExportController {
 
             ServletOutputStream outputStream = response.getOutputStream();
 
-            ExcelWriter writer = SaleExportUtils.customerSaleExport(outputStream, mapData, query);
+            ExcelWriter writer = SaleExportUtils.customerSaleExport(outputStream, mapData, query, userFacade.getUserInfo(null));
 
             writer.finish();
 
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @description  销售员提成统计导出
+     * @author yangyun
+     * @date 2019/4/30 0030
+     * @param response
+     * @param request
+     * @param query
+     * @return void
+     */
+    @GetMapping("exportsalededuction")
+    public void exportSaleDeduction (HttpServletResponse response, HttpServletRequest request, UserInfoQuery query){
+        try {
+            Map<String, Object> mapData = inventoryReportFacade.statisticSalesDeductionBySaleman(query);
+
+            String code = ExcelUtil.getCode();
+            String value = ExportFileNameEnum.SALEMAN_SALE_DEDUCTION.getValue();
+
+            response.setContentType("application/x-excel");
+            response.setHeader("Content-Disposition", "attachment;filename=" + new String((value + "-" + code + ".xlsx").getBytes(), "ISO-8859-1"));
+
+            ServletOutputStream outputStream = response.getOutputStream();
+            ExcelWriter writer = SaleExportUtils.SaleManDeductionExport(outputStream, mapData, query, userFacade.getUserInfo(null));
+
+            writer.finish();
         } catch (IOException e){
             e.printStackTrace();
         }

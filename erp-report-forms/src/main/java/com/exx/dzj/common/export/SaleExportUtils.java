@@ -9,12 +9,14 @@ import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.statistics.sales.*;
 import com.exx.dzj.entity.stock.StockInfo;
+import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.util.DateUtil;
 import com.exx.dzj.util.MathUtil;
 import com.exx.dzj.util.enums.ExportFileNameEnum;
 import com.exx.dzj.util.excel.ExcelUtil;
 import com.exx.dzj.util.excel.export.model.CustomerSaleModel;
 import com.exx.dzj.util.excel.export.model.InventorySaleModel;
+import com.exx.dzj.util.excel.export.model.SaleDeductionModel;
 import com.exx.dzj.util.excel.export.model.SalesManSaleModel;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -75,7 +77,7 @@ public class SaleExportUtils {
      * @param query
      * @return com.alibaba.excel.ExcelWriter
      */
-    public static ExcelWriter inventorySaleExport (ServletOutputStream outputStream, List<StockTypeReport> stockTypeReports, StockInfoQuery query) throws IOException {
+    public static ExcelWriter inventorySaleExport (ServletOutputStream outputStream, List<StockTypeReport> stockTypeReports, StockInfoQuery query, UserVo userVo) throws IOException {
         int count = 0;
 
         String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
@@ -206,7 +208,7 @@ public class SaleExportUtils {
         dataEnd.add(itemEnd);
         writer.write(dataEnd, sheet);
         itemEnd.setStockTypeName("公司名称: 正诚文化");
-        itemEnd.setCreateTime("操作员: ");
+        itemEnd.setCreateTime("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;
@@ -221,7 +223,7 @@ public class SaleExportUtils {
      * @param query
      * @return com.alibaba.excel.ExcelWriter
      */
-    public static ExcelWriter salesManSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query){
+    public static ExcelWriter salesManSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query, UserVo userVo){
         int count = 0;
         String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
 
@@ -354,13 +356,13 @@ public class SaleExportUtils {
 
         dataEnd.add(itemEnd);
         itemEnd.setCreateTime("公司名称: 正诚文化");
-        itemEnd.setCustName("操作员: ");
+        itemEnd.setCustName("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;
     }
 
-    public static ExcelWriter customerSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, CustomerQuery query){
+    public static ExcelWriter customerSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, CustomerQuery query, UserVo userVo){
         int count = 0;
         String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
 
@@ -484,7 +486,97 @@ public class SaleExportUtils {
 
         dataEnd.add(itemEnd);
         itemEnd.setCreateTime("公司名称: 正诚文化");
-        itemEnd.setStockName("操作员: ");
+        itemEnd.setStockName("操作员: " + userVo.getRealName());
+        writer.write(dataEnd, sheet);
+
+        return writer;
+    }
+
+    /**
+     * @description 销售员提成统计导出
+     * @author yangyun
+     * @date 2019/4/30 0030
+     * @param outputStream
+     * @param mapData
+     * @param query
+     * @return com.alibaba.excel.ExcelWriter
+     */
+    public static ExcelWriter SaleManDeductionExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query, UserVo userVo){
+        int count = 0;
+        String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
+
+        ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
+
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0,4000);
+        map.put(1,4000);
+        map.put(2,4000);
+        map.put(3,2000);
+        map.put(4,2800);
+        map.put(5,4000);
+        map.put(6,4000);
+        map.put(7,2000);
+        map.put(8,4000);
+        map.put(9,4000);
+
+
+        String sheetName = ExportFileNameEnum.SALEMAN_SALE_DEDUCTION.getValue() +" (" + value + ")";
+        Sheet sheet = gainSheet(map, sheetName);
+
+        Table title = new Table(1);
+        title.setClazz(SaleDeductionModel.class);
+        writer.write(null, sheet, title);
+
+
+        List<SaleDeductionModel> data1 = new ArrayList<>();
+        SaleDeductionModel item = new SaleDeductionModel();
+        item.setSaleMan("日期: 由" + query.getStartDate());
+        item.setSaleGoodsNum("至" + query.getEndDate());
+        item.setGrossMargin("打印日期: ");
+        item.setGrossRate(DateUtil.getDate(new Date()));
+        data1.add(item);
+        writer.write(data1, sheet);
+
+        List<SaleDeductionReport> saleDeductionReports = (List<SaleDeductionReport>)mapData.get("saleDeductionReports");
+
+        List<SaleDeductionModel> content = new ArrayList<>();
+
+        SaleDeductionModel sdm = null;
+
+        for (SaleDeductionReport sdr : saleDeductionReports){
+            sdm = new SaleDeductionModel();
+            sdm.setSaleMan(sdr.getUserCode() + sdr.getRealName());
+            sdm.setSaleGoodsNum(sdr.getSumGoodsNum() + "");
+            sdm.setSaleVolume(sdr.getSumSaleVolume().toString());
+            sdm.setSaleCost(sdr.getSumSaleCost().toString());
+            sdm.setGrossMargin(sdr.getSumGrossMargin().toString());
+            sdm.setGrossRate(sdr.getGrossRate().toString());
+            sdm.setFee(sdr.getSumCost().toString());
+            sdm.setPureProfit(sdr.getPureProfit().toString());
+            sdm.setCommissionRate((sdr.getCommissionRate() == null ? 0 : sdr.getCommissionRate()) + "%");
+            sdm.setCommission(sdr.getCommission().toString());
+            content.add(sdm);
+        }
+
+        sdm = new SaleDeductionModel();
+        sdm.setSaleMan("合计: ");
+        sdm.setSaleGoodsNum(mapData.get("sumGoodsNum").toString());
+        sdm.setSaleVolume(mapData.get("sumSaleVolume").toString());
+        sdm.setSaleCost(mapData.get("sumSaleCost").toString());
+        sdm.setGrossMargin(mapData.get("sumGrossMargin").toString());
+        sdm.setFee(mapData.get("sumCost").toString());
+        sdm.setPureProfit(mapData.get("sumPureProfit").toString());
+        sdm.setCommission(mapData.get("sumCommission").toString());
+
+        content.add(sdm);
+        writer.write(content, sheet);
+
+        List<SaleDeductionModel> dataEnd = new ArrayList<>();
+        SaleDeductionModel itemEnd = new SaleDeductionModel();
+        dataEnd.add(itemEnd);
+        writer.write(dataEnd, sheet);
+        itemEnd.setSaleMan("公司名称: 正诚文化");
+        itemEnd.setSaleVolume("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;

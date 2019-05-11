@@ -117,8 +117,11 @@
       UINFO.real_name AS userName,
       SINFO.user_code AS userCode,
       SINFO.create_user AS createUser,
+      logistics.logistic_company_name AS logisticsCompamyName,
+      logistics.freight_code AS freightCode,
       SINFO.remarks AS remarks
     FROM tab_sale_info SINFO
+    LEFT JOIN tab_sale_logistic_info logistics ON SINFO.id = logistics.sale_id
     LEFT JOIN tab_dictionary_info DICTIONPAY ON SINFO.payment_status=DICTIONPAY.dict_code AND DICTIONPAY.data_type='collection_status'
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code

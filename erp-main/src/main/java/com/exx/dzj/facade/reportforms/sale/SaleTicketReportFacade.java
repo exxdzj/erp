@@ -2,12 +2,14 @@ package com.exx.dzj.facade.reportforms.sale;
 
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.CustomerQuery;
+import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.statistics.sales.*;
 import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
 import com.exx.dzj.util.MathUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -17,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -275,4 +278,80 @@ public class SaleTicketReportFacade {
             }
         }
     }
+
+    /**
+     * @description 销售员提成统计
+     * @author yangyun
+     * @date 2019/4/30 0030
+     * @param query
+     * @return java.util.Map<java.lang.String,java.lang.Object>
+     */
+    public Map<String, Object> statisticSalesDeductionBySaleman (UserInfoQuery query) {
+        List<SaleDeductionReport> saleDeductionReports = stockTypeReportService.querySalesDeductionBySaleman(query);
+        double sumGoodsNum = saleDeductionReports.stream().mapToDouble(SaleDeductionReport::getSumGoodsNum).sum();
+        BigDecimal sumSaleVolume = saleDeductionReports.stream().map(SaleDeductionReport::getSumSaleVolume).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumSaleCost = saleDeductionReports.stream().map(SaleDeductionReport::getSumSaleCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumGrossMargin = saleDeductionReports.stream().map(SaleDeductionReport::getSumGrossMargin).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumGrossRate = MathUtil.keepTwoBigdecimal(sumGrossMargin, sumSaleVolume, CommonConstant.DEFAULT_VALUE_FOUR);//毛利率总计
+        BigDecimal sumCost = saleDeductionReports.stream().map(SaleDeductionReport::getSumCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumPureProfit = saleDeductionReports.stream().map(SaleDeductionReport::getPureProfit).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumCommission = saleDeductionReports.stream().map(SaleDeductionReport::getCommission).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("saleDeductionReports", saleDeductionReports);
+        map.put("sumGoodsNum", sumGoodsNum);
+        map.put("sumSaleVolume", sumSaleVolume);
+        map.put("sumSaleCost", sumSaleCost);
+        map.put("sumGrossMargin", sumGrossMargin);
+        map.put("sumGrossRate", sumGrossRate);
+        map.put("sumCost", sumCost);
+        map.put("sumPureProfit", sumPureProfit);
+        map.put("sumCommission", sumCommission);
+
+        return map;
+    }
+
+    public List<DeptSaleReport> selectionDeptInfo (String parentCode){
+        List<DeptSaleReport> deptInfoList = stockTypeReportService.selectionDeptInfo(parentCode);
+
+        return deptInfoList;
+    }
+
+    public List<DeptSaleReport> queryDeptSaleReport (DeptInfoQuery query){
+        List<DeptSaleReport> deptSaleReports = stockTypeReportService.queryDeptSaleReport(query);
+//        Map<String, List<DeptSaleReport>> map = deptSaleReports.stream().collect(Collectors.groupingBy(DeptSaleReport::getParentCode));
+//        List<DeptSaleReport> dom = map.remove("");
+        /*dom.stream().forEach(
+            p -> {
+                if (map.size() > 0){
+                    List<DeptSaleReport> child = map.remove(p.getDeptCode());
+                    p.getChildrenList().addAll(child);
+                    if (map.size() > 0) {
+                        child.stream().forEach(
+                            p2 -> {
+                                List<DeptSaleReport> child2 = map.remove(p2.getDeptCode());
+                                p2.getChildrenList().addAll(child2);
+                            }
+                        );
+                    }
+                }
+            }
+        );*/
+
+        BigDecimal sumCost = deptSaleReports.stream().map(DeptSaleReport::getSumCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumSaleVolume = deptSaleReports.stream().map(DeptSaleReport::getSumSaleVolume).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumSaleCost = deptSaleReports.stream().map(DeptSaleReport::getSumSaleCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+//        BigDecimal sumCost = deptSaleReports.stream().map(DeptSaleReport::getSumCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("deptSaleReports", deptSaleReports);
+
+
+
+        return deptSaleReports;
+    }
+
+
+
+
 }

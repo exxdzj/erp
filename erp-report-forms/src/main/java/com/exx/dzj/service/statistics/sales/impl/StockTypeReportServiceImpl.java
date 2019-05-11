@@ -1,12 +1,11 @@
 package com.exx.dzj.service.statistics.sales.impl;
 
 import com.exx.dzj.entity.bean.CustomerQuery;
+import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
-import com.exx.dzj.entity.statistics.sales.CustomerReport;
-import com.exx.dzj.entity.statistics.sales.StockTypeReport;
-import com.exx.dzj.entity.statistics.sales.UserInfoReport;
+import com.exx.dzj.entity.statistics.sales.*;
 import com.exx.dzj.mapper.statistics.sales.SaleTicketReportMapper;
 import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +40,21 @@ public class StockTypeReportServiceImpl implements SaleTicketReportService {
     @Override
     public List<CustomerReport> querySalesTicketByCust(CustomerQuery query) {
         return stockTypeReportMapper.querySalesTicketByCust(query);
+    }
+    @Cacheable(value = "querysalesdeductionbysaleman", keyGenerator = "myKeyGenerator")
+    @Override
+    public List<SaleDeductionReport> querySalesDeductionBySaleman(UserInfoQuery query) {
+        return stockTypeReportMapper.querySalesDeductionBySaleman(query);
+    }
+
+    @Override
+    public List<DeptSaleReport> selectionDeptInfo(String parentCode) {
+        return stockTypeReportMapper.selectionDeptInfo(parentCode);
+    }
+
+    @Override
+    public List<DeptSaleReport> queryDeptSaleReport(DeptInfoQuery query) {
+        List<DeptSaleReport> deptSaleReports = stockTypeReportMapper.queryDeptSaleReport(query);
+        return deptSaleReports;
     }
 }

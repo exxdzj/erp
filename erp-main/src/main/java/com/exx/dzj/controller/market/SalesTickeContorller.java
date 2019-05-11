@@ -1,6 +1,7 @@
 package com.exx.dzj.controller.market;
 
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
 import com.exx.dzj.excepte.ErpException;
@@ -159,6 +160,25 @@ public class SalesTickeContorller {
         Result result = Result.responseSuccess();
         List<SaleReceiptsDetails> saleReceiptsDetailsList = salesTicketFacade.querySaleReceviptDetailList(saleCode);
         result.setData(saleReceiptsDetailsList);
+        return result;
+    }
+
+    @PostMapping("addlogisticsinfo")
+    public Result addLogisticsInfo (LogisticsInfo logisticsInfo){
+        Result result = Result.responseSuccess();
+        try {
+            salesTicketFacade.addLogisticsInfo(logisticsInfo);
+        } catch (Exception e){
+            result.setCode(CommonConstant.FAIL_CODE);
+        }
+        return result;
+    }
+
+    @GetMapping("getlogisticsinfo/{saleId}")
+    public Result getLogisticsInfo (@PathVariable(value = "saleId", required = true) String saleId){
+        Result result = Result.responseSuccess();
+        LogisticsInfo logisticsInfo = salesTicketFacade.getLogisticsInfo(saleId);
+        result.setData(logisticsInfo);
         return result;
     }
 }

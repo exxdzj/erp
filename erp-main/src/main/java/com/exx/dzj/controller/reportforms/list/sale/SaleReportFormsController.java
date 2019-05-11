@@ -2,12 +2,11 @@ package com.exx.dzj.controller.reportforms.list.sale;
 
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.CustomerQuery;
+import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
-import com.exx.dzj.entity.customer.CustomerSupplierBean;
-import com.exx.dzj.entity.statistics.sales.CustomerReport;
-import com.exx.dzj.entity.statistics.sales.StockTypeReport;
-import com.exx.dzj.entity.statistics.sales.UserInfoReport;
+import com.exx.dzj.entity.statistics.sales.*;
+import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.facade.reportforms.sale.SaleTicketReportFacade;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.result.Result;
@@ -113,4 +112,42 @@ public class SaleReportFormsController {
         return result;
     }
 
+    /**
+     * @description 销售员提成统计
+     * @author yangyun
+     * @date 2019/4/29 0029
+     * @param query
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querysalesdeductionbysaleman")
+    public Result querySalesDeductionBySaleman (UserInfoQuery query){
+        Result result = Result.responseSuccess();
+
+        Map<String, Object> stringObjectMap = saleTicketReportFacade.statisticSalesDeductionBySaleman(query);
+        result.setData(stringObjectMap);
+        return result;
+    }
+
+    /**
+     * @description 部门下拉
+     * @author yangyun
+     * @date 2019/5/7 0007
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("selectiondeptinfo")
+    public Result selectionDeptInfo (){
+        Result result = Result.responseSuccess();
+        List<DeptSaleReport> deptSaleReports = saleTicketReportFacade.selectionDeptInfo("");
+        result.setData(deptSaleReports);
+        return result;
+    }
+
+    @GetMapping("querydeptsalereport")
+    public Result queryDeptSaleReport (DeptInfoQuery query){
+        Result result = Result.responseSuccess();
+        List<DeptSaleReport> deptSaleReports = saleTicketReportFacade.queryDeptSaleReport(query);
+        result.setData(deptSaleReports);
+        return result;
+    }
 }

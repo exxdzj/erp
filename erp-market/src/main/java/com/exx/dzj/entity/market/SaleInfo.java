@@ -102,4 +102,7 @@ public class SaleInfo implements Serializable {
     private String collectedAmounts;
 
     private Integer saleTicketType;
+
+    private String freightCode;
+    private String logisticsCompamyName;
 }

@@ -1,6 +1,7 @@
 package com.exx.dzj.facade.market;
 
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
@@ -65,6 +66,18 @@ public class SalesTicketFacade {
         if (!CollectionUtils.isEmpty(receiptsDetailsList)){
             receiptsDetailsList = setReceiptsSaleCode(receiptsDetailsList, saleInfo.getSaleCode());
             saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+        } else {
+            String collectedAmounts = saleInfo.getCollectedAmounts();
+            BigDecimal sumCollectedAmount = saleInfo.getSumCollectedAmount();
+            boolean b = sumCollectedAmount.compareTo(BigDecimal.ZERO) > 0;
+            if (StringUtils.isNotEmpty(collectedAmounts) && b){
+                SaleReceiptsDetails srd = new SaleReceiptsDetails();
+                srd.setCollectionAccount(collectedAmounts);
+                srd.setCollectedAmount(sumCollectedAmount);
+                srd.setSaleCode(saleInfo.getSaleCode());
+                receiptsDetailsList.add(srd);
+                saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+            }
         }
     }
 
@@ -95,6 +108,8 @@ public class SalesTicketFacade {
 
     private SaleInfo setPaymentStatus (SaleInfo saleInfo){
         if (StringUtils.isEmpty(saleInfo.getPaymentStatus())){
+            saleInfo.setPaymentStatus("cs01");
+        } else {
             if (saleInfo.getSumCollectedAmount().doubleValue() == 0){
                 saleInfo.setPaymentStatus("cs01");
             } else if (saleInfo.getSumCollectedAmount().doubleValue() == saleInfo.getReceivableAccoun().doubleValue()){
@@ -277,4 +292,18 @@ public class SalesTicketFacade {
             }
         }
     }
+
+    public void addLogisticsInfo (LogisticsInfo logisticsInfo){
+        Integer id = logisticsInfo.getId();
+        if (id == null){
+            saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
+        } else {
+            saleReceiptsDetailService.updateLogisticsInfo(logisticsInfo);
+        }
+    }
+
+    public LogisticsInfo getLogisticsInfo (String saleId) {
+        return saleReceiptsDetailService.getLogisticsInfo(saleId);
+    }
+
 }

@@ -340,4 +340,55 @@
       payment_method AS paymentMethod
     FROM tab_sale_receipts_details WHERE sale_code=#{saleCode}
   </select>
+  
+  <insert id="addLogisticsInfo" parameterType="com.exx.dzj.entity.market.LogisticsInfo">
+    INSERT INTO tab_sale_logistic_info
+      (logistic_company_code, logistic_company_name, freight_code, deliver_goods_time, selector_phone_num, remark, logistics_kind, sale_id, crate_time)
+    VALUES
+      (
+        #{logisticsCompanyCode}, #{logisticsCompamyName}, #{freihtCode}, #{deliverGoodsTime}, #{selectorPhoneNum}, #{remark},
+        #{logisticsKind}, #{saleId}, SYSDATE()
+      )
+  </insert>
+
+  <update id="updateLogisticsInfo">
+    UPDATE tab_sale_logistic_info
+    <set>
+      <if test="logisticsCompanyCode != null">
+        logistic_company_code = #{logisticsCompanyCode},
+      </if>
+      <if test="logisticsCompamyName != null">
+        logistic_company_name = #{logisticsCompamyName},
+      </if>
+      <if test="freihtCode != null">
+        freight_code = #{freihtCode},
+      </if>
+      <if test="deliverGoodsTime != null">
+        deliver_goods_time = #{deliverGoodsTime},
+      </if>
+      <if test="selectorPhoneNum != null">
+        selector_phone_num = #{selectorPhoneNum},
+      </if>
+      <if test="remark != null">
+        remark = #{remark},
+      </if>
+      <if test="logisticsKind != null">
+        logistics_kind = #{logisticsKind},
+      </if>
+      last_update_time = SYSDATE()
+    </set>
+  </update>
+
+  <select id="getLogisticsInfo" resultType="com.exx.dzj.entity.market.LogisticsInfo">
+    SELECT
+      id AS id,
+      logistic_company_code AS logisticsCompanyCode,
+      logistic_company_name AS logisticsCompamyName,
+      freight_code AS freihtCode,
+      deliver_goods_time AS deliverGoodsTime,
+      selector_phone_num AS selectorPhoneNum,
+      remark AS remark,
+      logistics_kind AS logisticsKind
+    FROM tab_sale_logistic_info WHERE sale_id = #{saleId}
+  </select>
 </mapper>

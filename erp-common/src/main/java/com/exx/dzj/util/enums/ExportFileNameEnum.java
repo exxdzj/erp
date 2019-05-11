@@ -5,6 +5,7 @@ package com.exx.dzj.util.enums;
  */
 public enum ExportFileNameEnum {
 
+    SALEMAN_SALE_DEDUCTION(5, "销售提成汇总分析"),
     CUSTOMER_SALE_NAME(4, "销售分析-依客户"),
     SALEMAN_SALE_NAME(3, "销售分析-依销售员"),
     INVENTORY_SALE_NAME(2, "销售分析-依存货"),

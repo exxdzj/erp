@@ -1,5 +1,6 @@
 package com.exx.dzj.mapper.market;
 
+import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
 import com.exx.dzj.entity.market.SaleReceiptsDetailsExample;
 import org.apache.ibatis.annotations.Param;
@@ -37,4 +38,10 @@ public interface SaleReceiptsDetailsMapper {
     void batchDeleteSalesReceiptsDeail(List<Integer> srdIds);
 
     List<SaleReceiptsDetails> querySaleReceviptDetailList(String saleCode);
+
+    void addLogisticsInfo(LogisticsInfo logisticsInfo);
+
+    void updateLogisticsInfo(LogisticsInfo logisticsInfo);
+
+    LogisticsInfo getLogisticsInfo(@Param("saleId") String saleId);
 }

@@ -180,4 +180,112 @@
                     ofType="com.exx.dzj.entity.statistics.sales.SaleGoodsReport"
                     select="selectSaleGoodsReportBySaleCode"/>
     </resultMap>
+
+    <!-- 销售员提成汇总统计 -->
+    <select id="querySalesDeductionBySaleman" parameterType="com.exx.dzj.entity.bean.UserInfoQuery" resultType="com.exx.dzj.entity.statistics.sales.SaleDeductionReport">
+      SELECT
+        ui.user_code AS userCode,
+        SUM(si.receivable_accoun) AS sumSaleVolume,  /*销售额, 总金额-优惠金额*/
+        SUM(sg.goods_num) AS sumGoodsNum, /*数量*/
+        SUM(sg.goods_num * sg.unit_price) AS sumSaleCost,  /*成本*/
+        SUM(si.receivable_accoun - sg.goods_num * sg.unit_price) AS sumGrossMargin, /*毛利*/
+        CONVERT(SUM(si.receivable_accoun - sg.goods_num * sg.unit_price) / SUM(si.receivable_accoun),DECIMAL(10, 4)) * 100 AS grossRate,
+        SUM(sg1.goods_num) AS sumCost, /*额外支出费用*/
+        SUM(si.receivable_accoun) - SUM(sg1.goods_num) AS pureProfit,
+        ui.commission_rate AS commissionRate, /*佣金率*/
+        IFNULL(ui.commission_rate * SUM(si.receivable_accoun), 0) / 100 AS commission, /*佣金*/
+        ui.real_name AS realName
+        FROM
+        tab_sale_info si
+        LEFT JOIN tab_user_info ui ON ui.user_code = si.user_code
+        inner JOIN tab_sale_goods_detail sg ON si.sale_code = sg.sale_code
+        inner JOIN tab_sale_goods_detail sg1 ON si.sale_code = sg1.sale_code AND sg1.stock_code REGEXP '^cb'
+        LEFT JOIN tab_sale_receipts_details sr ON si.sale_code = sr.sale_code
+        WHERE 1 =1
+	  <if test="userCodeList != null">
+          AND si.user_code IN
+          <foreach collection="userCodeList" separator="," open="(" close=")" item="item">
+            #{item}
+          </foreach>
+      </if>
+      AND si.create_time BETWEEN #{startDate} AND #{endDate}
+      <if test="paymentStatu == '1'" >
+          AND si.payment_status = 'cs03'
+      </if>
+      AND si.sale_ticket_type = #{businessType}
+      GROUP BY si.user_code
+    </select>
+    
+    <select id="selectionDeptInfo" resultMap="deptMap">
+      SELECT id, dept_code, dept_name, parent_code
+      FROM tab_dept_info
+      WHERE 1=1 AND parent_code = #{parentCode} AND is_enable = 1
+    </select>
+    
+    <resultMap id="deptMap" type="com.exx.dzj.entity.statistics.sales.DeptSaleReport">
+        <result column="id" property="id" />
+        <result column="dept_code" property="deptCode" />
+        <result column="dept_name" property="deptName" />
+        <result column="parent_code" property="parentCode" />
+        <collection property="childrenList" javaType="java.util.List" ofType="com.exx.dzj.entity.statistics.sales.DeptSaleReport"
+                    column="deptCode=dept_code" select="selectionDeptInfoChildren"/>
+    </resultMap>
+
+    <select id="selectionDeptInfoChildren" resultMap="deptMap">
+        SELECT id, dept_code, dept_name, parent_code
+        FROM tab_dept_info
+        WHERE 1=1 AND parent_code = #{deptCode} AND is_enable = 1
+    </select>
+    
+    <select id="queryDeptSaleReport" parameterType="com.exx.dzj.entity.bean.DeptInfoQuery" resultMap="deptReprotMap">
+        SELECT
+            dept.id, dept.dept_code, dept.dept_name,dept.parent_code,
+            IFNULL(sum(ss.sumSaleVolume), 0) AS sumSaleVolume,/*销售额, 总金额-优惠金额*/
+            IFNULL(sum(ss.sumSaleCost), 0) AS sumSaleCost,/*成本*/
+            IFNULL(sum(ss.sumGrossMargin), 0) AS sumGrossMargin,/*毛利*/
+            IFNULL(sum(ss.sumCost), 0) AS sumCost, /*额外支出费用*/
+            IFNULL(sum(ss.pureProfit), 0) AS pureProfit,/*纯利润*/
+            IFNULL(sum(ss.commission), 0) AS commission/*佣金*/
+        FROM
+          tab_dept_info dept
+        LEFT JOIN
+            (SELECT
+                ui.user_code AS userCode,
+                ui.dept_code AS deptCode,
+                SUM(si.receivable_accoun) AS sumSaleVolume,  /*销售额, 总金额-优惠金额*/
+                SUM(sg.goods_num * sg.unit_price) AS sumSaleCost,  /*成本*/
+                SUM(si.receivable_accoun - sg.goods_num * sg.unit_price) AS sumGrossMargin, /*毛利*/
+                SUM(sg1.goods_num) AS sumCost, /*额外支出费用*/
+                SUM(si.receivable_accoun) - SUM(sg1.goods_num) AS pureProfit,/*纯利润*/
+                IFNULL(ui.commission_rate * SUM(si.receivable_accoun), 0) / 100 AS commission, /*佣金*/
+                ui.real_name AS realName
+            FROM
+              tab_sale_info si
+            LEFT JOIN tab_user_info ui ON ui.user_code = si.user_code
+            INNER JOIN tab_sale_goods_detail sg ON si.sale_code = sg.sale_code
+            INNER JOIN tab_sale_goods_detail sg1 ON si.sale_code = sg1.sale_code AND sg1.stock_code REGEXP '^cb'
+            LEFT JOIN tab_sale_receipts_details sr ON si.sale_code = sr.sale_code
+            WHERE 1 =1 GROUP BY si.user_code) ss ON dept.dept_code = ss.deptCode
+        WHERE dept.is_enable = 1
+            <if test="deptCodeList != null">
+                AND dept.dept_code IN
+                <foreach collection="deptCodeList" item="item" open="(" close=")" separator=",">
+                  #{item}
+                </foreach>
+            </if>
+        GROUP BY dept.dept_code
+    </select>
+    
+    <resultMap id="deptReprotMap" type="com.exx.dzj.entity.statistics.sales.DeptSaleReport">
+        <result column="id" property="id"/>
+        <result column="dept_code" property="deptCode"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="parent_code" property="parentCode"/>
+        <result column="sumSaleVolume" property="sumSaleVolume"/>
+        <result column="sumSaleCost" property="sumSaleCost"/>
+        <result column="sumGrossMargin" property="sumGrossMargin"/>
+        <result column="sumCost" property="sumCost"/>
+        <result column="pureProfit" property="pureProfit"/>
+        <result column="commission" property="commission"/>
+    </resultMap>
 </mapper>
