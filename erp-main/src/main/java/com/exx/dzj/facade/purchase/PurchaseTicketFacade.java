@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,6 +66,18 @@ public class PurchaseTicketFacade {
         if (!CollectionUtils.isEmpty(purchaseReceiptsDetailsBeans)){
             purchaseReceiptsDetailsBeans = setReceiptsPurchaseCode(purchaseReceiptsDetailsBeans, purchaseInfo.getPurchaseCode());
             purchaseReceiptsService.batchInsertPurchaseReceipts(purchaseReceiptsDetailsBeans);
+        } else {
+            BigDecimal sumCollectedAmount = purchaseInfo.getSumCollectedAmount();
+            boolean b = sumCollectedAmount.compareTo(BigDecimal.ZERO) > 0;
+            String collectedAmounts = purchaseInfo.getCollectedAmounts();
+            if (StringUtils.isNotEmpty(collectedAmounts) && b){
+                PurchaseReceiptsDetailsBean prd = new PurchaseReceiptsDetailsBean();
+                prd.setCollectionAccount(collectedAmounts);
+                prd.setCollectedAmount(sumCollectedAmount);
+                prd.setPurchaseCode(purchaseInfo.getPurchaseCode());
+                purchaseReceiptsDetailsBeans.add(prd);
+                purchaseReceiptsService.batchInsertPurchaseReceipts(purchaseReceiptsDetailsBeans);
+            }
         }
     }
 
@@ -184,7 +197,18 @@ public class PurchaseTicketFacade {
                 List<Integer> deletePurchaseReceipts = new ArrayList<>();
                 List<PurchaseReceiptsDetailsBean> insertPurchaseReceipts = new ArrayList<>();
 
+//                List<Integer> collect1 = collect.stream().map(PurchaseReceiptsDetailsBean::getId).collect(Collectors.toList());
+//                for (PurchaseReceiptsDetailsBean e : finalCentreGoods){
+//                    boolean contains = collect1.contains(e.getId());
+//                    if (!contains){
+//                        deletePurchaseReceipts.add(e.getId());
+//                    }
+//
+//                }
+
+
                 for (PurchaseReceiptsDetailsBean e : finalCentreGoods){
+                    boolean contains = collect.contains(e);
                     if (!collect.contains(e)){
                         deletePurchaseReceipts.add(e.getId());
                     }
