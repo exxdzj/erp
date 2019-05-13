@@ -40,6 +40,7 @@ public class SysPermissionServiceImpl implements SysPermissionService {
             List<MenuInfo> menus = sysPermissionMapper.queryPermissionsByUser(userCode);
             JSONArray jsonArray = new JSONArray();
             this.getPermissionJsonArray(jsonArray, menus, null);
+            LOGGER.info("权限数据{}", jsonArray);
             return jsonArray;
         } catch (Exception ex) {
             LOGGER.error("异常方法:{}异常信息:{}", SysPermissionServiceImpl.class.getName()+".queryPermissionsByUser", ex.getMessage());
