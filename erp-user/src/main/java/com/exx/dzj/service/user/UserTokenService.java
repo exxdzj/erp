@@ -1,5 +1,7 @@
 package com.exx.dzj.service.user;
 
+import java.util.Map;
+
 /**
  * @Author
  * @Date 2019/1/8 0008 15:54
@@ -26,4 +28,10 @@ public interface UserTokenService {
      * @return
      */
     String getUserToken(String userCode);
+
+    /**
+     * 退出登录，删除 token
+     * @param param
+     */
+    void loginOut(Map<String, Object> param);
 }

@@ -7,13 +7,16 @@ import com.exx.dzj.mapper.user.UserInfoMapper;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.login.LoginService;
 import com.exx.dzj.service.user.UserTokenService;
+import com.exx.dzj.util.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author
@@ -60,6 +63,10 @@ public class LoginServiceImpl implements LoginService {
             userVo.setUserToken(userToken);
         }*/
         userVo.setUserToken(loginInfo.getUsertoken());
+        if(ConvertUtils.isEmpty(userVo.getHeadImg())) {
+            // 如果头像为空，则设置一个默认头像(此处暂时写死)
+            userVo.setHeadImg("https://exx-erp.oss-cn-shenzhen.aliyuncs.com/employee-images/prod/erpdefualtheadimg.png");
+        }
         result.setData(userVo);
         return result;
     }
@@ -71,7 +78,9 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Result loginOut(String userToken){
         Result result = Result.responseSuccess();
-
+        Map<String, Object> param = new HashMap<>();
+        param.put("userToken", userToken);
+        tokenService.loginOut(param);
         return result;
     }
 }

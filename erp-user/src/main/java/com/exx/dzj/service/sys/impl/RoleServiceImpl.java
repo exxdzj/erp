@@ -247,9 +247,16 @@ public class RoleServiceImpl implements RoleService {
             List<RoleMenuBean> list = new ArrayList<>();
             RoleMenuBean bean = null;
             if(!CollectionUtils.isEmpty(info.getMenuCodes())){
+                // 数据量很少的情况下使用 foreach 增强，比 JDK8 的新特性循环速度更快
                 for(String menuCode : info.getMenuCodes()){
                     bean = new RoleMenuBean();
                     bean.setMenuCode(menuCode);
+                    bean.setIsHalf(CommonConstant.DEFAULT_VALUE_ZERO);
+                    if(null != info.getHalfNodes() && info.getHalfNodes().size() > 0) {
+                        if(info.getHalfNodes().contains(menuCode)) {
+                            bean.setIsHalf(CommonConstant.DEFAULT_VALUE_ONE);
+                        }
+                    }
                     bean.setRoleCode(info.getRoleCode());
                     bean.setCreateUser(operator);
                     bean.setUpdateUser(operator);

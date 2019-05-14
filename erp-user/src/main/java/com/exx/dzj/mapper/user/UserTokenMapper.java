@@ -17,4 +17,6 @@ public interface UserTokenMapper {
     String queryUserCodeForToken(@Param("userToken") String userToken);
 
     UserTokenBean queryUserToken(Map<String, Object> param);
+
+    int loginOut(Map<String, Object> params);
 }

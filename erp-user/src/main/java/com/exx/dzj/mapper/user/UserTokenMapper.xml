@@ -46,4 +46,12 @@
         <![CDATA[ expired_date > SYSDATE() ]]>
         and user_code = #{userCode}
     </select>
+
+    <!-- 登出的时候将 token 给删除, 否则为垃圾数据 -->
+    <delete id="loginOut" parameterType="map">
+      delete from tab_user_token where user_token = #{userToken}
+      <if test="userCode!=null and userCode!=''">
+          AND user_code = #{userCode}
+      </if>
+    </delete>
 </mapper>

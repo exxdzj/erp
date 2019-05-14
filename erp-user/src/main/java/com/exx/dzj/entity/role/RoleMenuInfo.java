@@ -14,5 +14,12 @@ import java.util.List;
 public class RoleMenuInfo implements Serializable {
 
     private String roleCode;
+    /**
+     * 菜单编号
+     */
     private List<String> menuCodes;
+    /**
+     * 半选择的菜单
+     */
+    private List<String> halfNodes;
 }

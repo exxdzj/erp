@@ -98,4 +98,13 @@ public class UserTokenServiceImpl implements UserTokenService {
         }
         return token;
     }
+
+    /**
+     * 退出登录，删除 token
+     * @param param
+     */
+    @Override
+    public void loginOut(Map<String, Object> param) {
+        userTokenMapper.loginOut(param);
+    }
 }

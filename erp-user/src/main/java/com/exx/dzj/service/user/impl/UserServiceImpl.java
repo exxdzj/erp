@@ -7,6 +7,7 @@ import com.exx.dzj.mapper.user.UserInfoMapper;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.user.UserService;
+import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.GenerateSequenceUtil;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -82,7 +83,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserVo queryUserInfo(UserInfo info) {
-        return userMapper.queryUserInfo(info);
+        UserVo userVo = userMapper.queryUserInfo(info);
+        if(null != userVo && ConvertUtils.isEmpty(userVo.getHeadImg())) {
+            userVo.setHeadImg("https://exx-erp.oss-cn-shenzhen.aliyuncs.com/employee-images/prod/erpdefualtheadimg.png");
+        }
+        return userVo;
     }
 
     /**

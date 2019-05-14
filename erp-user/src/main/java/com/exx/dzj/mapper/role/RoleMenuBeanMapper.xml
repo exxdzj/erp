@@ -251,17 +251,17 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <!-- 查询 角色拥有的菜单权限数据 -->
+  <!-- 查询 角色拥有的菜单权限数据,将半选择的数据给过滤掉(半选择的节点一般都是父节点，之所以这样是方便前端显示，否则前端会将选择了部分子节点的父节点显示为非半选择) -->
   <select id="queryRolePermission" resultType="java.lang.String">
-    SELECT menu_code menuCode FROM tab_role_menu WHERE role_code = #{roleCode}
+    SELECT menu_code menuCode FROM tab_role_menu WHERE is_half = 0 AND role_code = #{roleCode}
   </select>
 
   <!-- 批量写入数据 -->
   <insert id="grantAuth">
-    insert into tab_role_menu (role_code, menu_code, create_time, create_user, update_time, update_user)
+    insert into tab_role_menu (role_code, menu_code, is_half, create_time, create_user, update_time, update_user)
     values
     <foreach collection="list" item="bean" separator=",">
-      (#{bean.roleCode}, #{bean.menuCode}, SYSDATE(), #{bean.createUser}, SYSDATE(), #{bean.updateUser})
+      (#{bean.roleCode}, #{bean.menuCode}, #{bean.isHalf}, SYSDATE(), #{bean.createUser}, SYSDATE(), #{bean.updateUser})
     </foreach>
   </insert>
 </mapper>
