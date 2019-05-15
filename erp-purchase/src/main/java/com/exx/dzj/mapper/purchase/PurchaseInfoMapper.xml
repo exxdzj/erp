@@ -115,6 +115,7 @@
       PINFO.invoice_code AS invoiceCode,
       UINFO.real_name AS purchaseName,
       PINFO.create_user AS createUser,
+      PINFO.flow_state AS flowState,
       PINFO.remarks AS remarks
     FROM
         tab_purchase_info PINFO
@@ -126,6 +127,9 @@
     </if>
     <if test="salesmanCode != null and salesmanCode != ''">
       AND  PINFO.salesman_code=#{salesmanCode}
+    </if>
+    <if test="flowState != '' and flowState > 0">
+      AND PINFO.flow_state = #{flowState}
     </if>
   </select>
 

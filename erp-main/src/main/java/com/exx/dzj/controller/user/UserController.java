@@ -164,10 +164,10 @@ public class UserController {
      * @param
      * @return com.exx.dzj.result.Result
      */
-    @GetMapping("querySalesmanList")
-    public Result querySalesmanList (){
+    @GetMapping("querySalesmanList/{type}")
+    public Result querySalesmanList (@PathVariable("type") Integer type){
         Result result = Result.responseSuccess();
-        List<UserInfo> userInfoList = userFacade.querySalesmanList();
+        List<UserInfo> userInfoList = userFacade.querySalesmanList(type);
         result.setData(userInfoList);
         return result;
     }

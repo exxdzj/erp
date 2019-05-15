@@ -40,5 +40,5 @@ public interface UserInfoMapper {
 
     public List<UserModel> selectionUserInfo();
 
-    List<UserInfo> querySalesmanList();
+    List<UserInfo> querySalesmanList(@Param("type") Integer type);
 }

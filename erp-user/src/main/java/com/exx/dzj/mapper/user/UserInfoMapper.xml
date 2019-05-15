@@ -505,7 +505,12 @@
       SELECT
         salesman_code
       FROM
+      <if test="type == 1">
         tab_sale_info
+      </if>
+      <if test="type == 2">
+        tab_purchase_info
+      </if>
       GROUP BY
         salesman_code
     )

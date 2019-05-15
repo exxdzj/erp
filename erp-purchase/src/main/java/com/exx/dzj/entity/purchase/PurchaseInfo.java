@@ -99,5 +99,5 @@ public class PurchaseInfo implements Serializable {
     private String paymentTerm;
 
     /**采购流程状态(1-财务审批，2-仓库审批， 3-完成)*/
-    private int flowState;
+    private String flowState;
 }

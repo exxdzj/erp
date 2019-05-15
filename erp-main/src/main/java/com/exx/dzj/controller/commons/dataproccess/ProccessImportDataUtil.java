@@ -301,7 +301,7 @@ public class ProccessImportDataUtil {
 
             BeanUtils.copyProperties(model, stockInfo);
             BeanUtils.copyProperties(model, stockNumPrice);
-
+            setPrice(stockNumPrice);
             setStockNatureStatu(model, stockInfo);
             setStockClass(stockInfo, stringMap);
 
@@ -360,6 +360,19 @@ public class ProccessImportDataUtil {
             stockInfo.setStockClass(value);
             stockInfo.setStockClassName(aClass);
         }
+    }
 
+    private static final BigDecimal  ZERO = new BigDecimal(0);
+
+    private static void setPrice (StockNumPrice stockNumPrice){
+        BigDecimal minSellPrice = stockNumPrice.getMinSellPrice();
+        if (minSellPrice == null || ZERO.equals(minSellPrice)){
+            stockNumPrice.setMinSellPrice(stockNumPrice.getStandardBuyPrice());
+        }
+
+        BigDecimal maxPurchasePrice = stockNumPrice.getMaxPurchasePrice();
+        if (maxPurchasePrice == null || ZERO.equals(maxPurchasePrice)){
+            stockNumPrice.setMaxPurchasePrice(stockNumPrice.getStandardSellPrice());
+        }
     }
 }
