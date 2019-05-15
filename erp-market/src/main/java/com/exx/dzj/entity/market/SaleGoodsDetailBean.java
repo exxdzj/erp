@@ -28,6 +28,8 @@ public class SaleGoodsDetailBean implements Serializable {
 
     private BigDecimal unitPrice;
 
+    private BigDecimal realSellPrice;
+
     private String priceType;
 
     private BigDecimal discountRate;

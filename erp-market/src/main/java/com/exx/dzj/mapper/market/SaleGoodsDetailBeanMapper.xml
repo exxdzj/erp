@@ -409,6 +409,7 @@
     SGDETAIL.stock_address ,
     SGDETAIL.goods_num ,
     SGDETAIL.unit_price ,
+    SGDETAIL.real_sell_price ,
     SGDETAIL.price_type ,
     SGDETAIL.discount_rate ,
     SGDETAIL.discount_amount ,
@@ -427,6 +428,7 @@
     <result property="stockAddress" jdbcType="VARCHAR" column="stock_address" />
     <result property="goodsNum" jdbcType="INTEGER" column="goods_num" />
     <result property="unitPrice" jdbcType="VARCHAR" column="unit_price" />
+    <result property="realSellPrice" jdbcType="VARCHAR" column="real_sell_price" />
     <result property="priceType" jdbcType="VARCHAR" column="price_type" />
     <result property="discountRate" jdbcType="DECIMAL" column="discount_rate" />
     <result property="discountAmount" jdbcType="DECIMAL" column="discount_amount" />
@@ -440,7 +442,7 @@
   <insert id="batchInsertSalesGoodsDetail">
     INSERT INTO tab_sale_goods_detail
       (sale_code, stock_code,stock_name, stock_address_code, stock_address,
-      goods_num, unit_price, price_type,
+      goods_num, unit_price, real_sell_price,price_type,
       discount_rate, discount_amount, sales_volume,
       remarks, create_time, create_user,
       update_time, update_user)
@@ -448,7 +450,7 @@
     <foreach collection="list" item="saleGoodsDetail" separator=",">
       (#{saleGoodsDetail.saleCode,jdbcType=VARCHAR}, #{saleGoodsDetail.stockCode,jdbcType=VARCHAR},
       #{saleGoodsDetail.stockName,jdbcType=VARCHAR}, #{saleGoodsDetail.stockAddressCode,jdbcType=VARCHAR}, #{saleGoodsDetail.stockAddress,jdbcType=VARCHAR},
-      #{saleGoodsDetail.goodsNum,jdbcType=INTEGER}, #{saleGoodsDetail.unitPrice,jdbcType=DECIMAL}, #{saleGoodsDetail.priceType,jdbcType=VARCHAR},
+      #{saleGoodsDetail.goodsNum,jdbcType=INTEGER}, #{saleGoodsDetail.unitPrice,jdbcType=DECIMAL}, #{saleGoodsDetail.realSellPrice},#{saleGoodsDetail.priceType,jdbcType=VARCHAR},
       #{saleGoodsDetail.discountRate,jdbcType=DECIMAL}, #{saleGoodsDetail.discountAmount,jdbcType=DECIMAL}, #{saleGoodsDetail.salesVolume,jdbcType=DECIMAL},
       #{saleGoodsDetail.remarks,jdbcType=VARCHAR}, SYSDATE(), #{saleGoodsDetail.createUser,jdbcType=VARCHAR},
       SYSDATE(), #{saleGoodsDetail.updateUser,jdbcType=VARCHAR})
@@ -480,6 +482,9 @@
           </if>
           <if test="item.unitPrice != null">
             unit_price = #{item.unitPrice,jdbcType=DECIMAL},
+          </if>
+          <if test="item.realSellPrice != null">
+            real_sell_price = #{item.realSellPrice,jdbcType=DECIMAL},
           </if>
           <if test="item.priceType != null">
             price_type = #{item.priceType,jdbcType=VARCHAR},
