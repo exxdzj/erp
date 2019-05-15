@@ -25,11 +25,20 @@ public class CustomerSupplierBean implements Serializable {
     //身份类型(1-客户  2-供应商  3-既是客户又是供应商 )
     private int custType;
 
+    //客户身份(0-非保险  1-保险)
+    private int identity;
+
     //客户职级(保险家等<类别>)
     private String custLevel;
 
     //职级名称(方便查询,减少表关联)
     private String levelName;
+
+    //职级编码(在行业中的职级,例如:总监、经理)
+    private String rankCode;
+
+    //职级名称(方便查询,不用再去字典表关联查询)
+    private String rankName;
 
     //业务员编码
     private String salesmanCode;

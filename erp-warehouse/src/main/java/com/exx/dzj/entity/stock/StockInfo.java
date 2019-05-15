@@ -45,4 +45,10 @@ public class StockInfo extends BaseModule {
     private Date updateTime;
 
     private String updateUser;
+
+    /**来源方式(0-存货， 1-采购，采购入库后需要修改为 0)*/
+    private Integer sourceMode;
+
+    /**版本号*/
+    private Integer version;
 }

@@ -3,6 +3,7 @@ package com.exx.dzj.entity.market;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -24,4 +25,6 @@ public class LogisticsInfo implements Serializable {
     private String remark;
     private Date createTime;
     private Date lastUpdateTime;
+    private BigDecimal expressFee;
+    private int chargeMethod;
 }

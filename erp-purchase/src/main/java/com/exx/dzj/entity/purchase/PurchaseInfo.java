@@ -8,25 +8,29 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 采购单实体类
+ */
 @Data
 @ToString
 public class PurchaseInfo implements Serializable {
+    /**主键*/
     private Integer id;
-
+    /**采购编号*/
     private String purchaseCode;
-
+    /**采购员编码*/
     private String userCode;
-
+    /**采购员编码(销售员和业务员对应)*/
     private String salesmanCode;
-
+    /**供应商编号*/
     private String custCode;
-
+    /**项目*/
     private String purchaseProject;
-
+    /**日期*/
     private Date purchaseDate;
-
+    /**采购订单号*/
     private String purchaseOrderCode;
-
+    /**币别*/
     private String currency;
 
     private Double exchangeRate;
@@ -82,10 +86,10 @@ public class PurchaseInfo implements Serializable {
     /***采购员名称***/
     private String purchaseName;
 
-    /*已收款总金额*/
+    /**已收款总金额*/
     private BigDecimal sumCollectedAmount;
 
-    /*收款账户*/
+    /**收款账户*/
     private String collectedAmounts;
 
     /**客户名称**/
@@ -94,4 +98,6 @@ public class PurchaseInfo implements Serializable {
     /**收款方式**/
     private String paymentTerm;
 
+    /**采购流程状态(1-财务审批，2-仓库审批， 3-完成)*/
+    private int flowState;
 }
