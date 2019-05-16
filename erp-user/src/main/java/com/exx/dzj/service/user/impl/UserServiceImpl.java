@@ -1,6 +1,9 @@
 package com.exx.dzj.service.user.impl;
 
+import com.exx.dzj.annotation.SysLog;
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.constant.LogLevel;
+import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.user.*;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.mapper.user.UserInfoMapper;
@@ -16,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,6 +50,7 @@ public class UserServiceImpl implements UserService {
      * @param bean
      */
     @Override
+    @SysLog(operate = "保存或修改用户信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public String saveSalesman(UserVo bean) throws ErpException{
         try{
             String userCode = null;
@@ -82,6 +85,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
+    @SysLog(operate = "查询用户信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public UserVo queryUserInfo(UserInfo info) {
         UserVo userVo = userMapper.queryUserInfo(info);
         if(null != userVo && ConvertUtils.isEmpty(userVo.getHeadImg())) {
@@ -96,6 +100,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
+    @SysLog(operate = "通过userCode查询用户信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public UserVo queryUserBean(String userCode) {
         UserInfo info = new UserInfo();
         info.setUserCode(userCode);
@@ -110,6 +115,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
+    @SysLog(operate = "查询用户列表", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result list(int pageNum, int pageSize, UserQuery query){
         Result result = Result.responseSuccess();
         PageHelper.startPage(pageNum, pageSize);
@@ -173,21 +179,20 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 离职操作
-     * @param userCode
+     * @param record
      * @return
      */
     @Override
-    public Result quitUser(String userCode) {
+    @SysLog(operate = "员工离职", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
+    public Result quitUser(UserInfo record) {
         Result result = Result.responseSuccess();
         try {
-            UserInfo record = new UserInfo();
-            record.setUserCode(userCode);
+            int i = 100/0;
             record.setIsQuit(CommonConstant.DEFAULT_VALUE_ZERO);
             userMapper.updateByPrimaryKeySelective(record);
         } catch(Exception ex){
-            result.setCode(400);
-            result.setMsg("操作失败!");
             LOGGER.error("异常方法:{}异常信息:{}", UserServiceImpl.class.getName()+".quitUser", ex.getMessage());
+            throw ex;
         }
         return result;
     }

@@ -4,6 +4,7 @@ import com.exx.dzj.entity.role.RoleBean;
 import com.exx.dzj.entity.role.RoleMenuInfo;
 import com.exx.dzj.entity.role.RoleQuery;
 import com.exx.dzj.entity.user.UserRole;
+import com.exx.dzj.entity.user.UserRoleBean;
 import com.exx.dzj.result.Result;
 
 import java.util.List;
@@ -39,12 +40,10 @@ public interface RoleService {
 
     /**
      * 保存 用户角色
-     * @param userCode
-     * @param operator
-     * @param roles
+     * @param urBean
      * @return
      */
-    Result saveUserRole(String userCode, String operator, List<String> roles);
+    Result saveUserRole(UserRoleBean urBean);
 
     /**
      * 删除 用户角色

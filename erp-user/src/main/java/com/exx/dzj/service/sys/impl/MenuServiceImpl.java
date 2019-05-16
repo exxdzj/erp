@@ -2,7 +2,10 @@ package com.exx.dzj.service.sys.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.exx.dzj.annotation.SysLog;
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.constant.LogLevel;
+import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.menu.MenuInfo;
 import com.exx.dzj.entity.menu.MenuInfoExample;
 import com.exx.dzj.entity.menu.MenuTreeBean;
@@ -187,6 +190,7 @@ public class MenuServiceImpl implements MenuService {
      * @return
      */
     @Override
+    @SysLog(operate = "更新菜单信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result saveMenu(MenuInfo menuInfo) {
         Result result = Result.responseSuccess();
         try {
@@ -225,8 +229,7 @@ public class MenuServiceImpl implements MenuService {
             }
         } catch(Exception ex) {
             LOGGER.error("异常方法:{}异常信息:{}", MenuServiceImpl.class.getName() + ".saveMenu", ex.getMessage());
-            result.setCode(400);
-            result.setMsg("保存菜单数据失败!");
+            throw ex;
         }
         return result;
     }
@@ -237,6 +240,7 @@ public class MenuServiceImpl implements MenuService {
      * @return
      */
     @Override
+    @SysLog(operate = "查询菜单信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public MenuInfo queryMenuInfo(MenuInfo menuInfo) {
         return menuMapper.selectByPrimaryKey(menuInfo.getMenuCode());
     }
@@ -247,6 +251,7 @@ public class MenuServiceImpl implements MenuService {
      * @return
      */
     @Override
+    @SysLog(operate = "删除菜单信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     @Transactional(rollbackFor = ErpException.class)
     public Result cancelMenu(MenuInfo menuInfo) throws ErpException{
         Result result = Result.responseSuccess();
@@ -262,8 +267,6 @@ public class MenuServiceImpl implements MenuService {
             menuInfo.setIsEnable(CommonConstant.DEFAULT_VALUE_ZERO);
             menuMapper.cancelMenu(menuInfo);
         } catch(Exception ex) {
-            result.setCode(400);
-            result.setMsg("删除失败!");
             LOGGER.error("异常方法{}异常信息{}", MenuServiceImpl.class.getName() + ".cancelMenu", ex.getMessage());
             throw new ErpException(400, "删除菜单失败!");
         }

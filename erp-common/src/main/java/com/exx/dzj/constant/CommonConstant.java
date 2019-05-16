@@ -126,4 +126,5 @@ public class CommonConstant {
     public static final Integer CUST_TYPE_OF_ALL = 3;
 
     public static final String BIGDECIMAL_ZERO = "0.00";
+
 }

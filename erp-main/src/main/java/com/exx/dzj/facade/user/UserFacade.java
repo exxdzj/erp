@@ -146,7 +146,16 @@ public class UserFacade {
      * @return
      */
     public Result quitUser(String userCode) {
-        return salesmanService.quitUser(userCode);
+        Result result = Result.responseSuccess();
+        try {
+            UserInfo userInfo = new UserInfo();
+            userInfo.setUserCode(userCode);
+            result = salesmanService.quitUser(userInfo);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("操作失败!");
+        }
+        return result;
     }
 
     /**

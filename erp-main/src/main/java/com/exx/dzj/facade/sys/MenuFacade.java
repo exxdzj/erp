@@ -55,7 +55,14 @@ public class MenuFacade {
      * @return
      */
     public Result saveMenu(MenuInfo menuInfo) {
-        return menuService.saveMenu(menuInfo);
+        Result result = Result.responseSuccess();
+        try {
+            result = menuService.saveMenu(menuInfo);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("保存菜单数据失败!");
+        }
+        return result;
     }
 
     /**

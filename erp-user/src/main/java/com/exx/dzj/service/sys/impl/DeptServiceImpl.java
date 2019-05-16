@@ -2,7 +2,10 @@ package com.exx.dzj.service.sys.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.exx.dzj.annotation.SysLog;
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.constant.LogLevel;
+import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.dept.DeptBean;
 import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.dept.DeptInfoBeanExample;
@@ -43,6 +46,7 @@ public class DeptServiceImpl implements DeptService {
      * @return
      */
     @Override
+    @SysLog(operate = "查询部门列表", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public ERPage<DeptInfoBean> queryList(int pageNum, int pageSize) {
         DeptInfoBeanExample example = new DeptInfoBeanExample();
         DeptInfoBeanExample.Criteria criteria = example.createCriteria();
@@ -78,7 +82,8 @@ public class DeptServiceImpl implements DeptService {
      * @return
      */
     @Override
-    public Result saveDeptInfo(DeptInfoBean dept) {
+    @SysLog(operate = "更新部门信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
+    public Result saveDeptInfo(DeptInfoBean dept){
         Result result = Result.responseSuccess();
         try {
             if(ConvertUtils.isNotEmpty(dept.getDeptCode())) {
@@ -95,8 +100,7 @@ public class DeptServiceImpl implements DeptService {
             }
         } catch(Exception ex) {
             LOGGER.error("异常方法:{}异常信息:{}", DeptServiceImpl.class.getName()+".saveDeptInfo", ex.getMessage());
-            result.setCode(400);
-            result.setMsg("操作失败!");
+            throw ex;
         }
         return result;
     }
@@ -173,15 +177,15 @@ public class DeptServiceImpl implements DeptService {
      * @return
      */
     @Override
+    @SysLog(operate = "删除部门信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result delDept(DeptBean dept) {
         Result result = Result.responseSuccess();
         try {
             dept.setIsEnable(CommonConstant.DEFAULT_VALUE_ZERO);
             deptMapper.delDept(dept);
         } catch(Exception ex) {
-            result.setCode(400);
-            result.setMsg("删除部门数据失败!");
             LOGGER.error("异常方法:{}异常信息:{}", DeptServiceImpl.class.getName()+".delDept", ex.getMessage());
+            throw ex;
         }
         return result;
     }

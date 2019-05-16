@@ -63,10 +63,10 @@ public interface UserService {
 
     /**
      * 用户 离职操作
-     * @param userCode
+     * @param record
      * @return
      */
-    Result quitUser(String userCode);
+    Result quitUser(UserInfo record);
 
     public List<UserModel> selectionUserInfo ();
 

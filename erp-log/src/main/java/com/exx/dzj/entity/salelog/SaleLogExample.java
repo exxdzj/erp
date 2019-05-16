@@ -1,17 +1,17 @@
-package com.exx.dzj.entity.log;
+package com.exx.dzj.entity.salelog;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class LogBeanExample {
+public class SaleLogExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public LogBeanExample() {
+    public SaleLogExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -235,73 +235,73 @@ public class LogBeanExample {
             return (Criteria) this;
         }
 
-        public Criteria andMethodIsNull() {
-            addCriterion("method is null");
+        public Criteria andLogContentIsNull() {
+            addCriterion("log_content is null");
             return (Criteria) this;
         }
 
-        public Criteria andMethodIsNotNull() {
-            addCriterion("method is not null");
+        public Criteria andLogContentIsNotNull() {
+            addCriterion("log_content is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMethodEqualTo(String value) {
-            addCriterion("method =", value, "method");
+        public Criteria andLogContentEqualTo(String value) {
+            addCriterion("log_content =", value, "logContent");
             return (Criteria) this;
         }
 
-        public Criteria andMethodNotEqualTo(String value) {
-            addCriterion("method <>", value, "method");
+        public Criteria andLogContentNotEqualTo(String value) {
+            addCriterion("log_content <>", value, "logContent");
             return (Criteria) this;
         }
 
-        public Criteria andMethodGreaterThan(String value) {
-            addCriterion("method >", value, "method");
+        public Criteria andLogContentGreaterThan(String value) {
+            addCriterion("log_content >", value, "logContent");
             return (Criteria) this;
         }
 
-        public Criteria andMethodGreaterThanOrEqualTo(String value) {
-            addCriterion("method >=", value, "method");
+        public Criteria andLogContentGreaterThanOrEqualTo(String value) {
+            addCriterion("log_content >=", value, "logContent");
             return (Criteria) this;
         }
 
-        public Criteria andMethodLessThan(String value) {
-            addCriterion("method <", value, "method");
+        public Criteria andLogContentLessThan(String value) {
+            addCriterion("log_content <", value, "logContent");
             return (Criteria) this;
         }
 
-        public Criteria andMethodLessThanOrEqualTo(String value) {
-            addCriterion("method <=", value, "method");
+        public Criteria andLogContentLessThanOrEqualTo(String value) {
+            addCriterion("log_content <=", value, "logContent");
             return (Criteria) this;
         }
 
-        public Criteria andMethodLike(String value) {
-            addCriterion("method like", value, "method");
+        public Criteria andLogContentLike(String value) {
+            addCriterion("log_content like", value, "logContent");
             return (Criteria) this;
         }
 
-        public Criteria andMethodNotLike(String value) {
-            addCriterion("method not like", value, "method");
+        public Criteria andLogContentNotLike(String value) {
+            addCriterion("log_content not like", value, "logContent");
             return (Criteria) this;
         }
 
-        public Criteria andMethodIn(List<String> values) {
-            addCriterion("method in", values, "method");
+        public Criteria andLogContentIn(List<String> values) {
+            addCriterion("log_content in", values, "logContent");
             return (Criteria) this;
         }
 
-        public Criteria andMethodNotIn(List<String> values) {
-            addCriterion("method not in", values, "method");
+        public Criteria andLogContentNotIn(List<String> values) {
+            addCriterion("log_content not in", values, "logContent");
             return (Criteria) this;
         }
 
-        public Criteria andMethodBetween(String value1, String value2) {
-            addCriterion("method between", value1, value2, "method");
+        public Criteria andLogContentBetween(String value1, String value2) {
+            addCriterion("log_content between", value1, value2, "logContent");
             return (Criteria) this;
         }
 
-        public Criteria andMethodNotBetween(String value1, String value2) {
-            addCriterion("method not between", value1, value2, "method");
+        public Criteria andLogContentNotBetween(String value1, String value2) {
+            addCriterion("log_content not between", value1, value2, "logContent");
             return (Criteria) this;
         }
 
@@ -375,143 +375,73 @@ public class LogBeanExample {
             return (Criteria) this;
         }
 
-        public Criteria andNodeIsNull() {
-            addCriterion("node is null");
+        public Criteria andSaleCodeIsNull() {
+            addCriterion("sale_code is null");
             return (Criteria) this;
         }
 
-        public Criteria andNodeIsNotNull() {
-            addCriterion("node is not null");
+        public Criteria andSaleCodeIsNotNull() {
+            addCriterion("sale_code is not null");
             return (Criteria) this;
         }
 
-        public Criteria andNodeEqualTo(String value) {
-            addCriterion("node =", value, "node");
+        public Criteria andSaleCodeEqualTo(String value) {
+            addCriterion("sale_code =", value, "saleCode");
             return (Criteria) this;
         }
 
-        public Criteria andNodeNotEqualTo(String value) {
-            addCriterion("node <>", value, "node");
+        public Criteria andSaleCodeNotEqualTo(String value) {
+            addCriterion("sale_code <>", value, "saleCode");
             return (Criteria) this;
         }
 
-        public Criteria andNodeGreaterThan(String value) {
-            addCriterion("node >", value, "node");
+        public Criteria andSaleCodeGreaterThan(String value) {
+            addCriterion("sale_code >", value, "saleCode");
             return (Criteria) this;
         }
 
-        public Criteria andNodeGreaterThanOrEqualTo(String value) {
-            addCriterion("node >=", value, "node");
+        public Criteria andSaleCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("sale_code >=", value, "saleCode");
             return (Criteria) this;
         }
 
-        public Criteria andNodeLessThan(String value) {
-            addCriterion("node <", value, "node");
+        public Criteria andSaleCodeLessThan(String value) {
+            addCriterion("sale_code <", value, "saleCode");
             return (Criteria) this;
         }
 
-        public Criteria andNodeLessThanOrEqualTo(String value) {
-            addCriterion("node <=", value, "node");
+        public Criteria andSaleCodeLessThanOrEqualTo(String value) {
+            addCriterion("sale_code <=", value, "saleCode");
             return (Criteria) this;
         }
 
-        public Criteria andNodeLike(String value) {
-            addCriterion("node like", value, "node");
+        public Criteria andSaleCodeLike(String value) {
+            addCriterion("sale_code like", value, "saleCode");
             return (Criteria) this;
         }
 
-        public Criteria andNodeNotLike(String value) {
-            addCriterion("node not like", value, "node");
+        public Criteria andSaleCodeNotLike(String value) {
+            addCriterion("sale_code not like", value, "saleCode");
             return (Criteria) this;
         }
 
-        public Criteria andNodeIn(List<String> values) {
-            addCriterion("node in", values, "node");
+        public Criteria andSaleCodeIn(List<String> values) {
+            addCriterion("sale_code in", values, "saleCode");
             return (Criteria) this;
         }
 
-        public Criteria andNodeNotIn(List<String> values) {
-            addCriterion("node not in", values, "node");
+        public Criteria andSaleCodeNotIn(List<String> values) {
+            addCriterion("sale_code not in", values, "saleCode");
             return (Criteria) this;
         }
 
-        public Criteria andNodeBetween(String value1, String value2) {
-            addCriterion("node between", value1, value2, "node");
+        public Criteria andSaleCodeBetween(String value1, String value2) {
+            addCriterion("sale_code between", value1, value2, "saleCode");
             return (Criteria) this;
         }
 
-        public Criteria andNodeNotBetween(String value1, String value2) {
-            addCriterion("node not between", value1, value2, "node");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelIsNull() {
-            addCriterion("log_level is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelIsNotNull() {
-            addCriterion("log_level is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelEqualTo(String value) {
-            addCriterion("log_level =", value, "logLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelNotEqualTo(String value) {
-            addCriterion("log_level <>", value, "logLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelGreaterThan(String value) {
-            addCriterion("log_level >", value, "logLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelGreaterThanOrEqualTo(String value) {
-            addCriterion("log_level >=", value, "logLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelLessThan(String value) {
-            addCriterion("log_level <", value, "logLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelLessThanOrEqualTo(String value) {
-            addCriterion("log_level <=", value, "logLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelLike(String value) {
-            addCriterion("log_level like", value, "logLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelNotLike(String value) {
-            addCriterion("log_level not like", value, "logLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelIn(List<String> values) {
-            addCriterion("log_level in", values, "logLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelNotIn(List<String> values) {
-            addCriterion("log_level not in", values, "logLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelBetween(String value1, String value2) {
-            addCriterion("log_level between", value1, value2, "logLevel");
-            return (Criteria) this;
-        }
-
-        public Criteria andLogLevelNotBetween(String value1, String value2) {
-            addCriterion("log_level not between", value1, value2, "logLevel");
+        public Criteria andSaleCodeNotBetween(String value1, String value2) {
+            addCriterion("sale_code not between", value1, value2, "saleCode");
             return (Criteria) this;
         }
 

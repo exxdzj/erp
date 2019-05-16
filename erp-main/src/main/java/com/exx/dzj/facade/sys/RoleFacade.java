@@ -3,6 +3,7 @@ package com.exx.dzj.facade.sys;
 import com.exx.dzj.entity.role.RoleBean;
 import com.exx.dzj.entity.role.RoleMenuInfo;
 import com.exx.dzj.entity.role.RoleQuery;
+import com.exx.dzj.entity.user.UserRoleBean;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.result.Result;
@@ -63,8 +64,13 @@ public class RoleFacade {
      * @return
      */
     public Result saveUserRole(String userCode, List<String> roles) throws ErpException{
+        UserRoleBean urBean = new UserRoleBean();
         String operator = userTokenFacade.queryUserCodeForToken(null);
-        return roleService.saveUserRole(userCode, operator, roles);
+        urBean.setUserCode(userCode);
+        urBean.setCreateUser(operator);
+        urBean.setUpdateUser(operator);
+        urBean.setRoles(roles);
+        return roleService.saveUserRole(urBean);
     }
 
     /**
@@ -73,7 +79,14 @@ public class RoleFacade {
      * @return
      */
     public Result delByUserCode(String userCode) throws ErpException {
-        return roleService.delByUserCode(userCode);
+        Result result = Result.responseSuccess();
+        try {
+            result = roleService.delByUserCode(userCode);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("删除用户角色失败!");
+        }
+        return result;
     }
 
     /**
@@ -82,10 +95,17 @@ public class RoleFacade {
      * @return
      */
     public Result saveRole(RoleBean bean) {
+        Result result = Result.responseSuccess();
         String operator = userTokenFacade.queryUserCodeForToken(null);
         bean.setCreateUser(operator);
         bean.setUpdateUser(operator);
-        return roleService.saveRole(bean);
+        try {
+            result = roleService.saveRole(bean);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("保存角色信息失败!");
+        }
+        return result;
     }
 
     /**
@@ -114,8 +134,15 @@ public class RoleFacade {
      * @return
      */
     public Result cancelRole(String roleCode) {
+        Result result = Result.responseSuccess();
         String operator = userTokenFacade.queryUserCodeForToken(null);
-        return roleService.cancelRole(roleCode, operator);
+        try {
+            result = roleService.cancelRole(roleCode, operator);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("删除角色失败!");
+        }
+        return result;
     }
 
     /**

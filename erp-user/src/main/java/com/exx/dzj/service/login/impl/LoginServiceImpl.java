@@ -1,5 +1,8 @@
 package com.exx.dzj.service.login.impl;
 
+import com.exx.dzj.annotation.SysLog;
+import com.exx.dzj.constant.LogLevel;
+import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.login.LoginInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.entity.user.UserVo;
@@ -40,6 +43,7 @@ public class LoginServiceImpl implements LoginService {
      * @return 返回 userToken, 前端获取之后,将 userToken 放到 header 域中
      */
     @Override
+    @SysLog(operate = "登录", logType = LogType.LOG_TYPE_LOGIN, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result signIn(LoginInfo loginInfo){
         Result result = Result.responseSuccess();
 

@@ -1,6 +1,9 @@
 package com.exx.dzj.service.sys.impl;
 
+import com.exx.dzj.annotation.SysLog;
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.constant.LogLevel;
+import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.dictionary.*;
 import com.exx.dzj.mapper.dictionary.DictionaryInfoMapper;
 import com.exx.dzj.mapper.dictionary.DictionaryTypeBeanMapper;
@@ -47,6 +50,7 @@ public class DictServiceImpl implements DictService {
      * @return
      */
     @Override
+    @SysLog(operate = "查询字典类型数据列表", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public List<DictionaryBean> queryDictDataList(DictionaryInfo dict) {
         dict.setIsEnable(CommonConstant.DEFAULT_VALUE_ONE);
         return dictMapper.queryDictDataList(dict);
@@ -70,6 +74,7 @@ public class DictServiceImpl implements DictService {
      * @return
      */
     @Override
+    @SysLog(operate = "更新字典类型数据", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result saveDictType(DictionaryTypeBean bean) {
         Result result = Result.responseSuccess();
         try {
@@ -79,28 +84,27 @@ public class DictServiceImpl implements DictService {
                 dictTypeMapper.insertSelective(bean);
             }
         } catch(Exception ex) {
-            result.setCode(400);
-            result.setMsg("保存字典数据类型失败!");
             log.error("异常方法{}异常信息{}", DictServiceImpl.class.getName()+"saveDictType", ex.getMessage());
+            throw ex;
         }
         return result;
     }
 
     /**
-     * 获取
+     * 删除 字典类型数据
      * @param bean
      * @return
      */
     @Override
+    @SysLog(operate = "删除字典类型数据", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result delDictType(DictionaryTypeBean bean) {
         Result result = Result.responseSuccess();
         try {
             bean.setIsEnable(CommonConstant.DEFAULT_VALUE_ZERO);
             dictTypeMapper.updateByPrimaryKeySelective(bean);
         } catch(Exception ex) {
-            result.setCode(400);
-            result.setMsg("删除字典数据类型失败!");
             log.error("异常方法{}异常信息{}", DictServiceImpl.class.getName()+"delDictType", ex.getMessage());
+            throw ex;
         }
         return result;
     }
@@ -111,15 +115,15 @@ public class DictServiceImpl implements DictService {
      * @return
      */
     @Override
+    @SysLog(operate = "删除字典数据", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result delDictData(DictionaryInfo info) {
         Result result = Result.responseSuccess();
         try {
             info.setIsEnable(CommonConstant.DEFAULT_VALUE_ZERO);
             dictMapper.updateByPrimaryKeySelective(info);
         } catch(Exception ex) {
-            result.setCode(400);
-            result.setMsg("删除字典数据失败!");
             log.error("异常方法{}异常信息{}", DictServiceImpl.class.getName()+"delDictType", ex.getMessage());
+            throw ex;
         }
         return result;
     }
@@ -130,6 +134,7 @@ public class DictServiceImpl implements DictService {
      * @return
      */
     @Override
+    @SysLog(operate = "更新字典数据", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result saveDictData(DictionaryInfo info) {
         Result result = Result.responseSuccess();
         try {
@@ -145,9 +150,8 @@ public class DictServiceImpl implements DictService {
                 dictMapper.insertSelective(info);
             }
         } catch(Exception ex) {
-            result.setCode(400);
-            result.setMsg("保存字典数据失败!");
             log.error("异常方法{}异常信息{}", DictServiceImpl.class.getName()+"saveDictData", ex.getMessage());
+            throw ex;
         }
         return result;
     }

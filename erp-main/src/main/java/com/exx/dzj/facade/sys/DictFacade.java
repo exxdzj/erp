@@ -54,10 +54,17 @@ public class DictFacade {
      * @return
      */
     public Result saveDictType(DictionaryTypeBean bean) {
+        Result result = Result.responseSuccess();
         String operator = userTokenFacade.queryUserCodeForToken(null);
         bean.setCreateUser(operator);
         bean.setUpdateUser(operator);
-        return dictService.saveDictType(bean);
+        try {
+            result = dictService.saveDictType(bean);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("保存字典数据类型失败!");
+        }
+        return result;
     }
 
     /**
@@ -66,9 +73,16 @@ public class DictFacade {
      * @return
      */
     public Result delDictType(DictionaryTypeBean bean) {
+        Result result = Result.responseSuccess();
         String operator = userTokenFacade.queryUserCodeForToken(null);
         bean.setUpdateUser(operator);
-        return dictService.delDictType(bean);
+        try {
+            result = dictService.delDictType(bean);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("删除字典数据类型失败!");
+        }
+        return result;
     }
 
     /**
@@ -87,9 +101,16 @@ public class DictFacade {
      * @return
      */
     public Result delDictData(DictionaryInfo info) {
+        Result result = Result.responseSuccess();
         String operator = userTokenFacade.queryUserCodeForToken(null);
         info.setUpdateUser(operator);
-        return dictService.delDictData(info);
+        try {
+            result = dictService.delDictData(info);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("删除字典数据失败!");
+        }
+        return result;
     }
 
     /**
@@ -98,9 +119,16 @@ public class DictFacade {
      * @return
      */
     public Result saveDictData(DictionaryInfo info) {
+        Result result = Result.responseSuccess();
         String operator = userTokenFacade.queryUserCodeForToken(null);
         info.setCreateUser(operator);
         info.setUpdateUser(operator);
-        return dictService.saveDictData(info);
+        try {
+            result = dictService.saveDictData(info);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("保存字典数据失败!");
+        }
+        return result;
     }
 }

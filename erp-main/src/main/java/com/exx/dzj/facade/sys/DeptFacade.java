@@ -70,10 +70,17 @@ public class DeptFacade {
      * @return
      */
     public Result saveDeptInfo(DeptInfoBean dept) {
+        Result result = Result.responseSuccess();
         String operator = userTokenFacade.queryUserCodeForToken(null);
         dept.setCreateUser(operator);
         dept.setUpdateUser(operator);
-        return deptService.saveDeptInfo(dept);
+        try {
+            result = deptService.saveDeptInfo(dept);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("操作失败!");
+        }
+        return result;
     }
 
     /**
@@ -82,6 +89,13 @@ public class DeptFacade {
      * @return
      */
     public Result delDept(DeptBean dept) {
-        return deptService.delDept(dept);
+        Result result = Result.responseSuccess();
+        try {
+            result = deptService.delDept(dept);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("删除部门数据失败!");
+        }
+        return result;
     }
 }

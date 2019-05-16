@@ -1,8 +1,12 @@
 package com.exx.dzj.service.sys.impl;
 
+import com.exx.dzj.annotation.SysLog;
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.constant.LogLevel;
+import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.role.*;
 import com.exx.dzj.entity.user.UserRole;
+import com.exx.dzj.entity.user.UserRoleBean;
 import com.exx.dzj.entity.user.UserRoleExample;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.mapper.role.RoleBeanMapper;
@@ -50,6 +54,7 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
+    @SysLog(operate = "查询角色列表", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result queryList(int pagaNum, int pageSize, RoleQuery query) {
         Result result = Result.responseSuccess();
         PageHelper.startPage(pagaNum, pageSize);
@@ -95,28 +100,28 @@ public class RoleServiceImpl implements RoleService {
 
     /**
      * 保存 用户角色
-     * @param userCode
-     * @param roles
+     * @param urBean
      * @return
      */
     @Override
-    public Result saveUserRole(String userCode, String operator, List<String> roles){
+    @SysLog(operate = "保存用户角色", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
+    public Result saveUserRole(UserRoleBean urBean){
         try {
             Result result = Result.responseSuccess();
-            if(CollectionUtils.isEmpty(roles)){
+            if(CollectionUtils.isEmpty(urBean.getRoles())){
                 result.setCode(400);
                 result.setMsg("未选择角色!");
                 return result;
             }
             List<UserRole> list = new ArrayList<>();
             UserRole userRole  = null;
-            for(String role : roles){
+            for(String role : urBean.getRoles()){
                 if(StringUtils.isNotBlank(role)){
                     userRole = new UserRole();
-                    userRole.setUserCode(userCode);
+                    userRole.setUserCode(urBean.getUserCode());
                     userRole.setRoleCode(role);
-                    userRole.setCreateUser(operator);
-                    userRole.setUpdateUser(operator);
+                    userRole.setCreateUser(urBean.getCreateUser());
+                    userRole.setUpdateUser(urBean.getUpdateUser());
                     list.add(userRole);
                 }
             }
@@ -134,6 +139,7 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
+    @SysLog(operate = "删除用户角色", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result delByUserCode(String userCode){
         try {
             Result result = Result.responseSuccess();
@@ -154,6 +160,7 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
+    @SysLog(operate = "保存角色", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result saveRole(RoleBean info) {
         Result result = Result.responseSuccess();
         try {
@@ -167,8 +174,7 @@ public class RoleServiceImpl implements RoleService {
             roleMapper.insertSelective(info);
         } catch(Exception ex) {
             LOGGER.error("异常方法:{}异常信息:{}", RoleServiceImpl.class.getName()+".saveRole", ex.getMessage());
-            result.setCode(400);
-            result.setMsg("保存角色信息失败!");
+            throw ex;
         }
         return result;
     }
@@ -209,6 +215,7 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
+    @SysLog(operate = "删除角色", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result cancelRole(String roleCode, String operator) {
         Result result = Result.responseSuccess();
         try {
@@ -222,8 +229,7 @@ public class RoleServiceImpl implements RoleService {
             roleMapper.updateByExampleSelective(record, example);
         } catch(Exception ex) {
             LOGGER.error("异常方法:{}异常信息:{}", RoleServiceImpl.class.getName()+".cancelRole", ex.getMessage());
-            result.setCode(400);
-            result.setMsg("删除角色失败!");
+            throw ex;
         }
         return result;
     }
@@ -235,6 +241,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     @Transactional(rollbackFor = ErpException.class)
+    @SysLog(operate = "角色授权", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void grantAuth(RoleMenuInfo info, String operator) {
         try {
             //先删除角色对于的数据
