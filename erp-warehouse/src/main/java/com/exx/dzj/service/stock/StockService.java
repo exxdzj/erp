@@ -2,6 +2,7 @@ package com.exx.dzj.service.stock;
 
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockInfo;
+import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.entity.stock.StockQuery;
 import com.exx.dzj.result.Result;
 import org.apache.ibatis.annotations.Param;
@@ -55,4 +56,8 @@ public interface StockService {
     void insertStockInfo(StockInfo stockInfo);
 
     void batchInventoryDataProccess (Map<String, List> map);
+
+    void updateStockGoodsInventory(StockBean stockInfo);
+
+    void insertStockNumPrice(StockNumPrice stockNumPrice);
 }

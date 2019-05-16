@@ -183,6 +183,16 @@ public class StockServiceImpl implements StockService {
         batchInsertStockNumPrice(stockNumPriceList);
     }
 
+    @Override
+    public void updateStockGoodsInventory(StockBean stockInfo) {
+        stockMapper.updateStockGoodsInventory(stockInfo);
+    }
+
+    @Override
+    public void insertStockNumPrice(StockNumPrice stockNumPrice) {
+        stockMapper.insertStockNumPrice(stockNumPrice);
+    }
+
     public void batchInsertStockInfo (List<StockInfo> stockInfoList){
         stockMapper.batchInsertStockInfo(stockInfoList);
     }

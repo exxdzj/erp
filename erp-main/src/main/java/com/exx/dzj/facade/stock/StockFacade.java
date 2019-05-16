@@ -11,6 +11,7 @@ import com.exx.dzj.result.Result;
 import com.exx.dzj.service.dictionary.DictionaryService;
 import com.exx.dzj.service.stock.StockService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,8 +121,20 @@ public class StockFacade {
         return result;
     }
 
-    public void insertStockInfo(StockInfo stockInfo){
+    @Transactional
+    public void insertStockInfo(StockBean stockBean){
+
+        StockInfo stockInfo = new StockInfo();
+        StockNumPrice stockNumPrice = new StockNumPrice();
+
+        BeanUtils.copyProperties(stockBean, stockInfo);
+        BeanUtils.copyProperties(stockBean, stockNumPrice);
+
+        // 保存存货信息
         stockInfoService.insertStockInfo(stockInfo);
+
+        // 存货价格信息
+        stockInfoService.insertStockNumPrice(stockNumPrice);
     }
 
     /**

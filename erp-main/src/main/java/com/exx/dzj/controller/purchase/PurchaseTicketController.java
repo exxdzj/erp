@@ -1,5 +1,7 @@
 package com.exx.dzj.controller.purchase;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
@@ -8,13 +10,14 @@ import com.exx.dzj.facade.purchase.PurchaseTicketFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.unique.SingletonGeneratorConfig;
+import com.exx.dzj.util.JsonUtils;
 import com.exx.dzj.util.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author yangyun
@@ -24,6 +27,8 @@ import java.util.List;
 @RestController
 @RequestMapping("purchaseticket/")
 public class PurchaseTicketController {
+
+    private static final Map<String, Integer> MAP_INTEGER = new HashMap<>();
 
     @Autowired
     private PurchaseTicketFacade purchaseTicketFacade;
@@ -158,6 +163,31 @@ public class PurchaseTicketController {
         Result result = Result.responseSuccess();
         String saleCode = "PCODE" + SingletonGeneratorConfig.getSingleton().next();
         result.setData(saleCode);
+        return result;
+    }
+
+    /**
+     * @description
+     * @author yangyun
+     * @date 2019/5/15 0015
+     * @param type
+     * @param idList
+     * @return com.exx.dzj.result.Result
+     */
+    @PostMapping("checkpurchaseticket/{type}")
+    public Result checkPurchaseTicket (@PathVariable("type") int type,@RequestParam("idList") String idList){
+        Result result = Result.responseSuccess();
+        Class<? extends Map> aClass = MAP_INTEGER.getClass();
+        try {
+            Map<String, Integer> map = JSON.parseObject(idList, aClass);
+            List<Integer> ids = new ArrayList<>(map.values());
+
+            purchaseTicketFacade.checkPurchaseTicket(type, ids);
+        } catch (JSONException e){
+            e.printStackTrace();
+            result.setCode(CommonConstant.FAIL_CODE);
+            result.setMsg("请选择需要审核采购单, 或重新审核");
+        }
         return result;
     }
 }

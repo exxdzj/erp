@@ -1,5 +1,6 @@
 package com.exx.dzj.mapper.purchase;
 
+import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBeanExample;
 import org.apache.ibatis.annotations.Param;
@@ -36,4 +37,10 @@ public interface PurchaseReceiptsDetailsBeanMapper {
     void batchDeletePurchaseReceipts(List<Integer> receiptIds);
 
     List<PurchaseReceiptsDetailsBean> queryPurchaseReceviptDetailList(String purchaseCode);
+
+    void financeCheckPurchaseTicet(List<Integer> ids);
+
+    void warehouseCheckPurchaseTicet(List<Integer> ids);
+
+    List<PurchaseGoodsDetailBean> queryPurchaseGoodsDetail(List<Integer> purhcaseIds);
 }

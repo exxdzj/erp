@@ -1,10 +1,12 @@
 package com.exx.dzj.service.purchasereceipts.impl;
 
+import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
 import com.exx.dzj.mapper.purchase.PurchaseReceiptsDetailsBeanMapper;
 import com.exx.dzj.service.purchasereceipts.PurchaseReceiptsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,5 +39,20 @@ public class PurchaseReceiptsServiceImpl implements PurchaseReceiptsService {
     @Override
     public List<PurchaseReceiptsDetailsBean> queryPurchaseReceviptDetailList(String purchaseCode) {
         return purchaseReceiptsDetailsBeanMapper.queryPurchaseReceviptDetailList(purchaseCode);
+    }
+
+    @Override
+    public void financeCheckPurchaseTicet(List<Integer> ids) {
+        purchaseReceiptsDetailsBeanMapper.financeCheckPurchaseTicet(ids);
+    }
+
+    @Override
+    public void warehouseCheckPurchaseTicet(List<Integer> ids) {
+        purchaseReceiptsDetailsBeanMapper.warehouseCheckPurchaseTicet(ids);
+    }
+
+    @Override
+    public List<PurchaseGoodsDetailBean> queryPurchaseGoodsDetail(List<Integer> ids) {
+        return purchaseReceiptsDetailsBeanMapper.queryPurchaseGoodsDetail(ids);
     }
 }

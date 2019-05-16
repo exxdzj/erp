@@ -121,13 +121,13 @@ public class StockController {
      * @date 2019/1/19 0019
      * @param request
      * @param response
-     * @param stockInfo
+     * @param stockBean
      * @return com.exx.dzj.result.Result
      */
     @PostMapping("addinventoryservice")
-    public Result addInventoryService(HttpServletRequest request, HttpServletResponse response, @RequestBody StockInfo stockInfo){
+    public Result addInventoryService(HttpServletRequest request, HttpServletResponse response, @RequestBody StockBean stockBean){
         Result result = Result.responseSuccess();
-        stockFacade.insertStockInfo(stockInfo);
+        stockFacade.insertStockInfo(stockBean);
         return result;
     }
 }

@@ -346,4 +346,41 @@
     payment_method AS paymentMethod
     FROM tab_purchase_receipts_details WHERE purchase_code=#{purchaseCode}
   </select>
+
+  <update id="financeCheckPurchaseTicet">
+    UPDATE tab_purchase_info
+      SET flow_state = 2
+      WHERE id IN
+      <foreach collection="list" item="item" separator="," open="(" close=")">
+        #{item}
+      </foreach>
+  </update>
+
+  <update id="warehouseCheckPurchaseTicet">
+    UPDATE tab_purchase_info
+      SET flow_state = 3
+      WHERE id IN
+      <foreach collection="list" item="item" separator="," open="(" close=")">
+        #{item}
+      </foreach>
+  </update>
+
+  <!-- 获取采购单采购商品信息 -->
+  <select id="queryPurchaseGoodsDetail" resultMap="purchaseGoods">
+    SELECT
+      id, purchase_code, goods_num, stock_code
+      FROM tab_purchase_goods_detail b WHERE b.purchase_code IN(
+      SELECT purchase_code FROM tab_purchase_info WHERE id IN
+        <foreach collection="list" item="item" close=")" open="(" separator=",">
+          #{item}
+        </foreach>
+      )
+  </select>
+  <resultMap id="purchaseGoods" type="com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean">
+    <result property="id" column="id"/>
+    <result property="purchaseCode" column="purchase_code"/>
+    <result property="goodsNum" column="goods_num"/>
+    <result property="stockCode" column="stock_code"/>
+    <!--<result property="id" column="id"/>-->
+  </resultMap>
 </mapper>

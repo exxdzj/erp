@@ -10,6 +10,7 @@
     <result column="stock_address" jdbcType="VARCHAR" property="stockAddress" />
     <result column="goods_num" jdbcType="INTEGER" property="goodsNum" />
     <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="real_sell_price" jdbcType="DECIMAL" property="realSellPrice" />
     <result column="price_type" jdbcType="VARCHAR" property="priceType" />
     <result column="discount_rate" jdbcType="DECIMAL" property="discountRate" />
     <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount" />
@@ -80,7 +81,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, purchase_code, stock_code, stock_name, stock_address_code, stock_address, goods_num, 
-    unit_price, price_type, discount_rate, discount_amount, purchase_volume, remarks, 
+    unit_price, real_sell_price,price_type, discount_rate, discount_amount, purchase_volume, remarks,
     create_time, create_user, update_time, update_user
   </sql>
   <select id="selectByExample" parameterType="com.exx.dzj.entity.purchase.PurchaseGoodsDetailBeanExample" resultMap="BaseResultMap">
@@ -116,13 +117,13 @@
   <insert id="insert" parameterType="com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean">
     insert into tab_purchase_goods_detail (id, purchase_code, stock_code, 
       stock_name, stock_address_code, stock_address, 
-      goods_num, unit_price, price_type, 
+      goods_num, unit_price, real_sell_price,price_type,
       discount_rate, discount_amount, purchase_volume, 
       remarks, create_time, create_user, 
       update_time, update_user)
     values (#{id,jdbcType=INTEGER}, #{purchaseCode,jdbcType=VARCHAR}, #{stockCode,jdbcType=VARCHAR}, 
       #{stockName,jdbcType=VARCHAR}, #{stockAddressCode,jdbcType=VARCHAR}, #{stockAddress,jdbcType=VARCHAR}, 
-      #{goodsNum,jdbcType=INTEGER}, #{unitPrice,jdbcType=DECIMAL}, #{priceType,jdbcType=VARCHAR}, 
+      #{goodsNum,jdbcType=INTEGER}, #{unitPrice,jdbcType=DECIMAL}, #{realSellPrice},#{priceType,jdbcType=VARCHAR},
       #{discountRate,jdbcType=DECIMAL}, #{discountAmount,jdbcType=DECIMAL}, #{purchaseVolume,jdbcType=DECIMAL}, 
       #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
@@ -153,6 +154,9 @@
       </if>
       <if test="unitPrice != null">
         unit_price,
+      </if>
+      <if test="realSellPrice != null">
+        real_sell_price,
       </if>
       <if test="priceType != null">
         price_type,
@@ -206,6 +210,9 @@
       </if>
       <if test="unitPrice != null">
         #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="realSellPrice != null">
+        #{realSellPrice,jdbcType=DECIMAL},
       </if>
       <if test="priceType != null">
         #{priceType,jdbcType=VARCHAR},
@@ -269,6 +276,9 @@
       <if test="record.unitPrice != null">
         unit_price = #{record.unitPrice,jdbcType=DECIMAL},
       </if>
+      <if test="record.realSellPrice != null">
+        real_sell_price = #{record.realSellPrice,jdbcType=DECIMAL},
+      </if>
       <if test="record.priceType != null">
         price_type = #{record.priceType,jdbcType=VARCHAR},
       </if>
@@ -311,6 +321,7 @@
       stock_address = #{record.stockAddress,jdbcType=VARCHAR},
       goods_num = #{record.goodsNum,jdbcType=INTEGER},
       unit_price = #{record.unitPrice,jdbcType=DECIMAL},
+      real_sell_price = #{record.realSellPrice,jdbcType=DECIMAL},
       price_type = #{record.priceType,jdbcType=VARCHAR},
       discount_rate = #{record.discountRate,jdbcType=DECIMAL},
       discount_amount = #{record.discountAmount,jdbcType=DECIMAL},
@@ -347,6 +358,9 @@
       </if>
       <if test="unitPrice != null">
         unit_price = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="realSellPrice != null">
+        real_sell_price = #{realSellPrice,jdbcType=DECIMAL},
       </if>
       <if test="priceType != null">
         price_type = #{priceType,jdbcType=VARCHAR},
@@ -387,6 +401,7 @@
       stock_address = #{stockAddress,jdbcType=VARCHAR},
       goods_num = #{goodsNum,jdbcType=INTEGER},
       unit_price = #{unitPrice,jdbcType=DECIMAL},
+      real_sell_price = #{realSellPrice,jdbcType=DECIMAL},
       price_type = #{priceType,jdbcType=VARCHAR},
       discount_rate = #{discountRate,jdbcType=DECIMAL},
       discount_amount = #{discountAmount,jdbcType=DECIMAL},
@@ -404,7 +419,7 @@
     INSERT INTO tab_purchase_goods_detail
       (purchase_code, stock_code,
       stock_name, stock_address_code, stock_address,
-      goods_num, unit_price, price_type,
+      goods_num, unit_price, real_sell_price, price_type,
       discount_rate, discount_amount, purchase_volume,
       remarks, create_time, create_user,
       update_time, update_user)
@@ -412,7 +427,7 @@
     <foreach collection="list" item="item" separator=",">
       (#{item.purchaseCode,jdbcType=VARCHAR}, #{item.stockCode,jdbcType=VARCHAR},
       #{item.stockName,jdbcType=VARCHAR}, #{item.stockAddressCode,jdbcType=VARCHAR}, #{item.stockAddress,jdbcType=VARCHAR},
-      #{item.goodsNum,jdbcType=INTEGER}, #{item.unitPrice,jdbcType=DECIMAL}, #{item.priceType,jdbcType=VARCHAR},
+      #{item.goodsNum,jdbcType=INTEGER}, #{item.unitPrice,jdbcType=DECIMAL}, #{item.realSellPrice},#{item.priceType,jdbcType=VARCHAR},
       #{item.discountRate,jdbcType=DECIMAL}, #{item.discountAmount,jdbcType=DECIMAL}, #{item.purchaseVolume,jdbcType=DECIMAL},
       #{item.remarks,jdbcType=VARCHAR}, SYSDATE(), #{item.createUser,jdbcType=VARCHAR},
       SYSDATE(), #{item.updateUser,jdbcType=VARCHAR})
@@ -430,6 +445,7 @@
       PGDETAIL.stock_address,
       PGDETAIL.goods_num,
       PGDETAIL.unit_price,
+      PGDETAIL.real_sell_price,
       PGDETAIL.price_type,
       PGDETAIL.discount_rate,
       PGDETAIL.discount_amount,
@@ -451,6 +467,7 @@
     <result column="stock_address" jdbcType="VARCHAR" property="stockAddress" />
     <result column="goods_num" jdbcType="INTEGER" property="goodsNum" />
     <result column="unit_price" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="real_sell_price" jdbcType="DECIMAL" property="realSellPrice" />
     <result column="price_type" jdbcType="VARCHAR" property="priceType" />
     <result column="discount_rate" jdbcType="DECIMAL" property="discountRate" />
     <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount" />
@@ -490,6 +507,9 @@
         </if>
         <if test="record.unitPrice != null">
           unit_price = #{record.unitPrice,jdbcType=DECIMAL},
+        </if>
+        <if test="record.realSellPrice != null">
+          real_sell_price = #{record.realSellPrice,jdbcType=DECIMAL},
         </if>
         <if test="record.priceType != null">
           price_type = #{record.priceType,jdbcType=VARCHAR},

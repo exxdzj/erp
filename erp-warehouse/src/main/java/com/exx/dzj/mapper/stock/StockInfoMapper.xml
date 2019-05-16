@@ -513,4 +513,17 @@
       (#{item.stockCode}, #{item.standardBuyPrice}, #{item.standardSellPrice}, #{item.maxPurchasePrice}, #{item.minSellPrice}, #{item.minInventory}, #{item.isEnable}, #{item.createTime}, #{item.createUser}, SYSDATE(), #{item.updateUser})
     </foreach>
   </insert>
+
+  <update id="updateStockGoodsInventory" parameterType="com.exx.dzj.entity.stock.StockBean">
+    UPDATE tab_stock_num_price
+      SET min_inventory = IFNULL(min_inventory, 0) + #{minInventory}
+      WHERE stock_code = #{stockCode}
+  </update>
+
+  <insert id="insertStockNumPrice" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
+    INSERT INTO tab_stock_num_price
+      (stock_code, min_inventory, standard_buy_price, max_purchase_price)
+    VALUES
+      ( #{stockCode}, #{minInventory}, #{standardBuyPrice}, #{maxPurchasePrice})
+  </insert>
 </mapper>

@@ -1,12 +1,15 @@
 package com.exx.dzj.facade.purchase;
 
+import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
+import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.purchasegoods.PurchaseGoodsService;
 import com.exx.dzj.service.purchasereceipts.PurchaseReceiptsService;
 import com.exx.dzj.service.purchaseticket.PurchaseTicketService;
+import com.exx.dzj.service.stock.StockService;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,9 @@ public class PurchaseTicketFacade {
 
     @Autowired
     private PurchaseReceiptsService purchaseReceiptsService;
+
+    @Autowired
+    private StockService stockInfoService;
 
     /**
      * @description 新增采购单
@@ -254,5 +260,38 @@ public class PurchaseTicketFacade {
 
     public List<PurchaseReceiptsDetailsBean> queryPurchaseReceviptDetailList(String purchaseCode){
         return purchaseReceiptsService.queryPurchaseReceviptDetailList(purchaseCode);
+    }
+
+    public void checkPurchaseTicket (int type, List<Integer> ids){
+        switch (type){
+            case CommonConstant.DEFAULT_VALUE_ONE: // 财务审核
+                purchaseReceiptsService.financeCheckPurchaseTicet(ids);
+                break;
+            case CommonConstant.DEFAULT_VALUE_TWO: // 仓库审核
+                warehouseCheckPurchaseTicket(ids);
+                break;
+        }
+    }
+
+    @Transactional
+    public void warehouseCheckPurchaseTicket (List<Integer> ids){
+        purchaseReceiptsService.warehouseCheckPurchaseTicet(ids);
+        // 获取采购单采购商品信息
+        List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans = purchaseReceiptsService.queryPurchaseGoodsDetail(ids);
+
+        if (!CollectionUtils.isEmpty(purchaseGoodsDetailBeans)){
+            for (PurchaseGoodsDetailBean purchaseGoods : purchaseGoodsDetailBeans){
+
+                // 根据存货编号查询对应商品
+                StockBean stockInfo = stockInfoService.queryStockInfo(purchaseGoods.getStockCode());
+                if (stockInfo != null){
+                    // 添加库存
+                    stockInfo.setMinInventory(purchaseGoods.getGoodsNum());
+                    stockInfoService.updateStockGoodsInventory(stockInfo);
+                }
+            }
+        }
+
+
     }
 }
