@@ -70,5 +70,5 @@ public interface UserService {
 
     public List<UserModel> selectionUserInfo ();
 
-    List<UserInfo> querySalesmanList();
+    List<UserInfo> querySalesmanList(Integer type);
 }

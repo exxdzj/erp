@@ -205,8 +205,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserInfo> querySalesmanList() {
-        return userMapper.querySalesmanList();
+    public List<UserInfo> querySalesmanList(Integer type) {
+        return userMapper.querySalesmanList(type);
     }
 
 

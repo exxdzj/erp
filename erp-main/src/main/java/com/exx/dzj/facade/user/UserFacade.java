@@ -199,7 +199,7 @@ public class UserFacade {
         return list;
     }
 
-    public List<UserInfo> querySalesmanList(){
-        return salesmanService.querySalesmanList();
+    public List<UserInfo> querySalesmanList(Integer type){
+        return salesmanService.querySalesmanList(type);
     }
 }
