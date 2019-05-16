@@ -1,6 +1,6 @@
 package com.exx.dzj.service.salelog;
 
-import com.exx.dzj.entity.salelog.SaleLog;
+import com.exx.dzj.entity.salelog.SaleLogBean;
 
 /**
  * @Author
@@ -13,5 +13,5 @@ public interface SaleLogService {
      * @功能: 保存销售单的操作日志
      * @param bean
      */
-    void saveSaleLog(SaleLog bean);
+    void saveSaleLog(SaleLogBean bean);
 }

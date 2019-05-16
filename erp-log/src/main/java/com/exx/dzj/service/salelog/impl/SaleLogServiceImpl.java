@@ -1,6 +1,6 @@
 package com.exx.dzj.service.salelog.impl;
 
-import com.exx.dzj.entity.salelog.SaleLog;
+import com.exx.dzj.entity.salelog.SaleLogBean;
 import com.exx.dzj.mapper.salelog.SaleLogMapper;
 import com.exx.dzj.service.salelog.SaleLogService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class SaleLogServiceImpl implements SaleLogService {
      * @param bean
      */
     @Override
-    public void saveSaleLog(SaleLog bean) {
+    public void saveSaleLog(SaleLogBean bean) {
         try{
             saleLogMapper.insertSelective(bean);
         } catch(Exception ex) {

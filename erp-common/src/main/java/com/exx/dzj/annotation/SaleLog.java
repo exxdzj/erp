@@ -11,4 +11,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface SaleLog {
+    /**
+     * 执行的操作
+     * @return
+     */
+    String operate() default "";
 }

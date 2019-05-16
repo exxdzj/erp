@@ -1,15 +1,15 @@
 package com.exx.dzj.mapper.salelog;
 
-import com.exx.dzj.entity.salelog.SaleLog;
+import com.exx.dzj.entity.salelog.SaleLogBean;
 import com.exx.dzj.entity.salelog.SaleLogExample;
 
 import java.util.List;
 
 public interface SaleLogMapper {
 
-    int insertSelective(SaleLog record);
+    int insertSelective(SaleLogBean record);
 
-    List<SaleLog> selectByExample(SaleLogExample example);
+    List<SaleLogBean> selectByExample(SaleLogExample example);
 
-    SaleLog selectByPrimaryKey(Integer id);
+    SaleLogBean selectByPrimaryKey(Integer id);
 }

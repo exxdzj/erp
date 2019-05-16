@@ -47,7 +47,7 @@ public class SysLogAspect {
 
     /**
      * @功能: 环绕通知
-     * @param point
+     * @param point 环绕通知的连接点参数类型必须是 ProceedingJoinPoint，它是 JoinPoint 的子类
      * @return
      * @throws Throwable
      */
@@ -55,12 +55,23 @@ public class SysLogAspect {
     public Object around(ProceedingJoinPoint point) throws Throwable {
         //开始时间
         long beginTime = System.currentTimeMillis();
-        //执行方法
+        //执行方法，需要明确的调用proceed()方法来执行被代理方法,否则会导致通知被执行，但是目标方法没有执行
         Object result = point.proceed();
         //执行时长(毫秒)
         long time = System.currentTimeMillis() - beginTime;
         saveLog(point, time, null);
         return result;
+    }
+
+    /**
+     * @功能: 后置异常通知
+     * @param point
+     * @param e
+     * @描述: 修改方法、保存方法最好是抛出,这样有利于日志表记录异常信息
+     */
+    @AfterThrowing(pointcut = "sysLogPointCut()", throwing = "e")
+    public void throwss(JoinPoint point, Throwable e){
+        saveLog(point, 0L, e);
     }
 
     /**
@@ -100,7 +111,7 @@ public class SysLogAspect {
                 String params = JSONObject.toJSONString(args);
                 logBean.setParams(params);
             }catch (Exception e){
-
+                log.error("执行方法:{},异常信息:{}", SysLogAspect.class.getName()+".saveLog", e.getMessage());
             }
 
             //获取request
@@ -124,14 +135,4 @@ public class SysLogAspect {
         }
     }
 
-    /**
-     * @功能: 后置异常通知
-     * @param point
-     * @param e
-     * @描述: 修改方法、保存方法最好是抛出,这样有利于日志表记录异常信息
-     */
-    @AfterThrowing(pointcut = "sysLogPointCut()", throwing = "e")
-    public void throwss(JoinPoint point, Throwable e){
-        saveLog(point, 0L, e);
-    }
 }
