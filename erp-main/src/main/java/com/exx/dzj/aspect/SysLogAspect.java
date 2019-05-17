@@ -8,7 +8,6 @@ import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.facade.log.SysLogFacade;
 import com.exx.dzj.util.IPUtils;
 import com.exx.dzj.util.SpringContextUtils;
-import lombok.extern.apachecommons.CommonsLog;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.JoinPoint;
@@ -41,9 +40,7 @@ public class SysLogAspect {
      * @功能: 切点
      */
     @Pointcut("@annotation(com.exx.dzj.annotation.SysLog)")
-    public void sysLogPointCut() {
-
-    }
+    public void sysLogPointCut() {}
 
     /**
      * @功能: 环绕通知

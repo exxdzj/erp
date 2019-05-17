@@ -1,10 +1,15 @@
 package com.exx.dzj.service.user.impl;
 
+import com.exx.dzj.annotation.SysLog;
+import com.exx.dzj.constant.LogLevel;
+import com.exx.dzj.constant.LogType;
+import com.exx.dzj.entity.login.LoginInfo;
 import com.exx.dzj.entity.user.UserTokenBean;
 import com.exx.dzj.mapper.user.UserTokenMapper;
 import com.exx.dzj.service.user.UserTokenService;
 import com.exx.dzj.unique.DefaultIdGenerator;
 import com.exx.dzj.unique.IdGenerator;
+import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.TokenBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -39,17 +44,14 @@ public class UserTokenServiceImpl implements UserTokenService {
 
     /**
      * 保存 user token
-     * @param userCode
-     * @param userToken
+     * @param tokenBean
      */
     @Override
-    public void saveUserToken(String userCode, String userToken) {
+    @SysLog(operate = "保存用户token", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
+    public void saveUserToken(UserTokenBean tokenBean) {
         try {
             IdGenerator idGenerator = new DefaultIdGenerator();
-            UserTokenBean tokenBean = new UserTokenBean();
             tokenBean.setId(idGenerator.next());
-            tokenBean.setUserCode(userCode);
-            tokenBean.setUserToken(userToken);
             userTokenMapper.saveSelective(tokenBean);
         } catch(Exception ex) {
             LOGGER.error("异常方法:{}异常信息:{}", UserTokenServiceImpl.class.getName()+".saveUserToken", ex.getMessage());
@@ -101,10 +103,16 @@ public class UserTokenServiceImpl implements UserTokenService {
 
     /**
      * 退出登录，删除 token
-     * @param param
+     * @param loginInfo
      */
     @Override
-    public void loginOut(Map<String, Object> param) {
-        userTokenMapper.loginOut(param);
+    @SysLog(operate = "退出登录,删除token", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
+    public void loginOut(LoginInfo loginInfo) {
+        if(null == loginInfo || ConvertUtils.isEmpty(loginInfo.getUsertoken())) {
+            return;
+        }
+        UserTokenBean bean = new UserTokenBean();
+        bean.setUserToken(loginInfo.getUsertoken());
+        userTokenMapper.loginOut(bean);
     }
 }

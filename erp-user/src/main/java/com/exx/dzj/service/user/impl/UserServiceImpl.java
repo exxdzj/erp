@@ -85,7 +85,6 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    @SysLog(operate = "查询用户信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public UserVo queryUserInfo(UserInfo info) {
         UserVo userVo = userMapper.queryUserInfo(info);
         if(null != userVo && ConvertUtils.isEmpty(userVo.getHeadImg())) {

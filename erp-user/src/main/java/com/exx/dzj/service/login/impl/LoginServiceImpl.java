@@ -5,21 +5,17 @@ import com.exx.dzj.constant.LogLevel;
 import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.login.LoginInfo;
 import com.exx.dzj.entity.user.UserInfo;
+import com.exx.dzj.entity.user.UserTokenBean;
 import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.mapper.user.UserInfoMapper;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.login.LoginService;
 import com.exx.dzj.service.user.UserTokenService;
 import com.exx.dzj.util.ConvertUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Author
@@ -58,7 +54,10 @@ public class LoginServiceImpl implements LoginService {
             return result;
         }
 
-        tokenService.saveUserToken(userVo.getUserCode(), loginInfo.getUsertoken());
+        UserTokenBean tokenBean = new UserTokenBean();
+        tokenBean.setUserCode(userVo.getUserCode());
+        tokenBean.setUserToken(loginInfo.getUsertoken());
+        tokenService.saveUserToken(tokenBean);
 
         //用户存在, 则生成 userToken, 并保存到数据库
         /*String userToken = tokenService.getUserToken(userVo.getUserCode());
@@ -80,11 +79,10 @@ public class LoginServiceImpl implements LoginService {
      * @return
      */
     @Override
-    public Result loginOut(String userToken){
+    @SysLog(operate = "退出登录", logType = LogType.LOG_TYPE_LOGIN, logLevel = LogLevel.LOG_LEVEL_INFO)
+    public Result loginOut(LoginInfo loginInfo){
         Result result = Result.responseSuccess();
-        Map<String, Object> param = new HashMap<>();
-        param.put("userToken", userToken);
-        tokenService.loginOut(param);
+        tokenService.loginOut(loginInfo);
         return result;
     }
 }

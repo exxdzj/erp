@@ -10,5 +10,5 @@ server:
 logging:
 #  config: classpath:log/logback-spring.xml
 ##### 打印sql
-#  level:
-#    com.exx.dzj: debug
+  level:
+    com.exx.dzj: debug

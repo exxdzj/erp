@@ -21,5 +21,5 @@ public interface LoginService {
      * 用户退出登录
      * @return
      */
-    Result loginOut(String userToken);
+    Result loginOut(LoginInfo loginInfo);
 }

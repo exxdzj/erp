@@ -58,7 +58,7 @@ public class SaleLogAspect {
      * @param point
      * @param e
      */
-    @AfterThrowing(value="saleLogPointCut()", throwing = "e")
+    @AfterThrowing(pointcut="saleLogPointCut()", throwing = "e")
     public void throwss(JoinPoint point, Throwable e) {
         saveSaleLog(point, e);
     }
@@ -66,7 +66,7 @@ public class SaleLogAspect {
     /**
      * @功能: 获取到相关切面函数的信息，并且保存到日志表
      * @param point
-     * @param e
+     * @param t
      */
     private void saveSaleLog(JoinPoint point, Throwable t) {
         try {

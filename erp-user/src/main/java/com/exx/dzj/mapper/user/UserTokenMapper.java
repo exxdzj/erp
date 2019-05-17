@@ -18,5 +18,5 @@ public interface UserTokenMapper {
 
     UserTokenBean queryUserToken(Map<String, Object> param);
 
-    int loginOut(Map<String, Object> params);
+    int loginOut(UserTokenBean bean);
 }

@@ -26,6 +26,9 @@ spring:
         prefix: /WEB-INF/jsp/
         ###########后缀
         suffix: .jsp
+    aop:
+      #auto: true
+      proxy-target-class: true
     #####配置序列化时,不返回null值到前端
 #    jackson:
 #      default-property-inclusion: ALWAYS

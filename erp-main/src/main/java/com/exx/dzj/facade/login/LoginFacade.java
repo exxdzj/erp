@@ -37,7 +37,9 @@ public class LoginFacade {
      */
     public Result loginOut(String userToken){
         Result result = Result.responseSuccess();
-        result = logonService.loginOut(userToken);
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setUsertoken(userToken);
+        result = logonService.loginOut(loginInfo);
         return result;
     }
 }
