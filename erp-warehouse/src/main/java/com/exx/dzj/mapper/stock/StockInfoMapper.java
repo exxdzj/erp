@@ -57,4 +57,6 @@ public interface StockInfoMapper {
     void updateStockGoodsInventory(StockBean stockInfo);
 
     void insertStockNumPrice(StockNumPrice stockNumPrice);
+
+    void updateStockInfoSourceModel(StockBean stockInfo);
 }

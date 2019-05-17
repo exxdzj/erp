@@ -17,4 +17,6 @@ public interface SalesGoodsDetailService {
     void batchUpdateSalesGoodsDetail(List<SaleGoodsDetailBean> goodsDetailBeanList);
 
     void batchDeleteSalesGoodsDetail(List<Integer> sgbIds);
+
+    SaleGoodsDetailBean querySaleGoodsDetail(SaleGoodsDetailBean bean);
 }

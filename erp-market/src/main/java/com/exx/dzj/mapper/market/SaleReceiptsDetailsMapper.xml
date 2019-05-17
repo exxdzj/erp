@@ -343,11 +343,12 @@
   
   <insert id="addLogisticsInfo" parameterType="com.exx.dzj.entity.market.LogisticsInfo">
     INSERT INTO tab_sale_logistic_info
-      (logistic_company_code, logistic_company_name, freight_code, deliver_goods_time, selector_phone_num, remark, logistics_kind, sale_id, crate_time)
+      (logistic_company_code, logistic_company_name, freight_code, deliver_goods_time, selector_phone_num, remark,
+        logistics_kind, sale_code, express_fee, charge_method, create_user, stock_code, crate_time)
     VALUES
       (
         #{logisticsCompanyCode}, #{logisticsCompamyName}, #{freihtCode}, #{deliverGoodsTime}, #{selectorPhoneNum}, #{remark},
-        #{logisticsKind}, #{saleId}, SYSDATE()
+        #{logisticsKind}, #{saleCode}, #{expressFee}, #{chargeMethod}, #{createUser}, #{stockCode}, SYSDATE()
       )
   </insert>
 
@@ -366,6 +367,12 @@
       <if test="deliverGoodsTime != null">
         deliver_goods_time = #{deliverGoodsTime},
       </if>
+      <if test="expressFee != null">
+        express_fee = #{expressFee},
+      </if>
+      <if test="chargeMethod != null">
+        charge_method = #{chargeMethod},
+      </if>
       <if test="selectorPhoneNum != null">
         selector_phone_num = #{selectorPhoneNum},
       </if>
@@ -375,20 +382,57 @@
       <if test="logisticsKind != null">
         logistics_kind = #{logisticsKind},
       </if>
+      <if test="createUser != null">
+        create_user = #{createUser},
+      </if>
       last_update_time = SYSDATE()
     </set>
+    <where>
+      id = #{id}
+    </where>
   </update>
 
-  <select id="getLogisticsInfo" resultType="com.exx.dzj.entity.market.LogisticsInfo">
+  <select id="getLogisticsInfo" resultMap="logisticsMap">
     SELECT
-      id AS id,
-      logistic_company_code AS logisticsCompanyCode,
-      logistic_company_name AS logisticsCompamyName,
-      freight_code AS freihtCode,
-      deliver_goods_time AS deliverGoodsTime,
-      selector_phone_num AS selectorPhoneNum,
-      remark AS remark,
-      logistics_kind AS logisticsKind
-    FROM tab_sale_logistic_info WHERE sale_id = #{saleId}
+      id,
+      logistic_company_code,
+      logistic_company_name,
+      freight_code,
+      sale_code,
+      stock_code,
+      deliver_goods_time,
+      selector_phone_num,
+      remark,
+      express_fee,
+      charge_method,
+      logistics_kind
+    FROM tab_sale_logistic_info WHERE sale_code = #{saleCode}
   </select>
+  
+  <resultMap id="logisticsMap" type="com.exx.dzj.entity.market.LogisticsInfo">
+    <result property="id" column="id"/>
+    <result property="logisticsCompanyCode" column="logistic_company_code"/>
+    <result property="logisticsCompamyName" column="logistic_company_name"/>
+    <result property="freihtCode" column="freight_code"/>
+    <result property="saleCode" column="sale_code"/>
+    <result property="stockCode" column="stock_code"/>
+    <result property="deliverGoodsTime" column="deliver_goods_time"/>
+    <result property="selectorPhoneNum" column="selector_phone_num"/>
+    <result property="logisticsKind" column="logistics_kind"/>
+    <result property="remark" column="remark"/>
+    <result property="expressFee" column="express_fee"/>
+    <result property="chargeMethod" column="charge_method"/>
+  </resultMap>
+
+  <select id="getSaleGoodsSelected" resultMap="goodsSelected">
+    SELECT
+      stock_code, stock_name
+    FROM tab_sale_goods_detail
+    WHERE sale_code = #{saleCode}
+  </select>
+  
+  <resultMap id="goodsSelected" type="com.exx.dzj.entity.market.SaleGoodsSelected">
+    <result property="stockName" column="stock_name"/>
+    <result property="stockCode" column="stock_code"/>
+  </resultMap>
 </mapper>

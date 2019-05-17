@@ -522,4 +522,12 @@
           #{id}
         </foreach>
   </delete>
+
+  <select id="querySaleGoodsDetail" parameterType="com.exx.dzj.entity.market.SaleGoodsDetailBean" resultType="com.exx.dzj.entity.market.SaleGoodsDetailBean">
+    SELECT
+      goods_num AS goodsNum, stock_code AS stockCode, sale_code AS saleCode, stock_address_code AS stockAddressCode
+    FROM tab_sale_goods_detail
+    WHERE sale_code = #{saleCode}
+      AND stock_code = #{stockCode}
+  </select>
 </mapper>

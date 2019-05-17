@@ -130,6 +130,7 @@ public class StockFacade {
         BeanUtils.copyProperties(stockBean, stockInfo);
         BeanUtils.copyProperties(stockBean, stockNumPrice);
 
+        stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ONE);
         // 保存存货信息
         stockInfoService.insertStockInfo(stockInfo);
 

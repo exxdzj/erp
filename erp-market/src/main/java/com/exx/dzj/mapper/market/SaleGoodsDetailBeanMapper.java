@@ -35,4 +35,6 @@ public interface SaleGoodsDetailBeanMapper {
     void batchUpdateSalesGoodsDetail(List<SaleGoodsDetailBean> saleGoodsDetailBeansList);
 
     void batchDeleteSalesGoodsDetail(List<Integer> sgbIds);
+
+    SaleGoodsDetailBean querySaleGoodsDetail(SaleGoodsDetailBean bean);
 }

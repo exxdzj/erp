@@ -1,16 +1,16 @@
 package com.exx.dzj.facade.market;
 
 import com.exx.dzj.constant.CommonConstant;
-import com.exx.dzj.entity.market.LogisticsInfo;
-import com.exx.dzj.entity.market.SaleGoodsDetailBean;
-import com.exx.dzj.entity.market.SaleInfo;
-import com.exx.dzj.entity.market.SaleReceiptsDetails;
+import com.exx.dzj.entity.market.*;
+import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.user.UserInfo;
+import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.dictionary.DictionaryService;
 import com.exx.dzj.service.salesgoodsdetail.SalesGoodsDetailService;
 import com.exx.dzj.service.salesreceiptsdetail.SaleReceiptsDetailService;
 import com.exx.dzj.service.salesticket.SalesTicketService;
+import com.exx.dzj.service.stock.StockService;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +44,12 @@ public class SalesTicketFacade {
 
     @Autowired
     private DictionaryService dictionaryService;
+
+    @Autowired
+    private UserTokenFacade userTokenFacade;
+
+    @Autowired
+    private StockService stockInfoService;
 
     /**
      * @description 新建销售单
@@ -296,15 +302,50 @@ public class SalesTicketFacade {
 
     public void addLogisticsInfo (LogisticsInfo logisticsInfo){
         Integer id = logisticsInfo.getId();
+        String token = userTokenFacade.queryUserCodeForToken(null);
+        logisticsInfo.setCreateUser(token);
         if (id == null){
-            saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
+            addLogisticsInfoAndUpdateStockInventory(logisticsInfo);
+//            saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
         } else {
             saleReceiptsDetailService.updateLogisticsInfo(logisticsInfo);
         }
     }
 
-    public LogisticsInfo getLogisticsInfo (String saleId) {
-        return saleReceiptsDetailService.getLogisticsInfo(saleId);
+    @Transactional
+    public void addLogisticsInfoAndUpdateStockInventory (LogisticsInfo logisticsInfo){
+        saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
+
+        // 根据 销售单编号和商品编号,获取销售单卖出商品数量, 并对库存做修改
+        SaleGoodsDetailBean bean = new SaleGoodsDetailBean();
+        bean.setStockCode(logisticsInfo.getStockCode());
+        bean.setSaleCode(logisticsInfo.getSaleCode());
+        SaleGoodsDetailBean saleGoodsDetailBean = salesGoodsDetailService.querySaleGoodsDetail(bean);
+
+        // 根据 存货编号获取商品信息
+        StockBean stockInfo = stockInfoService.queryStockInfo(logisticsInfo.getStockCode());
+        if (stockInfo != null){
+            String userCode = userTokenFacade.queryUserCodeForToken(null);
+            // 减少库存
+            stockInfo.setMinInventory(-saleGoodsDetailBean.getGoodsNum().intValue());
+            stockInfoService.updateStockGoodsInventory(stockInfo);
+            stockInfo.setUpdateUser(userCode);
+//            stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);
+//            stockInfoService.updateStockInfoSourceModel(stockInfo);
+        }
+    }
+
+    public List<LogisticsInfo> getLogisticsInfo (String saleCode) {
+        return saleReceiptsDetailService.getLogisticsInfo(saleCode);
+    }
+
+    public List<SaleGoodsSelected> getSaleGoodsSelected (String saleCode){
+        List<SaleGoodsSelected> saleGoodsSelected = saleReceiptsDetailService.getSaleGoodsSelected(saleCode);
+        List<SaleGoodsSelected> saleGoodsSelecteds = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(saleGoodsSelected)){
+            saleGoodsSelecteds = saleGoodsSelected.stream().filter(o -> !o.getStockCode().toUpperCase().contains("CB")).collect(Collectors.toList());
+        }
+        return saleGoodsSelecteds;
     }
 
 

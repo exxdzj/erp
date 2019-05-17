@@ -5,6 +5,7 @@ import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
 import com.exx.dzj.entity.stock.StockBean;
+import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.purchasegoods.PurchaseGoodsService;
 import com.exx.dzj.service.purchasereceipts.PurchaseReceiptsService;
@@ -41,6 +42,9 @@ public class PurchaseTicketFacade {
 
     @Autowired
     private StockService stockInfoService;
+
+    @Autowired
+    UserTokenFacade userTokenFacade;
 
     /**
      * @description 新增采购单
@@ -280,6 +284,8 @@ public class PurchaseTicketFacade {
         List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans = purchaseReceiptsService.queryPurchaseGoodsDetail(ids);
 
         if (!CollectionUtils.isEmpty(purchaseGoodsDetailBeans)){
+            String userCode = userTokenFacade.queryUserCodeForToken(null);
+
             for (PurchaseGoodsDetailBean purchaseGoods : purchaseGoodsDetailBeans){
 
                 // 根据存货编号查询对应商品
@@ -288,6 +294,9 @@ public class PurchaseTicketFacade {
                     // 添加库存
                     stockInfo.setMinInventory(purchaseGoods.getGoodsNum());
                     stockInfoService.updateStockGoodsInventory(stockInfo);
+                    stockInfo.setUpdateUser(userCode);
+                    stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);
+                    stockInfoService.updateStockInfoSourceModel(stockInfo);
                 }
             }
         }

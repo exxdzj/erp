@@ -2,6 +2,7 @@ package com.exx.dzj.controller.market;
 
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.market.LogisticsInfo;
+import com.exx.dzj.entity.market.SaleGoodsSelected;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
 import com.exx.dzj.entity.user.UserInfo;
@@ -177,7 +178,9 @@ public class SalesTickeContorller {
         try {
             salesTicketFacade.addLogisticsInfo(logisticsInfo);
         } catch (Exception e){
+            e.printStackTrace();
             result.setCode(CommonConstant.FAIL_CODE);
+            result.setMsg("操作失败");
         }
         return result;
     }
@@ -186,14 +189,29 @@ public class SalesTickeContorller {
      * @description  物流详情
      * @author yangyun
      * @date 2019/5/11 0011
-     * @param saleId
+     * @param saleCode
      * @return com.exx.dzj.result.Result
      */
-    @GetMapping("getlogisticsinfo/{saleId}")
-    public Result getLogisticsInfo (@PathVariable(value = "saleId", required = true) String saleId){
+    @GetMapping("getlogisticsinfo/{saleCode}")
+    public Result getLogisticsInfo (@PathVariable(value = "saleCode", required = true) String saleCode){
         Result result = Result.responseSuccess();
-        LogisticsInfo logisticsInfo = salesTicketFacade.getLogisticsInfo(saleId);
-        result.setData(logisticsInfo);
+        List<LogisticsInfo> logisticsInfos = salesTicketFacade.getLogisticsInfo(saleCode);
+        result.setData(logisticsInfos);
+        return result;
+    }
+
+    /**
+     * @description 销售单关联商品下拉数据
+     * @author yangyun
+     * @date 2019/5/17 0017
+     * @param saleCode
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("getsalegoodsselected/{saleCode}")
+    public Result getSaleGoodsSelected (@PathVariable("saleCode") String saleCode){
+        Result result = Result.responseSuccess();
+        List<SaleGoodsSelected> saleGoodsSelected = salesTicketFacade.getSaleGoodsSelected(saleCode);
+        result.setData(saleGoodsSelected);
         return result;
     }
 

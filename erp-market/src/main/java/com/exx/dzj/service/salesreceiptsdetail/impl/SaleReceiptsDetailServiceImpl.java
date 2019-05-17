@@ -1,6 +1,7 @@
 package com.exx.dzj.service.salesreceiptsdetail.impl;
 
 import com.exx.dzj.entity.market.LogisticsInfo;
+import com.exx.dzj.entity.market.SaleGoodsSelected;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
 import com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper;
 import com.exx.dzj.service.salesreceiptsdetail.SaleReceiptsDetailService;
@@ -51,7 +52,12 @@ public class SaleReceiptsDetailServiceImpl implements SaleReceiptsDetailService 
     }
 
     @Override
-    public LogisticsInfo getLogisticsInfo(String saleId) {
-        return saleReceiptsDetailsMapper.getLogisticsInfo(saleId);
+    public List<LogisticsInfo> getLogisticsInfo(String saleCode) {
+        return saleReceiptsDetailsMapper.getLogisticsInfo(saleCode);
+    }
+
+    @Override
+    public List<SaleGoodsSelected> getSaleGoodsSelected(String saleCode) {
+        return saleReceiptsDetailsMapper.getSaleGoodsSelected(saleCode);
     }
 }

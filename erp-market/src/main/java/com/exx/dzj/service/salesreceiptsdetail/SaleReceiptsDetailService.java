@@ -1,6 +1,7 @@
 package com.exx.dzj.service.salesreceiptsdetail;
 
 import com.exx.dzj.entity.market.LogisticsInfo;
+import com.exx.dzj.entity.market.SaleGoodsSelected;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
 
 import java.math.BigDecimal;
@@ -32,6 +33,7 @@ public interface SaleReceiptsDetailService {
 
     void updateLogisticsInfo(LogisticsInfo logisticsInfo);
 
-    LogisticsInfo getLogisticsInfo (String saleId);
+    List<LogisticsInfo> getLogisticsInfo (String saleCode);
 
+    List<SaleGoodsSelected> getSaleGoodsSelected (String saleCode);
 }

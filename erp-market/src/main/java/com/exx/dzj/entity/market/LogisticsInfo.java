@@ -15,7 +15,8 @@ public class LogisticsInfo implements Serializable {
     private static final long serialVersionUID = 117924928803317540L;
 
     private Integer id;
-    private Integer saleId;
+    private String saleCode;
+    private String stockCode;
     private String logisticsKind;
     private String logisticsCompanyCode;
     private String logisticsCompamyName;
@@ -26,5 +27,6 @@ public class LogisticsInfo implements Serializable {
     private Date createTime;
     private Date lastUpdateTime;
     private BigDecimal expressFee;
-    private int chargeMethod;
+    private String chargeMethod;
+    private String createUser;
 }

@@ -33,5 +33,10 @@ public class SalesGoodsDetailServiceImpl implements SalesGoodsDetailService {
         saleGoodsDetailBeanMapper.batchDeleteSalesGoodsDetail(sgbIds);
     }
 
+    @Override
+    public SaleGoodsDetailBean querySaleGoodsDetail(SaleGoodsDetailBean bean) {
+        return saleGoodsDetailBeanMapper.querySaleGoodsDetail(bean);
+    }
+
 
 }
