@@ -102,6 +102,18 @@ public class UserController {
     }
 
     /**
+     * @功能: 修改用户信息或密码(个人中心)
+     * @param request
+     * @param response
+     * @param bean
+     * @return
+     */
+    @PostMapping("modifyUserInfo")
+    public Result modifyUserInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody UserVo bean) {
+        return userFacade.modifyUserInfo(bean);
+    }
+
+    /**
      * 查询 用户信息
      * @param userCode
      * @return

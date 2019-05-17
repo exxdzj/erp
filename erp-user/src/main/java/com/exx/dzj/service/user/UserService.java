@@ -25,6 +25,12 @@ public interface UserService {
     String saveSalesman(UserVo bean);
 
     /**
+     * 修改 用户信息或密码(个人中心)
+     * @param bean
+     */
+    void modifyUserInfo(UserVo bean);
+
+    /**
      * 查询 用户详细信息
      * @param info
      * @return

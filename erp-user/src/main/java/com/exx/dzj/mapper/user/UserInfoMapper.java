@@ -24,11 +24,7 @@ public interface UserInfoMapper {
 
     int updateByExampleSelective(@Param("record") UserInfo record, @Param("example") UserInfoExample example);
 
-    int updateByExample(@Param("record") UserInfo record, @Param("example") UserInfoExample example);
-
     int updateByPrimaryKeySelective(UserInfo record);
-
-    int updateByPrimaryKey(UserInfo record);
 
     List<UserInfo> querySalesman();
 
@@ -38,7 +34,9 @@ public interface UserInfoMapper {
 
     List<String> queryUserRoleList(@Param("userCode") String userCode);
 
-    public List<UserModel> selectionUserInfo();
+    List<String> queryRoleNames(@Param("userCode") String userCode);
+
+    List<UserModel> selectionUserInfo();
 
     List<UserInfo> querySalesmanList(@Param("type") Integer type);
 }

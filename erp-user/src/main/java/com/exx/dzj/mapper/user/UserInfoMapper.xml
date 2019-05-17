@@ -16,6 +16,8 @@
     <result column="login_status" jdbcType="INTEGER" property="loginStatus" />
     <result column="last_signin_time" jdbcType="TIMESTAMP" property="lastSigninTime" />
     <result column="last_signout_time" jdbcType="TIMESTAMP" property="lastSignoutTime" />
+    <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+    <result column="gender" jdbcType="INTEGER" property="gender" />
   </resultMap>
 
   <resultMap id="UserBaseResultMap" type="com.exx.dzj.entity.user.UserVo">
@@ -95,7 +97,7 @@
 
   <sql id="Base_Column_List">
     id, user_code, user_name, pass_word, real_name, dept_code, salesman_code, head_img, 
-    phone_num, email, is_quit, login_status, last_signin_time, last_signout_time
+    phone_num, email, is_quit, login_status, last_signin_time, last_signout_time, birthday, gender
   </sql>
 
   <select id="selectByExample" parameterType="com.exx.dzj.entity.user.UserInfoExample" resultMap="BaseResultMap">
@@ -111,23 +113,6 @@
     <if test="orderByClause != null">
       order by ${orderByClause}
     </if>
-  </select>
-
-  <select id="queryUserInfo" parameterType="com.exx.dzj.entity.user.UserInfo" resultMap="UserBaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from tab_user_info
-    where is_quit = 1
-    <if test="userCode != null and userCode!=''">
-      and user_code = #{userCode,jdbcType=VARCHAR}
-    </if>
-    <if test="userName != null and userName!=''">
-      and user_name = #{userName,jdbcType=VARCHAR}
-    </if>
-    <if test="passWord != null and passWord!=''">
-      and pass_word = #{passWord,jdbcType=VARCHAR}
-    </if>
-    LIMIT 1
   </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -296,52 +281,31 @@
     </if>
   </update>
 
-  <update id="updateByExample" parameterType="map">
-    update tab_user_info
-    set id = #{record.id,jdbcType=INTEGER},
-      user_code = #{record.userCode,jdbcType=VARCHAR},
-      user_name = #{record.userName,jdbcType=VARCHAR},
-      pass_word = #{record.passWord,jdbcType=VARCHAR},
-      real_name = #{record.realName,jdbcType=VARCHAR},
-      dept_code = #{record.deptCode,jdbcType=VARCHAR},
-      salesman_code = #{record.salesmanCode,jdbcType=VARCHAR},
-      head_img = #{record.headImg,jdbcType=VARCHAR},
-      phone_num = #{record.phoneNum,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR},
-      is_quit = #{record.isQuit,jdbcType=INTEGER},
-      login_status = #{record.loginStatus,jdbcType=INTEGER},
-      last_signin_time = #{record.lastSigninTime,jdbcType=TIMESTAMP},
-      last_signout_time = #{record.lastSignoutTime,jdbcType=TIMESTAMP}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.user.UserInfo">
     update tab_user_info
     <set>
-      <if test="userName != null">
+      <if test="userName != null and userName!=''">
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="passWord != null">
+      <if test="passWord != null and passWord!=''">
         pass_word = #{passWord,jdbcType=VARCHAR},
       </if>
-      <if test="realName != null">
+      <if test="realName != null and realName!=''">
         real_name = #{realName,jdbcType=VARCHAR},
       </if>
-      <if test="deptCode != null">
+      <if test="deptCode != null and deptCode!=''">
         dept_code = #{deptCode,jdbcType=VARCHAR},
       </if>
-      <if test="salesmanCode != null">
+      <if test="salesmanCode != null and salesmanCode!=''">
         salesman_code = #{salesmanCode,jdbcType=VARCHAR},
       </if>
-      <if test="headImg != null">
+      <if test="headImg != null and headImg!=''">
         head_img = #{headImg,jdbcType=VARCHAR},
       </if>
-      <if test="phoneNum != null">
+      <if test="phoneNum != null and phoneNum!=''">
         phone_num = #{phoneNum,jdbcType=VARCHAR},
       </if>
-      <if test="email != null">
+      <if test="email != null and email!=''">
         email = #{email,jdbcType=VARCHAR},
       </if>
       <if test="birthday != null">
@@ -362,24 +326,6 @@
         and user_code = #{userCode, jdbcType=VARCHAR}
       </if>
     </where>
-  </update>
-
-  <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.user.UserInfo">
-    update tab_user_info
-    set user_code = #{userCode,jdbcType=VARCHAR},
-      user_name = #{userName,jdbcType=VARCHAR},
-      pass_word = #{passWord,jdbcType=VARCHAR},
-      real_name = #{realName,jdbcType=VARCHAR},
-      dept_code = #{deptCode,jdbcType=VARCHAR},
-      salesman_code = #{salesmanCode,jdbcType=VARCHAR},
-      head_img = #{headImg,jdbcType=VARCHAR},
-      phone_num = #{phoneNum,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      is_quit = #{isQuit,jdbcType=INTEGER},
-      login_status = #{loginStatus,jdbcType=INTEGER},
-      last_signin_time = #{lastSigninTime,jdbcType=TIMESTAMP},
-      last_signout_time = #{lastSignoutTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
   </update>
 
   <!-- 查询 用户(业务员)数据 -->
@@ -411,7 +357,7 @@
     WHEN tu.gender = 1 THEN
         '男'
     ELSE
-        '未知'
+        '保密'
     END genderName,
      tu.is_quit isQuit,
      CASE
@@ -441,13 +387,21 @@
     ORDER BY tu.is_quit DESC
   </select>
 
-  <!-- 用户信息 -->
-  <resultMap id="UserInfoResultMap" type="com.exx.dzj.entity.user.UserVo">
-    <collection property="roles" column="{userCode=userCode}" select="com.exx.dzj.mapper.user.UserInfoMapper.queryUserRoleList"></collection>
-  </resultMap>
+  <select id="queryUserInfo" parameterType="com.exx.dzj.entity.user.UserInfo" resultMap="UserBaseResultMap">
+    <include refid="QueryUserInfoSQL"/>
+    <if test="userCode != null and userCode!=''">
+      and tb.user_code = #{userCode,jdbcType=VARCHAR}
+    </if>
+    <if test="userName != null and userName!=''">
+      and tb.user_name = #{userName,jdbcType=VARCHAR}
+    </if>
+    <if test="passWord != null and passWord!=''">
+      and tb.pass_word = #{passWord,jdbcType=VARCHAR}
+    </if>
+    AND tb.is_quit = 1
+  </select>
 
-  <!-- 查询用户信息，包括用户角色 -->
-  <select id="queryUserBean" parameterType="com.exx.dzj.entity.user.UserInfo" resultMap="UserInfoResultMap">
+  <sql id="QueryUserInfoSQL">
     SELECT
       tb.user_code userCode,
       tb.user_name userName,
@@ -460,19 +414,51 @@
       tb.phone_num phoneNum,
       tb.email email,
       tb.birthday birthday,
-      tb.gender
+      tb.login_status loginStatus,
+      tb.is_quit isQuit,
+      tb.gender,
+      CASE
+        WHEN tb.gender = 0 THEN
+        '女'
+        WHEN tb.gender = 1 THEN
+        '男'
+        ELSE
+        '保密'
+      END genderName
     FROM tab_user_info tb
     LEFT JOIN tab_dept_info td ON tb.dept_code = td.dept_code
     WHERE 1 = 1
+  </sql>
+
+  <!-- 用户信息 -->
+  <resultMap id="UserInfoResultMap" type="com.exx.dzj.entity.user.UserVo">
+    <collection property="roles" column="{userCode=userCode}" select="com.exx.dzj.mapper.user.UserInfoMapper.queryUserRoleList"></collection>
+    <collection property="roleNames" column="{userCode=userCode}" select="com.exx.dzj.mapper.user.UserInfoMapper.queryRoleNames"></collection>
+  </resultMap>
+
+  <!-- 查询用户信息，包括用户角色 -->
+  <select id="queryUserBean" parameterType="com.exx.dzj.entity.user.UserInfo" resultMap="UserInfoResultMap">
+    <include refid="QueryUserInfoSQL"/>
     <if test="userCode != null and userCode!=''">
       AND tb.user_code = #{userCode}
+    </if>
+    <if test="userName != null and userName!=''">
+      AND tb.user_name = #{userName}
+    </if>
+    <if test="passWord != null and passWord!=''">
+      AND tb.pass_word = #{passWord}
     </if>
   </select>
 
   <select id="queryUserRoleList" resultType="java.lang.String">
     SELECT role_code FROM tab_user_role t WHERE 1 = 1 AND user_code = #{userCode}
   </select>
-  
+
+  <select id="queryRoleNames" resultType="java.lang.String">
+    SELECT role_name FROM tab_role r
+    INNER JOIN tab_user_role t WHERE r.role_code = t.role_code AND user_code = #{userCode}
+  </select>
+
   <select id="selectionUserInfo" resultMap="selectionUserInfoMap">
     SELECT deptInfo.dept_name, userInfo.user_code, userInfo.user_name, userInfo.real_name, userInfo.dept_code
       FROM tab_user_info userInfo

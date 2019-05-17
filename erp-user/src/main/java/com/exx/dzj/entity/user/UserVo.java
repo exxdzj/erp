@@ -21,7 +21,11 @@ public class UserVo extends UserInfo implements Serializable {
      */
     private List<String> roles;
 
+    private List<String> roleNames;
+
     private String deptName;
 
     private String userToken;
+
+    private String genderName;
 }

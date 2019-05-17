@@ -10,6 +10,7 @@ import com.exx.dzj.result.Result;
 import com.exx.dzj.result.SelectionSaleInfo;
 import com.exx.dzj.service.user.UserRoleService;
 import com.exx.dzj.service.user.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.sql.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * @Date 2019/1/8 0008 17:04
  * @Description 获取用户信息
  */
+@Slf4j
 @Component
 public class UserFacade {
 
@@ -49,9 +51,9 @@ public class UserFacade {
     public UserVo getUserRoles(String userToken){
         UserVo userVo = this.getUserInfo(userToken);
         // 查询用户角色
-        if(null != userVo){
+        /*if(null != userVo){
             userVo.setRoles(userRolesService.queryUserRoles(userVo.getUserCode()));
-        }
+        }*/
         return userVo;
     }
 
@@ -90,8 +92,26 @@ public class UserFacade {
                 roleFacade.saveUserRole(userCode, bean.getRoles());
             }
         }catch(ErpException ex){
+            log.error("执行方法:{},错误信息:{}", UserFacade.class.getName()+".saveUserInfo", ex.getMessage());
             throw new ErpException(400, "保存用户信息失败!");
         }
+    }
+
+    /**
+     * @功能: 修改用户信息或密码(个人中心)
+     * @param bean
+     * @return
+     */
+    public Result modifyUserInfo(UserVo bean) {
+        Result result = Result.responseSuccess();
+        try {
+            salesmanService.modifyUserInfo(bean);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("修改失败!");
+            log.error("执行方法:{},错误信息:{}", UserFacade.class.getName()+".modifyUserInfo", ex.getMessage());
+        }
+        return result;
     }
 
     /**

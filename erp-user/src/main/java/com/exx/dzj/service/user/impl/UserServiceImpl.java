@@ -80,15 +80,35 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 通过 用户名和密码获取用户信息
+     * @功能: 修改用户信息或密码(个人中心)
+     * @param bean
+     */
+    @Override
+    @SysLog(operate = "修改用户基本信息或密码", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
+    public void modifyUserInfo(UserVo bean) {
+        try{
+            userMapper.updateByPrimaryKeySelective(bean);
+        }catch(Exception ex){
+            LOGGER.error("异常方法:{}异常信息:{}", UserServiceImpl.class.getName()+".modifyUserInfo", ex.getMessage());
+            throw new ErpException(400, "修改信息失败!");
+        }
+    }
+
+    /**
+     * 获取用户信息，MyRealm 的 doGetAuthenticationInfo() 会调用这个方法来做验证
      * @param info
      * @return
      */
     @Override
     public UserVo queryUserInfo(UserInfo info) {
-        UserVo userVo = userMapper.queryUserInfo(info);
-        if(null != userVo && ConvertUtils.isEmpty(userVo.getHeadImg())) {
-            userVo.setHeadImg("https://exx-erp.oss-cn-shenzhen.aliyuncs.com/employee-images/prod/erpdefualtheadimg.png");
+        //UserVo userVo = userMapper.queryUserInfo(info);
+        UserVo userVo = userMapper.queryUserBean(info);
+        if(null != userVo) {
+            //userVo.setPassWord("");
+            //userVo.setUserName("");
+            if(ConvertUtils.isEmpty(userVo.getHeadImg())) {
+                userVo.setHeadImg("https://exx-erp.oss-cn-shenzhen.aliyuncs.com/employee-images/prod/erpdefualtheadimg.png");
+            }
         }
         return userVo;
     }
@@ -99,7 +119,6 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    @SysLog(operate = "通过userCode查询用户信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public UserVo queryUserBean(String userCode) {
         UserInfo info = new UserInfo();
         info.setUserCode(userCode);

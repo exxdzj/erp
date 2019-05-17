@@ -47,7 +47,8 @@ public class LoginServiceImpl implements LoginService {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserName(loginInfo.getUsername());
         userInfo.setPassWord(loginInfo.getPassword());
-        UserVo userVo = userMapper.queryUserInfo(userInfo);
+        //UserVo userVo = userMapper.queryUserInfo(userInfo);
+        UserVo userVo = userMapper.queryUserBean(userInfo);
         if(null == userVo){
             result.setCode(400);
             result.setMsg("用户或密码错误!");
@@ -70,6 +71,9 @@ public class LoginServiceImpl implements LoginService {
             // 如果头像为空，则设置一个默认头像(此处暂时写死)
             userVo.setHeadImg("https://exx-erp.oss-cn-shenzhen.aliyuncs.com/employee-images/prod/erpdefualtheadimg.png");
         }
+        //防止账号泄露,将用户和密码设置为空
+        userVo.setUserName("");
+        userVo.setPassWord("");
         result.setData(userVo);
         return result;
     }
