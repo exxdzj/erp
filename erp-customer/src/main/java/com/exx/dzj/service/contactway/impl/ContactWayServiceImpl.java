@@ -1,5 +1,8 @@
 package com.exx.dzj.service.contactway.impl;
 
+import com.exx.dzj.annotation.SysLog;
+import com.exx.dzj.constant.LogLevel;
+import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.mapper.contactway.ContactWayBeanMapper;
@@ -29,12 +32,13 @@ public class ContactWayServiceImpl implements ContactWayService {
      * @param bean
      */
     @Override
+    @SysLog(operate = "保存联系信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void saveContactWay(ContactWayBean bean) {
         try{
             contactWayMapper.insertSelective(bean);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", ContactWayServiceImpl.class.getName()+".saveContactWay", ex.getMessage());
-            throw new ErpException(400, "保存客户或供应商联系信息失败!");
+            throw ex;
         }
     }
 
@@ -43,12 +47,13 @@ public class ContactWayServiceImpl implements ContactWayService {
      * @param bean
      */
     @Override
+    @SysLog(operate = "修改联系信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public int modifyContactWay(ContactWayBean bean) {
         try{
             return contactWayMapper.updateByPrimaryKeySelective(bean);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", ContactWayServiceImpl.class.getName()+".modifyContactWay", ex.getMessage());
-            throw new ErpException(400, "修改客户或供应商联系信息失败!");
+            throw ex;
         }
     }
 

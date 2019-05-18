@@ -1,5 +1,8 @@
 package com.exx.dzj.service.accountatt.impl;
 
+import com.exx.dzj.annotation.SysLog;
+import com.exx.dzj.constant.LogLevel;
+import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.mapper.accountatt.AccountAttributeBeanMapper;
@@ -29,12 +32,13 @@ public class AccountAttributeServiceImpl implements AccountAttributeService {
      * @param bean
      */
     @Override
+    @SysLog(operate = "保存会计属性信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void saveAccountAttribute(AccountAttributeBean bean) {
         try{
             accountAttributeMapper.insertSelective(bean);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", AccountAttributeServiceImpl.class.getName()+".saveAccountAttribute", ex.getMessage());
-            throw new ErpException(400, "保存会计属性信息失败!");
+            throw ex;
         }
     }
 
@@ -43,12 +47,13 @@ public class AccountAttributeServiceImpl implements AccountAttributeService {
      * @param bean
      */
     @Override
+    @SysLog(operate = "修改会计属性信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public int modifyAccountAttribute(AccountAttributeBean bean) {
         try{
             return accountAttributeMapper.updateByPrimaryKeySelective(bean);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", AccountAttributeServiceImpl.class.getName()+".modifyAccountAttribute", ex.getMessage());
-            throw new ErpException(400, "属性会计属性信息失败!");
+            throw ex;
         }
     }
 

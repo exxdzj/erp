@@ -228,8 +228,14 @@ public class CustomerSupplierFacade {
      */
     public Result delCustomerSupplier(String custCodes){
         Result result = Result.responseSuccess();
-        String userCode = userTokenFacade.queryUserCodeForToken(null);
-        customerSupplierService.delCustomerSupplier(custCodes, CommonConstant.DEFAULT_VALUE_ZERO, userCode);
+        try {
+            String userCode = userTokenFacade.queryUserCodeForToken(null);
+            customerSupplierService.delCustomerSupplier(custCodes, CommonConstant.DEFAULT_VALUE_ZERO, userCode);
+        } catch(Exception ex) {
+            result.setCode(400);
+            result.setMsg("删除客户或供应商基础信息失败");
+        }
+
         return result;
     }
 

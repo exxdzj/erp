@@ -2,6 +2,9 @@ package com.exx.dzj.service.customer.impl;
 
 //import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.metadata.Sheet;
+import com.exx.dzj.annotation.SysLog;
+import com.exx.dzj.constant.LogLevel;
+import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.customer.*;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.listen.ExcelListener;
@@ -65,12 +68,13 @@ public class CustomerServiceImpl implements CustomerService {
      * @param bean
      */
     @Override
+    @SysLog(operate = "保存客户或供应商信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void saveCustomerSupplier(CustomerSupplierBean bean) {
         try{
             csMapper.insertSelective(bean);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", CustomerServiceImpl.class.getName()+".saveCustomerSupplier", ex.getMessage());
-            throw new ErpException(400, "保存客户或供应商基础信息失败!");
+            throw ex;
         }
     }
 
@@ -79,12 +83,13 @@ public class CustomerServiceImpl implements CustomerService {
      * @param bean
      */
     @Override
+    @SysLog(operate = "修改客户或供应商信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void modifyCustomerSupplier(CustomerSupplierBean bean){
         try{
             csMapper.updateByPrimaryKeySelective(bean);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", CustomerServiceImpl.class.getName()+".modifyCustomerSupplier", ex.getMessage());
-            throw new ErpException(400, "修改客户或供应商基础信息失败!");
+            throw ex;
         }
     }
 
@@ -93,6 +98,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param custCodes
      */
     @Override
+    @SysLog(operate = "删除客户或供应商信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void delCustomerSupplier(String custCodes, int isEnable, String userCode){
         try{
             String comma = ",";
@@ -107,7 +113,7 @@ public class CustomerServiceImpl implements CustomerService {
             csMapper.modifyCustomerSupplierDataStatus(list, isEnable, userCode);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", CustomerServiceImpl.class.getName()+".delCustomerSupplier", ex.getMessage());
-            throw new ErpException(400, "删除客户或供应商基础信息失败!");
+            throw ex;
         }
     }
 
@@ -157,6 +163,7 @@ public class CustomerServiceImpl implements CustomerService {
         csMapper.batchInsertCustomerSupplier(customerSupplierList);
     }
 
+    @Override
     @Cacheable(value = "{customersupplierlist}", keyGenerator = "myKeyGenerator")
     public List<CustomerSupplierBean> queryCustomerSupplierBeanList () {
         return csMapper.queryCustomerSupplierBeanList();

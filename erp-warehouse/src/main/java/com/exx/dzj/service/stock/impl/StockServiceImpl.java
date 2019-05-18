@@ -1,5 +1,8 @@
 package com.exx.dzj.service.stock.impl;
 
+import com.exx.dzj.annotation.SysLog;
+import com.exx.dzj.constant.LogLevel;
+import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.stock.*;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.mapper.stock.StockInfoMapper;
@@ -72,7 +75,8 @@ public class StockServiceImpl implements StockService {
      * @return
      */
     @Override
-    @Transactional(rollbackFor = ErpException.class)
+    @Transactional(rollbackFor = Exception.class)
+    @SysLog(operate = "更新存货数据", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public Result saveStockInfo(StockBean bean) {
         Result result = Result.responseSuccess();
         try{
@@ -108,7 +112,7 @@ public class StockServiceImpl implements StockService {
             }
         } catch(Exception ex) {
             LOGGER.error("异常方法:{}异常信息:{}", StockServiceImpl.class.getName()+".saveStockInfo", ex.getMessage());
-            throw new ErpException(400, "保存数据失败!");
+            throw ex;
         }
         return result;
     }
@@ -119,6 +123,7 @@ public class StockServiceImpl implements StockService {
      * @return
      */
     @Override
+    @SysLog(operate = "删除存货数据", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void delStockInfo(String stockCodes, int isEnable, String userCode) {
         try{
             String comma = ",";
@@ -133,7 +138,7 @@ public class StockServiceImpl implements StockService {
             stockMapper.shelvesStock(null, isEnable, list, userCode);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", StockServiceImpl.class.getName()+".delStockInfo", ex.getMessage());
-            throw new ErpException(400, "删除存货数据失败!");
+            throw ex;
         }
 
 
@@ -147,6 +152,7 @@ public class StockServiceImpl implements StockService {
      */
     @Override
     @Transactional(rollbackFor = ErpException.class)
+    @SysLog(operate = "存货上架或下架", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void shelvesStock(String isShelves, String stockCodes, String userCode){
         try{
             String comma = ",";
@@ -161,7 +167,7 @@ public class StockServiceImpl implements StockService {
             stockMapper.shelvesStock(isShelves, null, list, userCode);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", StockServiceImpl.class.getName()+".shelvesStock", ex.getMessage());
-            throw new ErpException(400, "删除存货数据失败!");
+            throw ex;
         }
     }
 
@@ -170,10 +176,12 @@ public class StockServiceImpl implements StockService {
      * @param stockInfo
      */
     @Override
+    @SysLog(operate = "保存存货数据", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void insertStockInfo(StockInfo stockInfo) {
         stockMapper.insertSelective(stockInfo);
     }
 
+    @Override
     @Transactional
     public void batchInventoryDataProccess (Map<String, List> map) {
         List<StockInfo> stockInfoList = map.get("stockInfoList");
@@ -184,11 +192,13 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    @SysLog(operate = "更新存货库存", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void updateStockGoodsInventory(StockBean stockInfo) {
         stockMapper.updateStockGoodsInventory(stockInfo);
     }
 
     @Override
+    @SysLog(operate = "更新存货存量与价格", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void insertStockNumPrice(StockNumPrice stockNumPrice) {
         stockMapper.insertStockNumPrice(stockNumPrice);
     }
