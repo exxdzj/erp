@@ -406,6 +406,7 @@
       ) stockNameForSpe,
       ti.stock_class_name stockClassName,
       sn.standard_buy_price standardBuyPrice,
+      IFNULL(sn.min_inventory, 0) minInventory,
       sn.standard_sell_price standardSellPrice,
       CASE
     WHEN ti.nature = '1' THEN
