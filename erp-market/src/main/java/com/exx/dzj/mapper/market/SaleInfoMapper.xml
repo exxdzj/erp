@@ -711,4 +711,8 @@
       update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <delete id="logisticsInfoDel">
+    DELETE FROM tab_sale_logistic_info WHERE id = #{id}
+  </delete>
 </mapper>

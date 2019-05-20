@@ -348,6 +348,8 @@ public class SalesTicketFacade {
         return saleGoodsSelecteds;
     }
 
-
+    public void logisticsInfoDel (Integer id){
+        salesTicketService.logisticsInfoDel(id);
+    }
 
 }

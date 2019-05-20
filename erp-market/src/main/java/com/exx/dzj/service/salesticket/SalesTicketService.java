@@ -25,4 +25,6 @@ public interface SalesTicketService {
     void updateSalesTicketById(SaleInfo saleInfo);
 
     void deleteSaleinfo(Integer id);
+
+    void logisticsInfoDel (Integer id);
 }

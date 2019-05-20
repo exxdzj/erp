@@ -215,4 +215,18 @@ public class SalesTickeContorller {
         return result;
     }
 
+    /**
+     * @description 物流信息删除
+     * @author yangyun
+     * @date 2019/5/20 0020
+     * @param id
+     * @return com.exx.dzj.result.Result
+     */
+    @DeleteMapping("logisticsinfodel/{id}")
+    public Result logisticsInfoDel (@PathVariable("id") Integer id){
+        Result result = Result.responseSuccess();
+        salesTicketFacade.logisticsInfoDel(id);
+        return result;
+    }
+
 }

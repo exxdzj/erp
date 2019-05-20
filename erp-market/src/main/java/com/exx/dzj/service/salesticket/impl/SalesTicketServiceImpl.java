@@ -90,4 +90,9 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     public void deleteSaleinfo(Integer id) {
         saleInfoMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public void logisticsInfoDel(Integer id) {
+        saleInfoMapper.logisticsInfoDel(id);
+    }
 }

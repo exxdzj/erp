@@ -32,4 +32,6 @@ public interface SaleInfoMapper {
     int updateByPrimaryKeySelective(SaleInfo record);
 
     int updateByPrimaryKey(SaleInfo record);
+
+    void logisticsInfoDel(@Param("id") Integer id);
 }
