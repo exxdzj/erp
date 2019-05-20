@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class LogisticsTrailServiceImpl implements LogisticsTrailService {
     @SysLog(operate = "保存物流明细", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void saveLogisticsTrail(List<LogisticsTrail> trails) {
         try {
+            if(CollectionUtils.isEmpty(trails)) {
+                return;
+            }
             trailMapper.saveLogisticsTrail(trails);
         } catch(Exception ex) {
             log.error("保存物流信息失败!执行方法:{}异常信息:{}", LogisticsTrailServiceImpl.class.getName()+".saveLogisticsTrail", ex.getMessage());

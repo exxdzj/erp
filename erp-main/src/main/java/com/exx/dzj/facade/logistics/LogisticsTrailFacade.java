@@ -66,7 +66,7 @@ public class LogisticsTrailFacade {
                 return result;
             }
 
-            if(null == bean.getState() && !CommonConstant.KDNIAO_SIGN_IN_STATE.equals(bean.getState())) {
+            if(null != bean.getState()) {
                 trails = paserTraces(bean, param);
             }
 
@@ -120,7 +120,7 @@ public class LogisticsTrailFacade {
 
         if(!CollectionUtils.isEmpty(trails)) {
             trails.sort((t1, t2) -> t2.getAcceptDate().compareTo(t1.getAcceptDate()));
-            //System.out.println("排序后的结果:" + trails);
+            System.out.println("排序后的结果:" + trails);
         }
 
         return trails;

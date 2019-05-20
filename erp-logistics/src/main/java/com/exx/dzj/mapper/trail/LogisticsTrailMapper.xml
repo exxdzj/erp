@@ -7,7 +7,7 @@
         INSERT INTO tab_logistics_trail (freight_code, logistic_company_code, order_no, accept_time, accept_station, bus_module, create_time, data_source, business_id)
         VALUES
         <foreach collection="trails" item="trail" separator=",">
-            (#{freightCode}, #{logisticCompanyCode}, #{orderNo}, str_to_date(#{acceptTime}, '%Y-%c-%d %H:%i:%s'), #{acceptStation}, #{busModule}, SYSDATE(), #{dataSource}, #{businessId})
+            (#{trail.freightCode}, #{trail.logisticCompanyCode}, #{trail.orderNo}, str_to_date(#{trail.acceptTime}, '%Y-%c-%d %H:%i:%s'), #{trail.acceptStation}, #{trail.busModule}, SYSDATE(), #{trail.dataSource}, #{trail.businessId})
         </foreach>
     </insert>
 
@@ -22,6 +22,7 @@
     <!-- 查询 物流明细数据 -->
     <select id="queryLogisticsTrails" parameterType="com.exx.dzj.entity.trail.LogisticsTrailParam" resultMap="LogisticsTrailResultMap">
         SELECT freight_code, logistic_company_code, order_no, DATE_FORMAT(accept_time,'%Y-%c-%d %H:%i:%s') as accept_time, accept_station
+        FROM tab_logistics_trail
         WHERE 1 = 1
         <if test="freightCode!=null and freightCode!=''">
             AND freight_code = #{freightCode}

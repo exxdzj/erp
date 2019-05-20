@@ -39,6 +39,11 @@ public class LogisticsTrail implements Serializable {
     private String acceptTime;
 
     /**
+     * 接收时间
+     */
+    private Date acceptDate;
+
+    /**
      * 接收站点
      */
     private String acceptStation;

@@ -2,6 +2,7 @@ package com.exx.dzj.mapper.trail;
 
 import com.exx.dzj.entity.trail.LogisticsTrail;
 import com.exx.dzj.entity.trail.LogisticsTrailParam;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface LogisticsTrailMapper {
      * @param trails
      * @return
      */
-    int saveLogisticsTrail(List<LogisticsTrail> trails);
+    int saveLogisticsTrail(@Param("trails") List<LogisticsTrail> trails);
 
     /**
      * @功能: 查询 物流明细数据
