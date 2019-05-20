@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exx.dzj.mapper.trail.LogisticsTrailMapper">
+
+    <!-- 批量保存 物流明细数据 -->
+    <insert id="saveLogisticsTrail">
+        INSERT INTO tab_logistics_trail (freight_code, logistic_company_code, order_no, accept_time, accept_station, bus_module, create_time, data_source, business_id)
+        VALUES
+        <foreach collection="trails" item="trail" separator=",">
+            (#{freightCode}, #{logisticCompanyCode}, #{orderNo}, str_to_date(#{acceptTime}, '%Y-%c-%d %H:%i:%s'), #{acceptStation}, #{busModule}, SYSDATE(), #{dataSource}, #{businessId})
+        </foreach>
+    </insert>
+
+    <resultMap id="LogisticsTrailResultMap" type="com.exx.dzj.entity.trail.LogisticsTrail">
+        <result column="freight_code" property="freightCode"/>
+        <result column="logistic_company_code" property="logisticCompanyCode"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="accept_time" property="acceptTime"/>
+        <result column="accept_station" property="acceptStation"/>
+    </resultMap>
+    
+    <!-- 查询 物流明细数据 -->
+    <select id="queryLogisticsTrails" parameterType="com.exx.dzj.entity.trail.LogisticsTrailParam" resultMap="LogisticsTrailResultMap">
+        SELECT freight_code, logistic_company_code, order_no, DATE_FORMAT(accept_time,'%Y-%c-%d %H:%i:%s') as accept_time, accept_station
+        WHERE 1 = 1
+        <if test="freightCode!=null and freightCode!=''">
+            AND freight_code = #{freightCode}
+        </if>
+        <if test="logisticCompanyCode!=null and logisticCompanyCode!=''">
+            AND logistic_company_code = #{logisticCompanyCode}
+        </if>
+        <if test="orderNo!=null and orderNo!=''">
+            AND order_no = #{orderNo}
+        </if>
+        <if test="busModule!=null">
+            AND bus_module = #{busModule}
+        </if>
+        ORDER BY accept_time DESC
+    </select>
+</mapper>

@@ -127,4 +127,8 @@ public class CommonConstant {
 
     public static final String BIGDECIMAL_ZERO = "0.00";
 
+    /*********************快递鸟物流状态(2-在途中,3-签收,4-问题件)*********************/
+    public static final Integer KDNIAO_ON_WAY_STATE = 2;
+    public static final Integer KDNIAO_SIGN_IN_STATE = 3;
+    public static final Integer KDNIAO_PROBLEM_STATE = 4;
 }

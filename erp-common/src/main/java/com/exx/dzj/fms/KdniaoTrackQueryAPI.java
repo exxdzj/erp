@@ -40,7 +40,7 @@ public class KdniaoTrackQueryAPI {
 	}
 
 	/**
-	 * 电商ID
+	 * 商户ID
 	 */
 	private String EBusinessID="1298315";
 	/**
@@ -50,12 +50,15 @@ public class KdniaoTrackQueryAPI {
 	/**
 	 * 请求url
 	 */
-	private String ReqURL="http://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx";	
- 
+	private String ReqURL="http://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx";
+
 	/**
-     * Json方式 查询订单物流轨迹
-	 * @throws Exception 
-     */
+	 * Json方式 查询订单物流轨迹
+	 * @param expCode  物流公司编码
+	 * @param expNo	   物流单号(快递单号)
+	 * @return
+	 * @throws Exception
+	 */
 	public String getOrderTracesByJson(String expCode, String expNo) throws Exception{
 		String requestData= "{'OrderCode':'','ShipperCode':'" + expCode + "','LogisticCode':'" + expNo + "'}";
 		
