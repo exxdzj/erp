@@ -96,7 +96,7 @@ public class StockController {
     @PostMapping("shelvesStock/{isShelves}")
     public Result shelvesStock(HttpServletRequest request, HttpServletResponse response,
                                @RequestParam String stockCode,
-                               @PathVariable("isShelves") String isShelves) {
+                               @PathVariable("isShelves") Integer isShelves) {
         return stockFacade.shelvesStock(isShelves, stockCode);
     }
 

@@ -2,20 +2,20 @@ package com.exx.dzj.facade.stock;
 
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
-import com.exx.dzj.entity.stock.StockBean;
-import com.exx.dzj.entity.stock.StockInfo;
-import com.exx.dzj.entity.stock.StockNumPrice;
-import com.exx.dzj.entity.stock.StockQuery;
+import com.exx.dzj.entity.stock.*;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.dictionary.DictionaryService;
 import com.exx.dzj.service.stock.StockService;
+import com.exx.dzj.util.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,9 +109,28 @@ public class StockFacade {
      * @param stockCode
      * @return
      */
-    public Result shelvesStock(String isShelves, String stockCode) {
+    public Result shelvesStock(Integer isShelves, String stockCode) {
         Result result = Result.responseSuccess();
         try{
+            StringBuilder builder = new StringBuilder();
+            //先查询商品数据是否完整，没有销售价和库存为 0 的商品不可上架
+            if(ConvertUtils.isNotEmpty(isShelves) && CommonConstant.DEFAULT_VALUE_ONE == isShelves) {
+                List<StockModel> list = stockInfoService.queryStockList(stockCode);
+                if(!CollectionUtils.isEmpty(list)) {
+                    for(StockModel model : list) {
+                        boolean b = null == model.getMinInventory() || model.getMinInventory() <= 0 || model.getStandardSellPrice().equals(new BigDecimal(0.00));
+                        if (b) {
+                            builder.append("商品：").append(model.getStockNameForSpe()).append("<br>");
+                        }
+                    }
+                }
+            }
+            if(ConvertUtils.isNotEmpty(builder.toString())) {
+                builder.append("的信息有待完成!");
+                result.setMsg(builder.toString());
+                return result;
+            }
+
             String userCode = userTokenFacade.queryUserCodeForToken(null);
             stockInfoService.shelvesStock(isShelves, stockCode, userCode);
         }catch(Exception ex){

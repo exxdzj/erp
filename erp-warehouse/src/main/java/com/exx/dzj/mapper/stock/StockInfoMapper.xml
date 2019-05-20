@@ -392,9 +392,8 @@
 
   <!-- ********************************* -->
 
-  <!-- 查询存货列表数据 -->
-  <select id="queryStockList" resultType="com.exx.dzj.entity.stock.StockModel"
-          parameterType="com.exx.dzj.entity.stock.StockQuery">
+  <!-- 列表 SQL 片段 -->
+  <sql id="QueryStockListSQL">
     SELECT
       ti.stock_code stockCode,
       ti.stock_address stockAddress,
@@ -434,6 +433,12 @@
     LEFT JOIN tab_stock_num_price sn ON ti.stock_code = sn.stock_code
     LEFT JOIN tab_dictionary_info DICTINFO ON DICTINFO.dict_code=ti.stock_address AND DICTINFO.data_type='inventory_ship_address'
     WHERE ti.is_enable = 1
+  </sql>
+
+  <!-- 查询存货列表数据 -->
+  <select id="queryStockList" resultType="com.exx.dzj.entity.stock.StockModel"
+          parameterType="com.exx.dzj.entity.stock.StockQuery">
+    <include refid="QueryStockListSQL"/>
     <if test="stockName!=null and stockName!=''">
       AND ti.stock_name LIKE CONCAT('%', #{stockName}, '%')
     </if>
@@ -444,6 +449,19 @@
       AND ti.stock_class = #{stockClass}
     </if>
     ORDER BY ti.create_time DESC
+  </select>
+
+  <select id="queryStockSet">
+    <include refid="QueryStockListSQL"/>
+    <choose>
+      <when test="stockCodes!=null">
+        where stock_code in
+        <foreach collection="stockCodes" item="item" open="(" close=")" separator=",">#{item}</foreach>
+      </when>
+      <otherwise>
+        where stock_code = null
+      </otherwise>
+    </choose>
   </select>
 
   <!-- SQL 片段 -->

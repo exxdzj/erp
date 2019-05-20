@@ -43,12 +43,19 @@ public interface StockInfoMapper {
     StockBean queryStockInfo(@Param("stockCode") String stockCode);
 
     /**
+     * 查询 根据存货编码 list, 查询存货数据
+     * @param stockCodes
+     * @return
+     */
+    List<StockModel> queryStockSet(@Param("stockCodes") List<String> stockCodes);
+
+    /**
      * 上架-下架 或 删除
      * @param isShelves
      * @param stockCodes
      * @return
      */
-    int shelvesStock(@Param("isShelves") String isShelves, @Param("isEnable") Integer isEnable, @Param("stockCodes") List<String> stockCodes, @Param("userCode") String userCode);
+    int shelvesStock(@Param("isShelves") Integer isShelves, @Param("isEnable") Integer isEnable, @Param("stockCodes") List<String> stockCodes, @Param("userCode") String userCode);
 
     void batchInsertStockInfo (List<StockInfo> stockInfoList);
 

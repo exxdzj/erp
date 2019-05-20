@@ -126,22 +126,13 @@ public class StockServiceImpl implements StockService {
     @SysLog(operate = "删除存货数据", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void delStockInfo(String stockCodes, int isEnable, String userCode) {
         try{
-            String comma = ",";
             List<String> list = new ArrayList<>();
-            if(stockCodes.contains(comma)){
-                String[]  stockCodeTemps = stockCodes.split(",");
-                list = new ArrayList<>(stockCodeTemps.length);
-                Collections.addAll(list, stockCodeTemps);
-            } else {
-                list.add(stockCodes);
-            }
+            strToList(stockCodes, list);
             stockMapper.shelvesStock(null, isEnable, list, userCode);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", StockServiceImpl.class.getName()+".delStockInfo", ex.getMessage());
             throw ex;
         }
-
-
     }
 
     /**
@@ -153,21 +144,43 @@ public class StockServiceImpl implements StockService {
     @Override
     @Transactional(rollbackFor = ErpException.class)
     @SysLog(operate = "存货上架或下架", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
-    public void shelvesStock(String isShelves, String stockCodes, String userCode){
+    public void shelvesStock(Integer isShelves, String stockCodes, String userCode){
         try{
-            String comma = ",";
             List<String> list = new ArrayList<String>();
-            if(stockCodes.contains(comma)){
-                String[]  stockCodeTemps = stockCodes.split(",");
-                list = new ArrayList<>(stockCodeTemps.length);
-                Collections.addAll(list, stockCodeTemps);
-            } else {
-                list.add(stockCodes);
-            }
+            strToList(stockCodes, list);
             stockMapper.shelvesStock(isShelves, null, list, userCode);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", StockServiceImpl.class.getName()+".shelvesStock", ex.getMessage());
             throw ex;
+        }
+    }
+
+    /**
+     * 查询要上架的商品是否有数据为完善
+     * @param stockCodes
+     * @return
+     */
+    @Override
+    public List<StockModel> queryStockList(String stockCodes) {
+        try {
+            List<String> list = new ArrayList<String>();
+            strToList(stockCodes, list);
+            List<StockModel> stocks = stockMapper.queryStockSet(list);
+            return stocks;
+        } catch(Exception ex) {
+            LOGGER.error("执行方法:{}异常信息:{}", StockServiceImpl.class.getName()+".queryStockList", ex.getMessage());
+            return null;
+        }
+    }
+
+    private void strToList(String stockCodes, List<String> list) {
+        String comma = ",";
+        if(stockCodes.contains(comma)){
+            String[]  stockCodeTemps = stockCodes.split(",");
+            list = new ArrayList<>(stockCodeTemps.length);
+            Collections.addAll(list, stockCodeTemps);
+        } else {
+            list.add(stockCodes);
         }
     }
 

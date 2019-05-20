@@ -1,9 +1,6 @@
 package com.exx.dzj.service.stock;
 
-import com.exx.dzj.entity.stock.StockBean;
-import com.exx.dzj.entity.stock.StockInfo;
-import com.exx.dzj.entity.stock.StockNumPrice;
-import com.exx.dzj.entity.stock.StockQuery;
+import com.exx.dzj.entity.stock.*;
 import com.exx.dzj.result.Result;
 import org.apache.ibatis.annotations.Param;
 
@@ -47,7 +44,14 @@ public interface StockService {
      * @param stockCodes
      * @return
      */
-    void shelvesStock(String isShelves, String stockCodes, String userCode);
+    void shelvesStock(Integer isShelves, String stockCodes, String userCode);
+
+    /**
+     * 查询要上架的商品是否有数据为完善
+     * @param stockCodes
+     * @return
+     */
+    List<StockModel> queryStockList(String stockCodes);
 
     /**
      * 保存 存货数据
