@@ -10,6 +10,7 @@ import com.exx.dzj.fms.KdniaoTrackQueryAPI;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.trail.LogisticsTrailService;
 import com.exx.dzj.util.ConvertUtils;
+import com.exx.dzj.util.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -107,22 +108,20 @@ public class LogisticsTrailFacade {
             trail = new LogisticsTrail();
             trail.setAcceptStation(traces.getAcceptStation());
             trail.setAcceptTime(traces.getAcceptTime());
+            trail.setAcceptDate(DateTimeUtil.strToDate(traces.getAcceptTime()));
             trail.setDataSource(1);
             trail.setBusinessId("1298315");
             trail.setBusModule(param.getBusModule());
-            trail.setFreightCode(bean.getShipperCode());
+            trail.setFreightCode(param.getFreightCode());
             trail.setOrderNo(param.getOrderNo());
             trail.setLogisticCompanyCode(bean.getShipperCode());
             trails.add(trail);
         }
 
-        if(CollectionUtils.isEmpty(trails)) {
-            Comparator<LogisticsTrail> list = (t1, t2) -> t2.getAcceptTime().compareTo(t1.getAcceptTime());
-            //List<LogisticsTrail> list = trails.stream().sorted(Comparator.comparing(LogisticsTrail::getAcceptTime)).collect(Collectors.toList());
-            trails.sort(list.reversed());
-            System.out.println(list);
+        if(!CollectionUtils.isEmpty(trails)) {
+            trails.sort((t1, t2) -> t2.getAcceptDate().compareTo(t1.getAcceptDate()));
+            //System.out.println("排序后的结果:" + trails);
         }
-
 
         return trails;
     }
