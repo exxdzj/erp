@@ -568,6 +568,9 @@
         <if test="sourceMode != null">
           source_mode =#{sourceMode},
         </if>
+        <if test="isShelves != null">
+          is_shelves =#{isShelves},
+        </if>
         <if test="updateUser != null">
           update_user =#{updateUser},
         </if>

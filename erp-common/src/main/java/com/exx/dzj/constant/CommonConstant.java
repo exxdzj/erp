@@ -1,5 +1,7 @@
 package com.exx.dzj.constant;
 
+import java.math.BigDecimal;
+
 /**
  * @Author
  * @Date 2019/1/7 0007 14:49
@@ -125,7 +127,7 @@ public class CommonConstant {
     public static final Integer CUST_TYPE_OF_SUPPLIER = 2;
     public static final Integer CUST_TYPE_OF_ALL = 3;
 
-    public static final String BIGDECIMAL_ZERO = "0.00";
+    public static final String BIGDECIMAL_ZERO_STR = "0.00";
 
     /*********************快递鸟物流状态(2-在途中,3-签收,4-问题件)*********************/
     public static final Integer KDNIAO_ON_WAY_STATE = 2;

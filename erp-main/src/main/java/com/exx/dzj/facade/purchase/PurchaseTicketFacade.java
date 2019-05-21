@@ -292,6 +292,10 @@ public class PurchaseTicketFacade {
                 StockBean stockInfo = stockInfoService.queryStockInfo(purchaseGoods.getStockCode());
                 if (stockInfo != null){
                     // 添加库存
+                    int standardSellPrice = stockInfo.getStandardSellPrice() == null ? 0 : stockInfo.getStandardSellPrice().intValue();
+                    if (CommonConstant.DEFAULT_VALUE_ZERO == standardSellPrice){
+                        stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_TWO);
+                    }
                     stockInfo.setMinInventory(purchaseGoods.getGoodsNum());
                     stockInfoService.updateStockGoodsInventory(stockInfo);
                     stockInfo.setUpdateUser(userCode);
