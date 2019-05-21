@@ -27,6 +27,8 @@ public class StockInfo extends BaseModule {
     private String stockClass;
     /**存货类别名称*/
     private String stockClassName;
+    /**默认存货地点编码*/
+    private String stockAddressCode;
     /**默认存货地点*/
     private String stockAddress;
     /**计量单位*/
