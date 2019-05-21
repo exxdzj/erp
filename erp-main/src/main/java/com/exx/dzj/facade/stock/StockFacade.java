@@ -118,7 +118,7 @@ public class StockFacade {
                 List<StockModel> list = stockInfoService.queryStockList(stockCode);
                 if(!CollectionUtils.isEmpty(list)) {
                     for(StockModel model : list) {
-                        boolean b = null == model.getMinInventory() || model.getMinInventory() <= 0 || model.getStandardSellPrice().equals(new BigDecimal(0.00));
+                        boolean b = null == model.getMinInventory() || model.getMinInventory() <= 0 || null == model.getStandardSellPrice() || model.getStandardSellPrice().equals(new BigDecimal(0.00));
                         if (b) {
                             builder.append("商品：").append(model.getStockNameForSpe()).append("<br>");
                         }

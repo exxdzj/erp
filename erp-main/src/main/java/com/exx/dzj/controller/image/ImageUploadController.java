@@ -26,7 +26,7 @@ public class ImageUploadController {
     private ImageUploadFacade imageFacade;
 
     /**
-     * 图片上传
+     * 图片上传(存货)
      * @param request
      * @param response
      * @return
@@ -40,7 +40,38 @@ public class ImageUploadController {
             result.setMsg("未获取到上传的图片!");
             return result;
         }
-        String filePath = imageFacade.uploadAliOSS(file);
+        //String filePath = imageFacade.uploadAliOSS(file);
+        String subdir = "producet-images";
+        String prefix = "producet";
+        String filePath = imageFacade.uploadAliOSS(file, subdir, prefix);
+        if(!StringUtils.isNotBlank(filePath)){
+            result.setCode(400);
+            result.setMsg("图片上传失败!");
+            return result;
+        }
+        result.setData(filePath);
+        return result;
+    }
+
+    /**
+     * 图片上传(存货)
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping("imgHeadUpload")
+    public Result imgHeadUpload(HttpServletRequest request, HttpServletResponse response, MultipartHttpServletRequest multiRequest){
+        Result result = Result.responseSuccess();
+        MultipartFile file = multiRequest.getFile("file");
+        if(null == file){
+            result.setCode(400);
+            result.setMsg("未获取到上传的图片!");
+            return result;
+        }
+        //String filePath = imageFacade.uploadAliOSS(file);
+        String subdir = "employee-images";
+        String prefix = "head";
+        String filePath = imageFacade.uploadAliOSS(file, subdir, prefix);
         if(!StringUtils.isNotBlank(filePath)){
             result.setCode(400);
             result.setMsg("图片上传失败!");

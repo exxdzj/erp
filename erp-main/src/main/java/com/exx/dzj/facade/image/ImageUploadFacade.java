@@ -33,7 +33,7 @@ public class ImageUploadFacade {
      * @param file
      * @return
      */
-    public String uploadAliOSS(MultipartFile file){
+    public String uploadAliOSS(MultipartFile file, String subdir, String prefix){
         if(null == file){
             return null;
         }
@@ -46,7 +46,7 @@ public class ImageUploadFacade {
             String accessKeyId = aliyunOSS.getAccessKeyId();
             String accessKeySecret = aliyunOSS.getAccessKeySecret();
             String bucketName = aliyunOSS.getBucketName();
-            String subdir = aliyunOSS.getSubdir();
+            //String subdir = aliyunOSS.getSubdir();
             String active = aliyunOSS.getActive();
 
             // https://academy-server-test.oss-cn-shenzhen.aliyuncs.com/academy-server/0000aa61cc1fbdadb1cd1d0c1aa02e30.png
@@ -57,7 +57,7 @@ public class ImageUploadFacade {
             bucketName = "academy-server";
             subdir = "academy-server/";*/
 
-            String prefix = "producet";
+            //String prefix = "producet";
             IdGeneratorConfig config = new DefaultIdGeneratorConfig(prefix);
             IdGenerator idGenerator = new DefaultIdGenerator(config);
 

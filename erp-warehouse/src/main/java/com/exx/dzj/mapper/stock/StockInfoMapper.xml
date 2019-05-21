@@ -198,9 +198,6 @@
     </trim>
 
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="stockCode != null">
         #{stockCode,jdbcType=VARCHAR},
       </if>
@@ -433,6 +430,10 @@
       '上架'
     WHEN ti.is_shelves = 0 THEN
       '下架'
+    WHEN ti.is_shelves = 2 THEN
+      '入库'
+    WHEN ti.is_shelves = 3 THEN
+      '待上架'
     ELSE
       '未知'
     END shelvesName
@@ -481,6 +482,7 @@
       ti.specificate_type specificateType,
       ti.stock_class stockClass,
       ti.stock_address stockAddress,
+      ti.stock_address_code stockAddressCode,
       ti.meter_unit meterUnit,
       ti.pictures,
       ti.bar_code barCode,

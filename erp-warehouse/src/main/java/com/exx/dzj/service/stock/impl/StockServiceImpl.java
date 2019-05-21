@@ -1,6 +1,7 @@
 package com.exx.dzj.service.stock.impl;
 
 import com.exx.dzj.annotation.SysLog;
+import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.constant.LogLevel;
 import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.stock.*;
@@ -103,7 +104,9 @@ public class StockServiceImpl implements StockService {
                 IdGenerator idGenerator = new DefaultIdGenerator();
                 String stockCode = idGenerator.next();
 
-                stockInfo.setStockCode(stockCode);
+                stockInfo.setStockCode("STOCKCODE"+stockCode);
+                //待上架状态
+                stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_TWO);
                 stockMapper.insertSelective(stockInfo);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(stockNumPrice)){
                     stockNumPrice.setStockCode(stockCode);
