@@ -360,6 +360,12 @@ public class ProccessImportDataUtil {
             stockInfo.setStockClass(value);
             stockInfo.setStockClassName(aClass);
         }
+        String stockAddress = stockInfo.getStockAddress();
+        if (StringUtils.isNotEmpty(stockAddress)){
+            String stockAddressCode = stringMap.get(stockAddress);
+            stockInfo.setStockAddress(stockAddress);
+            stockInfo.setStockAddressCode(stockAddressCode);
+        }
     }
 
     private static final BigDecimal  ZERO = new BigDecimal(0);
