@@ -23,6 +23,7 @@ public class StockModel implements Serializable {
     private int isShelves;
     private String shelvesName;
     private String stockAddress;
+    private String stockAddressCode;
     private Integer minInventory;
 
     /*仓库名称*/

@@ -163,6 +163,9 @@
       <if test="stockAddress != null">
         stock_address,
       </if>
+      <if test="stockAddressCode != null">
+        stock_address_code,
+      </if>
       <if test="meterUnit != null">
         meter_unit,
       </if>
@@ -218,6 +221,9 @@
       </if>
       <if test="stockAddress != null">
         #{stockAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="stockAddressCode != null">
+        #{stockAddressCode},
       </if>
       <if test="meterUnit != null">
         #{meterUnit,jdbcType=VARCHAR},
@@ -398,6 +404,7 @@
     SELECT
       ti.stock_code stockCode,
       ti.stock_address stockAddress,
+      ti.stock_address_code stockAddressCode,
       DICTINFO.dict_name warehouseName,
       concat_ws(
           '/',
