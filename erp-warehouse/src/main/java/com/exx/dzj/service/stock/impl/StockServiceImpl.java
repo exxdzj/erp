@@ -88,6 +88,10 @@ public class StockServiceImpl implements StockService {
             StockNumPrice stockNumPrice = new StockNumPrice();
             BeanUtils.copyProperties(bean, stockInfo);
             BeanUtils.copyProperties(bean, stockNumPrice);
+            //状态为入库，则修改为待上架
+            if(null != stockInfo.getIsShelves() && stockInfo.getIsShelves().equals(CommonConstant.DEFAULT_VALUE_TWO)) {
+                stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_THREE);
+            }
 
             if(StringUtils.isNotBlank(stockInfo.getStockCode())){
                 stockMapper.updateByPrimaryKeySelective(stockInfo);
@@ -106,7 +110,7 @@ public class StockServiceImpl implements StockService {
 
                 stockInfo.setStockCode("STOCKCODE"+stockCode);
                 //待上架状态
-                stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_TWO);
+                stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_THREE);
                 stockMapper.insertSelective(stockInfo);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(stockNumPrice)){
                     stockNumPrice.setStockCode(stockCode);
