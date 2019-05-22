@@ -459,6 +459,9 @@
     <if test="stockClass!=null and stockClass!=''">
       AND ti.stock_class = #{stockClass}
     </if>
+    <if test="isShelves!=null">
+      AND ti.is_shelves = #{isShelves}
+    </if>
     ORDER BY ti.create_time DESC
   </select>
 
