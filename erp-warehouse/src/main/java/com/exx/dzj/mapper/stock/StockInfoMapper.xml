@@ -160,9 +160,6 @@
       <if test="stockClassName != null">
         stock_class_name,
       </if>
-      <if test="stockAddressCode != null">
-        stock_address_code,
-      </if>
       <if test="stockAddress != null">
         stock_address,
       </if>
@@ -217,9 +214,6 @@
       </if>
       <if test="stockClassName != null">
         #{stockClassName,jdbcType=VARCHAR},
-      </if>
-      <if test="stockAddressCode != null">
-        #{stockAddressCode,jdbcType=VARCHAR},
       </if>
       <if test="stockAddress != null">
         #{stockAddress,jdbcType=VARCHAR},
