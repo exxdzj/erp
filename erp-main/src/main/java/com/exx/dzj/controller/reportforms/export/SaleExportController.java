@@ -38,7 +38,7 @@ public class SaleExportController {
     @Autowired
     private UserFacade userFacade;
 
-    @GetMapping("exportinventorysale")
+    @GetMapping("exportinventorysale/{userCode}")
     public void exportInventorySale (HttpServletRequest request, HttpServletResponse response, @PathVariable("userCode") String userCode, StockInfoQuery query){
 
         List<StockTypeReport> stockTypeReports = inventoryReportFacade.statisticsSaleByInventory(query);
@@ -67,7 +67,7 @@ public class SaleExportController {
      * @param query
      * @return void
      */
-    @GetMapping("exportsalesmansale")
+    @GetMapping("exportsalesmansale/{userCode}")
     public void exportSalesManSale (HttpServletResponse response, @PathVariable("userCode") String userCode, UserInfoQuery query){
         try {
             Map<String, Object> mapData = inventoryReportFacade.statisticsSaleBySalesMan(query);
@@ -125,12 +125,11 @@ public class SaleExportController {
      * @author yangyun
      * @date 2019/4/30 0030
      * @param response
-     * @param request
      * @param query
      * @return void
      */
-    @GetMapping("exportsalededuction")
-    public void exportSaleDeduction (HttpServletResponse response, HttpServletRequest request, @PathVariable("userCode") String userCode, UserInfoQuery query){
+    @GetMapping("exportsalededuction/{userCode}")
+    public void exportSaleDeduction (HttpServletResponse response, @PathVariable("userCode") String userCode, UserInfoQuery query){
         try {
             Map<String, Object> mapData = inventoryReportFacade.statisticSalesDeductionBySaleman(query);
 

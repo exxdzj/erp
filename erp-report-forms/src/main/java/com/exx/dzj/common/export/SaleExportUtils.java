@@ -79,6 +79,9 @@ public class SaleExportUtils {
 
 
         ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
+        if (CollectionUtils.isEmpty(stockTypeReports)){
+            return writer;
+        }
 
         Map<Integer, Integer> map = new HashMap<>();
         map.put(0,4000);
