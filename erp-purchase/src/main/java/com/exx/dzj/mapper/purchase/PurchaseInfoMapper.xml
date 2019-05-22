@@ -123,7 +123,7 @@
     LEFT JOIN tab_user_info UINFO ON UINFO.salesman_code=PINFO.salesman_code
     WHERE 1=1
     <if test="purchaseCode != null and purchaseCode != ''">
-      AND  PINFO.purchase_code = #{purchaseCode}
+      AND  PINFO.purchase_code LIKE CONCAT(#{purchaseCode}, '%')
     </if>
     <if test="salesmanCode != null and salesmanCode != ''">
       AND  PINFO.salesman_code=#{salesmanCode}
@@ -131,6 +131,8 @@
     <if test="flowState != '' and flowState > 0">
       AND PINFO.flow_state = #{flowState}
     </if>
+    /*AND PINFO.is_enable = 1*/
+    ORDER BY PINFO.create_time DESC
   </select>
 
   <!-- 采购单详情 -->

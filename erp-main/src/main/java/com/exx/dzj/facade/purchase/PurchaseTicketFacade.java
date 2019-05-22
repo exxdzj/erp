@@ -66,6 +66,7 @@ public class PurchaseTicketFacade {
 //        } else {
 //            purchaseInfo.setPaymentStatus("cs02");
 //        }
+        purchaseInfo.setIsEnable(CommonConstant.DEFAULT_VALUE_ONE);
         purchaseTicketService.savePurchaseTicket(purchaseInfo);
 
         if (!CollectionUtils.isEmpty(purchaseGoodsDetailBeans)){
@@ -250,13 +251,13 @@ public class PurchaseTicketFacade {
         purchaseTicketService.deletePurchaseTicket(id);
 
         List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans = purchaseInfo.getPurchaseGoodsDetailBeans();
-        if (Optional.ofNullable(purchaseGoodsDetailBeans).isPresent()){
+        if (!CollectionUtils.isEmpty(purchaseGoodsDetailBeans)){
             List<Integer> goodsIds = purchaseGoodsDetailBeans.stream().map((o) -> o.getId()).collect(Collectors.toList());
             purchaseGoodsService.batchDeletePurchaseGoods(goodsIds);
         }
 
         List<PurchaseReceiptsDetailsBean> purchaseReceiptsDetailsBeans = purchaseInfo.getPurchaseReceiptsDetailsBeans();
-        if (Optional.ofNullable(purchaseReceiptsDetailsBeans).isPresent()){
+        if (!CollectionUtils.isEmpty(purchaseReceiptsDetailsBeans)){
             List<Integer> receoptIds = purchaseReceiptsDetailsBeans.stream().map(o -> o.getId()).collect(Collectors.toList());
             purchaseReceiptsService.batchDeletePurchaseReceipts(receoptIds);
         }

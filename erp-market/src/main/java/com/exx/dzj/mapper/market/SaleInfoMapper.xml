@@ -128,11 +128,13 @@
     LEFT JOIN tab_user_info UINFO ON SINFO.salesman_code = UINFO.salesman_code
     WHERE 1=1
       <if test="saleCode != null and saleCode != ''">
-        AND  SINFO.sale_code = #{saleCode}
+        AND  SINFO.sale_code LIKE CONCAT(#{saleCode}, '%')
       </if>
       <if test="salesmanCode != null and salesmanCode != ''">
         AND  SINFO.salesman_code=#{salesmanCode}
       </if>
+      /*AND SINFO.is_enable = 1*/
+      ORDER BY SINFO.create_time DESC
   </select>
 
   <!-- 销售单详情 -->

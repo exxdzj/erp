@@ -65,6 +65,7 @@ public class SalesTicketFacade {
         List<SaleReceiptsDetails> receiptsDetailsList = saleInfo.getSaleReceiptsDetailsList();
         setPaymentStatus(saleInfo);
         saleInfo.setSaleTicketType(CommonConstant.DEFAULT_VALUE_ONE);
+        saleInfo.setIsEnable(CommonConstant.DEFAULT_VALUE_ONE);
         salesTicketService.saveSaleInfo(saleInfo);
         if(!CollectionUtils.isEmpty(goodsDetailBeanList)){
             goodsDetailBeanList = setGoodsSaleCode(goodsDetailBeanList, saleInfo.getSaleCode());
