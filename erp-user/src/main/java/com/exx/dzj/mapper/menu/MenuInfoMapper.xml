@@ -112,35 +112,6 @@
     where menu_code = #{menuCode,jdbcType=VARCHAR}
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tab_menu_info
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-
-  <delete id="deleteByExample" parameterType="com.exx.dzj.entity.menu.MenuInfoExample">
-    delete from tab_menu_info
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-
-  <insert id="insert" parameterType="com.exx.dzj.entity.menu.MenuInfo">
-    insert into tab_menu_info (id, menu_code, parent_code,
-      menu_name, menu_url, component,
-      redirect, menu_type, perms,
-      icon, desk_iconid, always_show,
-      is_leaf, hidden, menu_dict,
-      seq, menu_level, is_enable
-      )
-    values (#{id,jdbcType=INTEGER}, #{menuCode,jdbcType=VARCHAR}, #{parentCode,jdbcType=VARCHAR},
-      #{menuName,jdbcType=VARCHAR}, #{menuUrl,jdbcType=VARCHAR}, #{component,jdbcType=VARCHAR},
-      #{redirect,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER}, #{perms,jdbcType=VARCHAR},
-      #{icon,jdbcType=VARCHAR}, #{deskIconid,jdbcType=VARCHAR}, #{alwaysShow,jdbcType=INTEGER},
-      #{isLeaf,jdbcType=INTEGER}, #{hidden,jdbcType=INTEGER}, #{menuDict,jdbcType=VARCHAR},
-      #{seq,jdbcType=INTEGER}, #{menuLevel,jdbcType=INTEGER}, #{isEnable,jdbcType=INTEGER}
-      )
-  </insert>
-
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.menu.MenuInfo">
     insert into tab_menu_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -251,13 +222,6 @@
     </trim>
   </insert>
 
-  <select id="countByExample" parameterType="com.exx.dzj.entity.menu.MenuInfoExample" resultType="java.lang.Long">
-    select count(*) from tab_menu_info
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-
   <update id="updateByExampleSelective" parameterType="map">
     update tab_menu_info
     <set>
@@ -310,31 +274,6 @@
         is_enable = #{record.isEnable,jdbcType=INTEGER},
       </if>
     </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-
-  <update id="updateByExample" parameterType="map">
-    update tab_menu_info
-    set id = #{record.id,jdbcType=INTEGER},
-      menu_code = #{record.menuCode,jdbcType=VARCHAR},
-      parent_code = #{record.parentCode,jdbcType=VARCHAR},
-      menu_name = #{record.menuName,jdbcType=VARCHAR},
-      menu_url = #{record.menuUrl,jdbcType=VARCHAR},
-      component = #{record.component,jdbcType=VARCHAR},
-      redirect = #{record.redirect,jdbcType=VARCHAR},
-      menu_type = #{record.menuType,jdbcType=INTEGER},
-      perms = #{record.perms,jdbcType=VARCHAR},
-      icon = #{record.icon,jdbcType=VARCHAR},
-      desk_iconid = #{record.deskIconid,jdbcType=VARCHAR},
-      always_show = #{record.alwaysShow,jdbcType=INTEGER},
-      is_leaf = #{record.isLeaf,jdbcType=INTEGER},
-      hidden = #{record.hidden,jdbcType=INTEGER},
-      menu_dict = #{record.menuDict,jdbcType=VARCHAR},
-      seq = #{record.seq,jdbcType=INTEGER},
-      menu_level = #{record.menuLevel,jdbcType=INTEGER},
-      is_enable = #{record.isEnable,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -393,28 +332,6 @@
       </if>
     </set>
     where menu_code = #{menuCode,jdbcType=VARCHAR}
-  </update>
-
-  <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.menu.MenuInfo">
-    update tab_menu_info
-    set menu_code = #{menuCode,jdbcType=VARCHAR},
-      parent_code = #{parentCode,jdbcType=VARCHAR},
-      menu_name = #{menuName,jdbcType=VARCHAR},
-      menu_url = #{menuUrl,jdbcType=VARCHAR},
-      component = #{component,jdbcType=VARCHAR},
-      redirect = #{redirect,jdbcType=VARCHAR},
-      menu_type = #{menuType,jdbcType=INTEGER},
-      perms = #{perms,jdbcType=VARCHAR},
-      icon = #{icon,jdbcType=VARCHAR},
-      desk_iconid = #{deskIconid,jdbcType=VARCHAR},
-      always_show = #{alwaysShow,jdbcType=INTEGER},
-      is_leaf = #{isLeaf,jdbcType=INTEGER},
-      hidden = #{hidden,jdbcType=INTEGER},
-      menu_dict = #{menuDict,jdbcType=VARCHAR},
-      seq = #{seq,jdbcType=INTEGER},
-      menu_level = #{menuLevel,jdbcType=INTEGER},
-      is_enable = #{isEnable,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
   </update>
 
   <!-- 查询 子父级菜单是否交叉, 即 A 是 B 的父级，而 B 是 A 的父级 -->

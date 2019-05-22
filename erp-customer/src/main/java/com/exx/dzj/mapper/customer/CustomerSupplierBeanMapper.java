@@ -7,13 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface CustomerSupplierBeanMapper {
-    long countByExample(CustomerSupplierBeanExample example);
-
-    int deleteByExample(CustomerSupplierBeanExample example);
-
-    int deleteByPrimaryKey(Integer id);
-
-    int insert(CustomerSupplierBean record);
 
     int insertSelective(CustomerSupplierBean record);
 
@@ -23,11 +16,7 @@ public interface CustomerSupplierBeanMapper {
 
     int updateByExampleSelective(@Param("record") CustomerSupplierBean record, @Param("example") CustomerSupplierBeanExample example);
 
-    int updateByExample(@Param("record") CustomerSupplierBean record, @Param("example") CustomerSupplierBeanExample example);
-
     int updateByPrimaryKeySelective(CustomerSupplierBean record);
-
-    int updateByPrimaryKey(CustomerSupplierBean record);
 
     /**
      * 查询  客户或供应商列表数据

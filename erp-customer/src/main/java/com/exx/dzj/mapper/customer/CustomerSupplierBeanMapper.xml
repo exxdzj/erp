@@ -109,33 +109,6 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tab_customer_supplier
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-
-  <delete id="deleteByExample" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBeanExample">
-    delete from tab_customer_supplier
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-
-  <insert id="insert" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
-    insert into tab_customer_supplier (cust_code, cust_name,
-      cust_type, cust_level, level_name, 
-      salesman_code, user_code, region_code, 
-      region_name, ship_code, ship_address, 
-      remarks, create_time, create_user, 
-      update_time, update_user)
-    values (#{custCode,jdbcType=VARCHAR}, #{custName,jdbcType=VARCHAR},
-      #{custType,jdbcType=VARCHAR}, #{custLevel,jdbcType=VARCHAR}, #{levelName,jdbcType=VARCHAR}, 
-      #{salesmanCode,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR}, #{regionCode,jdbcType=VARCHAR}, 
-      #{regionName,jdbcType=VARCHAR}, #{shipCode,jdbcType=VARCHAR}, #{shipAddress,jdbcType=VARCHAR}, 
-      #{remarks,jdbcType=VARCHAR}, SYSDATE(), #{createUser,jdbcType=VARCHAR},
-      SYSDATE(), #{updateUser,jdbcType=VARCHAR})
-  </insert>
-
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
     insert into tab_customer_supplier
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -159,6 +132,15 @@
       </if>
       <if test="userCode != null">
         user_code,
+      </if>
+      <if test="identity != null">
+        identity,
+      </if>
+      <if test="rankCode != null and rankCode!=''">
+        rank_code,
+      </if>
+      <if test="rankName != null and rankName!=''">
+        rank_name,
       </if>
       <if test="regionCode != null">
         region_code,
@@ -209,6 +191,15 @@
       <if test="userCode != null">
         #{userCode,jdbcType=VARCHAR},
       </if>
+      <if test="identity != null">
+        #{identity},
+      </if>
+      <if test="rankCode != null and rankCode!=''">
+        #{rankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="rankName != null and rankName!=''">
+        #{rankName,jdbcType=VARCHAR},
+      </if>
       <if test="regionCode != null">
         #{regionCode,jdbcType=VARCHAR},
       </if>
@@ -237,13 +228,6 @@
       </if>
     </trim>
   </insert>
-
-  <select id="countByExample" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBeanExample" resultType="java.lang.Long">
-    select count(*) from tab_customer_supplier
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
 
   <update id="updateByExampleSelective" parameterType="map">
     update tab_customer_supplier
@@ -291,27 +275,6 @@
     </if>
   </update>
 
-  <update id="updateByExample" parameterType="map">
-    update tab_customer_supplier
-    set
-      cust_name = #{record.custName,jdbcType=VARCHAR},
-      cust_type = #{record.custType,jdbcType=VARCHAR},
-      cust_level = #{record.custLevel,jdbcType=VARCHAR},
-      level_name = #{record.levelName,jdbcType=VARCHAR},
-      salesman_code = #{record.salesmanCode,jdbcType=VARCHAR},
-      user_code = #{record.userCode,jdbcType=VARCHAR},
-      region_code = #{record.regionCode,jdbcType=VARCHAR},
-      region_name = #{record.regionName,jdbcType=VARCHAR},
-      ship_code = #{record.shipCode,jdbcType=VARCHAR},
-      ship_address = #{record.shipAddress,jdbcType=VARCHAR},
-      remarks = #{record.remarks,jdbcType=VARCHAR},
-      update_time = SYSDATE(),
-      update_user = #{record.updateUser,jdbcType=VARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
     update tab_customer_supplier
     <set>
@@ -339,6 +302,15 @@
       <if test="regionName != null">
         region_name = #{regionName,jdbcType=VARCHAR},
       </if>
+      <if test="identity != null">
+        identity = #{identity,jdbcType=INTEGER},
+      </if>
+      <if test="rankCode != null and rankCode!=''">
+        rank_code = #{rankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="rankName != null and rankName!=''">
+        rank_name = #{rankName,jdbcType=VARCHAR},
+      </if>
       <if test="shipCode != null">
         ship_code = #{shipCode,jdbcType=VARCHAR},
       </if>
@@ -354,25 +326,6 @@
       </if>
     </set>
     where cust_code = #{custCode,jdbcType=VARCHAR}
-  </update>
-
-  <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
-    update tab_customer_supplier
-    set cust_code = #{custCode,jdbcType=VARCHAR},
-      cust_name = #{custName,jdbcType=VARCHAR},
-      cust_type = #{custType,jdbcType=VARCHAR},
-      cust_level = #{custLevel,jdbcType=VARCHAR},
-      level_name = #{levelName,jdbcType=VARCHAR},
-      salesman_code = #{salesmanCode,jdbcType=VARCHAR},
-      user_code = #{userCode,jdbcType=VARCHAR},
-      region_code = #{regionCode,jdbcType=VARCHAR},
-      region_name = #{regionName,jdbcType=VARCHAR},
-      ship_code = #{shipCode,jdbcType=VARCHAR},
-      ship_address = #{shipAddress,jdbcType=VARCHAR},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      update_time = SYSDATE(),
-      update_user = #{updateUser,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
   </update>
 
   <!-- *****************************************手写 sql  start ******************************************* -->
@@ -429,6 +382,9 @@
     <result column="levelName" property="levelName"/>
     <result column="salesmanCode" property="salesmanCode"/>
     <result column="userCode" property="userCode"/>
+    <result column="identity" property="identity"/>
+    <result column="rankCode" property="rankCode"/>
+    <result column="rankName" property="rankName"/>
     <result column="regionCode" property="regionCode"/>
     <result column="regionName" property="regionName"/>
     <result column="shipCode" property="shipCode"/>
@@ -466,6 +422,9 @@
       cs.level_name levelName,
       cs.salesman_code salesmanCode,
       cs.user_code userCode,
+      cs.identity,
+      cs.rank_code rankCode,
+      cs.rank_name rankName,
       cs.region_code regionCode,
       cs.region_name regionName,
       cs.ship_code shipCode,

@@ -7,13 +7,6 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface MenuInfoMapper {
-    long countByExample(MenuInfoExample example);
-
-    int deleteByExample(MenuInfoExample example);
-
-    int deleteByPrimaryKey(Integer id);
-
-    int insert(MenuInfo record);
 
     int insertSelective(MenuInfo record);
 
@@ -23,11 +16,7 @@ public interface MenuInfoMapper {
 
     int updateByExampleSelective(@Param("record") MenuInfo record, @Param("example") MenuInfoExample example);
 
-    int updateByExample(@Param("record") MenuInfo record, @Param("example") MenuInfoExample example);
-
     int updateByPrimaryKeySelective(MenuInfo record);
-
-    int updateByPrimaryKey(MenuInfo record);
 
     int queryOverlap(MenuInfo record);
 
