@@ -72,7 +72,7 @@ public class SaleExportUtils {
      * @param query
      * @return com.alibaba.excel.ExcelWriter
      */
-    public static ExcelWriter inventorySaleExport (ServletOutputStream outputStream, List<StockTypeReport> stockTypeReports, StockInfoQuery query) throws IOException {
+    public static ExcelWriter inventorySaleExport (ServletOutputStream outputStream, List<StockTypeReport> stockTypeReports, StockInfoQuery query, UserVo userVo) throws IOException {
         int count = 0;
 
         String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
@@ -203,7 +203,7 @@ public class SaleExportUtils {
         dataEnd.add(itemEnd);
         writer.write(dataEnd, sheet);
         itemEnd.setStockTypeName("公司名称: 正诚文化");
-//        itemEnd.setCreateTime("操作员: " + userVo.getRealName());
+        itemEnd.setCreateTime("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;
@@ -218,7 +218,7 @@ public class SaleExportUtils {
      * @param query
      * @return com.alibaba.excel.ExcelWriter
      */
-    public static ExcelWriter salesManSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query){
+    public static ExcelWriter salesManSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query, UserVo userVo){
         int count = 0;
         String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
 
@@ -351,13 +351,13 @@ public class SaleExportUtils {
 
         dataEnd.add(itemEnd);
         itemEnd.setCreateTime("公司名称: 正诚文化");
-//        itemEnd.setCustName("操作员: " + userVo.getRealName());
+        itemEnd.setCustName("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;
     }
 
-    public static ExcelWriter customerSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, CustomerQuery query){
+    public static ExcelWriter customerSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, CustomerQuery query, UserVo userVo){
         int count = 0;
         String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
 
@@ -481,7 +481,7 @@ public class SaleExportUtils {
 
         dataEnd.add(itemEnd);
         itemEnd.setCreateTime("公司名称: 正诚文化");
-//        itemEnd.setStockName("操作员: " + userVo.getRealName());
+        itemEnd.setStockName("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;
@@ -496,7 +496,7 @@ public class SaleExportUtils {
      * @param query
      * @return com.alibaba.excel.ExcelWriter
      */
-    public static ExcelWriter SaleManDeductionExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query){
+    public static ExcelWriter SaleManDeductionExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query, UserVo userVo){
         int count = 0;
         String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
 
@@ -571,7 +571,7 @@ public class SaleExportUtils {
         dataEnd.add(itemEnd);
         writer.write(dataEnd, sheet);
         itemEnd.setSaleMan("公司名称: 正诚文化");
-//        itemEnd.setSaleVolume("操作员: " + userVo.getRealName());
+        itemEnd.setSaleVolume("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;
