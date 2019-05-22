@@ -1,6 +1,7 @@
 package com.exx.dzj.service.purchaseticket.impl;
 
 import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
+import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.mapper.purchase.PurchaseInfoMapper;
 import com.exx.dzj.service.purchaseticket.PurchaseTicketService;
@@ -42,5 +43,10 @@ public class PurchaseTicketServiceImpl implements PurchaseTicketService {
     @Override
     public void deletePurchaseTicket(Integer id) {
         purchaseInfoMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public List<PurchaseHistoryInfo> queryPurchaseHistoryRecord(String stockCode) {
+        return purchaseInfoMapper.queryPurchaseHistoryRecord(stockCode);
     }
 }

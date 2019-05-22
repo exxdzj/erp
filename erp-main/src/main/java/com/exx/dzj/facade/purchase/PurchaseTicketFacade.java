@@ -2,6 +2,7 @@ package com.exx.dzj.facade.purchase;
 
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
+import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
 import com.exx.dzj.entity.stock.StockBean;
@@ -81,7 +82,7 @@ public class PurchaseTicketFacade {
             BigDecimal sumCollectedAmount = purchaseInfo.getSumCollectedAmount();
             boolean b = sumCollectedAmount.compareTo(BigDecimal.ZERO) > 0;
             String collectedAmounts = purchaseInfo.getCollectedAmounts();
-            if (StringUtils.isNotEmpty(collectedAmounts) && b){
+            if (b){
                 PurchaseReceiptsDetailsBean prd = new PurchaseReceiptsDetailsBean();
                 prd.setCollectionAccount(collectedAmounts);
                 prd.setCollectedAmount(sumCollectedAmount);
@@ -305,7 +306,10 @@ public class PurchaseTicketFacade {
                 }
             }
         }
+    }
 
-
+    public List<PurchaseHistoryInfo> queryPurchaseHistoryRecord (String stockCode){
+        List<PurchaseHistoryInfo> purchaseHistoryInfoList  = purchaseTicketService.queryPurchaseHistoryRecord(stockCode);
+        return purchaseHistoryInfoList;
     }
 }

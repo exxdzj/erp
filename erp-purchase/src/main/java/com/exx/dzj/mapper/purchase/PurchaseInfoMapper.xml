@@ -705,4 +705,24 @@
       update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="queryPurchaseHistoryRecord" resultMap="purchaseHistoryMap">
+    SELECT
+        pgd.purchase_code, pgd.stock_address, pgd.goods_num, pgd.real_sell_price, snp.standard_buy_price, cs.cust_name, ui.real_name
+    FROM tab_purchase_goods_detail pgd
+        LEFT JOIN tab_purchase_info pi ON pgd.purchase_code = pi.purchase_code
+        LEFT JOIN tab_stock_num_price snp ON snp.stock_code = pgd.stock_code
+        LEFT JOIN tab_customer_supplier cs ON cs.cust_code = pi.cust_code
+        LEFT JOIN tab_user_info ui ON pi.salesman_code = ui.salesman_code
+    WHERE pgd.stock_code = #{stockCode}
+  </select>
+  <resultMap id="purchaseHistoryMap" type="com.exx.dzj.entity.purchase.PurchaseHistoryInfo">
+    <result column="purchase_code" property="purchaseCode"/>
+    <result column="stock_address" property="stockAddress"/>
+    <result column="goods_num" property="goodsNum"/>
+    <result column="real_sell_price" property="realSellPrice"/>
+    <result column="standard_buy_price" property="standardBuyPrice"/>
+    <result column="cust_name" property="custName"/>
+    <result column="real_name" property="realName"/>
+  </resultMap>
 </mapper>

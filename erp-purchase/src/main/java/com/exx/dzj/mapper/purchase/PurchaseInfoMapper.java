@@ -1,5 +1,6 @@
 package com.exx.dzj.mapper.purchase;
 
+import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfoExample;
 import org.apache.ibatis.annotations.Param;
@@ -28,4 +29,6 @@ public interface PurchaseInfoMapper {
     int updateByPrimaryKeySelective(PurchaseInfo record);
 
     int updateByPrimaryKey(PurchaseInfo record);
+
+    List<PurchaseHistoryInfo> queryPurchaseHistoryRecord(@Param("stockCode") String stockCode);
 }

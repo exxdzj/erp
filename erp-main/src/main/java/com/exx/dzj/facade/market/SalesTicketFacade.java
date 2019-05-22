@@ -78,7 +78,7 @@ public class SalesTicketFacade {
             String collectedAmounts = saleInfo.getCollectedAmounts();
             BigDecimal sumCollectedAmount = saleInfo.getSumCollectedAmount();
             boolean b = sumCollectedAmount.compareTo(BigDecimal.ZERO) > 0;
-            if (StringUtils.isNotEmpty(collectedAmounts) && b){
+            if (b){
                 SaleReceiptsDetails srd = new SaleReceiptsDetails();
                 srd.setCollectionAccount(collectedAmounts);
                 srd.setCollectedAmount(sumCollectedAmount);

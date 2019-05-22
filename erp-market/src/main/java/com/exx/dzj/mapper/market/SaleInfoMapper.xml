@@ -150,7 +150,7 @@
       UINFO.user_name AS userName,
       SINFO.sale_project,
       DICTIONPRO.dict_name AS saleProjectName,
-      SUM(collected_amount) AS sumCollectedAmount,
+      IFNULL(SUM(collected_amount), 0) AS sumCollectedAmount,
       SINFO.sale_date ,
       SINFO.currency ,
       SINFO.exchange_rate ,

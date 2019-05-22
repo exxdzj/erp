@@ -3,6 +3,7 @@ package com.exx.dzj.controller.purchase;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
 import com.exx.dzj.excepte.ErpException;
@@ -188,6 +189,21 @@ public class PurchaseTicketController {
             result.setCode(CommonConstant.FAIL_CODE);
             result.setMsg("请选择需要审核采购单, 或重新审核");
         }
+        return result;
+    }
+
+    /**
+     * @description 商品采购历史记录查看
+     * @author yangyun
+     * @date 2019/5/22 0022
+     * @param stockCode
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querypurchasehistoryrecord/{stockCode}")
+    public Result queryPurchaseHistoryRecord (@PathVariable("stockCode") String stockCode){
+        Result result = Result.responseSuccess();
+        List<PurchaseHistoryInfo> purchaseHistoryInfoList = purchaseTicketFacade.queryPurchaseHistoryRecord(stockCode);
+        result.setData(purchaseHistoryInfoList);
         return result;
     }
 }

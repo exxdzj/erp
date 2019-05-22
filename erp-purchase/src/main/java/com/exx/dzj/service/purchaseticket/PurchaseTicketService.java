@@ -1,6 +1,7 @@
 package com.exx.dzj.service.purchaseticket;
 
 import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
+import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface PurchaseTicketService {
     void updatePurchaseTicket(PurchaseInfo purchaseInfo);
 
     void deletePurchaseTicket(Integer id);
+
+    List<PurchaseHistoryInfo> queryPurchaseHistoryRecord (String stockCode);
 }
