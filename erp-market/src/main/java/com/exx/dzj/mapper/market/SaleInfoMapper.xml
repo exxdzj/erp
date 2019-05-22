@@ -144,9 +144,9 @@
       SINFO.sale_code,
       SINFO.user_code ,
       SINFO.salesman_code ,
-      SINFO.cust_code ,
+      IFNULL(SINFO.cust_code, '') AS custCode,
       SINFO.payment_term ,
-      CSUPPLIER.cust_name AS custName,
+      IFNULL(CSUPPLIER.cust_name,'') AS custName,
       UINFO.user_name AS userName,
       SINFO.sale_project,
       DICTIONPRO.dict_name AS saleProjectName,
@@ -190,7 +190,8 @@
     <result column="user_code" property="userCode" />
     <result column="salesman_code" jdbcType="VARCHAR" property="salesmanCode" />
     <result column="payment_term" jdbcType="VARCHAR" property="paymentTerm" />
-    <result column="cust_code" jdbcType="VARCHAR" property="custCode" />
+    <result column="custCode" jdbcType="VARCHAR" property="custCode" />
+    <result column="custName" jdbcType="VARCHAR" property="custName" />
     <result column="sale_project" jdbcType="VARCHAR" property="saleProject" />
     <result column="sale_date" jdbcType="DATE" property="saleDate" />
     <result column="currency" jdbcType="VARCHAR" property="currency" />
