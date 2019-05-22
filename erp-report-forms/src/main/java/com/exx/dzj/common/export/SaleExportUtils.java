@@ -8,24 +8,19 @@ import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.statistics.sales.*;
-import com.exx.dzj.entity.stock.StockInfo;
 import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.util.DateUtil;
 import com.exx.dzj.util.MathUtil;
 import com.exx.dzj.util.enums.ExportFileNameEnum;
-import com.exx.dzj.util.excel.ExcelUtil;
 import com.exx.dzj.util.excel.export.model.CustomerSaleModel;
 import com.exx.dzj.util.excel.export.model.InventorySaleModel;
 import com.exx.dzj.util.excel.export.model.SaleDeductionModel;
 import com.exx.dzj.util.excel.export.model.SalesManSaleModel;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.ServletOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -77,7 +72,7 @@ public class SaleExportUtils {
      * @param query
      * @return com.alibaba.excel.ExcelWriter
      */
-    public static ExcelWriter inventorySaleExport (ServletOutputStream outputStream, List<StockTypeReport> stockTypeReports, StockInfoQuery query, UserVo userVo) throws IOException {
+    public static ExcelWriter inventorySaleExport (ServletOutputStream outputStream, List<StockTypeReport> stockTypeReports, StockInfoQuery query) throws IOException {
         int count = 0;
 
         String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
@@ -208,7 +203,7 @@ public class SaleExportUtils {
         dataEnd.add(itemEnd);
         writer.write(dataEnd, sheet);
         itemEnd.setStockTypeName("公司名称: 正诚文化");
-        itemEnd.setCreateTime("操作员: " + userVo.getRealName());
+//        itemEnd.setCreateTime("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;
@@ -223,7 +218,7 @@ public class SaleExportUtils {
      * @param query
      * @return com.alibaba.excel.ExcelWriter
      */
-    public static ExcelWriter salesManSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query, UserVo userVo){
+    public static ExcelWriter salesManSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query){
         int count = 0;
         String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
 
@@ -356,13 +351,13 @@ public class SaleExportUtils {
 
         dataEnd.add(itemEnd);
         itemEnd.setCreateTime("公司名称: 正诚文化");
-        itemEnd.setCustName("操作员: " + userVo.getRealName());
+//        itemEnd.setCustName("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;
     }
 
-    public static ExcelWriter customerSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, CustomerQuery query, UserVo userVo){
+    public static ExcelWriter customerSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, CustomerQuery query){
         int count = 0;
         String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
 
@@ -486,7 +481,7 @@ public class SaleExportUtils {
 
         dataEnd.add(itemEnd);
         itemEnd.setCreateTime("公司名称: 正诚文化");
-        itemEnd.setStockName("操作员: " + userVo.getRealName());
+//        itemEnd.setStockName("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;
@@ -501,7 +496,7 @@ public class SaleExportUtils {
      * @param query
      * @return com.alibaba.excel.ExcelWriter
      */
-    public static ExcelWriter SaleManDeductionExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query, UserVo userVo){
+    public static ExcelWriter SaleManDeductionExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query){
         int count = 0;
         String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
 
@@ -576,7 +571,7 @@ public class SaleExportUtils {
         dataEnd.add(itemEnd);
         writer.write(dataEnd, sheet);
         itemEnd.setSaleMan("公司名称: 正诚文化");
-        itemEnd.setSaleVolume("操作员: " + userVo.getRealName());
+//        itemEnd.setSaleVolume("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;
