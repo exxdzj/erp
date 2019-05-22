@@ -155,12 +155,12 @@ public class MenuServiceImpl implements MenuService {
             MenuTreeBean tree = new MenuTreeBean(menu);
             if (null == treeBean && ConvertUtils.isEmpty(tempPCode)) {
                 treeList.add(tree);
-                if (tree.getIsLeaf() == CommonConstant.DEFAULT_VALUE_ZERO) {
+                if (null != tree.getIsLeaf() && tree.getIsLeaf() == CommonConstant.DEFAULT_VALUE_ZERO) {
                     getTreeList(treeList, menus, tree);
                 }
             } else if (null != treeBean && ConvertUtils.isNotEmpty(tempPCode) && tempPCode.equals(treeBean.getMenuCode())) {
                 treeBean.getChildren().add(tree);
-                if (tree.getIsLeaf() == CommonConstant.DEFAULT_VALUE_ZERO) {
+                if (null != tree.getIsLeaf() && tree.getIsLeaf() == CommonConstant.DEFAULT_VALUE_ZERO) {
                     getTreeList(treeList, menus, tree);
                 }
             }
@@ -191,6 +191,7 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     @SysLog(operate = "更新菜单信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
+    @Transactional(rollbackFor = Exception.class)
     public Result saveMenu(MenuInfo menuInfo) {
         Result result = Result.responseSuccess();
         try {
@@ -226,6 +227,14 @@ public class MenuServiceImpl implements MenuService {
                 DefaultIdGenerator generator = new DefaultIdGenerator("");
                 menuInfo.setMenuCode(generator.next());
                 menuMapper.insertSelective(menuInfo);
+
+                //修改上级节点，为非叶子节点
+                if(ConvertUtils.isNotEmpty(menuInfo.getParentCode())) {
+                    MenuInfo info = new MenuInfo();
+                    info.setMenuCode(menuInfo.getParentCode());
+                    info.setIsLeaf(CommonConstant.DEFAULT_VALUE_ZERO);
+                    menuMapper.updateByPrimaryKeySelective(menuInfo);
+                }
             }
         } catch(Exception ex) {
             LOGGER.error("异常方法:{}异常信息:{}", MenuServiceImpl.class.getName() + ".saveMenu", ex.getMessage());

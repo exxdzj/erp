@@ -17,6 +17,7 @@ public class MenuTreeBean implements Serializable {
 
     private String menuCode;
     private String menuName;
+    private Integer menuType;
     private String menuTypeName;
     private String menuUrl;
     private String component;
@@ -27,6 +28,7 @@ public class MenuTreeBean implements Serializable {
     public MenuTreeBean(MenuInfo menu) {
         this.menuCode = menu.getMenuCode();
         this.menuName = menu.getMenuName();
+        this.menuType = menu.getMenuType();
         this.menuTypeName = menu.getMenuTypeName();
         this.menuUrl = menu.getMenuUrl();
         this.component = menu.getComponent();

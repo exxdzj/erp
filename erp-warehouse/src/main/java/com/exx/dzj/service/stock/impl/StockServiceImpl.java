@@ -106,9 +106,9 @@ public class StockServiceImpl implements StockService {
                 }
             }else{
                 IdGenerator idGenerator = new DefaultIdGenerator();
-                String stockCode = idGenerator.next();
+                String stockCode = "STOCKCODE"+idGenerator.next();
 
-                stockInfo.setStockCode("STOCKCODE"+stockCode);
+                stockInfo.setStockCode(stockCode);
                 //待上架状态
                 stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_THREE);
                 stockMapper.insertSelective(stockInfo);
