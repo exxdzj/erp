@@ -6,10 +6,7 @@ import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.statistics.sales.StockTypeReport;
-import com.exx.dzj.entity.statistics.sales.UserInfoReport;
 import com.exx.dzj.facade.reportforms.sale.SaleTicketReportFacade;
-import com.exx.dzj.facade.user.UserFacade;
-import com.exx.dzj.result.Result;
 import com.exx.dzj.util.enums.ExportFileNameEnum;
 import com.exx.dzj.util.excel.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +32,6 @@ public class SaleExportController {
     @Autowired
     private SaleTicketReportFacade inventoryReportFacade;
 
-    @Autowired
-    private UserFacade userFacade;
-
     @GetMapping("exportinventorysale")
     public void exportInventorySale (HttpServletRequest request, HttpServletResponse response, StockInfoQuery query){
 
@@ -51,7 +45,7 @@ public class SaleExportController {
             response.setHeader("Content-Disposition", "attachment;filename=" + new String((value + "-" + code +".xlsx").getBytes(), "ISO-8859-1"));
 
             ServletOutputStream outputStream = response.getOutputStream();
-            ExcelWriter excelWriter = SaleExportUtils.inventorySaleExport(outputStream, stockTypeReports, query, userFacade.getUserInfo(null));
+            ExcelWriter excelWriter = SaleExportUtils.inventorySaleExport(outputStream, stockTypeReports, query);
             excelWriter.finish();
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,7 +72,7 @@ public class SaleExportController {
 
             ServletOutputStream outputStream = response.getOutputStream();
 
-            ExcelWriter writer = SaleExportUtils.salesManSaleExport(outputStream, mapData, query, userFacade.getUserInfo(null));
+            ExcelWriter writer = SaleExportUtils.salesManSaleExport(outputStream, mapData, query);
             writer.finish();
         } catch (IOException e){
             e.printStackTrace();
@@ -105,7 +99,7 @@ public class SaleExportController {
 
             ServletOutputStream outputStream = response.getOutputStream();
 
-            ExcelWriter writer = SaleExportUtils.customerSaleExport(outputStream, mapData, query, userFacade.getUserInfo(null));
+            ExcelWriter writer = SaleExportUtils.customerSaleExport(outputStream, mapData, query);
 
             writer.finish();
 
@@ -135,7 +129,7 @@ public class SaleExportController {
             response.setHeader("Content-Disposition", "attachment;filename=" + new String((value + "-" + code + ".xlsx").getBytes(), "ISO-8859-1"));
 
             ServletOutputStream outputStream = response.getOutputStream();
-            ExcelWriter writer = SaleExportUtils.SaleManDeductionExport(outputStream, mapData, query, userFacade.getUserInfo(null));
+            ExcelWriter writer = SaleExportUtils.SaleManDeductionExport(outputStream, mapData, query);
 
             writer.finish();
         } catch (IOException e){
