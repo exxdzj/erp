@@ -12,6 +12,7 @@
         <result column="redirect" jdbcType="VARCHAR" property="redirect" />
         <result column="menu_type" jdbcType="INTEGER" property="menuType" />
         <result column="perms" jdbcType="VARCHAR" property="perms" />
+        <result column="perms_type" jdbcType="INTEGER" property="permsType" />
         <result column="icon" jdbcType="VARCHAR" property="icon" />
         <result column="desk_iconid" jdbcType="VARCHAR" property="deskIconid" />
         <result column="always_show" jdbcType="INTEGER" property="alwaysShow" />
@@ -24,7 +25,7 @@
 
     <sql id="Base_Column_List">
         id, menu_code, parent_code, menu_name, menu_url, component, redirect, menu_type,
-        perms, icon, desk_iconid, always_show, is_leaf, hidden, menu_dict, seq, menu_level
+        perms, perms_type, icon, desk_iconid, always_show, is_leaf, hidden, menu_dict, seq, menu_level
     </sql>
 
     <select id="queryPermissionsByUser" parameterType="string" resultMap="BaseResultMap">

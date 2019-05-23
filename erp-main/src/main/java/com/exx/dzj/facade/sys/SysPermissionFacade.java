@@ -1,6 +1,6 @@
 package com.exx.dzj.facade.sys;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.service.sys.SysPermissionService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class SysPermissionFacade {
     @Autowired
     private SysPermissionService sysPermissionService;
 
-    public JSONArray queryPermissionsByUser(String userToken){
+    public JSONObject queryPermissionsByUser(String userToken){
         String userCode = userTokenFacade.queryUserCodeForToken(userToken);
         return sysPermissionService.queryPermissionsByUser(userCode);
     }

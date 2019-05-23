@@ -2,6 +2,7 @@ package com.exx.dzj.service.sys.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.menu.MenuInfo;
 import com.exx.dzj.mapper.sys.SysPermissionMapper;
 import com.exx.dzj.service.sys.SysPermissionService;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -34,14 +36,29 @@ public class SysPermissionServiceImpl implements SysPermissionService {
      * @return
      */
     @Override
-    public JSONArray queryPermissionsByUser(String userCode) {
+    public JSONObject queryPermissionsByUser(String userCode) {
         try {
             // 获取到菜单权限数据
             List<MenuInfo> menus = sysPermissionMapper.queryPermissionsByUser(userCode);
-            JSONArray jsonArray = new JSONArray();
-            this.getPermissionJsonArray(jsonArray, menus, null);
-            LOGGER.info("权限数据{}", jsonArray);
-            return jsonArray;
+            /**
+             * 菜单权限
+             */
+            JSONArray menuArray = new JSONArray();
+            this.getPermissionJsonArray(menuArray, menus, null);
+            /**
+             * 按钮权限
+             */
+            JSONArray btnArray = new JSONArray();
+            this.getBtnPermissionJsonArray(btnArray, menus);
+
+            LOGGER.info("菜单权限数据{}", menuArray);
+            LOGGER.info("按钮权限数据{}", btnArray);
+
+            JSONObject json = new JSONObject();
+            json.put("menu", menuArray);
+            json.put("auth", btnArray);
+
+            return json;
         } catch (Exception ex) {
             LOGGER.error("异常方法:{}异常信息:{}", SysPermissionServiceImpl.class.getName()+".queryPermissionsByUser", ex.getMessage());
             return null;
@@ -153,6 +170,26 @@ public class SysPermissionServiceImpl implements SysPermissionService {
             return url;
         }else {
             return null;
+        }
+    }
+
+    /**
+     * 按钮权限
+     * @param jsonArray
+     * @param metaList
+     */
+    private void getBtnPermissionJsonArray(JSONArray jsonArray, List<MenuInfo> metaList) {
+        if(!CollectionUtils.isEmpty(metaList)) {
+            JSONObject btnjson = null;
+            for(MenuInfo menu : metaList) {
+                if(null != menu.getMenuType() && menu.getMenuType() == CommonConstant.DEFAULT_VALUE_TWO) {
+                    btnjson = new JSONObject();
+                    btnjson.put("action", menu.getPerms());
+                    btnjson.put("type", menu.getPermsType());
+                    btnjson.put("describe", menu.getMenuName());
+                    jsonArray.add(btnjson);
+                }
+            }
         }
     }
 }

@@ -12,6 +12,7 @@
     <result column="menu_type" jdbcType="INTEGER" property="menuType" />
     <result column="menu_type_name" jdbcType="VARCHAR" property="menuTypeName" />
     <result column="perms" jdbcType="VARCHAR" property="perms" />
+    <result column="perms_type" jdbcType="INTEGER" property="permsType" />
     <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="desk_iconid" jdbcType="VARCHAR" property="deskIconid" />
     <result column="always_show" jdbcType="INTEGER" property="alwaysShow" />
@@ -86,7 +87,7 @@
   <sql id="Base_Column_List">
     id, menu_code, parent_code, menu_name, menu_url, component, redirect, menu_type,
     CASE WHEN menu_type = 0 THEN '一级菜单' WHEN menu_type = 1 THEN '子菜单' WHEN menu_type = 2 THEN '按钮' ELSE '其他' END menu_type_name,
-    perms, icon, desk_iconid, always_show, is_leaf, hidden, menu_dict, seq, menu_level,
+    perms, perms_type, icon, desk_iconid, always_show, is_leaf, hidden, menu_dict, seq, menu_level,
     is_enable
   </sql>
 
@@ -138,6 +139,9 @@
       </if>
       <if test="perms != null">
         perms,
+      </if>
+      <if test="permsType != null">
+        perms_type,
       </if>
       <if test="icon != null">
         icon,
@@ -192,6 +196,9 @@
       <if test="perms != null">
         #{perms,jdbcType=VARCHAR},
       </if>
+      <if test="permsType != null">
+        #{permsType,jdbcType=INTEGER},
+      </if>
       <if test="icon != null">
         #{icon,jdbcType=VARCHAR},
       </if>
@@ -245,6 +252,9 @@
       </if>
       <if test="record.perms != null">
         perms = #{record.perms,jdbcType=VARCHAR},
+      </if>
+      <if test="record.permsType != null">
+        perms_type = #{record.permsType,jdbcType=INTEGER},
       </if>
       <if test="record.icon != null">
         icon = #{record.icon,jdbcType=VARCHAR},
@@ -302,6 +312,9 @@
       </if>
       <if test="perms != null">
         perms = #{perms,jdbcType=VARCHAR},
+      </if>
+      <if test="permsType != null">
+        perms_type = #{permsType,jdbcType=INTEGER},
       </if>
       <if test="icon != null">
         icon = #{icon,jdbcType=VARCHAR},

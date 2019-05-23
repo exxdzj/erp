@@ -222,6 +222,8 @@ public class MenuServiceImpl implements MenuService {
                 if(menuInfo.getMenuType() == CommonConstant.DEFAULT_VALUE_ZERO) {
                     menuInfo.setParentCode(null);
                     menuInfo.setIsLeaf(CommonConstant.DEFAULT_VALUE_ZERO);
+                } else {
+                    menuInfo.setIsLeaf(CommonConstant.DEFAULT_VALUE_ONE);
                 }
                 //生成唯一编码
                 DefaultIdGenerator generator = new DefaultIdGenerator("");
@@ -233,7 +235,7 @@ public class MenuServiceImpl implements MenuService {
                     MenuInfo info = new MenuInfo();
                     info.setMenuCode(menuInfo.getParentCode());
                     info.setIsLeaf(CommonConstant.DEFAULT_VALUE_ZERO);
-                    menuMapper.updateByPrimaryKeySelective(menuInfo);
+                    menuMapper.updateByPrimaryKeySelective(info);
                 }
             }
         } catch(Exception ex) {

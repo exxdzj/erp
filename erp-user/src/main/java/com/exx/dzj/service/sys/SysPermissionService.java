@@ -1,6 +1,6 @@
 package com.exx.dzj.service.sys;
 
-import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @Author
@@ -14,5 +14,5 @@ public interface SysPermissionService {
      * @param userCode
      * @return
      */
-    JSONArray queryPermissionsByUser(String userCode);
+    JSONObject queryPermissionsByUser(String userCode);
 }

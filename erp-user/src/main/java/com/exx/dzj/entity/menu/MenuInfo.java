@@ -26,6 +26,8 @@ public class MenuInfo {
 
     private String perms;
 
+    private Integer permsType;
+
     private String icon;
 
     private String deskIconid;
