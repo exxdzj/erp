@@ -445,7 +445,7 @@
       PGDETAIL.stock_address,
       PGDETAIL.goods_num,
       PGDETAIL.unit_price,
-      PGDETAIL.real_sell_price,
+      IFNULL(PGDETAIL.real_sell_price, 0) AS real_sell_price,
       PGDETAIL.price_type,
       PGDETAIL.discount_rate,
       PGDETAIL.discount_amount,
