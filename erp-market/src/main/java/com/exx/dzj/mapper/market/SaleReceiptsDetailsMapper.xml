@@ -344,11 +344,11 @@
   <insert id="addLogisticsInfo" parameterType="com.exx.dzj.entity.market.LogisticsInfo">
     INSERT INTO tab_sale_logistic_info
       (logistic_company_code, logistic_company_name, freight_code, deliver_goods_time, selector_phone_num, remark,
-        logistics_kind, sale_code, express_fee, charge_method, create_user, stock_code, crate_time)
+        logistics_kind, sale_code, express_fee, charge_method, create_user, stock_code, stock_name, crate_time)
     VALUES
       (
         #{logisticsCompanyCode}, #{logisticsCompamyName}, #{freihtCode}, #{deliverGoodsTime}, #{selectorPhoneNum}, #{remark},
-        #{logisticsKind}, #{saleCode}, #{expressFee}, #{chargeMethod}, #{createUser}, #{stockCode}, SYSDATE()
+        #{logisticsKind}, #{saleCode}, #{expressFee}, #{chargeMethod}, #{createUser}, #{stockCode}, #{stockCode}, SYSDATE()
       )
   </insert>
 
@@ -369,6 +369,12 @@
       </if>
       <if test="expressFee != null">
         express_fee = #{expressFee},
+      </if>
+      <if test="stockCode != null">
+        stock_code = #{stockCode},
+      </if>
+      <if test="stockName != null">
+        stock_name = #{stockName},
       </if>
       <if test="chargeMethod != null">
         charge_method = #{chargeMethod},
@@ -400,6 +406,7 @@
       freight_code,
       sale_code,
       stock_code,
+      stock_name,
       deliver_goods_time,
       selector_phone_num,
       remark,
@@ -416,6 +423,7 @@
     <result property="freihtCode" column="freight_code"/>
     <result property="saleCode" column="sale_code"/>
     <result property="stockCode" column="stock_code"/>
+    <result property="stockName" column="stock_name"/>
     <result property="deliverGoodsTime" column="deliver_goods_time"/>
     <result property="selectorPhoneNum" column="selector_phone_num"/>
     <result property="logisticsKind" column="logistics_kind"/>

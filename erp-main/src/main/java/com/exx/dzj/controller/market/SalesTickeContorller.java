@@ -12,6 +12,7 @@ import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.unique.SingletonGeneratorConfig;
 import com.exx.dzj.util.MathUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -176,6 +177,7 @@ public class SalesTickeContorller {
     public Result addLogisticsInfo (LogisticsInfo logisticsInfo){
         Result result = Result.responseSuccess();
         try {
+
             salesTicketFacade.addLogisticsInfo(logisticsInfo);
         } catch (Exception e){
             e.printStackTrace();

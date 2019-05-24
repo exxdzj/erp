@@ -274,16 +274,25 @@ public class PurchaseTicketFacade {
                 purchaseReceiptsService.financeCheckPurchaseTicet(ids);
                 break;
             case CommonConstant.DEFAULT_VALUE_TWO: // 仓库审核
-                warehouseCheckPurchaseTicket(ids);
+//                warehouseCheckPurchaseTicket(ids);
                 break;
         }
     }
 
     @Transactional
-    public void warehouseCheckPurchaseTicket (List<Integer> ids){
+    public void warehouseCheckPurchaseTicket (PurchaseInfo purchaseInfo){
+        List<Integer> ids = new ArrayList<>();
+        ids.add(purchaseInfo.getId());
+        // 采购单审核状态修改
         purchaseReceiptsService.warehouseCheckPurchaseTicet(ids);
+
+
+        // 更新采购单实际采购数量
+        List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans = purchaseInfo.getPurchaseGoodsDetailBeans();
+        purchaseGoodsService.batchUpdatePurchaseGoodsDetails(purchaseGoodsDetailBeans);
+
         // 获取采购单采购商品信息
-        List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans = purchaseReceiptsService.queryPurchaseGoodsDetail(ids);
+//        List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans = purchaseReceiptsService.queryPurchaseGoodsDetail(ids);
 
         if (!CollectionUtils.isEmpty(purchaseGoodsDetailBeans)){
             String userCode = userTokenFacade.queryUserCodeForToken(null);
@@ -298,7 +307,7 @@ public class PurchaseTicketFacade {
                     if (CommonConstant.DEFAULT_VALUE_ZERO == standardSellPrice){
                         stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_TWO);
                     }
-                    stockInfo.setMinInventory(purchaseGoods.getGoodsNum());
+                    stockInfo.setMinInventory(purchaseGoods.getRealGoodsNum());
                     stockInfoService.updateStockGoodsInventory(stockInfo);
                     stockInfo.setUpdateUser(userCode);
                     stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);

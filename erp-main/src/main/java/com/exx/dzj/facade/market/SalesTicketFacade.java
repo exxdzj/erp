@@ -4,6 +4,7 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.user.UserInfo;
+import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.dictionary.DictionaryService;
@@ -302,6 +303,10 @@ public class SalesTicketFacade {
     }
 
     public void addLogisticsInfo (LogisticsInfo logisticsInfo){
+        if (StringUtils.isBlank(logisticsInfo.getChargeMethod())){
+            logisticsInfo.setChargeMethod(CommonConstant.DEFAULT_VALUE_ZERO + "");
+        }
+
         Integer id = logisticsInfo.getId();
         String token = userTokenFacade.queryUserCodeForToken(null);
         logisticsInfo.setCreateUser(token);
@@ -313,19 +318,20 @@ public class SalesTicketFacade {
         }
     }
 
-    @Transactional
-    public void addLogisticsInfoAndUpdateStockInventory (LogisticsInfo logisticsInfo){
-        saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
+    @Transactional(rollbackFor = Exception.class)
+    public void addLogisticsInfoAndUpdateStockInventory (LogisticsInfo logisticsInfo) {
+        try {
+            StockBean stockInfo = stockInfoService.queryStockInfo(logisticsInfo.getStockCode());
+            saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
 
-        // 根据 销售单编号和商品编号,获取销售单卖出商品数量, 并对库存做修改
-        SaleGoodsDetailBean bean = new SaleGoodsDetailBean();
-        bean.setStockCode(logisticsInfo.getStockCode());
-        bean.setSaleCode(logisticsInfo.getSaleCode());
-        SaleGoodsDetailBean saleGoodsDetailBean = salesGoodsDetailService.querySaleGoodsDetail(bean);
+            // 根据 销售单编号和商品编号,获取销售单卖出商品数量, 并对库存做修改
+            SaleGoodsDetailBean bean = new SaleGoodsDetailBean();
+            bean.setStockCode(logisticsInfo.getStockCode());
+            bean.setSaleCode(logisticsInfo.getSaleCode());
+            SaleGoodsDetailBean saleGoodsDetailBean = salesGoodsDetailService.querySaleGoodsDetail(bean);
 
-        // 根据 存货编号获取商品信息
-        StockBean stockInfo = stockInfoService.queryStockInfo(logisticsInfo.getStockCode());
-        if (stockInfo != null){
+            // 根据 存货编号获取商品信息
+        if (stockInfo != null) {
             String userCode = userTokenFacade.queryUserCodeForToken(null);
             // 减少库存
             stockInfo.setMinInventory(-saleGoodsDetailBean.getGoodsNum().intValue());
@@ -334,10 +340,25 @@ public class SalesTicketFacade {
 //            stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);
 //            stockInfoService.updateStockInfoSourceModel(stockInfo);
         }
+        } catch (Exception e){
+            throw e;
+        }
+
     }
 
     public List<LogisticsInfo> getLogisticsInfo (String saleCode) {
-        return saleReceiptsDetailService.getLogisticsInfo(saleCode);
+        List<LogisticsInfo> logisticsInfo = saleReceiptsDetailService.getLogisticsInfo(saleCode);
+        List<LogisticsInfo> list = new ArrayList<>();
+        for(LogisticsInfo li : logisticsInfo){
+            if (CommonConstant.DEFAULT_VALUE_ZERO == Integer.parseInt(li.getChargeMethod())){
+                li.setChargeMethod("");
+                list.add(li);
+            } else {
+                list.add(li);
+            }
+        }
+
+        return list;
     }
 
     public List<SaleGoodsSelected> getSaleGoodsSelected (String saleCode){

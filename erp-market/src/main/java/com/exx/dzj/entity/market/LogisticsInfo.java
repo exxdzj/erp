@@ -17,6 +17,7 @@ public class LogisticsInfo implements Serializable {
     private Integer id;
     private String saleCode;
     private String stockCode;
+    private String stockName;
     private String logisticsKind;
     private String logisticsCompanyCode;
     private String logisticsCompamyName;

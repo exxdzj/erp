@@ -24,7 +24,8 @@ public class PurchaseGoodsDetailBean implements Serializable {
 
     private String stockAddress;
 
-    private Integer goodsNum;
+    private Integer goodsNum;// 采购数量
+    private Integer realGoodsNum; // 实际入库数量
 
     private BigDecimal unitPrice;
 

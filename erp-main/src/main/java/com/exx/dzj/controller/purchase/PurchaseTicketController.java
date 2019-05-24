@@ -3,6 +3,7 @@ package com.exx.dzj.controller.purchase;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
 import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
@@ -14,11 +15,13 @@ import com.exx.dzj.unique.SingletonGeneratorConfig;
 import com.exx.dzj.util.JsonUtils;
 import com.exx.dzj.util.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author yangyun
@@ -204,6 +207,19 @@ public class PurchaseTicketController {
         Result result = Result.responseSuccess();
         List<PurchaseHistoryInfo> purchaseHistoryInfoList = purchaseTicketFacade.queryPurchaseHistoryRecord(stockCode);
         result.setData(purchaseHistoryInfoList);
+        return result;
+    }
+
+    @PostMapping("checkpurchaseticketforwarehouse")
+    public Result checkPurchaseTicketForWarehouse (HttpServletRequest request, HttpServletResponse response, @RequestBody PurchaseInfo purchaseInfo){
+        Result result = Result.responseSuccess();
+        try{
+            purchaseTicketFacade.warehouseCheckPurchaseTicket(purchaseInfo);
+        } catch (ErpException e){
+            e.printStackTrace();
+            result.setCode(CommonConstant.FAIL_CODE);
+            result.setMsg("审核失败, 请重新审核");
+        }
         return result;
     }
 }

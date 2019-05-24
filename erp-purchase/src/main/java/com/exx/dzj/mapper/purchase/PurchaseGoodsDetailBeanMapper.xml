@@ -505,6 +505,9 @@
         <if test="record.goodsNum != null">
           goods_num = #{record.goodsNum,jdbcType=INTEGER},
         </if>
+        <if test="record.realGoodsNum != null">
+          real_goods_num = #{record.realGoodsNum,jdbcType=INTEGER},
+        </if>
         <if test="record.unitPrice != null">
           unit_price = #{record.unitPrice,jdbcType=DECIMAL},
         </if>
