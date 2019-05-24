@@ -317,6 +317,9 @@
       <if test="shipAddress != null">
         ship_address = #{shipAddress,jdbcType=VARCHAR},
       </if>
+      <if test="source != null">
+        source = #{source,jdbcType=INTEGER},
+      </if>
       <if test="remarks != null">
         remarks = #{remarks,jdbcType=VARCHAR},
       </if>
