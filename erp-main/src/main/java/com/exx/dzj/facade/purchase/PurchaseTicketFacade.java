@@ -188,6 +188,11 @@ public class PurchaseTicketFacade {
                 goodsDetailBeanList = setGoodsPurchaseCode(goodsDetailBeanList, purchaseInfo.getPurchaseCode());
                 purchaseGoodsService.batchInsertPurchaseGoods(goodsDetailBeanList);
             }
+        } else {
+            if (!CollectionUtils.isEmpty(purchaseGoodsDetailBeanList)){
+                List<Integer> collect = purchaseGoodsDetailBeanList.stream().map(o -> o.getId()).collect(Collectors.toList());
+                purchaseGoodsService.batchDeletePurchaseGoods(collect);
+            }
         }
 
         List<PurchaseReceiptsDetailsBean> receiptsDetailsBeans = oldPurchaseInfo.getPurchaseReceiptsDetailsBeans();
@@ -241,6 +246,11 @@ public class PurchaseTicketFacade {
             } else {
                 detailsBeanList = setReceiptsPurchaseCode(detailsBeanList, purchaseInfo.getPurchaseCode());
                 purchaseReceiptsService.batchInsertPurchaseReceipts(detailsBeanList);
+            }
+        } else {
+            if (!CollectionUtils.isEmpty(receiptsDetailsBeans)){
+                List<Integer> collect = receiptsDetailsBeans.stream().map(o -> o.getId()).collect(Collectors.toList());
+                purchaseReceiptsService.batchDeletePurchaseReceipts(collect);
             }
         }
     }

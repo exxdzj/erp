@@ -191,6 +191,11 @@ public class SalesTicketFacade {
                 goodsDetailBeanList = setGoodsSaleCode(goodsDetailBeanList, saleInfo.getSaleCode());
                 salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList);
             }
+        } else {
+            if (!CollectionUtils.isEmpty(saleGoodsDetailBeanList)){
+                List<Integer> collect = saleGoodsDetailBeanList.stream().map(o -> o.getId()).collect(Collectors.toList());
+                salesGoodsDetailService.batchDeleteSalesGoodsDetail(collect);
+            }
         }
 
 
@@ -234,6 +239,11 @@ public class SalesTicketFacade {
             }else {
                 receiptsDetailsList = setReceiptsSaleCode(receiptsDetailsList, saleInfo.getSaleCode());
                 saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+            }
+        } else {
+            if (!CollectionUtils.isEmpty(saleReceiptsDetailsList)){
+                List<Integer> collect = saleReceiptsDetailsList.stream().map(o -> o.getId()).collect(Collectors.toList());
+                saleReceiptsDetailService.batchDeleteSalesReceiptsDeail(collect);
             }
         }
     }
