@@ -134,7 +134,7 @@
         AND  SINFO.salesman_code=#{salesmanCode}
       </if>
       /*AND SINFO.is_enable = 1*/
-      ORDER BY SINFO.create_time DESC
+      ORDER BY SINFO.create_time  DESC
   </select>
 
   <!-- 销售单详情 -->
