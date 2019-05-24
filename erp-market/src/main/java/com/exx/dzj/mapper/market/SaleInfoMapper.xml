@@ -212,7 +212,7 @@
     <result column="create_user" jdbcType="VARCHAR" property="createUser" />
     <result column="collection_user_name" jdbcType="VARCHAR" property="collectionUserName" />
     <result column="create_time" jdbcType="VARCHAR" property="createTime" />
-    <result column="payment_term" jdbcType="VARCHAR" property="paymentTerm" />
+    <result column="payment_status" jdbcType="VARCHAR" property="paymentStatus" />
     <!-- 查询关联收款记录 -->
     <collection property="saleReceiptsDetailsList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleReceiptsDetails" javaType="java.util.List"
       select="com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper.querySaleReceiptsDetailsList" />
