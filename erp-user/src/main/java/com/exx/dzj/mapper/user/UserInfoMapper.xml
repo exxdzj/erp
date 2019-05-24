@@ -338,6 +338,7 @@
         tab_user_info ui
     WHERE
         ui.is_quit = 1
+        and salesman_code IS NOT NULL
   </select>
 
   <!-- 查询公司员工列表数据 -->
