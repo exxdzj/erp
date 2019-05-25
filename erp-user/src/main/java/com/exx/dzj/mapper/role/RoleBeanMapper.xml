@@ -71,10 +71,12 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List">
     id, role_code, role_name, role_dict, is_enable, seq, create_time, create_user, update_time, 
     update_user
   </sql>
+
   <select id="selectByExample" parameterType="com.exx.dzj.entity.role.RoleBeanExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -89,32 +91,13 @@
       order by ${orderByClause}
     </if>
   </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from tab_role
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tab_role
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.exx.dzj.entity.role.RoleBeanExample">
-    delete from tab_role
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.exx.dzj.entity.role.RoleBean">
-    insert into tab_role (id, role_code, role_name, 
-      role_dict, is_enable, seq, 
-      create_time, create_user, update_time, 
-      update_user)
-    values (#{id,jdbcType=INTEGER}, #{roleCode,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, 
-      #{roleDict,jdbcType=VARCHAR}, #{isEnable,jdbcType=INTEGER}, #{seq,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateUser,jdbcType=VARCHAR})
-  </insert>
 
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.role.RoleBean">
     insert into tab_role
@@ -196,23 +179,6 @@
     </if>
   </update>
 
-  <update id="updateByExample" parameterType="map">
-    update tab_role
-    set id = #{record.id,jdbcType=INTEGER},
-      role_code = #{record.roleCode,jdbcType=VARCHAR},
-      role_name = #{record.roleName,jdbcType=VARCHAR},
-      role_dict = #{record.roleDict,jdbcType=VARCHAR},
-      is_enable = #{record.isEnable,jdbcType=INTEGER},
-      seq = #{record.seq,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      update_user = #{record.updateUser,jdbcType=VARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.role.RoleBean">
     update tab_role
     <set>
@@ -227,20 +193,6 @@
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  
-  <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.role.RoleBean">
-    update tab_role
-    set role_code = #{roleCode,jdbcType=VARCHAR},
-      role_name = #{roleName,jdbcType=VARCHAR},
-      role_dict = #{roleDict,jdbcType=VARCHAR},
-      is_enable = #{isEnable,jdbcType=INTEGER},
-      seq = #{seq,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      update_user = #{updateUser,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 

@@ -67,6 +67,7 @@ public class RoleServiceImpl implements RoleService {
         if(null != query && StringUtils.isNotBlank(query.getRoleName())) {
             criteria.andRoleNameLike(query.getRoleName());
         }
+        example.setOrderByClause(" role_code desc ");
         List<RoleBean> list = roleMapper.selectByExample(example);
         ERPage<RoleBean> pages = new ERPage<>(list);
         result.setData(pages);

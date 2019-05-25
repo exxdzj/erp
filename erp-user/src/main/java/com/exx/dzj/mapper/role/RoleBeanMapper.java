@@ -10,12 +10,6 @@ import java.util.List;
 public interface RoleBeanMapper {
     long countByExample(RoleBeanExample example);
 
-    int deleteByExample(RoleBeanExample example);
-
-    int deleteByPrimaryKey(Integer id);
-
-    int insert(RoleBean record);
-
     int insertSelective(RoleBean record);
 
     List<RoleBean> selectByExample(RoleBeanExample example);
@@ -24,11 +18,7 @@ public interface RoleBeanMapper {
 
     int updateByExampleSelective(@Param("record") RoleBean record, @Param("example") RoleBeanExample example);
 
-    int updateByExample(@Param("record") RoleBean record, @Param("example") RoleBeanExample example);
-
     int updateByPrimaryKeySelective(RoleBean record);
-
-    int updateByPrimaryKey(RoleBean record);
 
     int queryMaxSeq();
 }
