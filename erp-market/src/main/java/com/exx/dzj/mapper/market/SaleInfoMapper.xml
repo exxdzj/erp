@@ -667,9 +667,6 @@
       <if test="createUser != null">
         create_user = #{createUser,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
@@ -679,6 +676,7 @@
       <if test="paymentTerm != null">
         payment_term = #{paymentTerm,jdbcType=VARCHAR},
       </if>
+      update_time = SYSDATE()
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>

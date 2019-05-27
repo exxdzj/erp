@@ -358,7 +358,8 @@
 
   <update id="warehouseCheckPurchaseTicet">
     UPDATE tab_purchase_info
-      SET flow_state = 3
+      SET flow_state = 3,
+          update_time = SYSDATE()
       WHERE id IN
       <foreach collection="list" item="item" separator="," open="(" close=")">
         #{item}
