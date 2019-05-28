@@ -326,9 +326,6 @@
       <if test="remarks != null">
         remarks,
       </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
       <if test="createUser != null">
         create_user,
       </if>
@@ -344,6 +341,7 @@
       <if test="paymentStatus != null">
         payment_status,
       </if>
+      create_time
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -421,9 +419,6 @@
       <if test="remarks != null">
         #{remarks,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="createUser != null">
         #{createUser,jdbcType=VARCHAR},
       </if>
@@ -439,6 +434,7 @@
       <if test="paymentStatus != null">
         payment_status = #{paymentStatus,jdbcType=VARCHAR},
       </if>
+      SYSDATE()
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.exx.dzj.entity.purchase.PurchaseInfoExample" resultType="java.lang.Long">
@@ -658,9 +654,6 @@
       <if test="createUser != null">
         create_user = #{createUser,jdbcType=VARCHAR},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="updateUser != null">
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
@@ -670,6 +663,7 @@
       <if test="paymentTerm != null">
         payment_term = #{paymentTerm,jdbcType=VARCHAR},
       </if>
+      update_time = SYSDATE()
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>

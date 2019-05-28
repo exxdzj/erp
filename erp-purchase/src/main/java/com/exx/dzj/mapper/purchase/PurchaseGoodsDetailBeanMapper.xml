@@ -535,12 +535,10 @@
         <if test="record.createUser != null">
           create_user = #{record.createUser,jdbcType=VARCHAR},
         </if>
-        <if test="record.updateTime != null">
-          update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-        </if>
         <if test="record.updateUser != null">
           update_user = #{record.updateUser,jdbcType=VARCHAR},
         </if>
+        update_time = SYSDATE()
       </set>
       <where>
         id=#{record.id}
