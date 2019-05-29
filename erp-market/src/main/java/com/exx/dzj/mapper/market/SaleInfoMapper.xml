@@ -714,6 +714,50 @@
   </update>
   
   <delete id="logisticsInfoDel">
-    DELETE FROM tab_sale_logistic_info WHERE id = #{id}
+      DELETE FROM tab_sale_logistic_info WHERE id = #{id}
   </delete>
+
+  <select id="querySumSalesOnDay" resultType="java.math.BigDecimal">
+    SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
+	  WHERE sinfo.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND SYSDATE();
+  </select>
+
+  <select id="querySumSalesOnYear" resultType="java.math.BigDecimal">
+    SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
+	  WHERE sinfo.sale_date BETWEEN DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY) AND concat(YEAR(now()),'-12-31');
+  </select>
+
+  <select id="querySalesTop" resultMap="salesTopMap">
+    SELECT
+      u.real_name,SUM(s.receivable_accoun) AS receivable_accoun
+    FROM tab_sale_info s
+    LEFT JOIN tab_user_info u ON s.salesman_code = u.salesman_code
+    WHERE DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d') <!-- DATE_FORMAT(sysdate(), '%Y-%m-%d')-->
+    AND s.salesman_code = u.user_code
+    GROUP BY s.salesman_code,u.real_name
+    ORDER BY SUM(s.receivable_accoun) DESC
+    LIMIT 10
+  </select>
+  
+  <resultMap id="salesTopMap" type="com.exx.dzj.entity.market.SaleInfo">
+    <result column="real_name" property="realName"/>
+    <result column="receivable_accoun" property="receivableAccoun"/>
+  </resultMap>
+  
+  <select id="salesUncollectedTop" resultMap="salesUncollectedTopMap">
+    SELECT u.salesman_code,u.real_name,
+	  (sum(s.receivable_accoun) - (select sum(collected_amount) from tab_sale_receipts_details p where p.sale_code = s.sale_code)) AS receivable_accoun
+    FROM tab_sale_info s
+    LEFT JOIN tab_user_info u ON s.salesman_code = u.salesman_code
+    WHERE DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')        <!-- DATE_FORMAT(sysdate(), '%Y-%m-%d')-->
+    AND s.salesman_code = u.user_code
+    GROUP BY s.salesman_code,u.real_name
+    ORDER BY receivable_accoun DESC
+    LIMIT 10
+  </select>
+
+  <resultMap id="salesUncollectedTopMap" type="com.exx.dzj.entity.market.SaleInfo">
+    <result column="real_name" property="realName"/>
+    <result column="receivable_accoun" property="receivableAccoun"/>
+  </resultMap>
 </mapper>

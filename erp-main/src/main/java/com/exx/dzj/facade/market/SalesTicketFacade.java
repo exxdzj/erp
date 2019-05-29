@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,45 @@ public class SalesTicketFacade {
 
     @Autowired
     private StockService stockInfoService;
+
+
+    @Transactional
+    public void saveSalesTicket2(SaleInfo saleInfo){
+        Optional.of(saleInfo);
+        List<SaleGoodsDetailBean> goodsDetailBeanList = saleInfo.getSaleGoodsDetailBeanList();
+        List<SaleReceiptsDetails> receiptsDetailsList = saleInfo.getSaleReceiptsDetailsList();
+        saleInfo.setSaleTicketType(CommonConstant.DEFAULT_VALUE_ONE);
+        saleInfo.setIsEnable(CommonConstant.DEFAULT_VALUE_ONE);
+
+
+        if(!CollectionUtils.isEmpty(goodsDetailBeanList)){
+            goodsDetailBeanList = setGoodsSaleCode(goodsDetailBeanList, saleInfo.getSaleCode());
+
+            // 该部分代码用于金蝶导入金额计算, 优惠后金额
+            BigDecimal receivableAccoun = new BigDecimal(0);
+            BigDecimal hundred = new BigDecimal(100);
+            BigDecimal divide = new BigDecimal(0);
+            BigDecimal price = new BigDecimal(0);
+
+            for (SaleGoodsDetailBean gg : goodsDetailBeanList){
+                // 折扣额后
+                divide = hundred.subtract(gg.getDiscountRate()).divide(hundred);
+
+                price = gg.getUnitPrice().multiply(new BigDecimal(gg.getGoodsNum()));
+
+                receivableAccoun = receivableAccoun.add(price.multiply(divide));
+            }
+            saleInfo.setReceivableAccoun(receivableAccoun.setScale(2, BigDecimal.ROUND_HALF_UP));
+            // 该部分代码用于金蝶导入金额计算, 优惠后金额
+
+            salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList);
+        }
+        if (!CollectionUtils.isEmpty(receiptsDetailsList)){
+            receiptsDetailsList = setReceiptsSaleCode(receiptsDetailsList, saleInfo.getSaleCode());
+            saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+        }
+        salesTicketService.saveSaleInfo(saleInfo);
+    }
 
     /**
      * @description 新建销售单
@@ -305,8 +345,9 @@ public class SalesTicketFacade {
         List<SaleInfo> importFailData = new ArrayList<>();
         for (SaleInfo s : saleInfos){
             try {
-                saveSalesTicket(s);
+                saveSalesTicket2(s);
             } catch (Exception e){
+                e.printStackTrace();
                 importFailData.add(s);
             }
         }

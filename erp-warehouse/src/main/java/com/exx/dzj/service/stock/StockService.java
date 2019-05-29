@@ -66,4 +66,6 @@ public interface StockService {
     void insertStockNumPrice(StockNumPrice stockNumPrice);
 
     void updateStockInfoSourceModel(StockBean stockInfo);
+
+    List<StockBean> stockInventoryWarning (int warningNum);
 }

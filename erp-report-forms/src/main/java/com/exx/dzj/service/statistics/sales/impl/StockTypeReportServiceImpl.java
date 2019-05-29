@@ -57,4 +57,14 @@ public class StockTypeReportServiceImpl implements SaleTicketReportService {
         List<DeptSaleReport> deptSaleReports = stockTypeReportMapper.queryDeptSaleReport(query);
         return deptSaleReports;
     }
+
+    @Override
+    public List<HomePageReport> queryStasticsSalesForYear() {
+        return stockTypeReportMapper.queryStasticsSalesForYear();
+    }
+
+    @Override
+    public List<HomePageReport> queryStasticsSalesForMonth() {
+        return stockTypeReportMapper.queryStasticsSalesForMonth();
+    }
 }

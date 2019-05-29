@@ -66,4 +66,6 @@ public interface StockInfoMapper {
     void insertStockNumPrice(StockNumPrice stockNumPrice);
 
     void updateStockInfoSourceModel(StockBean stockInfo);
+
+    List<StockBean> stockInventoryWarning(@Param("warningNum") int warningNum);
 }

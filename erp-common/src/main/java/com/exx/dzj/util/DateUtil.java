@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * @author yangyun
@@ -451,5 +452,12 @@ public class DateUtil {
         } else {
             return false;// 超出指定区间
         }
+    }
+
+    public static int getDayForMonth (){
+        // 当前月天数
+        Calendar aCalendar = Calendar.getInstance(Locale.CHINA);
+        int day = aCalendar.getActualMaximum(Calendar.DATE);
+        return day;
     }
 }

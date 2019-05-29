@@ -8,6 +8,7 @@ import com.exx.dzj.service.purchaseticket.PurchaseTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -48,5 +49,10 @@ public class PurchaseTicketServiceImpl implements PurchaseTicketService {
     @Override
     public List<PurchaseHistoryInfo> queryPurchaseHistoryRecord(String stockCode) {
         return purchaseInfoMapper.queryPurchaseHistoryRecord(stockCode);
+    }
+
+    @Override
+    public BigDecimal sumPurchaseSalesOnYear() {
+        return purchaseInfoMapper.sumPurchaseSalesOnYear();
     }
 }

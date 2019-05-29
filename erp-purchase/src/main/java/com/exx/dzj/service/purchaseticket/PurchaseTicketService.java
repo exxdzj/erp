@@ -4,6 +4,7 @@ import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
 import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -23,4 +24,6 @@ public interface PurchaseTicketService {
     void deletePurchaseTicket(Integer id);
 
     List<PurchaseHistoryInfo> queryPurchaseHistoryRecord (String stockCode);
+
+    BigDecimal sumPurchaseSalesOnYear();
 }

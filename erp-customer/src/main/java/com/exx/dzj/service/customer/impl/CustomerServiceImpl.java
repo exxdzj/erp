@@ -176,4 +176,19 @@ public class CustomerServiceImpl implements CustomerService {
         ERPage<CustomerSupplierBean> pages = new ERPage<>(list);
         return pages;
     }
+
+    @Override
+    public int countCustomerSupplier(int type) {
+        return csMapper.countCustomerSupplier(type);
+    }
+
+    @Override
+    public List<InsuranceCustomer> queryStatisticsCustomer() {
+        return csMapper.queryStatisticsCustomer();
+    }
+
+    @Override
+    public List<InsuranceCustomer> queryIncreaseCutomerForMonth() {
+        return csMapper.queryIncreaseCutomerForMonth();
+    }
 }

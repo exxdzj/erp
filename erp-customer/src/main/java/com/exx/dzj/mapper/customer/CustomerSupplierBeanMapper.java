@@ -53,4 +53,10 @@ public interface CustomerSupplierBeanMapper {
     public List<CustomerSupplierBean> queryCustomerSupplierBeanList ();
 
     List<CustomerSupplierBean> selectionCustomer(CustomerSupplierQuery query);
+
+    int countCustomerSupplier(@Param("type") int type);
+
+    List<InsuranceCustomer> queryStatisticsCustomer();
+
+    List<InsuranceCustomer> queryIncreaseCutomerForMonth();
 }

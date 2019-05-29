@@ -288,4 +288,28 @@
         <result column="pureProfit" property="pureProfit"/>
         <result column="commission" property="commission"/>
     </resultMap>
+
+    <select id="queryStasticsSalesForYear" resultMap="salesMapForYear">
+        SELECT
+          YEAR(sale_date) AS `year`,MONTH(sale_date) AS `month`, SUM(receivable_accoun) AS sum_receivable_accoun
+        FROM tab_sale_info
+            GROUP BY MONTH (sale_date)
+            ORDER BY YEAR(sale_date), MONTH(sale_date);
+    </select>
+    <resultMap id="salesMapForYear" type="com.exx.dzj.entity.statistics.sales.HomePageReport">
+        <result column="month" property="month"/>
+        <result column="sum_receivable_accoun" property="sumReceivableAccoun"/>
+    </resultMap>
+
+    <select id="queryStasticsSalesForMonth" resultMap="salesMapForMomth">
+        SELECT DAY(sale_date) AS `day`, SUM(receivable_accoun)  AS sum_receivable_accoun
+        FROM tab_sale_info
+        WHERE MONTH(sale_date) = MONTH(sysdate())
+        GROUP BY DAY(sale_date);
+    </select>
+    
+    <resultMap id="salesMapForMomth" type="com.exx.dzj.entity.statistics.sales.HomePageReport">
+        <result column="day" property="day"/>
+        <result column="sum_receivable_accoun" property="sumReceivableAccoun"/>
+    </resultMap>
 </mapper>

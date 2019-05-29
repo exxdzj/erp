@@ -3,6 +3,7 @@ package com.exx.dzj.service.customer;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
+import com.exx.dzj.entity.customer.InsuranceCustomer;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 
@@ -68,4 +69,9 @@ public interface CustomerService {
 
     ERPage<CustomerSupplierBean> selectionCustomer (CustomerSupplierQuery query);
 
+    public int countCustomerSupplier (int type);
+
+    List<InsuranceCustomer> queryStatisticsCustomer();
+
+    List<InsuranceCustomer> queryIncreaseCutomerForMonth ();
 }

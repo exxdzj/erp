@@ -5,6 +5,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,7 @@ public class SaleInfo implements Serializable {
 
     private String saleProjectName;
 
-    private Date saleDate;
+    private Timestamp saleDate;
 
     private String salesOrderCode;
 
@@ -105,4 +106,5 @@ public class SaleInfo implements Serializable {
 
     private String freightCode;
     private String logisticsCompamyName;
+    private String realName;
 }

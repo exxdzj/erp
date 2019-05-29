@@ -26,4 +26,8 @@ public interface SaleTicketReportService {
     List<DeptSaleReport> selectionDeptInfo (String parentCode);
 
     List<DeptSaleReport> queryDeptSaleReport (DeptInfoQuery query);
+
+    List<HomePageReport> queryStasticsSalesForYear();
+
+    List<HomePageReport> queryStasticsSalesForMonth();
 }

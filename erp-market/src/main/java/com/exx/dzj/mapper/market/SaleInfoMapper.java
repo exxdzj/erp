@@ -34,4 +34,11 @@ public interface SaleInfoMapper {
     int updateByPrimaryKey(SaleInfo record);
 
     void logisticsInfoDel(@Param("id") Integer id);
+
+    BigDecimal querySumSalesOnDay();
+
+    BigDecimal querySumSalesOnYear();
+
+    List<SaleInfo> querySalesTop();
+    List<SaleInfo> salesUncollectedTop();
 }

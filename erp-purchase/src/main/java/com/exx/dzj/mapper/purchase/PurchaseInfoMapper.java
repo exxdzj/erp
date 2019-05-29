@@ -5,6 +5,7 @@ import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfoExample;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface PurchaseInfoMapper {
@@ -31,4 +32,6 @@ public interface PurchaseInfoMapper {
     int updateByPrimaryKey(PurchaseInfo record);
 
     List<PurchaseHistoryInfo> queryPurchaseHistoryRecord(@Param("stockCode") String stockCode);
+
+    BigDecimal sumPurchaseSalesOnYear();
 }

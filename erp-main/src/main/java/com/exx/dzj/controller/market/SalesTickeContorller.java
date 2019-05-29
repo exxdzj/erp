@@ -104,6 +104,7 @@ public class SalesTickeContorller {
         Result result = Result.responseSuccess();
         try {
             salesTicketFacade.updateSalesTicket(saleInfo);
+
         } catch (ErpException e){
             e.printStackTrace();
             result.setCode(Result.FAIL_CODE);

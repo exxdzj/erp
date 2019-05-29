@@ -95,4 +95,23 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     public void logisticsInfoDel(Integer id) {
         saleInfoMapper.logisticsInfoDel(id);
     }
+
+    @Override
+    public BigDecimal querySumSalesOnDay() {
+        return saleInfoMapper.querySumSalesOnDay();
+    }
+
+    @Override
+    public BigDecimal querySumSalesOnYear() {
+        return saleInfoMapper.querySumSalesOnYear();
+    }
+
+    @Override
+    public List<SaleInfo> querySalesTop() {
+        return saleInfoMapper.querySalesTop();
+    }
+    @Override
+    public List<SaleInfo> salesUncollectedTop() {
+        return saleInfoMapper.salesUncollectedTop();
+    }
 }

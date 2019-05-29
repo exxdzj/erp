@@ -133,4 +133,10 @@ public class CommonConstant {
     public static final Integer KDNIAO_ON_WAY_STATE = 2;
     public static final Integer KDNIAO_SIGN_IN_STATE = 3;
     public static final Integer KDNIAO_PROBLEM_STATE = 4;
+
+    public static final String DATE_YEAR_PATTERN = "yyyy";
+    public static final int HOME_PAGE_DEFAULT_MONTH = 12;
+    public static final int HOME_PAGE_DEFAULT_YEAR = 4;
+
+    public static final int STOCK_INVENTORY_WARNING = 100;
 }

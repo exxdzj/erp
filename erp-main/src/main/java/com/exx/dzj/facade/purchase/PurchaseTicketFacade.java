@@ -60,13 +60,7 @@ public class PurchaseTicketFacade {
         List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans = purchaseInfo.getPurchaseGoodsDetailBeans();
         List<PurchaseReceiptsDetailsBean> purchaseReceiptsDetailsBeans = purchaseInfo.getPurchaseReceiptsDetailsBeans();
         setStatus(purchaseInfo);
-//        if (purchaseInfo.getSumCollectedAmount().doubleValue() == 0){
-//            purchaseInfo.setPaymentStatus("cs01");
-//        } else if (purchaseInfo.getSumCollectedAmount().doubleValue() == purchaseInfo.getReceivableAccoun().doubleValue()){
-//            purchaseInfo.setPaymentStatus("cs03");
-//        } else {
-//            purchaseInfo.setPaymentStatus("cs02");
-//        }
+
         purchaseInfo.setIsEnable(CommonConstant.DEFAULT_VALUE_ONE);
         purchaseTicketService.savePurchaseTicket(purchaseInfo);
 

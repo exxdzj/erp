@@ -26,4 +26,8 @@ public interface SaleTicketReportMapper {
     List<DeptSaleReport> selectionDeptInfo(@Param("parentCode") String parentCode);
 
     List<DeptSaleReport> queryDeptSaleReport(DeptInfoQuery query);
+
+    List<HomePageReport> queryStasticsSalesForYear();
+
+    List<HomePageReport> queryStasticsSalesForMonth();
 }

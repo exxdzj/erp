@@ -228,6 +228,11 @@ public class StockServiceImpl implements StockService {
         stockMapper.updateStockInfoSourceModel(stockInfo);
     }
 
+    @Override
+    public List<StockBean> stockInventoryWarning(int warningNum) {
+        return stockMapper.stockInventoryWarning(warningNum);
+    }
+
     public void batchInsertStockInfo (List<StockInfo> stockInfoList){
         stockMapper.batchInsertStockInfo(stockInfoList);
     }

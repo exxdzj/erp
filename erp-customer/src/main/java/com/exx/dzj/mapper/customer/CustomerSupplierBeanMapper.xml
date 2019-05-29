@@ -548,5 +548,33 @@
       AND cust_name LIKE CONCAT('%',#{custName},'%')
     </if>
   </select>
+  
+  <select id="countCustomerSupplier" resultType="int">
+    SELECT COUNT(1) FROM tab_customer_supplier WHERE cust_type IN (#{type}, 3)
+  </select>
+  
+  <select id="queryStatisticsCustomer" resultMap="insuranceCustomerMap">
+    SELECT rank_code, rank_name, COUNT(rank_code) AS `count` FROM tab_customer_supplier where
+    cust_type in (1, 3) AND `identity` = 1 GROUP BY rank_code
+  </select>
+  <resultMap id="insuranceCustomerMap" type="com.exx.dzj.entity.customer.InsuranceCustomer">
+    <result column="rank_code" property="rankCode"/>
+    <result column="rank_name" property="rankName"/>
+    <result column="count" property="count"/>
+  </resultMap>
+
+  <select id="queryIncreaseCutomerForMonth" resultMap="increaseCustomerMap">
+    SELECT MONTH(create_time) AS `month`, COUNT(MONTH (create_time)) AS `count`
+    FROM tab_customer_supplier
+     WHERE YEAR(create_time) = DATE_FORMAT(CURDATE(),'%Y')
+    GROUP BY MONTH (create_time)
+    ORDER BY YEAR(create_time),MONTH(create_time);
+  </select>
+  <resultMap id="increaseCustomerMap" type="com.exx.dzj.entity.customer.InsuranceCustomer">
+    <result column="month" property="month"/>
+    <result column="count" property="count"/>
+  </resultMap>
+
+
 
 </mapper>
