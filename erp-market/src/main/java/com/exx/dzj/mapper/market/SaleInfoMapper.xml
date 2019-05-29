@@ -721,6 +721,14 @@
     SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
 	  WHERE sinfo.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND SYSDATE();
   </select>
+  
+  <select id="queryAdditionalSumSalesOnDay" resultType="java.math.BigDecimal">
+    SELECT
+        SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
+    FROM tab_sale_info s
+    WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND SYSDATE()
+
+  </select>
 
   <select id="querySumSalesOnYear" resultType="java.math.BigDecimal">
     SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
