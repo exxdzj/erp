@@ -54,13 +54,23 @@ public class HomePageFacade {
         BigDecimal sumSalesOnDay = salesTicketService.querySumSalesOnDay();
         topData.put("sumSalesOnDay", sumSalesOnDay);
 
+        // 今日额外销售额
+        BigDecimal sumAdditionalSalesOnDay = salesTicketService.queryAdditionalSumSalesOnDay();
+        if (sumAdditionalSalesOnDay == null){
+            sumAdditionalSalesOnDay = ZERO;
+        }
+        // 计算纯利润
+        BigDecimal subtract = sumSalesOnDay.subtract(sumAdditionalSalesOnDay);
+
+        topData.put("sumAdditionalSalesOnDay", subtract);
+
         //年度销售额
         BigDecimal sumSalesOnYear = salesTicketService.querySumSalesOnYear();
         topData.put("sumSalesOnYear", sumSalesOnYear);
 
         // 采购总金额
         BigDecimal sumPurchaseSalesOnYear = purchaseTicketService.sumPurchaseSalesOnYear();
-        topData.put("sumPurchaseSalesOnYear", sumPurchaseSalesOnYear);
+//        topData.put("sumPurchaseSalesOnYear", sumPurchaseSalesOnYear);
 
         return topData;
     }

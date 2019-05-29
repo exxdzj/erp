@@ -102,6 +102,11 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     }
 
     @Override
+    public BigDecimal queryAdditionalSumSalesOnDay() {
+        return saleInfoMapper.queryAdditionalSumSalesOnDay();
+    }
+
+    @Override
     public BigDecimal querySumSalesOnYear() {
         return saleInfoMapper.querySumSalesOnYear();
     }

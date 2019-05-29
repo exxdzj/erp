@@ -29,6 +29,7 @@ public interface SalesTicketService {
     void logisticsInfoDel (Integer id);
 
     BigDecimal querySumSalesOnDay();
+    BigDecimal queryAdditionalSumSalesOnDay();
     BigDecimal querySumSalesOnYear();
     List<SaleInfo> querySalesTop();
     List<SaleInfo> salesUncollectedTop();
