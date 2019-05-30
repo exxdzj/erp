@@ -1,14 +1,13 @@
 package com.exx.dzj.controller.user;
 
-import com.exx.dzj.annotation.SysLog;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.exx.dzj.annotation.DataPermission;
 import com.exx.dzj.constant.CommonConstant;
-import com.exx.dzj.constant.LogLevel;
-import com.exx.dzj.constant.LogType;
-import com.exx.dzj.entity.user.UserBean;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.entity.user.UserQuery;
 import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.facade.user.UserFacade;
+import com.exx.dzj.query.QueryGenerator;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.JsonUtils;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -62,13 +60,30 @@ public class UserController {
      * @param query
      * @return
      */
-    @GetMapping("list")
+    @GetMapping("list1")
     public Result list(HttpServletRequest request, HttpServletResponse response, String query) {
         Result result = Result.responseSuccess();
         UserQuery queryParam = JsonUtils.jsonToPojo(query, UserQuery.class);
         int pageNum = queryParam != null ? queryParam.getPage() : CommonConstant.DEFAULT_PAGE_NUM;
         int pageSize = queryParam != null ? queryParam.getLimit() : CommonConstant.DEFAULT_PAGE_SIZE;
         result = userFacade.list(pageNum, pageSize, queryParam);
+        return result;
+    }
+
+    @GetMapping("list")
+    @DataPermission(pageComponent="system/user/list")
+    public Result queryList(HttpServletRequest request, HttpServletResponse response, String query) {
+        Result result = Result.responseSuccess();
+        UserQuery queryParam = JsonUtils.jsonToPojo(query, UserQuery.class);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName(queryParam.getUserName());
+        userInfo.setRealName(queryParam.getRealName());
+        userInfo.setSalesmanCode(queryParam.getSalesmanCode());
+        userInfo.setIsQuit(queryParam.getIsQuit());
+        QueryWrapper<UserInfo> queryWrapper = QueryGenerator.initQueryWrapper(userInfo, request.getParameterMap());
+        int pageNum = queryParam != null ? queryParam.getPage() : CommonConstant.DEFAULT_PAGE_NUM;
+        int pageSize = queryParam != null ? queryParam.getLimit() : CommonConstant.DEFAULT_PAGE_SIZE;
+        result = userFacade.queryList(pageNum, pageSize, queryWrapper);
         return result;
     }
 

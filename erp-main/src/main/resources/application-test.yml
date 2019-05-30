@@ -44,6 +44,14 @@ pagehelper:
     supportMethodsArguments: true
     params: count=countSql
 
+#mybatis plus 设置
+mybatis-plus:
+  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
+  # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
+  mapper-locations: classpath*:com/exx/dzj/mapper/**/*Mapper.xml
+  #mp2.3+ 全局表前缀 mp_
+  table-prefix: tab_
+
 # 阿里云存储配置
 aliyun:
   endpoint: http://oss-cn-shenzhen.aliyuncs.com

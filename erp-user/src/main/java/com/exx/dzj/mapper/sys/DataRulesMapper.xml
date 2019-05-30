@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exx.dzj.mapper.sys.DataRulesMapper">
+
+    <select id="queryDataRules" parameterType="com.exx.dzj.entity.datarules.DataRulesParam" resultType="string">
+        SELECT m.data_rule_ids
+        FROM tab_role_menu m
+        JOIN tab_user_role t ON m.role_code = t.role_code
+        WHERE m.menu_code = #{menuCode}
+          AND t.user_code = #{userCode}
+    </select>
+</mapper>

@@ -1,6 +1,7 @@
 package com.exx.dzj.service.sys;
 
 import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.exx.dzj.entity.menu.MenuInfo;
 import com.exx.dzj.entity.menu.MenuTreeBean;
 import com.exx.dzj.result.Result;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @Author
  * @Description 菜单 service
  */
-public interface MenuService {
+public interface MenuService extends IService<MenuInfo> {
 
     /**
      * 查询 菜单树形结构数据
@@ -52,4 +53,10 @@ public interface MenuService {
      * @return
      */
     Result cancelMenu(MenuInfo menuInfo);
+
+    /**
+     * 查询出带有特殊符号的菜单地址的集合
+     * @return
+     */
+    List<String> queryPermissionUrlWithStar();
 }

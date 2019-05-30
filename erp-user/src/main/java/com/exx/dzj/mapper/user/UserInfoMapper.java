@@ -1,17 +1,21 @@
 package com.exx.dzj.mapper.user;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exx.dzj.entity.user.*;
 import org.apache.ibatis.annotations.Param;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.util.List;
 
-public interface UserInfoMapper {
+public interface UserInfoMapper extends BaseMapper<UserInfo> {
     long countByExample(UserInfoExample example);
 
     int deleteByExample(UserInfoExample example);
 
     int deleteByPrimaryKey(Integer id);
 
+    @Override
     int insert(UserInfo record);
 
     int insertSelective(UserInfo record);
@@ -29,6 +33,8 @@ public interface UserInfoMapper {
     List<UserInfo> querySalesman();
 
     List<UserModel> queryUserList(UserQuery query);
+
+    List<UserModel> queryList(@Param("ew") Wrapper<T> queryWrapper);
 
     UserVo queryUserBean(UserInfo info);
 

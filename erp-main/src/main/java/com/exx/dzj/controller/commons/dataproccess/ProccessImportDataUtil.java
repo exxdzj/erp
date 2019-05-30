@@ -304,6 +304,7 @@ public class ProccessImportDataUtil {
             setPrice(stockNumPrice);
             setStockNatureStatu(model, stockInfo);
             setStockClass(stockInfo, stringMap);
+            setStockAddress(stockNumPrice, stringMap);
 
             stockInfoList.add(stockInfo);
             stockNumPriceList.add(stockNumPrice);
@@ -360,11 +361,15 @@ public class ProccessImportDataUtil {
             stockInfo.setStockClass(value);
             stockInfo.setStockClassName(aClass);
         }
-        String stockAddress = stockInfo.getStockAddress();
+
+    }
+
+    private static void setStockAddress(StockNumPrice stockNumPrice, Map<String, String> stringMap) {
+        String stockAddress = stockNumPrice.getStockAddress();
         if (StringUtils.isNotEmpty(stockAddress)){
             String stockAddressCode = stringMap.get(stockAddress);
-            stockInfo.setStockAddress(stockAddress);
-            stockInfo.setStockAddressCode(stockAddressCode);
+            stockNumPrice.setStockAddress(stockAddress);
+            stockNumPrice.setStockAddressCode(stockAddressCode);
         }
     }
 

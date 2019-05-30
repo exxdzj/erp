@@ -112,10 +112,10 @@
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
     insert into tab_customer_supplier
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="custCode != null">
+      <if test="custCode != null and custCode!=''">
         cust_code,
       </if>
-      <if test="custName != null">
+      <if test="custName != null and custName!=''">
         cust_name,
       </if>
       <if test="custType != null">
@@ -124,13 +124,13 @@
       <if test="custLevel != null">
         cust_level,
       </if>
-      <if test="levelName != null">
+      <if test="levelName != null and levelName!=''">
         level_name,
       </if>
-      <if test="salesmanCode != null">
+      <if test="salesmanCode != null and salesmanCode!=''">
         salesman_code,
       </if>
-      <if test="userCode != null">
+      <if test="userCode != null and userCode!=''">
         user_code,
       </if>
       <if test="identity != null">
@@ -142,38 +142,41 @@
       <if test="rankName != null and rankName!=''">
         rank_name,
       </if>
-      <if test="regionCode != null">
+      <if test="regionCode != null and regionCode!=''">
         region_code,
       </if>
-      <if test="regionName != null">
+      <if test="regionName != null and regionName!=''">
         region_name,
       </if>
-      <if test="shipCode != null">
+      <if test="shipCode != null and shipCode!=''">
         ship_code,
       </if>
-      <if test="shipAddress != null">
+      <if test="shipAddress != null and shipAddress!=''">
         ship_address,
       </if>
-      <if test="remarks != null">
+      <if test="remarks != null and remarks!=''">
         remarks,
+      </if>
+      <if test="birthday != null">
+        birthday,
       </if>
       <if test="source != null">
         source,
       </if>
         create_time,
-      <if test="createUser != null">
+      <if test="createUser != null and createUser !=''">
         create_user,
       </if>
         update_time,
-      <if test="updateUser != null">
+      <if test="updateUser != null and updateUser !=''">
         update_user,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="custCode != null">
+      <if test="custCode != null and custCode !=''">
         #{custCode,jdbcType=VARCHAR},
       </if>
-      <if test="custName != null">
+      <if test="custName != null and custName !=''">
         #{custName,jdbcType=VARCHAR},
       </if>
       <if test="custType != null">
@@ -182,13 +185,13 @@
       <if test="custLevel != null">
         #{custLevel,jdbcType=VARCHAR},
       </if>
-      <if test="levelName != null">
+      <if test="levelName != null and levelName !=''">
         #{levelName,jdbcType=VARCHAR},
       </if>
-      <if test="salesmanCode != null">
+      <if test="salesmanCode != null and salesmanCode !=''">
         #{salesmanCode,jdbcType=VARCHAR},
       </if>
-      <if test="userCode != null">
+      <if test="userCode != null and userCode !=''">
         #{userCode,jdbcType=VARCHAR},
       </if>
       <if test="identity != null">
@@ -200,30 +203,33 @@
       <if test="rankName != null and rankName!=''">
         #{rankName,jdbcType=VARCHAR},
       </if>
-      <if test="regionCode != null">
+      <if test="regionCode != null and regionCode !=''">
         #{regionCode,jdbcType=VARCHAR},
       </if>
-      <if test="regionName != null">
+      <if test="regionName != null and regionName !=''">
         #{regionName,jdbcType=VARCHAR},
       </if>
-      <if test="shipCode != null">
+      <if test="shipCode != null and shipCode !=''">
         #{shipCode,jdbcType=VARCHAR},
       </if>
-      <if test="shipAddress != null">
+      <if test="shipAddress != null and shipAddress !=''">
         #{shipAddress,jdbcType=VARCHAR},
       </if>
-      <if test="remarks != null">
+      <if test="remarks != null and remarks !=''">
         #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=DATE},
       </if>
       <if test="source != null">
         #{source},
       </if>
         SYSDATE(),
-      <if test="createUser != null">
+      <if test="createUser != null and createUser !=''">
         #{createUser,jdbcType=VARCHAR},
       </if>
         SYSDATE(),
-      <if test="updateUser != null">
+      <if test="updateUser != null and updateUser !=''">
         #{updateUser,jdbcType=VARCHAR},
       </if>
     </trim>
@@ -278,7 +284,7 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.customer.CustomerSupplierBean">
     update tab_customer_supplier
     <set>
-      <if test="custName != null">
+      <if test="custName != null and custName!=''">
         cust_name = #{custName,jdbcType=VARCHAR},
       </if>
       <if test="custType != null">
@@ -287,19 +293,19 @@
       <if test="custLevel != null">
         cust_level = #{custLevel,jdbcType=VARCHAR},
       </if>
-      <if test="levelName != null">
+      <if test="levelName != null and levelName!=''">
         level_name = #{levelName,jdbcType=VARCHAR},
       </if>
-      <if test="salesmanCode != null">
+      <if test="salesmanCode != null and salesmanCode!=''">
         salesman_code = #{salesmanCode,jdbcType=VARCHAR},
       </if>
-      <if test="userCode != null">
+      <if test="userCode != null and userCode!=''">
         user_code = #{userCode,jdbcType=VARCHAR},
       </if>
-      <if test="regionCode != null">
+      <if test="regionCode != null and regionCode!=''">
         region_code = #{regionCode,jdbcType=VARCHAR},
       </if>
-      <if test="regionName != null">
+      <if test="regionName != null and regionName!=''">
         region_name = #{regionName,jdbcType=VARCHAR},
       </if>
       <if test="identity != null">
@@ -311,20 +317,23 @@
       <if test="rankName != null and rankName!=''">
         rank_name = #{rankName,jdbcType=VARCHAR},
       </if>
-      <if test="shipCode != null">
+      <if test="shipCode != null and shipCode!=''">
         ship_code = #{shipCode,jdbcType=VARCHAR},
       </if>
-      <if test="shipAddress != null">
+      <if test="shipAddress != null and shipAddress!=''">
         ship_address = #{shipAddress,jdbcType=VARCHAR},
       </if>
       <if test="source != null">
         source = #{source,jdbcType=INTEGER},
       </if>
-      <if test="remarks != null">
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="remarks != null and remarks!=''">
         remarks = #{remarks,jdbcType=VARCHAR},
       </if>
         update_time = SYSDATE(),
-      <if test="updateUser != null">
+      <if test="updateUser != null and updateUser!=''">
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
@@ -338,13 +347,15 @@
     SELECT
         cs.cust_code custCode,
         cs.cust_name custName,
-        cw.link_man linkMan,
+        IFNULL(cw.link_man, '无') linkMan,
         cw.email email,
-        ui.real_name salesman,
+        IFNULL(ui.real_name, '无') salesman,
         cs.level_name levelName,
         ta.discount_rate discountRate,
         ta.account_period accountPeriod,
         cs.region_name regionName,
+        IFNULL(cs.rank_name, '无') rankName,
+        IFNULL(DATE_FORMAT(cs.birthday, '%Y-%m-%d'), '无') birthday,
       CASE
     WHEN cs.is_enable = 1 THEN
     '使用中'
@@ -393,6 +404,7 @@
     <result column="shipCode" property="shipCode"/>
     <result column="shipAddress" property="shipAddress"/>
     <result column="remarks" property="remarks"/>
+    <result column="birthday" property="birthday"/>
     <!-- 联系方式 -->
     <result column="linkMan" property="linkMan"/>
     <result column="telephoneNum" property="telephoneNum"/>
@@ -433,6 +445,7 @@
       cs.ship_code shipCode,
       cs.ship_address shipAddress,
       cs.remarks,
+      cs.birthday,
       cw.link_man linkMan,
       cw.telephone_num telephoneNum,
       cw.phone_num phoneNum,

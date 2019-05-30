@@ -1,6 +1,11 @@
 package com.exx.dzj.service.user;
 
-import com.exx.dzj.entity.user.*;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.exx.dzj.entity.user.UserInfo;
+import com.exx.dzj.entity.user.UserModel;
+import com.exx.dzj.entity.user.UserQuery;
+import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.result.Result;
 
 import java.util.List;
@@ -10,7 +15,7 @@ import java.util.List;
  * @Date 2019/1/5 0005 9:39
  * @Description 用户(公司业务员) service
  */
-public interface UserService {
+public interface UserService extends IService<UserInfo> {
 
     /**
      * 查询 业务员列表
@@ -52,6 +57,15 @@ public interface UserService {
      * @return
      */
     Result list(int pageNum, int pageSize, UserQuery query);
+
+    /**
+     * 查询用户(公司员工)列表数据
+     * @param pageNum
+     * @param pageSize
+     * @param queryWrapper
+     * @return
+     */
+    Result queryList(int pageNum, int pageSize, QueryWrapper queryWrapper);
 
     /**
      * 检查 用户账号是否被注册

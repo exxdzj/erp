@@ -10,6 +10,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
   </resultMap>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -39,6 +40,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -68,9 +70,11 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List">
     id, role_code, menu_code, create_time, create_user, update_time, update_user
   </sql>
+
   <select id="selectByExample" parameterType="com.exx.dzj.entity.role.RoleMenuBeanExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -93,26 +97,12 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tab_role_menu
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.role.RoleMenuBeanExample">
     delete from tab_role_menu
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-
-  <insert id="insert" parameterType="com.exx.dzj.entity.role.RoleMenuBean">
-    insert into tab_role_menu (id, role_code, menu_code, 
-      create_time, create_user, update_time, 
-      update_user)
-    values (#{id,jdbcType=INTEGER}, #{roleCode,jdbcType=VARCHAR}, #{menuCode,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateUser,jdbcType=VARCHAR})
-  </insert>
 
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.role.RoleMenuBean">
     insert into tab_role_menu
@@ -163,13 +153,6 @@
       </if>
     </trim>
   </insert>
-  
-  <select id="countByExample" parameterType="com.exx.dzj.entity.role.RoleMenuBeanExample" resultType="java.lang.Long">
-    select count(*) from tab_role_menu
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
 
   <update id="updateByExampleSelective" parameterType="map">
     update tab_role_menu
@@ -201,20 +184,6 @@
     </if>
   </update>
 
-  <update id="updateByExample" parameterType="map">
-    update tab_role_menu
-    set id = #{record.id,jdbcType=INTEGER},
-      role_code = #{record.roleCode,jdbcType=VARCHAR},
-      menu_code = #{record.menuCode,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      update_user = #{record.updateUser,jdbcType=VARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.role.RoleMenuBean">
     update tab_role_menu
     <set>
@@ -240,17 +209,6 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.role.RoleMenuBean">
-    update tab_role_menu
-    set role_code = #{roleCode,jdbcType=VARCHAR},
-      menu_code = #{menuCode,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      update_user = #{updateUser,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-
   <!-- 查询 角色拥有的菜单权限数据,将半选择的数据给过滤掉(半选择的节点一般都是父节点，之所以这样是方便前端显示，否则前端会将选择了部分子节点的父节点显示为非半选择) -->
   <select id="queryRolePermission" resultType="java.lang.String">
     SELECT menu_code menuCode FROM tab_role_menu WHERE is_half = 0 AND role_code = #{roleCode}
@@ -258,10 +216,10 @@
 
   <!-- 批量写入数据 -->
   <insert id="grantAuth">
-    insert into tab_role_menu (role_code, menu_code, is_half, create_time, create_user, update_time, update_user)
+    insert into tab_role_menu (role_code, menu_code, is_half, data_rule_ids, create_time, create_user, update_time, update_user)
     values
     <foreach collection="list" item="bean" separator=",">
-      (#{bean.roleCode}, #{bean.menuCode}, #{bean.isHalf}, SYSDATE(), #{bean.createUser}, SYSDATE(), #{bean.updateUser})
+      (#{bean.roleCode}, #{bean.menuCode}, #{bean.isHalf}, #{bean.dataRuleIds}, SYSDATE(), #{bean.createUser}, SYSDATE(), #{bean.updateUser})
     </foreach>
   </insert>
 </mapper>

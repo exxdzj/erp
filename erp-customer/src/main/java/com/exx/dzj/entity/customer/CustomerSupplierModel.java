@@ -43,4 +43,14 @@ public class CustomerSupplierModel implements Serializable {
 
     /** 数据状态(使用中、关闭) */
     private String dataStatus;
+
+    /**
+     * 生日
+     */
+    private String birthday;
+
+    /**
+     * 职级
+     */
+    private String rankName;
 }

@@ -1,5 +1,6 @@
 package com.exx.dzj.facade.user;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.entity.user.UserModel;
 import com.exx.dzj.entity.user.UserQuery;
@@ -11,7 +12,6 @@ import com.exx.dzj.result.SelectionSaleInfo;
 import com.exx.dzj.service.user.UserRoleService;
 import com.exx.dzj.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.sql.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -140,6 +140,10 @@ public class UserFacade {
      */
     public Result list(int pageNum, int pageSize, UserQuery query) {
         return salesmanService.list(pageNum, pageSize, query);
+    }
+
+    public Result queryList(int pageNum, int pageSize, QueryWrapper queryWrapper) {
+        return salesmanService.queryList(pageNum, pageSize, queryWrapper);
     }
 
     /**

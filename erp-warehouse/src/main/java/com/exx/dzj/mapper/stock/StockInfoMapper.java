@@ -8,12 +8,6 @@ import java.util.List;
 public interface StockInfoMapper {
     long countByExample(StockInfoExample example);
 
-    int deleteByExample(StockInfoExample example);
-
-    int deleteByPrimaryKey(Integer id);
-
-    int insert(StockInfo record);
-
     int insertSelective(StockInfo record);
 
     List<StockInfo> selectByExample(StockInfoExample example);
@@ -22,11 +16,7 @@ public interface StockInfoMapper {
 
     int updateByExampleSelective(@Param("record") StockInfo record, @Param("example") StockInfoExample example);
 
-    int updateByExample(@Param("record") StockInfo record, @Param("example") StockInfoExample example);
-
     int updateByPrimaryKeySelective(StockInfo record);
-
-    int updateByPrimaryKey(StockInfo record);
 
     /**
      * 查询存货列表数据

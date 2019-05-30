@@ -4,18 +4,33 @@ import com.exx.dzj.entity.customer.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 public interface CustomerSupplierBeanMapper {
 
+    /**
+     * 保存
+     * @param record
+     * @return
+     */
     int insertSelective(CustomerSupplierBean record);
 
     List<CustomerSupplierBean> selectByExample(CustomerSupplierBeanExample example);
 
     CustomerSupplierBean selectByPrimaryKey(Integer id);
 
+    /**
+     * 更新
+     * @param record
+     * @param example
+     * @return
+     */
     int updateByExampleSelective(@Param("record") CustomerSupplierBean record, @Param("example") CustomerSupplierBeanExample example);
 
+    /**
+     * 更新
+     * @param record
+     * @return
+     */
     int updateByPrimaryKeySelective(CustomerSupplierBean record);
 
     /**
@@ -50,7 +65,7 @@ public interface CustomerSupplierBeanMapper {
 
     void batchInsertCustomerSupplier(List<CustomerSupplierBean> customerSupplierList);
 
-    public List<CustomerSupplierBean> queryCustomerSupplierBeanList ();
+    List<CustomerSupplierBean> queryCustomerSupplierBeanList ();
 
     List<CustomerSupplierBean> selectionCustomer(CustomerSupplierQuery query);
 

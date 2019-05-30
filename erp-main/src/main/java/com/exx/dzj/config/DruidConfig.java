@@ -14,9 +14,10 @@ import javax.sql.DataSource;
 @Configuration
 public class DruidConfig {
 
-    @ConfigurationProperties(prefix = "spring.datasource")
     @Bean
+    @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource getDruid () {
         return new DruidDataSource();
     }
+
 }

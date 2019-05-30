@@ -1,10 +1,12 @@
 package com.exx.dzj.entity.menu;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
 
 @Data
 @ToString
+@TableName("tab_menu_info")
 public class MenuInfo {
     private Integer id;
 
@@ -21,8 +23,6 @@ public class MenuInfo {
     private String redirect;
 
     private Integer menuType;
-
-    private String menuTypeName;
 
     private String perms;
 

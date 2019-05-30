@@ -1,18 +1,20 @@
 package com.exx.dzj.mapper.menu;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.exx.dzj.entity.menu.MenuBean;
 import com.exx.dzj.entity.menu.MenuInfo;
 import com.exx.dzj.entity.menu.MenuInfoExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface MenuInfoMapper {
+public interface MenuInfoMapper extends BaseMapper<MenuInfo> {
 
     int insertSelective(MenuInfo record);
 
-    List<MenuInfo> selectByExample(MenuInfoExample example);
+    List<MenuBean> selectByExample(MenuInfoExample example);
 
-    MenuInfo selectByPrimaryKey(@Param("menuCode") String menuCode);
+    MenuBean selectByPrimaryKey(@Param("menuCode") String menuCode);
 
     int updateByExampleSelective(@Param("record") MenuInfo record, @Param("example") MenuInfoExample example);
 

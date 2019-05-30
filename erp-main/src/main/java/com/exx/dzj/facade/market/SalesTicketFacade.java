@@ -1,10 +1,9 @@
 package com.exx.dzj.facade.market;
 
+import com.exx.dzj.annotation.SaleLog;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.stock.StockBean;
-import com.exx.dzj.entity.user.UserInfo;
-import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.dictionary.DictionaryService;
@@ -20,10 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -100,6 +97,7 @@ public class SalesTicketFacade {
      * @return void
      */
     @Transactional
+    @SaleLog(operate = "更新销售单")
     public void saveSalesTicket(SaleInfo saleInfo){
         Optional.of(saleInfo);
         List<SaleGoodsDetailBean> goodsDetailBeanList = saleInfo.getSaleGoodsDetailBeanList();
@@ -178,6 +176,7 @@ public class SalesTicketFacade {
      * @return void
      */
     @Transactional
+    @SaleLog(operate = "更新销售单")
     public void updateSalesTicket(SaleInfo saleInfo){
 //        saleInfo = calculatePrice(saleInfo);
         Optional.ofNullable(saleInfo);
@@ -286,6 +285,11 @@ public class SalesTicketFacade {
                 saleReceiptsDetailService.batchDeleteSalesReceiptsDeail(collect);
             }
         }
+
+        /*if(null != saleInfo && ConvertUtils.isNotEmpty(saleInfo.getPaymentStatus())
+                && (saleInfo.getPaymentStatus().equals("cs03")) || (saleInfo.getPaymentStatus().equals("cs02"))) {
+            salesTicketService.syncSaleData(saleInfo);
+        }*/
     }
 
     /**

@@ -1,11 +1,11 @@
 package com.exx.dzj.entity.customer;
 
-import com.exx.dzj.entity.accountatt.AccountAttributeBean;
-import com.exx.dzj.entity.contactway.ContactWayBean;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -13,6 +13,7 @@ import java.util.Date;
  */
 @Data
 @ToString
+@TableName("tab_customer_supplier")
 public class CustomerSupplierBean implements Serializable {
     private Integer id;
 
@@ -60,6 +61,9 @@ public class CustomerSupplierBean implements Serializable {
 
     //发货地址
     private String shipAddress;
+
+    // 生日
+    private Timestamp birthday;
 
     //备注
     private String remarks;

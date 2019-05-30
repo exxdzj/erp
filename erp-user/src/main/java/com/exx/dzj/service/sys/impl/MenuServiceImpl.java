@@ -2,10 +2,12 @@ package com.exx.dzj.service.sys.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exx.dzj.annotation.SysLog;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.constant.LogLevel;
 import com.exx.dzj.constant.LogType;
+import com.exx.dzj.entity.menu.MenuBean;
 import com.exx.dzj.entity.menu.MenuInfo;
 import com.exx.dzj.entity.menu.MenuInfoExample;
 import com.exx.dzj.entity.menu.MenuTreeBean;
@@ -33,7 +35,7 @@ import java.util.Map;
  * @Description 菜单
  */
 @Component
-public class MenuServiceImpl implements MenuService {
+public class MenuServiceImpl extends ServiceImpl<MenuInfoMapper, MenuInfo> implements MenuService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(MenuServiceImpl.class);
 
@@ -51,7 +53,7 @@ public class MenuServiceImpl implements MenuService {
             MenuInfoExample example = new MenuInfoExample();
             example.setOrderByClause(" seq ");
             example.createCriteria().andIsEnableEqualTo(CommonConstant.DEFAULT_VALUE_ONE);
-            List<MenuInfo> menus = menuMapper.selectByExample(example);
+            List<MenuBean> menus = menuMapper.selectByExample(example);
             List<String> menuCodes = new ArrayList<>();
             if (!CollectionUtils.isEmpty(menus)) {
                 for (MenuInfo menu : menus) {
@@ -77,7 +79,7 @@ public class MenuServiceImpl implements MenuService {
      * @param menuList
      * @param parentJson
      */
-    private void listConvertJson(JSONArray jsonArray, List<MenuInfo> menuList, JSONObject parentJson) {
+    private void listConvertJson(JSONArray jsonArray, List<MenuBean> menuList, JSONObject parentJson) {
         for (MenuInfo menu : menuList) {
             if (null == menu) {
                 continue;
@@ -132,7 +134,7 @@ public class MenuServiceImpl implements MenuService {
         try {
             MenuInfoExample example = new MenuInfoExample();
             example.createCriteria().andIsEnableEqualTo(CommonConstant.DEFAULT_VALUE_ONE);
-            List<MenuInfo> menus = menuMapper.selectByExample(example);
+            List<MenuBean> menus = menuMapper.selectByExample(example);
             List<MenuTreeBean> treeList = new ArrayList<>();
             this.getTreeList(treeList, menus, null);
             return treeList;
@@ -149,8 +151,8 @@ public class MenuServiceImpl implements MenuService {
      * @param menus
      * @param treeBean
      */
-    private void getTreeList(List<MenuTreeBean> treeList, List<MenuInfo> menus, MenuTreeBean treeBean) {
-        for (MenuInfo menu : menus) {
+    private void getTreeList(List<MenuTreeBean> treeList, List<MenuBean> menus, MenuTreeBean treeBean) {
+        for (MenuBean menu : menus) {
             String tempPCode = menu.getParentCode();
             MenuTreeBean tree = new MenuTreeBean(menu);
             if (null == treeBean && ConvertUtils.isEmpty(tempPCode)) {
@@ -178,7 +180,7 @@ public class MenuServiceImpl implements MenuService {
         example.createCriteria()
                 .andIsEnableEqualTo(CommonConstant.DEFAULT_VALUE_ONE)
                 .andMenuTypeNotEqualTo(CommonConstant.DEFAULT_VALUE_TWO);
-        List<MenuInfo> menus = menuMapper.selectByExample(example);
+        List<MenuBean> menus = menuMapper.selectByExample(example);
         JSONArray jsonArray = new JSONArray();
         this.listConvertJson(jsonArray, menus, null);
         return jsonArray;
@@ -282,5 +284,14 @@ public class MenuServiceImpl implements MenuService {
             throw new ErpException(400, "删除菜单失败!");
         }
         return result;
+    }
+
+    /**
+     * 查询出带有特殊符号的菜单地址的集合
+     * @return
+     */
+    @Override
+    public List<String> queryPermissionUrlWithStar() {
+        return null;
     }
 }

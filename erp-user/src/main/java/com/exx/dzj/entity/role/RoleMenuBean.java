@@ -20,6 +20,8 @@ public class RoleMenuBean implements Serializable {
 
     private Integer isHalf;
 
+    private String dataRuleIds;
+
     private Date createTime;
 
     private String createUser;

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exx.dzj.mapper.sys.DataPermissionRulesMapper">
+    
+    <resultMap id="DataPermissionRulesBaseResult" type="com.exx.dzj.entity.datarules.DataPermissionRules">
+        <result property="ruleCode" column="rule_code"/>
+        <result property="menuCode" column="menu_code"/>
+        <result property="ruleName" column="rule_name"/>
+        <result property="ruleColumn" column="rule_column"/>
+        <result property="ruleConditions" column="rule_conditions"/>
+        <result property="ruleValue" column="rule_value"/>
+    </resultMap>
+
+    <sql id="QueryDataPermissionRulesSQL">
+        SELECT
+          rule_code, menu_code, rule_name, rule_column, rule_conditions, rule_value
+        FROM tab_data_permission_rules
+        WHERE is_enable = 1
+    </sql>
+
+    <!-- 查询  数据权限列表数据 -->
+    <select id="queryDataPermissionRules" resultMap="DataPermissionRulesBaseResult"
+            parameterType="com.exx.dzj.entity.datarules.DataRulesParam">
+        <include refid="QueryDataPermissionRulesSQL"/>
+        <if test="ruleCode != null and ruleCode!=''">
+            AND rule_code = #{ruleCode}
+        </if>
+        <if test="menuCode != null and menuCode!=''">
+            AND menu_code = #{menuCode}
+        </if>
+    </select>
+
+    <!-- 查询  数据权限详细信息 -->
+    <select id="queryDataPermissionRulesInfo" resultMap="DataPermissionRulesBaseResult"
+            parameterType="com.exx.dzj.entity.datarules.DataRulesParam">
+        <include refid="QueryDataPermissionRulesSQL"/>
+        <if test="ruleCode != null and ruleCode!=''">
+            AND rule_code = #{ruleCode}
+        </if>
+        <if test="menuCode != null and menuCode!=''">
+            AND menu_code = #{menuCode}
+        </if>
+    </select>
+
+    <!-- 保存 数据权限信息 -->
+    <insert id="saveDataPermissionRules" parameterType="com.exx.dzj.entity.datarules.DataPermissionRules">
+        INSERT INTO tab_data_permission_rules
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ruleCode!=null and ruleCode!=''">
+                rule_code,
+            </if>
+            <if test="menuCode!=null and menuCode!=''">
+              menu_code,
+            </if>
+            <if test="ruleName!=null and ruleName!=''">
+              rule_name,
+            </if>
+            <if test="ruleColumn!=null and ruleColumn!=''">
+              rule_column,
+            </if>
+            <if test="ruleConditions!=null and ruleConditions!=''">
+              rule_conditions,
+            </if>
+            <if test="ruleValue!=null and ruleValue!=''">
+              rule_value,
+            </if>
+            <if test="createUser!=null and createUser!=''">
+              create_user,
+            </if>
+              create_time
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="ruleCode!=null and ruleCode!=''">
+                #{ruleCode},
+            </if>
+            <if test="menuCode!=null and menuCode!=''">
+                #{menuCode},
+            </if>
+            <if test="ruleName!=null and ruleName!=''">
+                #{ruleName},
+            </if>
+            <if test="ruleColumn!=null and ruleColumn!=''">
+                #{ruleColumn},
+            </if>
+            <if test="ruleConditions!=null and ruleConditions!=''">
+                #{ruleConditions},
+            </if>
+            <if test="ruleValue!=null and ruleValue!=''">
+                #{ruleValue},
+            </if>
+            <if test="createUser!=null and createUser!=''">
+                #{createUser},
+            </if>
+              SYSDATE()
+        </trim>
+    </insert>
+
+    <!-- 修改 或 删除数据 -->
+    <update id="modifyDataPermissionRules" parameterType="com.exx.dzj.entity.datarules.DataPermissionRules">
+        UPDATE tab_data_permission_rules
+        <set>
+            <if test="ruleName!=null and ruleName!=''">
+                rule_name = #{ruleName},
+            </if>
+            <if test="ruleColumn!=null and ruleColumn!=''">
+                rule_column = #{ruleColumn},
+            </if>
+            <if test="ruleConditions!=null and ruleConditions!=''">
+                rule_conditions = #{ruleConditions},
+            </if>
+            <if test="ruleValue!=null and ruleValue!=''">
+                rule_value = #{ruleValue},
+            </if>
+            <if test="isEnable!=null">
+                is_enable = #{isEnable},
+            </if>
+        </set>
+        WHERE rule_code = #{ruleCode}
+    </update>
+</mapper>

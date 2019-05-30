@@ -330,6 +330,7 @@
 
   <!-- 查询 用户(业务员)数据 -->
   <select id="querySalesman" resultType="com.exx.dzj.entity.user.UserInfo">
+    <![CDATA[
     SELECT
         user_code userCode,
         salesman_code salesmanCode,
@@ -338,7 +339,8 @@
         tab_user_info ui
     WHERE
         ui.is_quit = 1
-        and salesman_code IS NOT NULL
+        and salesman_code IS NOT NULL and length(salesman_code) > 0
+    ]]>
   </select>
 
   <!-- 查询公司员工列表数据 -->
@@ -385,6 +387,42 @@
     <if test="isQuit != null">
       and tu.is_quit = #{isQuit}
     </if>
+    ORDER BY tu.is_quit DESC
+  </select>
+  
+  <select id="queryList" resultType="com.exx.dzj.entity.user.UserModel">
+    SELECT
+    tu.user_code userCode,
+    tu.user_name userName,
+    tu.real_name realName,
+    tu.salesman_code salesmanCode,
+    tu.head_img headImg,
+    tu.phone_num phoneNum,
+    td.dept_name deptName,
+    tu.email,
+    CASE
+    WHEN tu.gender = 0 THEN
+    '女'
+    WHEN tu.gender = 1 THEN
+    '男'
+    ELSE
+    '保密'
+    END genderName,
+    tu.is_quit isQuit,
+    CASE
+    WHEN tu.is_quit = 1 THEN
+    '在职'
+    WHEN tu.is_quit = 0 THEN
+    '离职'
+    ELSE
+    '未知'
+    END quitDesc
+    FROM
+    tab_user_info tu
+    LEFT JOIN tab_dept_info td ON tu.dept_code = td.dept_code
+    <where>
+      ${ew.sqlSegment}
+    </where>
     ORDER BY tu.is_quit DESC
   </select>
 

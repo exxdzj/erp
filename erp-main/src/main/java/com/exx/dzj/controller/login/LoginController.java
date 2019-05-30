@@ -1,10 +1,6 @@
 package com.exx.dzj.controller.login;
 
-import com.exx.dzj.annotation.SysLog;
-import com.exx.dzj.constant.LogLevel;
-import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.login.LoginInfo;
-import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.facade.login.LoginFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.shiro.util.JwtUtil;
@@ -13,15 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.Date;
 
 /**
  * @Author

@@ -26,4 +26,8 @@ public class StockBean extends StockInfo implements Serializable {
     private BigDecimal minSellPrice;
 
     private Integer minInventory;
+    /**默认存货地点编码*/
+    private String stockAddressCode;
+    /**默认存货地点*/
+    private String stockAddress;
 }

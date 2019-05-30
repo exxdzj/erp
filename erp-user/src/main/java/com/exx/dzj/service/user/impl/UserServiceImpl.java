@@ -1,5 +1,7 @@
 package com.exx.dzj.service.user.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exx.dzj.annotation.SysLog;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.constant.LogLevel;
@@ -28,7 +30,7 @@ import java.util.List;
  * @Description 用户(业务员) service
  */
 @Service("salesmanService")
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -138,6 +140,16 @@ public class UserServiceImpl implements UserService {
         Result result = Result.responseSuccess();
         PageHelper.startPage(pageNum, pageSize);
         List<UserModel> list = userMapper.queryUserList(query);
+        ERPage<UserModel> pages = new ERPage<UserModel>(list);
+        result.setData(pages);
+        return result;
+    }
+
+    @Override
+    public Result queryList(int pageNum, int pageSize, QueryWrapper queryWrapper) {
+        Result result = Result.responseSuccess();
+        PageHelper.startPage(pageNum, pageSize);
+        List<UserModel> list = userMapper.queryList(queryWrapper);
         ERPage<UserModel> pages = new ERPage<UserModel>(list);
         result.setData(pages);
         return result;

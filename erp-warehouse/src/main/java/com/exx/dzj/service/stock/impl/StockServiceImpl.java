@@ -114,6 +114,7 @@ public class StockServiceImpl implements StockService {
                 stockMapper.insertSelective(stockInfo);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(stockNumPrice)){
                     stockNumPrice.setStockCode(stockCode);
+                    stockNumPrice.setIsDefault(CommonConstant.DEFAULT_VALUE_ONE);
                     priceMapper.insertSelective(stockNumPrice);
                 }
             }
