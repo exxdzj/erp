@@ -114,9 +114,13 @@
       DICTIONPAY.dict_name AS paymentStatus,
       SINFO.invoice_code AS invoiceCode,
       DICTIONPRO.dict_name AS saleProject,
+      SALESOURCE.dict_name AS saleSourceName,
       UINFO.real_name AS userName,
       SINFO.user_code AS userCode,
       SINFO.create_user AS createUser,
+      SINFO.sale_source AS saleSource,
+      SINFO.is_receipt AS isReceipt,
+      SINFO.subordinate_company_name AS subordinateCompanyName,
       logistics.logistic_company_name AS logisticsCompamyName,
       logistics.freight_code AS freightCode,
       SINFO.remarks AS remarks
@@ -124,6 +128,7 @@
     LEFT JOIN tab_sale_logistic_info logistics ON SINFO.sale_code = logistics.sale_code
     LEFT JOIN tab_dictionary_info DICTIONPAY ON SINFO.payment_status=DICTIONPAY.dict_code AND DICTIONPAY.data_type='collection_status'
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
+    LEFT JOIN tab_dictionary_info SALESOURCE ON SINFO.sale_project=SALESOURCE.dict_code AND DICTIONPRO.data_type='source_sales_order'
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code
     LEFT JOIN tab_user_info UINFO ON SINFO.salesman_code = UINFO.salesman_code
     WHERE 1=1
@@ -168,6 +173,8 @@
       SINFO.is_enable ,
       SINFO.create_time ,
       SINFO.remarks ,
+      SINFO.is_receipt ,
+      SINFO.sale_source ,
       SINFO.create_user ,
       SINFO.collection_user_name,
       SINFO.payment_term ,
@@ -209,6 +216,8 @@
     <result column="due_date" jdbcType="DATE" property="dueDate" />
     <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="is_receipt" jdbcType="VARCHAR" property="isReceipt" />
+    <result column="sale_source" jdbcType="VARCHAR" property="saleSource" />
     <result column="create_user" jdbcType="VARCHAR" property="createUser" />
     <result column="collection_user_name" jdbcType="VARCHAR" property="collectionUserName" />
     <result column="create_time" jdbcType="VARCHAR" property="createTime" />
@@ -351,6 +360,12 @@
       <if test="saleTicketType != null">
         sale_ticket_type,
       </if>
+      <if test="saleSource != null and saleSource != ''">
+        sale_source,
+      </if>
+      <if test="isReceipt != null and isReceipt != ''">
+        is_receipt,
+      </if>
       create_time
     </trim>
     <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
@@ -446,6 +461,12 @@
       </if>
       <if test="saleTicketType != null">
         #{saleTicketType},
+      </if>
+      <if test="saleSource != null and saleSource != ''">
+        #{saleSource},
+      </if>
+      <if test="isReceipt != null and isReceipt != ''">
+        #{isReceipt},
       </if>
       sysdate()
     </trim>
@@ -675,6 +696,12 @@
       </if>
       <if test="paymentTerm != null">
         payment_term = #{paymentTerm,jdbcType=VARCHAR},
+      </if>
+      <if test="saleSource != null and saleSource!= ''">
+        sale_source = #{saleSource,jdbcType=VARCHAR},
+      </if>
+      <if test="isReceipt != null and isReceipt != ''">
+        is_receipt = #{isReceipt,jdbcType=INTEGER},
       </if>
       update_time = SYSDATE()
     </set>

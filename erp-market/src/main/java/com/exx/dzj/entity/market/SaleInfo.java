@@ -107,4 +107,15 @@ public class SaleInfo implements Serializable {
     private String freightCode;
     private String logisticsCompamyName;
     private String realName;
+
+    /**销售单来源*/
+    private String saleSource;
+    private String saleSourceName;
+
+    /**销售员所属公司*/
+    private String subordinateCompanyCode;
+    private String subordinateCompanyName;
+
+    /**是否签收*/
+    private Integer isReceipt;
 }
