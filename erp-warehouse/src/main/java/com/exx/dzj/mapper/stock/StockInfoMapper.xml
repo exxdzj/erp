@@ -401,6 +401,11 @@
   <!-- 列表 SQL 片段 -->
   <sql id="QueryStockListSQL">
     SELECT
+      concat_ws(
+          '/',
+          ti.stock_name,
+          ti.specificate_type
+      ) AS `value`,
       ti.stock_code stockCode,
       ti.stock_address stockAddress,
       ti.stock_address_code stockAddressCode,
