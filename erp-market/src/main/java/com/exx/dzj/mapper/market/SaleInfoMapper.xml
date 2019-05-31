@@ -748,13 +748,40 @@
     SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
 	  WHERE sinfo.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND SYSDATE();
   </select>
-  
+
+  <select id="querySumSalesOnMonth" resultType="java.math.BigDecimal">
+    SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
+	  WHERE sinfo.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
+                            AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
+  </select>
+
   <select id="queryAdditionalSumSalesOnDay" resultType="java.math.BigDecimal">
     SELECT
         SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
+        +
+        sum((SELECT
+                sum(CASE
+                        WHEN bb.real_sell_price > 0 THEN bb.goods_num * bb.real_sell_price
+                    ELSE 0
+                    END)
+              FROM tab_sale_goods_detail bb WHERE bb.sale_code = s.sale_code))
     FROM tab_sale_info s
     WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND SYSDATE()
+  </select>
 
+  <select id="queryAdditionalSumSalesOnMonth" resultType="java.math.BigDecimal">
+    SELECT
+        SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
+        +
+        sum((SELECT
+                sum(CASE
+                        WHEN bb.real_sell_price > 0 THEN bb.goods_num * bb.real_sell_price
+                    ELSE 0
+                    END)
+              FROM tab_sale_goods_detail bb WHERE bb.sale_code = s.sale_code))
+    FROM tab_sale_info s
+    WHERE s.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
+                      AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
   </select>
 
   <select id="querySumSalesOnYear" resultType="java.math.BigDecimal">

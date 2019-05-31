@@ -37,7 +37,11 @@ public interface SaleInfoMapper {
 
     BigDecimal querySumSalesOnDay();
 
+    BigDecimal querySumSalesOnMonth();
+
     BigDecimal queryAdditionalSumSalesOnDay();
+
+    BigDecimal queryAdditionalSumSalesOnMonth();
 
     BigDecimal querySumSalesOnYear();
 

@@ -7,7 +7,7 @@ package com.exx.dzj.enummodel;
 public enum InsuranceCustomerLevelEnum {
     GOVERNOR("zj01", "总监"),
     MANAGER("jl02", "经理"),
-    DIRECTOR("zr03", "主任"),
+    DIRECTOR("zr03", "主管"),
     SALE("ywy04", "业务员"),
     OTHER("qt05", "其他");
 

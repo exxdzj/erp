@@ -69,7 +69,9 @@ public interface CustomerService {
 
     ERPage<CustomerSupplierBean> selectionCustomer (CustomerSupplierQuery query);
 
-    public int countCustomerSupplier (int type);
+    int countCustomerSupplier (int type);
+
+    int newlyIncreasedCutomerCount (int type);
 
     List<InsuranceCustomer> queryStatisticsCustomer();
 

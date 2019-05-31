@@ -50,19 +50,38 @@ public class HomePageFacade {
         int customerCount = customerSupplierService.countCustomerSupplier(CommonConstant.DEFAULT_VALUE_ONE);
         topData.put("customerCount", customerCount);
 
+        //当日新增客户数
+        int newlyCount = customerSupplierService.newlyIncreasedCutomerCount(CommonConstant.DEFAULT_VALUE_ONE);
+        topData.put("newlyCount", newlyCount);
+
         // 今日销售额
         BigDecimal sumSalesOnDay = salesTicketService.querySumSalesOnDay();
         topData.put("sumSalesOnDay", sumSalesOnDay);
 
-        // 今日额外销售额
+        // 当月销售额
+        BigDecimal sumSalesOnMonth = salesTicketService.querySumSalesOnMonth();
+        topData.put("sumSalesOnMonth", sumSalesOnMonth);
+
+        // 今日额外支付费用 商品成本 + 商品编码以cb开头(快递费用)
         BigDecimal sumAdditionalSalesOnDay = salesTicketService.queryAdditionalSumSalesOnDay();
+
         if (sumAdditionalSalesOnDay == null){
             sumAdditionalSalesOnDay = ZERO;
         }
-        // 计算纯利润
-        BigDecimal subtract = sumSalesOnDay.subtract(sumAdditionalSalesOnDay);
 
-        topData.put("sumAdditionalSalesOnDay", subtract);
+        // 当月额外支付费用
+        BigDecimal sumAdditionalSalesOnMonth = salesTicketService.queryAdditionalSumSalesOnMonth();
+        if (sumAdditionalSalesOnMonth == null){
+            sumAdditionalSalesOnMonth = ZERO;
+        }
+
+        // 计算日利润
+        BigDecimal subtractDay = sumSalesOnDay.subtract(sumAdditionalSalesOnDay);
+        // 计算月利润
+        BigDecimal subtractMonth = sumSalesOnMonth.subtract(sumAdditionalSalesOnMonth);
+
+        topData.put("sumAdditionalSalesOnDay", subtractDay);
+        topData.put("sumAdditionalSalesOnMonth", subtractMonth);
 
         //年度销售额
         BigDecimal sumSalesOnYear = salesTicketService.querySumSalesOnYear();

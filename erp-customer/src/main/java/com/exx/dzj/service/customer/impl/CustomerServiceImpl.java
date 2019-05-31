@@ -183,6 +183,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public int newlyIncreasedCutomerCount(int type) {
+        return csMapper.newlyIncreasedCutomerCount(type);
+    }
+
+    @Override
     public List<InsuranceCustomer> queryStatisticsCustomer() {
         return csMapper.queryStatisticsCustomer();
     }

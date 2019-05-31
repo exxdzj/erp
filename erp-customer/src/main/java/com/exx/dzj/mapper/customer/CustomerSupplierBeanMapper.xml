@@ -565,6 +565,12 @@
   <select id="countCustomerSupplier" resultType="int">
     SELECT COUNT(1) FROM tab_customer_supplier WHERE cust_type IN (#{type}, 3)
   </select>
+
+  <select id="newlyIncreasedCutomerCount" resultType="int">
+    SELECT COUNT(1) FROM tab_customer_supplier
+    WHERE cust_type IN (#{type}, 3)
+    AND create_time BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND SYSDATE()
+  </select>
   
   <select id="queryStatisticsCustomer" resultMap="insuranceCustomerMap">
     SELECT rank_code, rank_name, COUNT(rank_code) AS `count` FROM tab_customer_supplier where

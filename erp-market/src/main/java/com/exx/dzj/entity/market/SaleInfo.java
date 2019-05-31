@@ -1,5 +1,6 @@
 package com.exx.dzj.entity.market;
 
+import com.exx.dzj.page.BaseModule;
 import lombok.Data;
 import lombok.ToString;
 
@@ -12,7 +13,8 @@ import java.util.List;
 
 @Data
 @ToString
-public class SaleInfo implements Serializable {
+public class SaleInfo extends BaseModule {
+    private static final long serialVersionUID = 4886114971525378166L;
     private Integer id;
 
     private String saleCode;

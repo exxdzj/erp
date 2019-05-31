@@ -66,8 +66,8 @@ public class SalesTickeContorller {
     @GetMapping("querysalesticket")
     public Result querySalesTickets(HttpServletRequest request, HttpServletResponse response, SaleInfo saleInfo){
         Result result = Result.responseSuccess();
-        int pageNum = MathUtil.toInt(request.getParameter("pageNum"), CommonConstant.DEFAULT_VALUE_ZERO);
-        int pageSize = MathUtil.toInt(request.getParameter("pageSize"), CommonConstant.DEFAULT_PAGE_SIZE);
+        int pageNum = MathUtil.toInt(saleInfo.getPageNum(), CommonConstant.DEFAULT_VALUE_ZERO);
+        int pageSize = MathUtil.toInt(saleInfo.getPageSize(), CommonConstant.DEFAULT_PAGE_SIZE);
         ERPage<SaleInfo> saleInfoPage = salesTicketFacade.querySalesTicketList(saleInfo, pageNum, pageSize);
         result.setData(saleInfoPage);
         return result;

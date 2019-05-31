@@ -71,6 +71,8 @@ public interface CustomerSupplierBeanMapper {
 
     int countCustomerSupplier(@Param("type") int type);
 
+    int newlyIncreasedCutomerCount(@Param("type") int type);
+
     List<InsuranceCustomer> queryStatisticsCustomer();
 
     List<InsuranceCustomer> queryIncreaseCutomerForMonth();
