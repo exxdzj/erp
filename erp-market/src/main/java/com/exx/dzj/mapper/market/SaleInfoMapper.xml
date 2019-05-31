@@ -746,7 +746,7 @@
 
   <select id="querySumSalesOnDay" resultType="java.math.BigDecimal">
     SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
-	  WHERE sinfo.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND SYSDATE();
+	  WHERE sinfo.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
   </select>
 
   <select id="querySumSalesOnMonth" resultType="java.math.BigDecimal">
@@ -766,7 +766,7 @@
                     END)
               FROM tab_sale_goods_detail bb WHERE bb.sale_code = s.sale_code))
     FROM tab_sale_info s
-    WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND SYSDATE()
+    WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
   </select>
 
   <select id="queryAdditionalSumSalesOnMonth" resultType="java.math.BigDecimal">
@@ -807,11 +807,22 @@
   </resultMap>
   
   <select id="salesUncollectedTop" resultMap="salesUncollectedTopMap">
+    <!--SELECT u.salesman_code,u.real_name,-->
+	  <!--(sum(s.receivable_accoun) - (select sum(collected_amount) from tab_sale_receipts_details p where p.sale_code = s.sale_code)) AS receivable_accoun-->
+    <!--FROM tab_sale_info s-->
+    <!--LEFT JOIN tab_user_info u ON s.salesman_code = u.salesman_code-->
+    <!--WHERE DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')        &lt;!&ndash; DATE_FORMAT(sysdate(), '%Y-%m-%d')&ndash;&gt;-->
+    <!--AND s.salesman_code = u.user_code-->
+    <!--GROUP BY s.salesman_code,u.real_name-->
+    <!--ORDER BY receivable_accoun DESC-->
+    <!--LIMIT 10-->
+
     SELECT u.salesman_code,u.real_name,
-	  (sum(s.receivable_accoun) - (select sum(collected_amount) from tab_sale_receipts_details p where p.sale_code = s.sale_code)) AS receivable_accoun
+    (SUM(s.receivable_accoun) - (SELECT SUM(collected_amount) FROM tab_sale_receipts_details p WHERE p.sale_code = s.sale_code)) AS receivable_accoun
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.salesman_code = u.salesman_code
-    WHERE DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')        <!-- DATE_FORMAT(sysdate(), '%Y-%m-%d')-->
+    #WHERE DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')
+    WHERE s.sale_date BETWEEN date_add(curdate(),INTERVAL - DAY(curdate())+1 DAY) AND date_add(curdate() - DAY(curdate()) +1,INTERVAL 1 MONTH)
     AND s.salesman_code = u.user_code
     GROUP BY s.salesman_code,u.real_name
     ORDER BY receivable_accoun DESC
@@ -821,5 +832,21 @@
   <resultMap id="salesUncollectedTopMap" type="com.exx.dzj.entity.market.SaleInfo">
     <result column="real_name" property="realName"/>
     <result column="receivable_accoun" property="receivableAccoun"/>
+  </resultMap>
+
+  <select id="querySalesTicketTop" resultMap="saleTicketTopMap">
+    SELECT u.real_name,s.salesman_code, COUNT(s.salesman_code) AS countTicket
+    FROM tab_sale_info s
+    LEFT JOIN tab_user_info u ON s.salesman_code = u.salesman_code
+        WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
+									AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
+				GROUP BY s.salesman_code
+				ORDER BY countTicket DESC
+				LIMIT 10
+  </select>
+  
+  <resultMap id="saleTicketTopMap" type="com.exx.dzj.entity.market.SaleInfo">
+    <result column="real_name" property="realName"/>
+    <result column="countTicket" property="countTicket"/>
   </resultMap>
 </mapper>

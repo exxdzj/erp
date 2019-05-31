@@ -58,4 +58,12 @@ public interface StockInfoMapper {
     void updateStockInfoSourceModel(StockBean stockInfo);
 
     List<StockBean> stockInventoryWarning(@Param("warningNum") int warningNum);
+
+    List<StockBean> queryStockInfoForPurchaseAudit(@Param("stockCode") String stockCode);
+
+    void insertStockNumPriceForPurchaseAudit(StockNumPrice stockNumPrice);
+
+    List<StockNumPrice> queryMultipleStocks(@Param("stockCode") String stockCode);
+
+    StockNumPrice queryStockNumPirckList(StockNumPrice stockNumPrice);
 }

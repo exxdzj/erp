@@ -1,8 +1,10 @@
 package com.exx.dzj.controller.stock;
 
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockInfo;
+import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.entity.stock.StockQuery;
 import com.exx.dzj.facade.stock.StockFacade;
 import com.exx.dzj.result.Result;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @Author
@@ -128,6 +131,29 @@ public class StockController {
     public Result addInventoryService(HttpServletRequest request, HttpServletResponse response, @RequestBody StockBean stockBean){
         Result result = Result.responseSuccess();
         stockFacade.insertStockInfo(stockBean);
+        return result;
+    }
+
+    /**
+     * @description 新增销售单查询多仓库
+     * @author yangyun
+     * @date 2019/5/31 0031
+     * @param stockCode
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querymultiplestocks/{stockCode}")
+    public Result queryMultipleStocks (@PathVariable("stockCode") String stockCode){
+        Result result = Result.responseSuccess();
+        List<DictionaryInfo> data = stockFacade.queryMultipleStocks(stockCode);
+        result.setData(data);
+        return result;
+    }
+
+    @GetMapping("querystocknumpircklist")
+    public Result queryStockNumPirckList ( StockNumPrice stockNumPrice){
+        Result result = Result.responseSuccess();
+        StockNumPrice snp = stockFacade.queryStockNumPirckList(stockNumPrice);
+        result.setData(snp);
         return result;
     }
 }

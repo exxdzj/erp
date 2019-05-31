@@ -6,6 +6,7 @@ import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
 import com.exx.dzj.entity.stock.StockBean;
+import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.purchasegoods.PurchaseGoodsService;
@@ -14,6 +15,7 @@ import com.exx.dzj.service.purchaseticket.PurchaseTicketService;
 import com.exx.dzj.service.stock.StockService;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,6 +86,19 @@ public class PurchaseTicketFacade {
                 purchaseReceiptsDetailsBeans.add(prd);
                 purchaseReceiptsService.batchInsertPurchaseReceipts(purchaseReceiptsDetailsBeans);
             }
+        }
+    }
+
+    /**
+     * @description 采购商品关联仓库
+     * @author yangyun
+     * @date 2019/5/31 0031
+     * @param purchaseGoodsDetailBeans
+     * @return void
+     */
+    private void purcahseGoodsRelevanceStock (List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans){
+        for (PurchaseGoodsDetailBean pdb : purchaseGoodsDetailBeans){
+
         }
     }
 
@@ -300,15 +315,37 @@ public class PurchaseTicketFacade {
 
         if (!CollectionUtils.isEmpty(purchaseGoodsDetailBeans)){
             String userCode = userTokenFacade.queryUserCodeForToken(null);
-
             for (PurchaseGoodsDetailBean purchaseGoods : purchaseGoodsDetailBeans){
-
-                // 根据存货编号查询对应商品
-                StockBean stockInfo = stockInfoService.queryStockInfo(purchaseGoods.getStockCode());
-                if (stockInfo != null){
+                // 根据存货编号查询多仓库商品
+                List<StockBean> stockInfo = stockInfoService.queryStockInfoForPurchaseAudit(purchaseGoods.getStockCode());
+                for (StockBean sb : stockInfo){
+                    if (StringUtils.equals(purchaseGoods.getStockAddressCode(), sb.getStockAddressCode())) {
+                        int standardSellPrice = sb.getStandardSellPrice() == null ? 0 : sb.getStandardSellPrice().intValue();
+                        if (CommonConstant.DEFAULT_VALUE_ZERO == standardSellPrice){
+                            // 标准卖价没定, 新商品为入库
+                            sb.setIsShelves(CommonConstant.DEFAULT_VALUE_TWO);
+                        }
+                        sb.setMinInventory(purchaseGoods.getRealGoodsNum());
+                        stockInfoService.updateStockGoodsInventory(sb);
+                        sb.setUpdateUser(userCode);
+                        sb.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);
+                        stockInfoService.updateStockInfoSourceModel(sb);
+                    } else {
+                        StockNumPrice stockNumPrice = new StockNumPrice();
+                        BeanUtils.copyProperties(sb, stockNumPrice);
+                        stockNumPrice.setStockAddressCode(purchaseGoods.getStockAddressCode());
+                        stockNumPrice.setStockAddress(purchaseGoods.getStockAddress());
+                        stockNumPrice.setMinInventory(purchaseGoods.getRealGoodsNum());
+                        stockNumPrice.setIsDefault(CommonConstant.DEFAULT_VALUE_ZERO);
+                        stockNumPrice.setCreateUser(userCode);
+                        stockInfoService.insertStockNumPriceForPurchaseAudit(stockNumPrice);
+                    }
+                }
+                /*if (stockInfo != null){ // 只需在原始基础上累加库存数
                     // 添加库存
                     int standardSellPrice = stockInfo.getStandardSellPrice() == null ? 0 : stockInfo.getStandardSellPrice().intValue();
                     if (CommonConstant.DEFAULT_VALUE_ZERO == standardSellPrice){
+                        // 标准卖价没定, 新商品为入库
                         stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_TWO);
                     }
                     stockInfo.setMinInventory(purchaseGoods.getRealGoodsNum());
@@ -316,7 +353,17 @@ public class PurchaseTicketFacade {
                     stockInfo.setUpdateUser(userCode);
                     stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);
                     stockInfoService.updateStockInfoSourceModel(stockInfo);
-                }
+                } else {
+                    // 需要新增一条记录, 分不同仓库
+                    stockInfo = new StockBean();
+                    stockInfo.setStockCode(purchaseGoods.getStockCode());
+                    stockInfo.setStockAddressCode(purchaseGoods.getStockAddressCode());
+                    stockInfo.setStockAddress(purchaseGoods.getStockAddress());
+                    stockInfo.setStockName(purchaseGoods.getStockName());
+                    stockInfo.setMinInventory(purchaseGoods.getRealGoodsNum());
+                    stockInfo.setStandardBuyPrice(purchaseGoods.getRealSellPrice());
+
+                }*/
             }
         }
     }

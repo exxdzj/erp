@@ -46,5 +46,8 @@ public interface SaleInfoMapper {
     BigDecimal querySumSalesOnYear();
 
     List<SaleInfo> querySalesTop();
+
     List<SaleInfo> salesUncollectedTop();
+
+    List<SaleInfo> querySalesTicketTop();
 }

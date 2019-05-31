@@ -68,4 +68,12 @@ public interface StockService {
     void updateStockInfoSourceModel(StockBean stockInfo);
 
     List<StockBean> stockInventoryWarning (int warningNum);
+
+    List<StockBean> queryStockInfoForPurchaseAudit(String stockCode);
+
+    void insertStockNumPriceForPurchaseAudit(StockNumPrice stockNumPrice);
+
+    List<StockNumPrice> queryMultipleStocks (String stockCode);
+
+    StockNumPrice queryStockNumPirckList (StockNumPrice stockNumPrice);
 }

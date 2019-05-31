@@ -1,5 +1,6 @@
 package com.exx.dzj.service.salesgoodsdetail.impl;
 
+import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.mapper.market.SaleGoodsDetailBeanMapper;
 import com.exx.dzj.service.salesgoodsdetail.SalesGoodsDetailService;
@@ -36,6 +37,12 @@ public class SalesGoodsDetailServiceImpl implements SalesGoodsDetailService {
     @Override
     public SaleGoodsDetailBean querySaleGoodsDetail(SaleGoodsDetailBean bean) {
         return saleGoodsDetailBeanMapper.querySaleGoodsDetail(bean);
+    }
+
+    @Override
+    public SaleGoodsDetailBean queryGoodsForStock(LogisticsInfo logisticsInfo) {
+        return saleGoodsDetailBeanMapper.queryGoodsForStock(logisticsInfo);
+//        return null;
     }
 
 

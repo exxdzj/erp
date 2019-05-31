@@ -120,4 +120,6 @@ public class SaleInfo extends BaseModule {
 
     /**是否签收*/
     private Integer isReceipt;
+
+    private Integer countTicket;
 }

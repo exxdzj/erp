@@ -569,7 +569,7 @@
   <select id="newlyIncreasedCutomerCount" resultType="int">
     SELECT COUNT(1) FROM tab_customer_supplier
     WHERE cust_type IN (#{type}, 3)
-    AND create_time BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND SYSDATE()
+    AND create_time BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
   </select>
   
   <select id="queryStatisticsCustomer" resultMap="insuranceCustomerMap">

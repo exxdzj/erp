@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,5 +168,25 @@ public class StockFacade {
     public void batchInventoryDataProccess (Map<String, List> map){
 
         stockInfoService.batchInventoryDataProccess(map);
+    }
+
+    public List<DictionaryInfo> queryMultipleStocks (String stockCode){
+        List<StockNumPrice> list = stockInfoService.queryMultipleStocks(stockCode);
+
+        List<DictionaryInfo> data = new ArrayList<>();
+
+        if (!CollectionUtils.isEmpty(list)){
+            for (StockNumPrice snp : list){
+                DictionaryInfo di = new DictionaryInfo();
+                di.setDictCode(snp.getStockAddressCode());
+                di.setDictName(snp.getStockAddress());
+                data.add(di);
+            }
+        }
+        return data;
+    }
+
+    public StockNumPrice queryStockNumPirckList (StockNumPrice stockNumPrice) {
+        return stockInfoService.queryStockNumPirckList(stockNumPrice);
     }
 }

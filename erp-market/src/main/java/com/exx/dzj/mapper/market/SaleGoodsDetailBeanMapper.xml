@@ -530,4 +530,9 @@
     WHERE sale_code = #{saleCode}
       AND stock_code = #{stockCode}
   </select>
+
+  <select id="queryGoodsForStock" parameterType="com.exx.dzj.entity.market.LogisticsInfo" resultType="com.exx.dzj.entity.market.SaleGoodsDetailBean">
+    SELECT  stock_code, stock_address_code, goods_num
+	FROM tab_sale_goods_detail WHERE sale_code = #{saleCode} and stock_code = #{stockCode} and stock_address_code = #{stockAddressCode}
+  </select>
 </mapper>

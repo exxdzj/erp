@@ -344,11 +344,11 @@
   <insert id="addLogisticsInfo" parameterType="com.exx.dzj.entity.market.LogisticsInfo">
     INSERT INTO tab_sale_logistic_info
       (logistic_company_code, logistic_company_name, freight_code, deliver_goods_time, selector_phone_num, remark,
-        logistics_kind, sale_code, express_fee, charge_method, create_user, stock_code, stock_name, crate_time)
+        logistics_kind, sale_code, express_fee, charge_method, create_user, stock_code, stock_name,stock_address_code, crate_time)
     VALUES
       (
         #{logisticsCompanyCode}, #{logisticsCompamyName}, #{freihtCode}, #{deliverGoodsTime}, #{selectorPhoneNum}, #{remark},
-        #{logisticsKind}, #{saleCode}, #{expressFee}, #{chargeMethod}, #{createUser}, #{stockCode}, #{stockCode}, SYSDATE()
+        #{logisticsKind}, #{saleCode}, #{expressFee}, #{chargeMethod}, #{createUser}, #{stockCode}, #{stockCode},#{stockAddressCode} SYSDATE()
       )
   </insert>
 

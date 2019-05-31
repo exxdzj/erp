@@ -176,6 +176,10 @@ public class HomePageFacade {
 
         dataList.add(ic);
 
+//        for (){
+//
+//        }
+
 
         InsuranceCustomerLevelEnum[] values = InsuranceCustomerLevelEnum.values();
         String[] strs = new String[values.length];
@@ -211,7 +215,7 @@ public class HomePageFacade {
         List<SaleInfo> list = salesTicketService.salesUncollectedTop();
         Iterator<SaleInfo> iterator = list.iterator();
         while (iterator.hasNext()){
-            if (iterator.next().getReceivableAccoun().compareTo(ZERO) <= 0){
+            if (iterator.next().getReceivableAccoun().compareTo(ZERO) <= CommonConstant.DEFAULT_VALUE_ZERO){
                 iterator.remove();
             }
         }
@@ -222,5 +226,18 @@ public class HomePageFacade {
         List<StockBean> stockBeanList = stockInfoService.stockInventoryWarning(CommonConstant.STOCK_INVENTORY_WARNING);
         return stockBeanList;
     }
+
+    public List<SaleInfo> querySalesTicketTop (){
+        List<SaleInfo> list = salesTicketService.querySalesTicketTop();
+
+//        Iterator<SaleInfo> iterator = list.iterator();
+//        while (iterator.hasNext()){
+//            if (iterator.next().getCountTicket() ){
+//
+//            }
+//        }
+        return list;
+    }
+
 
 }

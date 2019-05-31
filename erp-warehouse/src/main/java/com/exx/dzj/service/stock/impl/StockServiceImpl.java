@@ -242,4 +242,23 @@ public class StockServiceImpl implements StockService {
         stockMapper.batchInsertStockNumPrice(stockNumPriceList);
     }
 
+    public List<StockBean> queryStockInfoForPurchaseAudit(String stockCode) {
+        return stockMapper.queryStockInfoForPurchaseAudit(stockCode);
+    }
+
+    @Override
+    public void insertStockNumPriceForPurchaseAudit(StockNumPrice stockNumPrice) {
+        stockMapper.insertStockNumPriceForPurchaseAudit(stockNumPrice);
+    }
+
+    @Override
+    public List<StockNumPrice> queryMultipleStocks(String stockCode) {
+        return stockMapper.queryMultipleStocks(stockCode);
+    }
+
+    @Override
+    public StockNumPrice queryStockNumPirckList(StockNumPrice stockNumPrice) {
+        return stockMapper.queryStockNumPirckList(stockNumPrice);
+    }
+
 }

@@ -109,7 +109,7 @@ public class HomePageController {
     }
 
     /**
-     * @description 未收款
+     * @description 月未收款
      * @author yangyun
      * @date 2019/5/29 0029
      * @param
@@ -128,6 +128,21 @@ public class HomePageController {
         Result result = Result.responseSuccess();
         List<StockBean> stockBeans = homePageFacade.stockInventoryWarning();
         result.setData(stockBeans);
+        return result;
+    }
+
+    /**
+     * @description 今日销售件数top
+     * @author yangyun
+     * @date 2019/5/31 0031
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querysalestickettop")
+    public Result querySalesTicketTop (){
+        Result result = Result.responseSuccess();
+        List<SaleInfo> list = homePageFacade.querySalesTicketTop();
+        result.setData(list);
         return result;
     }
 

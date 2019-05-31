@@ -30,4 +30,5 @@ public class LogisticsInfo implements Serializable {
     private BigDecimal expressFee;
     private String chargeMethod;
     private String createUser;
+    private String stockAddressCode;
 }

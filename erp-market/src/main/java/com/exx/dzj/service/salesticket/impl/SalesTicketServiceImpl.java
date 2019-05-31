@@ -129,4 +129,9 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     public List<SaleInfo> salesUncollectedTop() {
         return saleInfoMapper.salesUncollectedTop();
     }
+
+    @Override
+    public List<SaleInfo> querySalesTicketTop() {
+        return saleInfoMapper.querySalesTicketTop();
+    }
 }

@@ -4,6 +4,7 @@ import com.exx.dzj.annotation.SaleLog;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.stock.StockBean;
+import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.dictionary.DictionaryService;
@@ -376,20 +377,32 @@ public class SalesTicketFacade {
     @Transactional(rollbackFor = Exception.class)
     public void addLogisticsInfoAndUpdateStockInventory (LogisticsInfo logisticsInfo) {
         try {
-            StockBean stockInfo = stockInfoService.queryStockInfo(logisticsInfo.getStockCode());
+
+
+            // 查询对应仓库商品信息
+            StockNumPrice snp = new StockNumPrice();
+            snp.setStockCode(logisticsInfo.getStockCode());
+            snp.setStockAddressCode(logisticsInfo.getStockAddressCode());
+
+            StockNumPrice stockNumPrice = stockInfoService.queryStockNumPirckList(snp);
+
             saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
 
             // 根据 销售单编号和商品编号,获取销售单卖出商品数量, 并对库存做修改
-            SaleGoodsDetailBean bean = new SaleGoodsDetailBean();
-            bean.setStockCode(logisticsInfo.getStockCode());
-            bean.setSaleCode(logisticsInfo.getSaleCode());
-            SaleGoodsDetailBean saleGoodsDetailBean = salesGoodsDetailService.querySaleGoodsDetail(bean);
+            // 查询销售单销售商品数量
+            SaleGoodsDetailBean saleGoods = salesGoodsDetailService.queryGoodsForStock(logisticsInfo);
+//            SaleGoodsDetailBean bean = new SaleGoodsDetailBean();
+//            bean.setStockCode(logisticsInfo.getStockCode());
+//            bean.setSaleCode(logisticsInfo.getSaleCode());
+//            SaleGoodsDetailBean saleGoodsDetailBean = salesGoodsDetailService.querySaleGoodsDetail(bean);
 
             // 根据 存货编号获取商品信息
-        if (stockInfo != null) {
+        if (stockNumPrice != null) {
             String userCode = userTokenFacade.queryUserCodeForToken(null);
             // 减少库存
-            stockInfo.setMinInventory(-saleGoodsDetailBean.getGoodsNum().intValue());
+            StockBean stockInfo = new StockBean();
+
+            stockInfo.setMinInventory(-saleGoods.getGoodsNum().intValue());
             stockInfoService.updateStockGoodsInventory(stockInfo);
             stockInfo.setUpdateUser(userCode);
 //            stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);

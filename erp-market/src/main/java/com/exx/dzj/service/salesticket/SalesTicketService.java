@@ -41,4 +41,6 @@ public interface SalesTicketService {
     List<SaleInfo> querySalesTop();
 
     List<SaleInfo> salesUncollectedTop();
+
+    List<SaleInfo> querySalesTicketTop ();
 }

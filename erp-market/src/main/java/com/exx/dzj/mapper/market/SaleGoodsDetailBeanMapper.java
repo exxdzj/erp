@@ -1,5 +1,6 @@
 package com.exx.dzj.mapper.market;
 
+import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleGoodsDetailBeanExample;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
@@ -37,4 +38,6 @@ public interface SaleGoodsDetailBeanMapper {
     void batchDeleteSalesGoodsDetail(List<Integer> sgbIds);
 
     SaleGoodsDetailBean querySaleGoodsDetail(SaleGoodsDetailBean bean);
+
+    SaleGoodsDetailBean queryGoodsForStock(LogisticsInfo logisticsInfo);
 }

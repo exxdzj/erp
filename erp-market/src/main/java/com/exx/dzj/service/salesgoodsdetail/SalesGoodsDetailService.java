@@ -1,5 +1,6 @@
 package com.exx.dzj.service.salesgoodsdetail;
 
+import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import org.springframework.stereotype.Component;
 
@@ -19,4 +20,6 @@ public interface SalesGoodsDetailService {
     void batchDeleteSalesGoodsDetail(List<Integer> sgbIds);
 
     SaleGoodsDetailBean querySaleGoodsDetail(SaleGoodsDetailBean bean);
+
+    SaleGoodsDetailBean queryGoodsForStock(LogisticsInfo logisticsInfo);
 }
