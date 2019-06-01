@@ -5,14 +5,11 @@ import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsSelected;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
-import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.market.SalesTicketFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
-import com.exx.dzj.unique.SingletonGeneratorConfig;
 import com.exx.dzj.util.MathUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -145,7 +142,8 @@ public class SalesTickeContorller {
     @GetMapping("salecodegenerator")
     public Result querySaleTicketCode(){
         Result result = Result.responseSuccess();
-        String saleCode = "SCODE" + SingletonGeneratorConfig.getSingleton().next();
+        //String saleCode = "SCODE" + SingletonGeneratorConfig.getSingleton().next();
+        String saleCode = salesTicketFacade.getCode();
         result.setData(saleCode);
         return result;
     }

@@ -189,4 +189,17 @@ public class StockFacade {
     public StockNumPrice queryStockNumPirckList (StockNumPrice stockNumPrice) {
         return stockInfoService.queryStockNumPirckList(stockNumPrice);
     }
+
+    public Result checkStockCode(String stockCode) {
+        StockInfoExample example = new StockInfoExample();
+        StockInfoExample.Criteria criteria = example.createCriteria();
+        criteria.andStockCodeEqualTo(stockCode);
+        long count = stockInfoService.countByExample(example);
+        Result result = Result.responseSuccess();
+        if(count > 0) {
+            result.setCode(400);
+            result.setMsg("编码已存在!");
+        }
+        return result;
+    }
 }

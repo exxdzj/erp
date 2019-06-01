@@ -3,7 +3,6 @@ package com.exx.dzj.controller.stock;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.stock.StockBean;
-import com.exx.dzj.entity.stock.StockInfo;
 import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.entity.stock.StockQuery;
 import com.exx.dzj.facade.stock.StockFacade;
@@ -68,9 +67,7 @@ public class StockController {
      */
     @PostMapping("saveStockInfo")
     public Result saveStockInfo(HttpServletRequest request, HttpServletResponse response, @RequestBody StockBean bean) {
-        Result result = Result.responseSuccess();
-        result = stockFacade.saveStockInfo(bean);
-        return result;
+        return stockFacade.saveStockInfo(bean);
     }
 
     /**
@@ -155,5 +152,10 @@ public class StockController {
         StockNumPrice snp = stockFacade.queryStockNumPirckList(stockNumPrice);
         result.setData(snp);
         return result;
+    }
+
+    @GetMapping("checkStockCode")
+    public Result checkStockCode(String stockCode) {
+        return stockFacade.checkStockCode(stockCode);
     }
 }

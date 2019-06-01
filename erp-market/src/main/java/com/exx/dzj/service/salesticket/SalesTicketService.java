@@ -1,11 +1,11 @@
 package com.exx.dzj.service.salesticket;
 
 import com.exx.dzj.entity.market.SaleInfo;
+import com.exx.dzj.entity.market.SaleInfoExample;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yangyun
@@ -13,6 +13,8 @@ import java.util.Map;
  * 销售单
  */
 public interface SalesTicketService {
+
+    long countByExample(SaleInfoExample example);
 
     void saveSaleReceiptsDetails(SaleReceiptsDetails saleReceiptsDetails);
 

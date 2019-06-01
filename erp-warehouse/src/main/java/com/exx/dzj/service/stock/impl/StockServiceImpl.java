@@ -44,6 +44,11 @@ public class StockServiceImpl implements StockService {
     @Autowired
     private StockNumPriceMapper priceMapper;
 
+    @Override
+    public long countByExample(StockInfoExample example) {
+        return stockMapper.countByExample(example);
+    }
+
     /**
      * 获取存货列表数据
      * @param pageNum
@@ -105,15 +110,15 @@ public class StockServiceImpl implements StockService {
                     }
                 }
             }else{
-                IdGenerator idGenerator = new DefaultIdGenerator();
+                /*IdGenerator idGenerator = new DefaultIdGenerator();
                 String stockCode = "STOCKCODE"+idGenerator.next();
 
-                stockInfo.setStockCode(stockCode);
+                stockInfo.setStockCode(stockCode);*/
                 //待上架状态
                 stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_THREE);
                 stockMapper.insertSelective(stockInfo);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(stockNumPrice)){
-                    stockNumPrice.setStockCode(stockCode);
+                    stockNumPrice.setStockCode(stockInfo.getStockCode());
                     stockNumPrice.setIsDefault(CommonConstant.DEFAULT_VALUE_ONE);
                     priceMapper.insertSelective(stockNumPrice);
                 }

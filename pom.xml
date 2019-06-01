@@ -70,6 +70,7 @@
         <module>erp-report-forms</module>
         <module>erp-log</module>
         <module>erp-logistics</module>
+        <module>erp-system</module>
     </modules>
 
     <build>

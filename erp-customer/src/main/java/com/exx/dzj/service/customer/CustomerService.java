@@ -1,9 +1,6 @@
 package com.exx.dzj.service.customer;
 
-import com.exx.dzj.entity.customer.CustomerSupplierBean;
-import com.exx.dzj.entity.customer.CustomerSupplierInfo;
-import com.exx.dzj.entity.customer.CustomerSupplierQuery;
-import com.exx.dzj.entity.customer.InsuranceCustomer;
+import com.exx.dzj.entity.customer.*;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 
@@ -16,6 +13,13 @@ import java.util.List;
  * @Description 客户或供应商 service
  */
 public interface CustomerService {
+
+    /**
+     * 编辑是否有效
+     * @param example
+     * @return
+     */
+    int countCustomer(CustomerSupplierBeanExample example);
 
     /**
      * 查询 客户或供应商列表数据

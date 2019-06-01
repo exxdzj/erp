@@ -39,6 +39,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerSupplierBeanMapper csMapper;
 
+    @Override
+    public int countCustomer(CustomerSupplierBeanExample example) {
+        List<CustomerSupplierBean> list = csMapper.selectByExample(example);
+        if(null == list) {
+            return 0;
+        }
+        return list.size();
+    }
+
     /**
      * 查询 客户或供应商列表数据
      * @return

@@ -4,11 +4,13 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
+import com.exx.dzj.entity.customer.CustomerSupplierBeanExample;
 import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.excepte.ErpException;
+import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
@@ -17,10 +19,7 @@ import com.exx.dzj.service.contactway.ContactWayService;
 import com.exx.dzj.service.customer.CustomerService;
 import com.exx.dzj.service.dictionary.DictionaryService;
 import com.exx.dzj.service.user.UserService;
-import com.exx.dzj.unique.DefaultIdGenerator;
-import com.exx.dzj.unique.DefaultIdGeneratorConfig;
-import com.exx.dzj.unique.IdGenerator;
-import com.exx.dzj.unique.IdGeneratorConfig;
+import com.exx.dzj.unique.SeqGenerator;
 import com.exx.dzj.util.EntityJudgeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -58,6 +57,8 @@ public class CustomerSupplierFacade {
     private UserService salesmanService;
     @Autowired
     private UserTokenFacade userTokenFacade;
+    @Autowired
+    private BusEncodeFacade busEncodeFacade;
 
     /**
      * 查询 客户或供应商列表数据
@@ -172,16 +173,12 @@ public class CustomerSupplierFacade {
                     }
                 }
             }else{
-                String prefix = "";
-                if(custType == CommonConstant.DEFAULT_VALUE_ONE){
-                    prefix = "KH";
-                }
-                if(custType == CommonConstant.DEFAULT_VALUE_TWO){
-                    prefix = "GYS";
-                }
+                /**String prefix = "";
                 IdGeneratorConfig config = new DefaultIdGeneratorConfig(prefix);
                 IdGenerator idGenerator = new DefaultIdGenerator(config);
-                String custCode = idGenerator.next();
+                String custCode = idGenerator.next();*/
+
+                String custCode = getCode(custType, bean.getPrefix());
                 customerBean.setCustCode(custCode);
                 customerBean.setCreateUser(userCode);
                 customerBean.setUpdateUser(userCode);
@@ -238,6 +235,32 @@ public class CustomerSupplierFacade {
         return result;
     }
 
+    /**
+     * 获取业务员编码
+     * @param custType
+     * @param prefix
+     * @return
+     */
+    private String getCode(Integer custType, String prefix) {
+        String custCode = "";
+        if(custType == CommonConstant.DEFAULT_VALUE_ONE){
+            String busType = "customer";
+            custCode = busEncodeFacade.nextBusCode(busType, prefix);
+
+        }
+        if(custType == CommonConstant.DEFAULT_VALUE_TWO){
+            custCode = SeqGenerator.nextCode();
+        }
+
+        CustomerSupplierBeanExample example = new CustomerSupplierBeanExample();
+        CustomerSupplierBeanExample.Criteria criteria =example.createCriteria();
+        criteria.andCustCodeEqualTo(custCode);
+        int count = customerSupplierService.countCustomer(example);
+        while (count > 0) {
+            getCode(custType, prefix);
+        }
+        return custCode;
+    }
 
     public List<CustomerSupplierInfo> queryCustomerPullDownInfo(Integer type){
         return customerSupplierService.queryCustomerPullDownInfo(type);

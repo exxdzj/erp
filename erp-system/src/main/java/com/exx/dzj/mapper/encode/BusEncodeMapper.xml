@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exx.dzj.mapper.encode.BusEncodeMapper">
+
+    <resultMap id="BusEncodeRuleMap" type="com.exx.dzj.entity.encode.BusEncodeRuleCacheData">
+        <result column="bus_type" property="busType"/>
+
+        <collection property="encodeInfos"
+                    select="com.exx.dzj.mapper.encode.BusEncodeMapper.queryBusEncodeRule"
+                    column="{busType=bus_type}" fetchType="lazy"/>
+    </resultMap>
+
+    <resultMap id="BusEncodeRuleInfoMap" type="com.exx.dzj.entity.encode.BusEncodeRuleInfo">
+        <result column="prefix" property="prefix"/>
+        <result column="encode_name" property="encodeName"/>
+        <result column="coding_mode" property="codingMode"/>
+        <result column="initial_value" property="initialValue"/>
+        <result column="next_value" property="nextValue"/>
+        <result column="serial_num_length" property="serialNumLength"/>
+        <result column="step" property="step"/>
+        <result column="serial_num_format" property="serialNumFormat"/>
+    </resultMap>
+
+    <select id="queryList" resultMap="BusEncodeRuleMap">
+        SELECT bus_type FROM tab_bus_model WHERE is_enable = 1
+    </select>
+
+    <select id="queryBusEncodeRule" resultMap="BusEncodeRuleInfoMap">
+      SELECT
+        tb.prefix, tb.encode_name, tb.coding_mode, tb.initial_value, tb.next_value, tb.serial_num_length, tb.step, tb.serial_num_format
+      FROM tab_bus_encoding_rule tb
+      WHERE tb.is_enable = 1 and tb.bus_type = #{busType}
+    </select>
+</mapper>

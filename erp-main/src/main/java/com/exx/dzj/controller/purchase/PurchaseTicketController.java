@@ -3,7 +3,6 @@ package com.exx.dzj.controller.purchase;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.exx.dzj.constant.CommonConstant;
-import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
 import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
@@ -11,17 +10,16 @@ import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.purchase.PurchaseTicketFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
-import com.exx.dzj.unique.SingletonGeneratorConfig;
-import com.exx.dzj.util.JsonUtils;
 import com.exx.dzj.util.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author yangyun
@@ -165,7 +163,8 @@ public class PurchaseTicketController {
     @GetMapping("purchasecodegenerator")
     public Result queryPurchaseTicketCode(){
         Result result = Result.responseSuccess();
-        String saleCode = "PCODE" + SingletonGeneratorConfig.getSingleton().next();
+        //String saleCode = "PCODE" + SingletonGeneratorConfig.getSingleton().next();
+        String saleCode = purchaseTicketFacade.getCode();
         result.setData(saleCode);
         return result;
     }

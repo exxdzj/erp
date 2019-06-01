@@ -1,17 +1,16 @@
 package com.exx.dzj.service.salesticket.impl;
 
 import com.exx.dzj.entity.market.SaleInfo;
+import com.exx.dzj.entity.market.SaleInfoExample;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
 import com.exx.dzj.mapper.market.SaleInfoMapper;
 import com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper;
 import com.exx.dzj.service.salesticket.SalesTicketService;
-import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yangyun
@@ -25,6 +24,11 @@ public class SalesTicketServiceImpl implements SalesTicketService {
 
     @Autowired
     private SaleReceiptsDetailsMapper saleReceiptsDetailsMapper;
+
+    @Override
+    public long countByExample(SaleInfoExample example) {
+        return saleInfoMapper.countByExample(example);
+    }
 
     /**
      * @description 新增销售收款记录

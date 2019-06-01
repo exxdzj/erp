@@ -10,6 +10,10 @@ import java.util.Optional;
 public class SingletonGeneratorConfig {
     private static DefaultIdGenerator defaultIdGenerator = null;
 
+    static {
+        defaultIdGenerator = new DefaultIdGenerator();
+    }
+
     public static synchronized DefaultIdGenerator getSingleton(){
         if(!Optional.ofNullable(defaultIdGenerator).isPresent()){
             defaultIdGenerator = new DefaultIdGenerator();

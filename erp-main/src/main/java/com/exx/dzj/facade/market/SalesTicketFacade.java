@@ -5,6 +5,7 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockNumPrice;
+import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.dictionary.DictionaryService;
@@ -50,6 +51,9 @@ public class SalesTicketFacade {
 
     @Autowired
     private StockService stockInfoService;
+
+    @Autowired
+    private BusEncodeFacade busEncodeFacade;
 
 
     @Transactional
@@ -440,6 +444,21 @@ public class SalesTicketFacade {
 
     public void logisticsInfoDel (Integer id){
         salesTicketService.logisticsInfoDel(id);
+    }
+
+    public String getCode() {
+        String busType = "sale_ticket";
+        String prefix = "Z";
+        String code = busEncodeFacade.nextBusCode(busType, prefix);
+
+        SaleInfoExample example = new SaleInfoExample();
+        SaleInfoExample.Criteria criteria =example.createCriteria();
+        criteria.andSaleCodeEqualTo(code);
+        long count = salesTicketService.countByExample(example);
+        while (count > 0) {
+            getCode();
+        }
+        return code;
     }
 
 }

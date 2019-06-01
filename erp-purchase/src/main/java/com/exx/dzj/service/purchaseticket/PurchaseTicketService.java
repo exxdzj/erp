@@ -1,8 +1,8 @@
 package com.exx.dzj.service.purchaseticket;
 
-import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
 import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
+import com.exx.dzj.entity.purchase.PurchaseInfoExample;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,6 +12,8 @@ import java.util.List;
  * @create 2019-01-12-15:54
  */
 public interface PurchaseTicketService {
+
+    long countByExample(PurchaseInfoExample example);
 
     void savePurchaseTicket(PurchaseInfo purchaseInfo);
 

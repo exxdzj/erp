@@ -1,8 +1,8 @@
 package com.exx.dzj.service.purchaseticket.impl;
 
-import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
 import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
+import com.exx.dzj.entity.purchase.PurchaseInfoExample;
 import com.exx.dzj.mapper.purchase.PurchaseInfoMapper;
 import com.exx.dzj.service.purchaseticket.PurchaseTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,11 @@ public class PurchaseTicketServiceImpl implements PurchaseTicketService {
 
     @Autowired
     private PurchaseInfoMapper purchaseInfoMapper;
+
+    @Override
+    public long countByExample(PurchaseInfoExample example) {
+        return purchaseInfoMapper.countByExample(example);
+    }
 
     @Override
     public void savePurchaseTicket(PurchaseInfo purchaseInfo) {

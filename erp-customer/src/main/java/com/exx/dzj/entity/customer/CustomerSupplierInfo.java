@@ -1,7 +1,5 @@
 package com.exx.dzj.entity.customer;
 
-import com.exx.dzj.entity.accountatt.AccountAttributeBean;
-import com.exx.dzj.entity.contactway.ContactWayBean;
 import lombok.Data;
 import lombok.ToString;
 
@@ -20,6 +18,7 @@ public class CustomerSupplierInfo extends CustomerSupplierBean implements Serial
      * 供应商类型(供应商，或即是供应商又是客户)
      */
     private String custTypeName;
+    private String prefix;
 
     /**
      * 联系信息

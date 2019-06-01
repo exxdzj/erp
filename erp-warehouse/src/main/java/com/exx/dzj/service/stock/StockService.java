@@ -2,7 +2,6 @@ package com.exx.dzj.service.stock;
 
 import com.exx.dzj.entity.stock.*;
 import com.exx.dzj.result.Result;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +12,8 @@ import java.util.Map;
  * @Description 存货 service
  */
 public interface StockService {
+
+    long countByExample(StockInfoExample example);
 
     /**
      * 获取存货列表数据

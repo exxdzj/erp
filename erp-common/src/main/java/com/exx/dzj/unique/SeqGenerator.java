@@ -1,6 +1,10 @@
 package com.exx.dzj.unique;
 
+import com.exx.dzj.util.DateTimeUtil;
+
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
 
 /**
  * @Author
@@ -43,7 +47,15 @@ public class SeqGenerator {
         return timeMillisSequence;
     }
 
+    public static String nextCode() {
+        String nanoTime = DateTimeUtil.dateToStr(new Date(), "yyMMdd");
+        Random random = new Random();
+        // 获取5位随机数
+        int rannum = (int) (random.nextDouble() * (99 - 10 + 1)) + 100;
+        return nanoTime + rannum;
+    }
+
     public static void main(String[] agrs) {
-        System.out.println(getTimeMillisSequence());
+        System.out.println(nextCode());
     }
 }

@@ -1,12 +1,10 @@
 package com.exx.dzj.facade.purchase;
 
 import com.exx.dzj.constant.CommonConstant;
-import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
-import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
-import com.exx.dzj.entity.purchase.PurchaseInfo;
-import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
+import com.exx.dzj.entity.purchase.*;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockNumPrice;
+import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.purchasegoods.PurchaseGoodsService;
@@ -48,6 +46,9 @@ public class PurchaseTicketFacade {
 
     @Autowired
     UserTokenFacade userTokenFacade;
+
+    @Autowired
+    private BusEncodeFacade busEncodeFacade;
 
     /**
      * @description 新增采购单
@@ -371,5 +372,20 @@ public class PurchaseTicketFacade {
     public List<PurchaseHistoryInfo> queryPurchaseHistoryRecord (String stockCode){
         List<PurchaseHistoryInfo> purchaseHistoryInfoList  = purchaseTicketService.queryPurchaseHistoryRecord(stockCode);
         return purchaseHistoryInfoList;
+    }
+
+    public String getCode() {
+        String busType = "purchase_ticket";
+        String prefix = "ZC";
+        String code = busEncodeFacade.nextBusCode(busType, prefix);
+
+        PurchaseInfoExample example = new PurchaseInfoExample();
+        PurchaseInfoExample.Criteria criteria =example.createCriteria();
+        criteria.andPurchaseCodeEqualTo(code);
+        long count = purchaseTicketService.countByExample(example);
+        while (count > 0) {
+            getCode();
+        }
+        return code;
     }
 }
