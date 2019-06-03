@@ -158,4 +158,12 @@ public class StockController {
     public Result checkStockCode(String stockCode) {
         return stockFacade.checkStockCode(stockCode);
     }
+
+    @Deprecated
+    @GetMapping("querystockgoodsinventory")
+    public Result queryStockGoodsInventory (StockNumPrice stockNumPrice){
+        Result result = Result.responseSuccess();
+
+        return result;
+    }
 }
