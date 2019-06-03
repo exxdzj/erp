@@ -469,4 +469,9 @@ public class SalesTicketFacade {
         return code;
     }
 
+    public List<SaleInfo> queryCustomerSalesToday (SaleInfo saleInfo){
+        List<SaleInfo> list = salesTicketService.queryCustomerSalesToday(saleInfo);
+        return list;
+    }
+
 }

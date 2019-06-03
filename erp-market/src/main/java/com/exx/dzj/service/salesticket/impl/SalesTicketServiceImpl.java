@@ -138,4 +138,9 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     public List<SaleInfo> querySalesTicketTop() {
         return saleInfoMapper.querySalesTicketTop();
     }
+
+    @Override
+    public List<SaleInfo> queryCustomerSalesToday(SaleInfo saleInfo) {
+        return saleInfoMapper.queryCustomerSalesToday(saleInfo);
+    }
 }

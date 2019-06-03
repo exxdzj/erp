@@ -230,4 +230,18 @@ public class SalesTickeContorller {
         return result;
     }
 
+    /**
+     * @description 当前客户销售单录单查询
+     * @author yangyun
+     * @date 2019/6/3 0003
+     * @param saleInfo
+     * @return com.exx.dzj.result.Result
+     */
+    @PostMapping("querycustomersalestoday")
+    public Result queryCustomerSalesToday (@RequestBody SaleInfo saleInfo){
+        Result result = Result.responseSuccess();
+        List<SaleInfo> list = salesTicketFacade.queryCustomerSalesToday(saleInfo);
+        result.setData(list);
+        return result;
+    }
 }

@@ -50,4 +50,6 @@ public interface SaleInfoMapper {
     List<SaleInfo> salesUncollectedTop();
 
     List<SaleInfo> querySalesTicketTop();
+
+    List<SaleInfo> queryCustomerSalesToday (SaleInfo saleInfo);
 }
