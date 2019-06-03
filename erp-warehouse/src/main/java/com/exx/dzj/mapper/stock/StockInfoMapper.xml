@@ -472,7 +472,7 @@
   <update id="updateStockGoodsInventory" parameterType="com.exx.dzj.entity.stock.StockBean">
     UPDATE tab_stock_num_price
       SET min_inventory = IFNULL(min_inventory, 0) + #{minInventory}
-      WHERE stock_code = #{stockCode}
+      WHERE stock_code = #{stockCode} AND stock_address_code = #{stockAddressCode}
   </update>
 
   <insert id="insertStockNumPrice" parameterType="com.exx.dzj.entity.stock.StockNumPrice">

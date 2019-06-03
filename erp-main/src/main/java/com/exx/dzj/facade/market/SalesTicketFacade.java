@@ -4,6 +4,7 @@ import com.exx.dzj.annotation.SaleLog;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.stock.StockBean;
+import com.exx.dzj.entity.stock.StockInfo;
 import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
@@ -411,7 +412,8 @@ public class SalesTicketFacade {
             String userCode = userTokenFacade.queryUserCodeForToken(null);
             // 减少库存
             StockBean stockInfo = new StockBean();
-
+            stockInfo.setStockAddressCode(stockNumPrice.getStockAddressCode());
+            stockInfo.setStockCode(stockNumPrice.getStockCode());
             stockInfo.setMinInventory(-sum.intValue());
             stockInfoService.updateStockGoodsInventory(stockInfo);
             stockInfo.setUpdateUser(userCode);

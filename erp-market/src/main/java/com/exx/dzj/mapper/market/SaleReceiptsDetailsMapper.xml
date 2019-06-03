@@ -348,7 +348,7 @@
     VALUES
       (
         #{logisticsCompanyCode}, #{logisticsCompamyName}, #{freihtCode}, #{deliverGoodsTime}, #{selectorPhoneNum}, #{remark},
-        #{logisticsKind}, #{saleCode}, #{expressFee}, #{chargeMethod}, #{createUser}, #{stockCode}, #{stockCode},#{stockAddressCode} SYSDATE()
+        #{logisticsKind}, #{saleCode}, #{expressFee}, #{chargeMethod}, #{createUser}, #{stockCode}, #{stockCode},#{stockAddressCode}, SYSDATE()
       )
   </insert>
 
