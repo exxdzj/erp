@@ -99,18 +99,18 @@
   </sql>
 
   <!-- 销售单列表查询 -->
-  <select id="querySalesTicketList" resultType="com.exx.dzj.entity.market.SaleInfo" parameterType="java.util.Map">
+  <select id="querySalesTicketList" resultMap="saleListMap" parameterType="java.util.Map">
     SELECT
-      SINFO.id AS id,
-      SINFO.sale_code AS saleCode,
-      SINFO.sale_date AS saleDate,
-      CSUPPLIER.cust_name AS custName,
-      SINFO.currency AS currency,
-      SINFO.exchange_rate AS exchangeRate,
-      SINFO.total_sum AS totalSum,
-      SINFO.discount_amount AS discountAmount,
-      SINFO.receivable_accoun AS receivableAccoun,
-      SINFO.due_date AS dueDate,
+      SINFO.id,
+      SINFO.sale_code,
+      SINFO.sale_date,
+      CSUPPLIER.cust_name,
+      SINFO.currency,
+      SINFO.exchange_rate,
+      SINFO.total_sum,
+      SINFO.discount_amount,
+      SINFO.receivable_accoun,
+      SINFO.due_date,
       DICTIONPAY.dict_name AS paymentStatus,
       SINFO.invoice_code AS invoiceCode,
       DICTIONPRO.dict_name AS saleProject,
@@ -121,11 +121,11 @@
       SINFO.sale_source AS saleSource,
       SINFO.is_receipt AS isReceipt,
       SINFO.subordinate_company_name AS subordinateCompanyName,
-      logistics.logistic_company_name AS logisticsCompamyName,
-      logistics.freight_code AS freightCode,
+      /*logistics.logistic_company_name AS logisticsCompamyName,
+      logistics.freight_code AS freightCode,*/
       SINFO.remarks AS remarks
     FROM tab_sale_info SINFO
-    LEFT JOIN tab_sale_logistic_info logistics ON SINFO.sale_code = logistics.sale_code
+   /* LEFT JOIN tab_sale_logistic_info logistics ON SINFO.sale_code = logistics.sale_code*/
     LEFT JOIN tab_dictionary_info DICTIONPAY ON SINFO.payment_status=DICTIONPAY.dict_code AND DICTIONPAY.data_type='collection_status'
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
     LEFT JOIN tab_dictionary_info SALESOURCE ON SINFO.sale_project=SALESOURCE.dict_code AND DICTIONPRO.data_type='source_sales_order'
@@ -140,6 +140,38 @@
       </if>
       /*AND SINFO.is_enable = 1*/
       ORDER BY SINFO.create_time  DESC
+  </select>
+  <resultMap id="saleListMap" type="com.exx.dzj.entity.market.SaleInfo">
+    <result column="id" property="id"/>
+    <result column="remarks" property="remarks"/>
+    <result column="subordinateCompanyName" property="subordinateCompanyName"/>
+    <result column="isReceipt" property="isReceipt"/>
+    <result column="saleSource" property="saleSource"/>
+    <result column="createUser" property="createUser"/>
+    <result column="userCode" property="userCode"/>
+    <result column="userName" property="userName"/>
+    <result column="saleSourceName" property="saleSourceName"/>
+    <result column="saleProject" property="saleProject"/>
+    <result column="invoiceCode" property="invoiceCode"/>
+    <result column="paymentStatus" property="paymentStatus"/>
+    <result column="due_date" property="dueDate"/>
+    <result column="receivable_accoun" property="receivableAccoun"/>
+    <result column="discount_amount" property="discountAmount"/>
+    <result column="total_sum" property="totalSum"/>
+    <result column="exchange_rate" property="exchangeRate"/>
+    <result column="currency" property="currency"/>
+    <result column="cust_name" property="custName"/>
+    <result column="sale_date" property="saleDate"/>
+    <result column="sale_code" property="saleCode"/>
+    <collection property="logisticsInfoList" column="sale_code" ofType="com.exx.dzj.entity.market.LogisticsInfo"
+                javaType="java.util.List" select="logisticsInfoList"></collection>
+  </resultMap>
+
+  <select id="logisticsInfoList" parameterType="String" resultType="com.exx.dzj.entity.market.LogisticsInfo">
+    SELECT
+      id AS id, freight_code AS freihtCode, logistic_company_name AS logisticsCompamyName
+    FROM tab_sale_logistic_info
+    WHERE sale_code = #{saleCode}
   </select>
 
   <!-- 销售单详情 -->

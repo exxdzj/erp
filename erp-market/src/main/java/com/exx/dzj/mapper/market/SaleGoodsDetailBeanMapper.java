@@ -39,5 +39,5 @@ public interface SaleGoodsDetailBeanMapper {
 
     SaleGoodsDetailBean querySaleGoodsDetail(SaleGoodsDetailBean bean);
 
-    SaleGoodsDetailBean queryGoodsForStock(LogisticsInfo logisticsInfo);
+    List<SaleGoodsDetailBean> queryGoodsForStock(LogisticsInfo logisticsInfo);
 }

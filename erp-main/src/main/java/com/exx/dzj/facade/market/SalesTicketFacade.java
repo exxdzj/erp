@@ -394,7 +394,13 @@ public class SalesTicketFacade {
 
             // 根据 销售单编号和商品编号,获取销售单卖出商品数量, 并对库存做修改
             // 查询销售单销售商品数量
-            SaleGoodsDetailBean saleGoods = salesGoodsDetailService.queryGoodsForStock(logisticsInfo);
+            List<SaleGoodsDetailBean> saleGoods = salesGoodsDetailService.queryGoodsForStock(logisticsInfo);
+
+            Double sum = 0.0;
+            if (!CollectionUtils.isEmpty(saleGoods)){
+                sum = saleGoods.stream().mapToDouble(SaleGoodsDetailBean::getGoodsNum).sum();
+
+            }
 //            SaleGoodsDetailBean bean = new SaleGoodsDetailBean();
 //            bean.setStockCode(logisticsInfo.getStockCode());
 //            bean.setSaleCode(logisticsInfo.getSaleCode());
@@ -406,7 +412,7 @@ public class SalesTicketFacade {
             // 减少库存
             StockBean stockInfo = new StockBean();
 
-            stockInfo.setMinInventory(-saleGoods.getGoodsNum().intValue());
+            stockInfo.setMinInventory(-sum.intValue());
             stockInfoService.updateStockGoodsInventory(stockInfo);
             stockInfo.setUpdateUser(userCode);
 //            stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);

@@ -106,8 +106,11 @@ public class SaleInfo extends BaseModule {
 
     private Integer saleTicketType;
 
-    private String freightCode;
-    private String logisticsCompamyName;
+    /*物流信息*/
+    List<LogisticsInfo> logisticsInfoList;
+
+//    private String freightCode;
+//    private String logisticsCompamyName;
     private String realName;
 
     /**销售单来源*/

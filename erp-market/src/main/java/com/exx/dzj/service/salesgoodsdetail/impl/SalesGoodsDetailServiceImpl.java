@@ -40,7 +40,7 @@ public class SalesGoodsDetailServiceImpl implements SalesGoodsDetailService {
     }
 
     @Override
-    public SaleGoodsDetailBean queryGoodsForStock(LogisticsInfo logisticsInfo) {
+    public List<SaleGoodsDetailBean> queryGoodsForStock(LogisticsInfo logisticsInfo) {
         return saleGoodsDetailBeanMapper.queryGoodsForStock(logisticsInfo);
 //        return null;
     }
