@@ -1,5 +1,7 @@
 package com.exx.dzj.facade.sys;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.datarules.DataPermissionRules;
 import com.exx.dzj.entity.datarules.DataRulesParam;
 import com.exx.dzj.facade.user.UserTokenFacade;
@@ -7,6 +9,8 @@ import com.exx.dzj.result.Result;
 import com.exx.dzj.service.sys.DataPermissionRulesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * @Author
@@ -21,6 +25,18 @@ public class DataPermissionRulesFacade {
 
     @Autowired
     private UserTokenFacade userTokenFacade;
+
+    /**
+     * 查询 菜单所对应的数据权限
+     * @param menuCode
+     * @return
+     */
+    public List<DataPermissionRules> list(String menuCode) {
+        LambdaQueryWrapper<DataPermissionRules> query = new LambdaQueryWrapper<>();
+        query.eq(DataPermissionRules::getMenuCode, menuCode);
+        query.eq(DataPermissionRules::getIsEnable, CommonConstant.DEFAULT_VALUE_ONE);
+        return dataPermissionRulesService.list(query);
+    }
 
     /**
      * 查询  数据权限列表数据

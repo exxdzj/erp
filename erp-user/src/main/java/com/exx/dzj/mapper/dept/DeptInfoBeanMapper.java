@@ -1,5 +1,6 @@
 package com.exx.dzj.mapper.dept;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exx.dzj.entity.dept.DeptBean;
 import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.dept.DeptInfoBeanExample;
@@ -7,14 +8,8 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface DeptInfoBeanMapper {
+public interface DeptInfoBeanMapper extends BaseMapper<DeptInfoBean> {
     long countByExample(DeptInfoBeanExample example);
-
-    int deleteByExample(DeptInfoBeanExample example);
-
-    int deleteByPrimaryKey(Integer id);
-
-    int insert(DeptInfoBean record);
 
     int insertSelective(DeptInfoBean record);
 
@@ -24,11 +19,7 @@ public interface DeptInfoBeanMapper {
 
     int updateByExampleSelective(@Param("record") DeptInfoBean record, @Param("example") DeptInfoBeanExample example);
 
-    int updateByExample(@Param("record") DeptInfoBean record, @Param("example") DeptInfoBeanExample example);
-
     int updateByPrimaryKeySelective(DeptInfoBean record);
-
-    int updateByPrimaryKey(DeptInfoBean record);
 
     List<DeptInfoBean> queryDeptList();
 

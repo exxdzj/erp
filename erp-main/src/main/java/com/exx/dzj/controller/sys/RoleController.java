@@ -1,19 +1,27 @@
 package com.exx.dzj.controller.sys;
 
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.datarules.DataPermissionRules;
 import com.exx.dzj.entity.role.RoleBean;
+import com.exx.dzj.entity.role.RoleMenuBean;
 import com.exx.dzj.entity.role.RoleMenuInfo;
 import com.exx.dzj.entity.role.RoleQuery;
+import com.exx.dzj.facade.sys.DataPermissionRulesFacade;
 import com.exx.dzj.facade.sys.RoleFacade;
+import com.exx.dzj.facade.sys.RoleMenuFacade;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.JsonUtils;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author
@@ -26,6 +34,12 @@ public class RoleController {
 
     @Autowired
     private RoleFacade roleFacade;
+
+    @Autowired
+    private DataPermissionRulesFacade dataPermissionRulesFacade;
+
+    @Autowired
+    private RoleMenuFacade roleMenuFacade;
 
     /**
      * 获取角色列表数据
@@ -144,5 +158,53 @@ public class RoleController {
             return result;
         }
         return roleFacade.grantAuth(info);
+    }
+
+    /**
+     * 获取--角色已配置的数据权限和
+     * @param menuCode
+     * @param roleCode
+     * @return
+     */
+    @GetMapping("datarule/{menuCode}/{roleCode}")
+    public Result datarule(@PathVariable("menuCode") String menuCode, @PathVariable("roleCode") String roleCode) {
+        Result result = Result.responseSuccess();
+        List<DataPermissionRules> list = dataPermissionRulesFacade.list(menuCode);
+        if(CollectionUtils.isEmpty(list)) {
+            result.setCode(400);
+            result.setMsg("未查询到数据权限配置信息!");
+            return result;
+        }
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("datarule", list);
+
+        RoleMenuBean bean = roleMenuFacade.queryRoleMenu(menuCode, roleCode);
+        if(null != bean && ConvertUtils.isNotEmpty(bean.getDataRuleIds())) {
+            String drChecked = bean.getDataRuleIds();
+            map.put("drChecked", drChecked.endsWith(",")?drChecked.substring(0, drChecked.length()-1):drChecked);
+        }
+        result.setData(map);
+        return result;
+    }
+
+    /**
+     * 角色--配置数据权限
+     * @param info
+     * @return
+     */
+    @PostMapping("datarule")
+    public Result datarule(@RequestBody RoleMenuBean info) {
+        Result result = Result.responseSuccess();
+        if(null == info
+                || ConvertUtils.isEmpty(info.getMenuCode())
+                || ConvertUtils.isEmpty(info.getRoleCode())
+                || ConvertUtils.isEmpty(info.getDataRuleIds())) {
+            result.setCode(400);
+            result.setMsg("请选择要配置数据!");
+            return result;
+        }
+        result = roleMenuFacade.datarule(info);
+        return result;
     }
 }

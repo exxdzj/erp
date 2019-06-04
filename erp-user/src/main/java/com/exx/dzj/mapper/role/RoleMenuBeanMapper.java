@@ -1,12 +1,13 @@
 package com.exx.dzj.mapper.role;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exx.dzj.entity.role.RoleMenuBean;
 import com.exx.dzj.entity.role.RoleMenuBeanExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface RoleMenuBeanMapper {
+public interface RoleMenuBeanMapper extends BaseMapper<RoleMenuBean> {
 
     int deleteByExample(RoleMenuBeanExample example);
 

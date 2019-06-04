@@ -2,6 +2,8 @@ package com.exx.dzj.service.sys.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exx.dzj.annotation.SysLog;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.constant.LogLevel;
@@ -14,16 +16,17 @@ import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.sys.DeptService;
 import com.exx.dzj.unique.DefaultIdGenerator;
-import com.exx.dzj.unique.DefaultIdGeneratorConfig;
 import com.exx.dzj.unique.IdGenerator;
-import com.exx.dzj.unique.IdGeneratorConfig;
 import com.exx.dzj.util.ConvertUtils;
+import com.exx.dzj.util.SerialNumberUtil;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +35,7 @@ import java.util.List;
  * @Description  部门
  */
 @Component
-public class DeptServiceImpl implements DeptService {
+public class DeptServiceImpl extends ServiceImpl<DeptInfoBeanMapper, DeptInfoBean> implements DeptService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(DeptServiceImpl.class);
 
@@ -95,6 +98,11 @@ public class DeptServiceImpl implements DeptService {
                 }
                 IdGenerator idGenerator = new DefaultIdGenerator("");
                 String deptCode = idGenerator.next();
+
+                String[] codeArray = generateOrgCode(dept.getParentCode());
+                dept.setOrgCode(codeArray[0]);
+                String orgType = codeArray[1];
+                dept.setIsCompare(Integer.valueOf(orgType));
                 dept.setDeptCode(deptCode);
                 deptMapper.insertSelective(dept);
             }
@@ -188,5 +196,72 @@ public class DeptServiceImpl implements DeptService {
             throw ex;
         }
         return result;
+    }
+
+    /**
+     * 获取 机构编码和部门类型
+     * @param parentCode
+     * @return
+     */
+    private String[] generateOrgCode(String parentCode) {
+        //update-begin--Author:Steve  Date:20190201 for：组织机构添加数据代码调整
+        LambdaQueryWrapper<DeptInfoBean> query = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<DeptInfoBean> query1 = new LambdaQueryWrapper<>();
+        String[] strArray = new String[2];
+        // 创建一个List集合,存储查询返回的所有SysDepart对象
+        List<DeptInfoBean> departList = new ArrayList<>();
+        // 定义新编码字符串
+        String newOrgCode = "";
+        // 定义旧编码字符串
+        String oldOrgCode = "";
+        // 定义部门类型
+        String orgType = "";
+
+        // 如果是最高级,则查询出同级的org_code, 调用工具类生成编码并返回
+        if (StringUtil.isEmpty(parentCode)) {
+            // 线判断数据库中的表是否为空,空则直接返回初始编码
+            query1.eq(DeptInfoBean::getParentCode, "");
+            query1.orderByDesc(DeptInfoBean::getOrgCode);
+            departList = this.list(query1);
+            if(departList == null || departList.size() == 0) {
+                strArray[0] = SerialNumberUtil.getNextYouBianCode(null);
+                strArray[1] = "1";
+                return strArray;
+            }else {
+                DeptInfoBean depart = departList.get(0);
+                oldOrgCode = depart.getOrgCode();
+                orgType = depart.getIsCompare()+"";
+                newOrgCode = SerialNumberUtil.getNextYouBianCode(oldOrgCode);
+            }
+        } else {
+            // 反之则查询出所有同级的部门,获取结果后有两种情况,有同级和没有同级
+            // 封装查询同级的条件
+            query.eq(DeptInfoBean::getParentCode, parentCode);
+            // 降序排序
+            query.orderByDesc(DeptInfoBean::getOrgCode);
+            // 查询出同级部门的集合
+            List<DeptInfoBean> parentList = this.list(query);
+            // 查询出父级部门
+            DeptInfoBean depart = this.getById(parentCode);
+            // 获取父级部门的Code
+            String orgCode = depart.getOrgCode();
+            // 根据父级部门类型算出当前部门的类型
+            orgType = String.valueOf(Integer.valueOf(depart.getIsCompare()) - 1);
+            // 处理同级部门为null的情况
+            if (parentList == null || parentList.size() == 0) {
+                // 直接生成当前的部门编码并返回
+                newOrgCode = SerialNumberUtil.getSubYouBianCode(orgCode, null);
+            } else {
+                //处理有同级部门的情况
+                // 获取同级部门的编码,利用工具类
+                String subCode = parentList.get(0).getOrgCode();
+                // 返回生成的当前部门编码
+                newOrgCode = SerialNumberUtil.getSubYouBianCode(orgCode, subCode);
+            }
+        }
+        // 返回最终封装了部门编码和部门类型的数组
+        strArray[0] = newOrgCode;
+        strArray[1] = orgType;
+        return strArray;
     }
 }

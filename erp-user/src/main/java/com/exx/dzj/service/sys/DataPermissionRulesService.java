@@ -1,5 +1,6 @@
 package com.exx.dzj.service.sys;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.exx.dzj.entity.datarules.DataPermissionRules;
 import com.exx.dzj.entity.datarules.DataRulesParam;
 import com.exx.dzj.result.Result;
@@ -11,7 +12,7 @@ import java.util.List;
  * @Date 2019/5/27 0027 11:43
  * @Description  数据权限 service
  */
-public interface DataPermissionRulesService {
+public interface DataPermissionRulesService extends IService<DataPermissionRules> {
 
     /**
      * 查询  数据权限列表

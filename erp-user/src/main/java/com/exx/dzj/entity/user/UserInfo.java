@@ -1,5 +1,6 @@
 package com.exx.dzj.entity.user;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
 
@@ -8,6 +9,7 @@ import java.util.Date;
 
 @Data
 @ToString
+@TableName("tab_user_info")
 public class UserInfo implements Serializable {
     private Integer id;
 
@@ -20,6 +22,8 @@ public class UserInfo implements Serializable {
     private String realName;
 
     private String deptCode;
+
+    private String orgCode;
 
     private String salesmanCode;
 

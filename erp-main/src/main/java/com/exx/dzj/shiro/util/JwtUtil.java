@@ -5,11 +5,16 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.exx.dzj.constant.DataBaseConstant;
+import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.util.ConvertUtils;
+import com.exx.dzj.util.DataAutorUtils;
+import com.exx.dzj.util.SpringContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 /**
@@ -22,7 +27,7 @@ public class JwtUtil {
     /**
      * 过期时间24小时
      */
-    public static final long EXPIRE_TIME = 24 * 60 * 60 * 1000;
+    public static final long EXPIRE_TIME = 12 * 60 * 60 * 1000;
 
     /**
      * 校验token是否正确
@@ -85,5 +90,67 @@ public class JwtUtil {
             throw new ErpException(400, "未获取到用户");
         }
         return userName;
+    }
+
+    /**
+     * 从 session 中获取变量
+     * @param key
+     * @return
+     */
+    public static String getSessionData(String key) {
+        //${myVar}%
+        //得到${} 后面的值
+        String moshi = "";
+        if(key.indexOf("}")!=-1){
+            moshi = key.substring(key.indexOf("}")+1);
+        }
+        String returnValue = null;
+        if (key.contains("#{")) {
+            key = key.substring(2,key.indexOf("}"));
+        }
+        if (ConvertUtils.isNotEmpty(key)) {
+            HttpSession session = SpringContextUtils.getHttpServletRequest().getSession();
+            returnValue = (String) session.getAttribute(key);
+        }
+        //结果加上${} 后面的值
+        if(returnValue!=null){returnValue = returnValue + moshi;}
+        return returnValue;
+    }
+
+    /**
+     * 从当前用户中获取变量
+     * @param key
+     * @param user
+     * @return
+     */
+    public static String getUserSystemData(String key, UserInfo user) {
+        if(user==null) {
+            user = DataAutorUtils.loadUserInfo();
+        }
+        //#{user_code}%
+        String moshi = "";
+        if(key.indexOf("}")!=-1){
+            moshi = key.substring(key.indexOf("}")+1);
+        }
+        String returnValue = null;
+        //针对特殊标示处理#{deptCode}，判断替换
+        if (key.contains("#{")) {
+            key = key.substring(2,key.indexOf("}"));
+        } else {
+            key = key;
+        }
+        // 登录用户帐号
+        if (key.equals(DataBaseConstant.USER_CODE)|| key.equals(DataBaseConstant.USER_CODE_TABLE)) {
+            returnValue = user.getUserCode();
+        }
+        // 用户登录所使用的机构编码
+        if (key.equals(DataBaseConstant.DEPT_CODE)|| key.equals(DataBaseConstant.DEPT_CODE_TABLE)) {
+            returnValue = user.getDeptCode();
+        }
+
+        if(returnValue!=null){
+            returnValue = returnValue + moshi;
+        }
+        return returnValue;
     }
 }

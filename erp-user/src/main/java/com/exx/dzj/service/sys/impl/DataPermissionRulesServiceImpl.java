@@ -1,6 +1,7 @@
 package com.exx.dzj.service.sys.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exx.dzj.annotation.SysLog;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.datarules.DataPermissionRules;
@@ -28,7 +29,7 @@ import java.util.Set;
  */
 @Slf4j
 @Component
-public class DataPermissionRulesServiceImpl implements DataPermissionRulesService {
+public class DataPermissionRulesServiceImpl extends ServiceImpl<DataPermissionRulesMapper, DataPermissionRules> implements DataPermissionRulesService {
 
     @Autowired
     private DataPermissionRulesMapper dataPermissionRulesMapper;

@@ -1,6 +1,7 @@
 package com.exx.dzj.service.sys;
 
 import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.exx.dzj.entity.dept.DeptBean;
 import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.page.ERPage;
@@ -13,7 +14,7 @@ import java.util.List;
  * @Date 2019/4/2 0002 15:06
  * @Description
  */
-public interface DeptService {
+public interface DeptService extends IService<DeptInfoBean> {
 
     /**
      * 查询 部门列表数据

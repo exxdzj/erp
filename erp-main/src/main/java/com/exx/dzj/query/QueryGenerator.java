@@ -3,6 +3,7 @@ package com.exx.dzj.query;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.entity.datarules.DataPermissionRules;
+import com.exx.dzj.shiro.util.JwtUtil;
 import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.DataAutorUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -532,10 +533,10 @@ public class QueryGenerator {
 	 * @return
 	 */
 	public static String converRuleValue(String ruleValue) {
-		String value = null;/*JwtUtil.getSessionData(ruleValue);
+		String value = JwtUtil.getSessionData(ruleValue);
 		if(ConvertUtils.isEmpty(value)) {
 			value = JwtUtil.getUserSystemData(ruleValue,null);
-		}*/
+		}
 		return value!= null ? value : ruleValue;
 	}
 

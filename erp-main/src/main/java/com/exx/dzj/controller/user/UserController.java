@@ -102,7 +102,7 @@ public class UserController {
             result.setMsg("请填写用户数据!");
             return result;
         }
-        if(StringUtils.isBlank(bean.getUserName())){
+        if(StringUtils.isBlank(bean.getUserName())) {
             result.setCode(400);
             result.setMsg("请填写用户账号!");
             return result;

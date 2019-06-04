@@ -1,5 +1,6 @@
 package com.exx.dzj.entity.dept;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
 
@@ -8,6 +9,7 @@ import java.util.Date;
 
 @Data
 @ToString
+@TableName("tab_dept_info")
 public class DeptInfoBean implements Serializable {
     private Integer id;
 
@@ -30,4 +32,8 @@ public class DeptInfoBean implements Serializable {
     private Date updateTime;
 
     private String updateUser;
+
+    private Integer isCompare;
+
+    private String orgCode;
 }

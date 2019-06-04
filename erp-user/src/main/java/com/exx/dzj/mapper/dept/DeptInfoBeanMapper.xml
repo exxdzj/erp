@@ -100,44 +100,22 @@
     where dept_code = #{deptCode}
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tab_dept_info
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-
-  <delete id="deleteByExample" parameterType="com.exx.dzj.entity.dept.DeptInfoBeanExample">
-    delete from tab_dept_info
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-
-  <insert id="insert" parameterType="com.exx.dzj.entity.dept.DeptInfoBean">
-    insert into tab_dept_info (id, dept_code, dept_name, 
-      parent_code, dept_describe, seq, 
-      is_enable, create_time, create_user, 
-      update_time, update_user)
-    values (#{id,jdbcType=INTEGER}, #{deptCode,jdbcType=VARCHAR}, #{deptName,jdbcType=VARCHAR}, 
-      #{parentCode,jdbcType=VARCHAR}, #{deptDescribe,jdbcType=VARCHAR}, #{seq,jdbcType=INTEGER}, 
-      #{isEnable,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
-  </insert>
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.dept.DeptInfoBean">
     insert into tab_dept_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="deptCode != null">
+      <if test="deptCode != null and deptCode!=''">
         dept_code,
       </if>
-      <if test="deptName != null">
+      <if test="deptName != null and deptName!=''">
         dept_name,
       </if>
-      <if test="parentCode != null">
+      <if test="parentCode != null and parentCode!=''">
         parent_code,
       </if>
-      <if test="deptDescribe != null">
+      <if test="orgCode != null and orgCode!=''">
+        orgCode,
+      </if>
+      <if test="deptDescribe != null and deptDescribe!=''">
         dept_describe,
       </if>
       <if test="seq != null">
@@ -149,30 +127,30 @@
       <if test="createTime != null">
         create_time,
       </if>
-      <if test="createUser != null">
+      <if test="createUser != null and createUser!=''">
         create_user,
       </if>
       <if test="updateTime != null">
         update_time,
       </if>
-      <if test="updateUser != null">
+      <if test="updateUser != null and updateUser!=''">
         update_user,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="deptCode != null">
+      <if test="deptCode != null and deptCode!=''">
         #{deptCode,jdbcType=VARCHAR},
       </if>
-      <if test="deptName != null">
+      <if test="deptName != null and deptName!=''">
         #{deptName,jdbcType=VARCHAR},
       </if>
-      <if test="parentCode != null">
+      <if test="parentCode != null and parentCode!=''">
         #{parentCode,jdbcType=VARCHAR},
       </if>
-      <if test="deptDescribe != null">
+      <if test="orgCode != null and orgCode!=''">
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="deptDescribe != null and deptDescribe!=''">
         #{deptDescribe,jdbcType=VARCHAR},
       </if>
       <if test="seq != null">
@@ -184,23 +162,25 @@
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="createUser != null">
+      <if test="createUser != null and createUser!=''">
         #{createUser,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateUser != null">
+      <if test="updateUser != null and updateUser!=''">
         #{updateUser,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
+
   <select id="countByExample" parameterType="com.exx.dzj.entity.dept.DeptInfoBeanExample" resultType="java.lang.Long">
     select count(*) from tab_dept_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update tab_dept_info
     <set>
@@ -243,62 +223,27 @@
     </if>
   </update>
 
-  <update id="updateByExample" parameterType="map">
-    update tab_dept_info
-    set id = #{record.id,jdbcType=INTEGER},
-      dept_code = #{record.deptCode,jdbcType=VARCHAR},
-      dept_name = #{record.deptName,jdbcType=VARCHAR},
-      parent_code = #{record.parentCode,jdbcType=VARCHAR},
-      dept_describe = #{record.deptDescribe,jdbcType=VARCHAR},
-      seq = #{record.seq,jdbcType=INTEGER},
-      is_enable = #{record.isEnable,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      create_user = #{record.createUser,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      update_user = #{record.updateUser,jdbcType=VARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.dept.DeptInfoBean">
     update tab_dept_info
     <set>
-      <if test="deptName != null">
+      <if test="deptName != null and deptName!=''">
         dept_name = #{deptName,jdbcType=VARCHAR},
       </if>
-      <if test="parentCode != null">
+      <if test="parentCode != null and parentCode!=''">
         parent_code = #{parentCode,jdbcType=VARCHAR},
       </if>
-      <if test="deptDescribe != null">
+      <if test="deptDescribe != null and deptDescribe!=''">
         dept_describe = #{deptDescribe,jdbcType=VARCHAR},
       </if>
       <if test="seq != null">
         seq = #{seq,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null">
+        update_time = SYSDATE(),
+      <if test="updateUser != null and updateUser!=''">
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
     where dept_code = #{deptCode,jdbcType=VARCHAR}
-  </update>
-
-  <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.dept.DeptInfoBean">
-    update tab_dept_info
-    set dept_code = #{deptCode,jdbcType=VARCHAR},
-      dept_name = #{deptName,jdbcType=VARCHAR},
-      parent_code = #{parentCode,jdbcType=VARCHAR},
-      dept_describe = #{deptDescribe,jdbcType=VARCHAR},
-      seq = #{seq,jdbcType=INTEGER},
-      is_enable = #{isEnable,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      update_user = #{updateUser,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
   </update>
 
   <!-- 查询部门下拉框数据 -->
