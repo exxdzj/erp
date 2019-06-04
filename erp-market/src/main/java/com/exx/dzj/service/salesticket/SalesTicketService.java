@@ -1,5 +1,6 @@
 package com.exx.dzj.service.salesticket;
 
+import com.exx.dzj.entity.market.SaleGoodsTop;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleInfoExample;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
@@ -47,4 +48,6 @@ public interface SalesTicketService {
     List<SaleInfo> querySalesTicketTop ();
 
     List<SaleInfo> queryCustomerSalesToday (SaleInfo saleInfo);
+
+    List<SaleGoodsTop> querySaleGoodsTop (String type);
 }

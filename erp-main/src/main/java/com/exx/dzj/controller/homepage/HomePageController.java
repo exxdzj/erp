@@ -2,12 +2,14 @@ package com.exx.dzj.controller.homepage;
 
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.entity.customer.InsuranceCustomer;
+import com.exx.dzj.entity.market.SaleGoodsTop;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.facade.homepage.HomePageFacade;
 import com.exx.dzj.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -143,6 +145,14 @@ public class HomePageController {
         Result result = Result.responseSuccess();
         List<SaleInfo> list = homePageFacade.querySalesTicketTop();
         result.setData(list);
+        return result;
+    }
+
+    @GetMapping("querysalegoodstop/{type}")
+    public Result querySaleGoodsTop (@PathVariable("type") String type){
+        Result result = Result.responseSuccess();
+        List<SaleGoodsTop> data = homePageFacade.querySaleGoodsTop(type);
+        result.setData(data);
         return result;
     }
 

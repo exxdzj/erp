@@ -40,4 +40,6 @@ public interface SaleGoodsDetailBeanMapper {
     SaleGoodsDetailBean querySaleGoodsDetail(SaleGoodsDetailBean bean);
 
     List<SaleGoodsDetailBean> queryGoodsForStock(LogisticsInfo logisticsInfo);
+
+    void batchUpdateSalesGoodsSubtractStatus(List<Integer> ids);
 }

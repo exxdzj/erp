@@ -45,5 +45,10 @@ public class SalesGoodsDetailServiceImpl implements SalesGoodsDetailService {
 //        return null;
     }
 
+    @Override
+    public void batchUpdateSalesGoodsSubtractStatus(List<Integer> ids) {
+        saleGoodsDetailBeanMapper.batchUpdateSalesGoodsSubtractStatus(ids);
+    }
+
 
 }

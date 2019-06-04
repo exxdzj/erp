@@ -871,7 +871,7 @@
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.salesman_code = u.salesman_code
         WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
-									AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
+									 AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
 				GROUP BY s.salesman_code
 				ORDER BY countTicket DESC
 				LIMIT 10
@@ -888,4 +888,23 @@
 		LEFT JOIN tab_customer_supplier CS ON SINFO.cust_code = CS.cust_code
         WHERE SINFO.cust_code = #{custCode} AND DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') = DATE_FORMAT(#{saleDate}, '%Y-%m-%d')
   </select>
+
+    <select id="querySaleGoodsTop" resultType="com.exx.dzj.entity.market.SaleGoodsTop">
+        SELECT
+          SGD.stock_code AS stockCode, SUM(SGD.goods_num) AS goodsNum, STINFO.stock_name AS stockName
+        FROM tab_sale_info SINFO
+            LEFT JOIN tab_sale_goods_detail SGD ON SINFO.sale_code = SGD.sale_code
+            LEFT JOIN tab_stock_info STINFO ON STINFO.stock_code = SGD.stock_code
+            WHERE 1=1 AND SINFO.sale_date
+            <if test="type == 'day'">
+                BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
+            </if>
+            <if test="type == 'week'">
+                BETWEEN date_sub(curdate(),INTERVAL WEEKDAY(curdate()) + 1 DAY) AND date_sub(curdate(),INTERVAL WEEKDAY(curdate()) - 5 DAY)
+            </if>
+            <if test="type == 'month'">
+                BETWEEN concat(date_format(LAST_DAY(now()),'%Y-%m-'),'01') AND LAST_DAY(now())
+            </if>
+            GROUP BY SGD.stock_code ORDER BY goodsNum DESC LIMIT 20
+    </select>
 </mapper>

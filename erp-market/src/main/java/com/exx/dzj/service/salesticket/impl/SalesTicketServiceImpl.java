@@ -1,5 +1,6 @@
 package com.exx.dzj.service.salesticket.impl;
 
+import com.exx.dzj.entity.market.SaleGoodsTop;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleInfoExample;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
@@ -142,5 +143,10 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     @Override
     public List<SaleInfo> queryCustomerSalesToday(SaleInfo saleInfo) {
         return saleInfoMapper.queryCustomerSalesToday(saleInfo);
+    }
+
+    @Override
+    public List<SaleGoodsTop> querySaleGoodsTop(String type) {
+        return saleInfoMapper.querySaleGoodsTop(type);
     }
 }

@@ -47,4 +47,6 @@ public class SaleGoodsDetailBean implements Serializable {
     private Date updateTime;
 
     private String updateUser;
+
+    private Integer isSubtractInventory;
 }

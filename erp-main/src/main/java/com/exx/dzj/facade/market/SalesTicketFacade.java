@@ -399,7 +399,23 @@ public class SalesTicketFacade {
 
             Double sum = 0.0;
             if (!CollectionUtils.isEmpty(saleGoods)){
-                sum = saleGoods.stream().mapToDouble(SaleGoodsDetailBean::getGoodsNum).sum();
+                boolean flag = true;
+                for (SaleGoodsDetailBean sgdb : saleGoods){
+                    Integer isSubtractInventory = sgdb.getIsSubtractInventory();
+                    if (CommonConstant.INTEGER_VALUE_ONE.equals(isSubtractInventory)){
+                        flag = false;
+                        break;
+                    }
+                }
+
+                // 还没减过库存
+                if (flag){
+                    sum = saleGoods.stream().mapToDouble(SaleGoodsDetailBean::getGoodsNum).sum();
+
+                    // 修改减库存状态为已减
+                    List<Integer> collect = saleGoods.stream().map(o -> o.getId()).collect(Collectors.toList());
+                    salesGoodsDetailService.batchUpdateSalesGoodsSubtractStatus(collect);
+                }
 
             }
 //            SaleGoodsDetailBean bean = new SaleGoodsDetailBean();

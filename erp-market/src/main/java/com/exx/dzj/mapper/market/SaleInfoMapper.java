@@ -1,9 +1,6 @@
 package com.exx.dzj.mapper.market;
 
-import com.exx.dzj.entity.market.SaleGoodsDetailBean;
-import com.exx.dzj.entity.market.SaleInfo;
-import com.exx.dzj.entity.market.SaleInfoExample;
-import com.exx.dzj.entity.market.SaleReceiptsDetails;
+import com.exx.dzj.entity.market.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -52,4 +49,6 @@ public interface SaleInfoMapper {
     List<SaleInfo> querySalesTicketTop();
 
     List<SaleInfo> queryCustomerSalesToday (SaleInfo saleInfo);
+
+    List<SaleGoodsTop> querySaleGoodsTop(@Param("type") String type);
 }

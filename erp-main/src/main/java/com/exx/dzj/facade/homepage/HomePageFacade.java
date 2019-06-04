@@ -2,6 +2,7 @@ package com.exx.dzj.facade.homepage;
 
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.customer.InsuranceCustomer;
+import com.exx.dzj.entity.market.SaleGoodsTop;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.statistics.sales.HomePageReport;
 import com.exx.dzj.entity.stock.StockBean;
@@ -56,6 +57,9 @@ public class HomePageFacade {
 
         // 今日销售额
         BigDecimal sumSalesOnDay = salesTicketService.querySumSalesOnDay();
+        if (sumSalesOnDay == null){
+            sumSalesOnDay = ZERO;
+        }
         topData.put("sumSalesOnDay", sumSalesOnDay);
 
         // 当月销售额
@@ -165,7 +169,9 @@ public class HomePageFacade {
         List<InsuranceCustomer> insuranceCustomers = customerSupplierService.queryStatisticsCustomer();
 
 
-        Map<String, List<InsuranceCustomer>> collect = insuranceCustomers.stream().collect(Collectors.groupingBy(InsuranceCustomer::getRankName));
+//        Map<String, List<InsuranceCustomer>> collect = insuranceCustomers.stream().collect(Collectors.groupingBy(InsuranceCustomer::getRankName));
+
+        Map<String, List<InsuranceCustomer>> collect2 = insuranceCustomers.stream().collect(Collectors.groupingBy(InsuranceCustomer::getRankCode));
 
         List<InsuranceCustomer> dataList = new ArrayList<>();
 
@@ -183,20 +189,37 @@ public class HomePageFacade {
 
         InsuranceCustomerLevelEnum[] values = InsuranceCustomerLevelEnum.values();
         String[] strs = new String[values.length];
+        String code = null;
         String name = null;
         for (int i = 0; i< values.length; i++){
+            code = values[i].getCode();
             name = values[i].getValue();
             strs[i] = name;
-            List<InsuranceCustomer> insuranceCustomers1 = collect.get(name);
-            if (insuranceCustomers1 == null){
+            List<InsuranceCustomer> insuranceCustomers2 = collect2.get(code);
+
+            if (insuranceCustomers2 == null){
                 ic = new InsuranceCustomer();
-                ic.setCount(CommonConstant.DEFAULT_VALUE_ZERO);
                 ic.setRankName(name);
-                ic.setRankCode(values[i].getCode());
+                ic.setRankCode(code);
+                ic.setCount(CommonConstant.DEFAULT_VALUE_ZERO);
                 dataList.add(ic);
             } else {
-                dataList.add(insuranceCustomers1.get(0));
+                InsuranceCustomer insuranceCustomer = insuranceCustomers2.get(0);
+                insuranceCustomer.setRankName(name);
+                insuranceCustomer.setRankCode(code);
+                dataList.add(insuranceCustomer);
             }
+
+//            List<InsuranceCustomer> insuranceCustomers1 = collect.get(name);
+//            if (insuranceCustomers1 == null){
+//                ic = new InsuranceCustomer();
+//                ic.setCount(CommonConstant.DEFAULT_VALUE_ZERO);
+//                ic.setRankName(name);
+//                ic.setRankCode(values[i].getCode());
+//                dataList.add(ic);
+//            } else {
+//                dataList.add(insuranceCustomers1.get(0));
+//            }
         }
 
         return dataList;
@@ -237,6 +260,11 @@ public class HomePageFacade {
 //            }
 //        }
         return list;
+    }
+
+    public List<SaleGoodsTop> querySaleGoodsTop (String type){
+        List<SaleGoodsTop> saleGoodsTops = salesTicketService.querySaleGoodsTop(type);
+        return saleGoodsTops;
     }
 
 

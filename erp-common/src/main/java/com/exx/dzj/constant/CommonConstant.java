@@ -139,4 +139,5 @@ public class CommonConstant {
     public static final int HOME_PAGE_DEFAULT_YEAR = 4;
 
     public static final int STOCK_INVENTORY_WARNING = 100;
+    public static final Integer INTEGER_VALUE_ONE = 1;
 }
