@@ -147,6 +147,10 @@ public class JwtUtil {
         if (key.equals(DataBaseConstant.DEPT_CODE)|| key.equals(DataBaseConstant.DEPT_CODE_TABLE)) {
             returnValue = user.getDeptCode();
         }
+        // 用户所属结构编码
+        if (key.equals(DataBaseConstant.ORG_CODE)|| key.equals(DataBaseConstant.ORG_CODE_TABLE)) {
+            returnValue = user.getOrgCode();
+        }
 
         if(returnValue!=null){
             returnValue = returnValue + moshi;

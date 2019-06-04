@@ -1,6 +1,7 @@
 package com.exx.dzj.entity.user;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.exx.dzj.annotation.LIKE;
 import lombok.Data;
 import lombok.ToString;
 
@@ -44,4 +45,14 @@ public class UserInfo implements Serializable {
     private Date lastSigninTime;
 
     private Date lastSignoutTime;
+
+    @LIKE
+    public String getUserName() {
+        return userName;
+    }
+
+    @LIKE
+    public String getRealName() {
+        return realName;
+    }
 }

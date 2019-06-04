@@ -217,7 +217,6 @@ public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> imple
     public Result quitUser(UserInfo record) {
         Result result = Result.responseSuccess();
         try {
-            int i = 100/0;
             record.setIsQuit(CommonConstant.DEFAULT_VALUE_ZERO);
             userMapper.updateByPrimaryKeySelective(record);
         } catch(Exception ex){

@@ -2,6 +2,7 @@ package com.exx.dzj.query;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.exx.dzj.annotation.LIKE;
 import com.exx.dzj.entity.datarules.DataPermissionRules;
 import com.exx.dzj.shiro.util.JwtUtil;
 import com.exx.dzj.util.ConvertUtils;
@@ -66,7 +67,7 @@ public class QueryGenerator {
 	 */
 	public static <T> QueryWrapper<T> initQueryWrapper(T searchObj, Map<String, String[]> parameterMap){
 		long start = System.currentTimeMillis();
-		QueryWrapper<T> queryWrapper = new QueryWrapper<T>();
+		QueryWrapper<T> queryWrapper = new QueryWrapper<>();
 		installMplus(queryWrapper, searchObj, parameterMap);
 		log.debug("---查询条件构造器初始化完成,耗时:"+(System.currentTimeMillis()-start)+"毫秒----");
 		return queryWrapper;
@@ -118,12 +119,12 @@ public class QueryGenerator {
 		String name, type;
 
 		/**
-		 * 根据类的成员变量作循环
+		 * 根据类的成员变量作循环 int i = 0; i < origDescriptors.length; i++
 		 */
-		for (int i = 0; i < origDescriptors.length; i++) {
+		for (PropertyDescriptor property : origDescriptors) {
 			//aliasName = origDescriptors[i].getName();  mybatis  不存在实体属性 不用处理别名的情况
-			name = origDescriptors[i].getName();
-			type = origDescriptors[i].getPropertyType().toString();
+			name = property.getName();
+			type = property.getPropertyType().toString();
 			try {
 				/**
 				 * 判断成员变量是否可读 或 是关键字
@@ -137,7 +138,7 @@ public class QueryGenerator {
 					/**
 					 * 将数据规则添加到查询条件中
 					 */
-					addRuleToQueryWrapper(ruleMap.get(name), name, origDescriptors[i].getPropertyType(), queryWrapper);
+					addRuleToQueryWrapper(ruleMap.get(name), name, property.getPropertyType(), queryWrapper);
 				}
 				
 				// 添加 判断是否有区间值
@@ -156,7 +157,7 @@ public class QueryGenerator {
 				//TODO 这种前后带逗号的支持分割后模糊查询需要使多选字段的查询生效
 				Object value = PropertyUtils.getSimpleProperty(searchObj, name);
 
-				// 判断 value 不等于kong, 并且前后都包含有逗号
+				// 判断 value 不等于空, 并且前后都包含有逗号
 				if (null != value && value.toString().startsWith(COMMA) && value.toString().endsWith(COMMA)) {
 					// 将连续的两个逗号给替换为一个逗号
 					String multiLikeval = value.toString().replace(",,", COMMA);
@@ -177,6 +178,12 @@ public class QueryGenerator {
 						queryWrapper.and(j -> j.like(field,vals[0]));
 					}
 				}else {
+					// Method method = property.getReadMethod();  可以获取到 getter 方法上的注解,无法获取到字段上的注解,所以在实体类中还要重写 getter 方法
+					LIKE like = PropertyUtils.getPropertyDescriptor(searchObj, name).getReadMethod().getAnnotation(LIKE.class);
+					if(null != like && ConvertUtils.isNotEmpty(value)) {
+						// 有 * 符号的走 LIKE 查询
+						value = "*"+value+"*";
+					}
 					// 根据参数值带什么关键字符串判断走什么类型的查询
 					QueryRuleEnum rule = convert2Rule(value);
 					// 根据规则条件将规则值中的特殊字符给剔除， 比如 value 中的 *
@@ -398,7 +405,27 @@ public class QueryGenerator {
 		}
 		return date;
 	}
-	
+
+	/**
+	 * 根据规则走不同的查询,如果字段有前缀，需要将前缀给拼接上
+	 * @param queryWrapper
+	 * @param name
+	 * @param prefix
+	 * @param rule
+	 * @param value
+	 */
+	private static void addEasyQuery(QueryWrapper<?> queryWrapper, String name, String prefix, QueryRuleEnum rule, Object value) {
+		if (value == null || rule == null) {
+			return;
+		}
+		name = ConvertUtils.camelToUnderline(name);
+		if(ConvertUtils.isNotEmpty(prefix)) {
+			name = prefix+"."+name;
+		}
+		log.info("--查询规则-->"+name+" "+rule.getValue()+" "+value);
+		matchCondition(queryWrapper, name, rule, value);
+	}
+
 	/**
 	 * 根据规则走不同的查询
 	 * @param queryWrapper  QueryWrapper
@@ -412,46 +439,57 @@ public class QueryGenerator {
 		}
 		name = ConvertUtils.camelToUnderline(name);
 		log.info("--查询规则-->"+name+" "+rule.getValue()+" "+value);
+		matchCondition(queryWrapper, name, rule, value);
+	}
+
+	/**
+	 * 查询条件匹配
+	 * @param queryWrapper
+	 * @param name
+	 * @param rule
+	 * @param value
+	 */
+	private static void matchCondition(QueryWrapper<?> queryWrapper, String name, QueryRuleEnum rule, Object value) {
 		switch (rule) {
-		case GT:
-			queryWrapper.gt(name, value);
-			break;
-		case GE:
-			queryWrapper.ge(name, value);
-			break;
-		case LT:
-			queryWrapper.lt(name, value);
-			break;
-		case LE:
-			queryWrapper.le(name, value);
-			break;
-		case EQ:
-			queryWrapper.eq(name, value);
-			break;
-		case NE:
-			queryWrapper.ne(name, value);
-			break;
-		case IN:
-			if(value instanceof String) {
-				queryWrapper.in(name, (Object[])value.toString().split(","));
-			}else if(value instanceof String[]) {
-				queryWrapper.in(name, (Object[]) value);
-			}else {
-				queryWrapper.in(name, value);
-			}
-			break;
-		case LIKE:
-			queryWrapper.like(name, value);
-			break;
-		case LEFT_LIKE:
-			queryWrapper.likeLeft(name, value);
-			break;
-		case RIGHT_LIKE:
-			queryWrapper.likeRight(name, value);
-			break;
-		default:
-			log.info("--查询规则未匹配到---");
-			break;
+			case GT:
+				queryWrapper.gt(name, value);
+				break;
+			case GE:
+				queryWrapper.ge(name, value);
+				break;
+			case LT:
+				queryWrapper.lt(name, value);
+				break;
+			case LE:
+				queryWrapper.le(name, value);
+				break;
+			case EQ:
+				queryWrapper.eq(name, value);
+				break;
+			case NE:
+				queryWrapper.ne(name, value);
+				break;
+			case IN:
+				if(value instanceof String) {
+					queryWrapper.in(name, (Object[])value.toString().split(","));
+				}else if(value instanceof String[]) {
+					queryWrapper.in(name, (Object[]) value);
+				}else {
+					queryWrapper.in(name, value);
+				}
+				break;
+			case LIKE:
+				queryWrapper.like(name, value);
+				break;
+			case LEFT_LIKE:
+				queryWrapper.likeLeft(name, value);
+				break;
+			case RIGHT_LIKE:
+				queryWrapper.likeRight(name, value);
+				break;
+			default:
+				log.info("--查询规则未匹配到---");
+				break;
 		}
 	}
 
@@ -517,12 +555,15 @@ public class QueryGenerator {
 				objs[i] = NumberUtils.parseNumber(values[i], propertyType);
 			}
 			// 生成查询条件
-			addEasyQuery(queryWrapper, name, rule, objs);
+			//addEasyQuery(queryWrapper, name, rule, objs);
+			addEasyQuery(queryWrapper, name, dataRule.getPrefix(), rule, objs);
 		}else {
 			if (propertyType.equals(String.class)) {
-				addEasyQuery(queryWrapper, name, rule, converRuleValue(dataRule.getRuleValue()));
+				//addEasyQuery(queryWrapper, name, rule, converRuleValue(dataRule.getRuleValue()));
+				addEasyQuery(queryWrapper, name, dataRule.getPrefix(), rule, converRuleValue(dataRule.getRuleValue()));
 			} else {
-				addEasyQuery(queryWrapper, name, rule, NumberUtils.parseNumber(dataRule.getRuleValue(), propertyType));
+				//addEasyQuery(queryWrapper, name, rule, NumberUtils.parseNumber(dataRule.getRuleValue(), propertyType));
+				addEasyQuery(queryWrapper, name, dataRule.getPrefix(), rule, NumberUtils.parseNumber(dataRule.getRuleValue(), propertyType));
 			}
 		}
 	}

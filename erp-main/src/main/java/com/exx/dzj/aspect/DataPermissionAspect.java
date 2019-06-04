@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.exx.dzj.annotation.DataPermission;
 import com.exx.dzj.entity.datarules.DataPermissionRules;
 import com.exx.dzj.entity.menu.MenuInfo;
+import com.exx.dzj.entity.user.UserVo;
+import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.service.sys.DataPermissionRulesService;
 import com.exx.dzj.service.sys.MenuService;
@@ -45,11 +47,8 @@ public class DataPermissionAspect {
     @Autowired
     private UserTokenFacade userTokenFacade;
 
-    /*@Autowired
-    private UserFacade userFacade;
-
     @Autowired
-    private UserService userService;*/
+    private UserFacade userFacade;
 
     @Pointcut("@annotation(com.exx.dzj.annotation.DataPermission)")
     public void pointCut() {
@@ -95,7 +94,7 @@ public class DataPermissionAspect {
             }
             //3.通过用户名+菜单ID 找到权限配置信息 放到request中去
             if(currentPermission!=null) {
-                //String username = JwtUtil.getUserNameByToken(request);
+
                 /**
                  * 使用 userCode 查询是否会更好一点
                  */
@@ -104,9 +103,9 @@ public class DataPermissionAspect {
                 if(dataRules!=null && dataRules.size()>0) {
                     DataAutorUtils.installDataSearchConditon(request, dataRules);
 
-                    //TODO 此处将用户信息查找出来放到request中实属无奈  可以优化
-                /*UserInfo userinfo = userService.queryUserInfo(username);
-                DataAutorUtils.installUserInfo(request, userinfo);*/
+                    //TODO 此处将用户信息查找出来放到request中，此处可以优化(放到 Redis 缓存中, 减少查询)
+                    UserVo userInfo = userFacade.queryUserBean(userCode);
+                    DataAutorUtils.installUserInfo(request, userInfo);
                 }
             }
 

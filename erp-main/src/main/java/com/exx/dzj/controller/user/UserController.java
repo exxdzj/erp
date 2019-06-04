@@ -70,6 +70,13 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 数据权限测试
+     * @param request
+     * @param response
+     * @param query
+     * @return
+     */
     @GetMapping("list")
     @DataPermission(pageComponent="system/user/list")
     public Result queryList(HttpServletRequest request, HttpServletResponse response, String query) {

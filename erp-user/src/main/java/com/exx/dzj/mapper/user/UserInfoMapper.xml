@@ -122,31 +122,6 @@
     where user_code = #{userCode,jdbcType=VARCHAR}
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tab_user_info
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-
-  <delete id="deleteByExample" parameterType="com.exx.dzj.entity.user.UserInfoExample">
-    delete from tab_user_info
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-
-  <insert id="insert" parameterType="com.exx.dzj.entity.user.UserInfo">
-    insert into tab_user_info (user_code, user_name,
-      pass_word, real_name, dept_code, 
-      salesman_code, head_img, phone_num, 
-      email, is_quit, login_status, 
-      last_signin_time, last_signout_time)
-    values (#{userCode,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
-      #{passWord,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{deptCode,jdbcType=VARCHAR}, 
-      #{salesmanCode,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, #{phoneNum,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{isQuit,jdbcType=INTEGER}, #{loginStatus,jdbcType=INTEGER}, 
-      #{lastSigninTime,jdbcType=TIMESTAMP}, #{lastSignoutTime,jdbcType=TIMESTAMP})
-  </insert>
-
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.user.UserInfo">
     insert into tab_user_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -448,6 +423,7 @@
       tb.real_name realName,
       tb.dept_code deptCode,
       td.dept_name deptName,
+      td.org_code orgCode,
       tb.salesman_code salesmanCode,
       tb.head_img headImg,
       tb.phone_num phoneNum,

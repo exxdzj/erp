@@ -11,13 +11,6 @@ import java.util.List;
 public interface UserInfoMapper extends BaseMapper<UserInfo> {
     long countByExample(UserInfoExample example);
 
-    int deleteByExample(UserInfoExample example);
-
-    int deleteByPrimaryKey(Integer id);
-
-    @Override
-    int insert(UserInfo record);
-
     int insertSelective(UserInfo record);
 
     List<UserInfo> selectByExample(UserInfoExample example);

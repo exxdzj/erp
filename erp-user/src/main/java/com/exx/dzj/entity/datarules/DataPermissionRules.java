@@ -51,6 +51,11 @@ public class DataPermissionRules implements Serializable {
     private String ruleValue;
 
     /**
+     * 前缀(表的别名)
+     */
+    private String prefix;
+
+    /**
      * 是否有效
      */
     private Integer isEnable;

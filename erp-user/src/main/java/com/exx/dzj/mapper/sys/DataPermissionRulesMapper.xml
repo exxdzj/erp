@@ -9,11 +9,12 @@
         <result property="ruleColumn" column="rule_column"/>
         <result property="ruleConditions" column="rule_conditions"/>
         <result property="ruleValue" column="rule_value"/>
+        <result property="prefix" column="prefix"/>
     </resultMap>
 
     <sql id="QueryDataPermissionRulesSQL">
         SELECT
-          rule_code, menu_code, rule_name, rule_column, rule_conditions, rule_value
+          rule_code, menu_code, rule_name, rule_column, rule_conditions, rule_value, prefix
         FROM tab_data_permission_rules
         WHERE is_enable = 1
     </sql>
@@ -64,6 +65,9 @@
             <if test="ruleValue!=null and ruleValue!=''">
               rule_value,
             </if>
+            <if test="prefix!=null and prefix!=''">
+                prefix,
+            </if>
             <if test="createUser!=null and createUser!=''">
               create_user,
             </if>
@@ -88,6 +92,9 @@
             <if test="ruleValue!=null and ruleValue!=''">
                 #{ruleValue},
             </if>
+            <if test="prefix!=null and prefix!=''">
+                #{prefix},
+            </if>
             <if test="createUser!=null and createUser!=''">
                 #{createUser},
             </if>
@@ -110,6 +117,9 @@
             </if>
             <if test="ruleValue!=null and ruleValue!=''">
                 rule_value = #{ruleValue},
+            </if>
+            <if test="prefix!=null and prefix!=''">
+                prefix = #{prefix},
             </if>
             <if test="isEnable!=null">
                 is_enable = #{isEnable},

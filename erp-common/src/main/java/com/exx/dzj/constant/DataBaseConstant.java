@@ -17,6 +17,11 @@ public interface DataBaseConstant {
 
     public static final String USER_CODE_TABLE = "USER_CODE";
 
+    /** 机构编码 */
+    public static final String ORG_CODE = "orgCode";
+
+    public static final String ORG_CODE_TABLE = "ORG_CODE";
+
     /** 创建时间 */
     public static final String CREATE_TIME ="createTime";
 
