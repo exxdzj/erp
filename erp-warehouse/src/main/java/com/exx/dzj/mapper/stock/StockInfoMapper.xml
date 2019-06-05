@@ -116,13 +116,13 @@
       <if test="stockCode != null and stockCode!=''">
         stock_code,
       </if>
-      <if test="nature != null">
+      <if test="nature != null and nature != ''">
         nature,
       </if>
       <if test="stockName != null and stockName!=''">
         stock_name,
       </if>
-      <if test="specificateType != null">
+      <if test="specificateType != null and specificateType != ''">
         specificate_type,
       </if>
       <if test="stockClass != null and stockClass!=''">
@@ -130,6 +130,12 @@
       </if>
       <if test="stockClassName != null and stockClassName!=''">
         stock_class_name,
+      </if>
+      <if test="stockAddress != null and stockAddress!=''">
+        stock_address,
+      </if>
+      <if test="stockAddressCode != null and stockAddressCode!=''">
+        stock_address_code,
       </if>
       <if test="meterUnit != null and meterUnit!=''">
         meter_unit,
@@ -165,7 +171,7 @@
       <if test="stockCode != null and stockCode!=''">
         #{stockCode,jdbcType=VARCHAR},
       </if>
-      <if test="nature != null">
+      <if test="nature != null and nature != ''">
         #{nature,jdbcType=VARCHAR},
       </if>
       <if test="stockName != null and stockName!=''">
@@ -179,6 +185,12 @@
       </if>
       <if test="stockClassName != null and stockClassName!=''">
         #{stockClassName,jdbcType=VARCHAR},
+      </if>
+      <if test="stockAddress != null and stockAddress!=''">
+        #{stockAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="stockAddressCode != null and stockAddressCode!=''">
+        #{stockAddressCode,jdbcType=VARCHAR},
       </if>
       <if test="meterUnit != null and meterUnit!=''">
         #{meterUnit,jdbcType=VARCHAR},
@@ -317,8 +329,8 @@
           ti.specificate_type
       ) AS `value`,
       ti.stock_code stockCode,
-      sn.stock_address stockAddress,
-      sn.stock_address_code stockAddressCode,
+      ti.stock_address stockAddress,
+      ti.stock_address_code stockAddressCode,
       DICTINFO.dict_name warehouseName,
       concat_ws(
           '/',
@@ -472,7 +484,7 @@
   <update id="updateStockGoodsInventory" parameterType="com.exx.dzj.entity.stock.StockBean">
     UPDATE tab_stock_num_price
       SET min_inventory = IFNULL(min_inventory, 0) + #{minInventory}
-      WHERE stock_code = #{stockCode} AND stock_address_code = #{stockAddressCode}
+      WHERE stock_code = #{stockCode}
   </update>
 
   <insert id="insertStockNumPrice" parameterType="com.exx.dzj.entity.stock.StockNumPrice">

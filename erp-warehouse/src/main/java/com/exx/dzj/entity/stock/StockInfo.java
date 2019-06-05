@@ -52,4 +52,7 @@ public class StockInfo extends BaseModule {
 
     /**版本号*/
     private Integer version;
+
+    private String stockAddress;
+    private String stockAddressCode;
 }
