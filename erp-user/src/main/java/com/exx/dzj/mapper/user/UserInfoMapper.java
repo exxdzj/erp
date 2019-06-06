@@ -38,4 +38,6 @@ public interface UserInfoMapper extends BaseMapper<UserInfo> {
     List<UserModel> selectionUserInfo();
 
     List<UserInfo> querySalesmanList(@Param("type") Integer type);
+
+    String querySalesmanDeptCode(@Param("salesmanCode") String salesmanCode);
 }

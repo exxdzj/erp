@@ -154,4 +154,14 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     public List<SaleInfo> querySubordinateCompanySelect() {
         return saleInfoMapper.querySubordinateCompanySelect();
     }
+
+    @Override
+    public int querySaleBySaleCode(String saleCode) {
+        return saleInfoMapper.querySaleBySaleCode(saleCode);
+    }
+
+    @Override
+    public void updateSalesmanSubordinateCompany(SaleInfo saleInfo) {
+        saleInfoMapper.updateSalesmanSubordinateCompany(saleInfo);
+    }
 }

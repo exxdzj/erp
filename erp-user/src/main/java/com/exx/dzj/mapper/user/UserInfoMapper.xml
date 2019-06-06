@@ -516,4 +516,8 @@
         salesman_code
     )
   </select>
+
+  <select id="querySalesmanDeptCode" resultType="string">
+    SELECT dept_code FROM tab_user_info where salesman_code = #{salesmanCode}
+  </select>
 </mapper>

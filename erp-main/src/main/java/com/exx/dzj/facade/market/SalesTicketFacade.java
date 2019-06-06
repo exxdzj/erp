@@ -7,6 +7,7 @@ import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockInfo;
 import com.exx.dzj.entity.stock.StockNumPrice;
+import com.exx.dzj.facade.market.task.AsyncSaleTask;
 import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
@@ -16,6 +17,7 @@ import com.exx.dzj.service.salesreceiptsdetail.SaleReceiptsDetailService;
 import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.stock.StockService;
 import com.exx.dzj.service.sys.DeptService;
+import com.exx.dzj.service.user.UserService;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -61,6 +64,9 @@ public class SalesTicketFacade {
 
     @Autowired
     private DeptService deptService;
+
+    @Autowired
+    private UserService salesmanService;
 
 
     @Transactional
@@ -121,7 +127,13 @@ public class SalesTicketFacade {
         // 获取部门信息
         List<DeptInfoBean> deptInfos = deptService.queryDeptList();
 
+        // 查询销售员部门编码
+        String deptCode = salesmanService.querySalesmanDeptCode(saleInfo.getSalesmanCode());
+
+
         salesTicketService.saveSaleInfo(saleInfo);
+        setSubordinateCompany(saleInfo, deptInfos, deptCode);
+
         if(!CollectionUtils.isEmpty(goodsDetailBeanList)){
             goodsDetailBeanList = setGoodsSaleCode(goodsDetailBeanList, saleInfo.getSaleCode());
             salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList);
@@ -142,6 +154,14 @@ public class SalesTicketFacade {
                 saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
             }
         }
+    }
+
+    @Autowired
+    private Executor asyncSaleExecutr;
+
+    private void setSubordinateCompany (SaleInfo saleInfo, List<DeptInfoBean> deptInfos, String deptCode){
+        AsyncSaleTask  asyncSaleTask = new AsyncSaleTask(saleInfo, deptInfos, deptCode, salesTicketService);
+        asyncSaleExecutr.execute(asyncSaleTask);
     }
 
     public ERPage<SaleInfo> querySalesTicketList(SaleInfo saleInfo, int pageNum, int pageSize){
@@ -200,6 +220,14 @@ public class SalesTicketFacade {
         salesTicketService.updateSalesTicketById(saleInfo);
 
         SaleInfo oldSaleInfo = querySalesTicketById(saleInfo.getId());
+
+        List<DeptInfoBean> deptInfos = deptService.queryDeptList();
+
+        // 查询销售员部门编码
+        String deptCode = salesmanService.querySalesmanDeptCode(saleInfo.getSalesmanCode());
+
+
+        setSubordinateCompany(saleInfo, deptInfos, deptCode);
 
         List<SaleGoodsDetailBean> saleGoodsDetailBeanList = oldSaleInfo.getSaleGoodsDetailBeanList();
         List<SaleGoodsDetailBean> centreGoods = null;

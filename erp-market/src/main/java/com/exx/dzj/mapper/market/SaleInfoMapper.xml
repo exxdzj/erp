@@ -918,4 +918,16 @@
     SELECT subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
 	  FROM tab_sale_info where subordinate_company_code is not null GROUP BY subordinate_company_code
   </select>
+
+  <select id="querySaleBySaleCode" resultType="int">
+    SELECT COUNT(1) FROM tab_sale_info WHERE sale_code = #{saleCode}
+  </select>
+
+  <update id="updateSalesmanSubordinateCompany" parameterType="com.exx.dzj.entity.market.SaleInfo">
+    UPDATE tab_sale_info SET
+      subordinate_company_code = #{subordinateCompanyCode},
+      subordinate_company_name = #{subordinateCompanyName}
+    WHERE sale_code = #{saleCode}
+
+  </update>
 </mapper>

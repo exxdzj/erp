@@ -91,4 +91,6 @@ public interface UserService extends IService<UserInfo> {
     public List<UserModel> selectionUserInfo ();
 
     List<UserInfo> querySalesmanList(Integer type);
+
+    String querySalesmanDeptCode(String salesmanCode);
 }

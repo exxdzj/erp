@@ -52,4 +52,8 @@ public interface SalesTicketService {
     List<SaleGoodsTop> querySaleGoodsTop (String type);
 
     List<SaleInfo> querySubordinateCompanySelect();
+
+    int querySaleBySaleCode(String saleCode);
+
+    void updateSalesmanSubordinateCompany(SaleInfo saleInfo);
 }

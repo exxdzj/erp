@@ -24,6 +24,7 @@ import com.github.pagehelper.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptInfoBeanMapper, DeptInfoBea
      * @return
      */
     @Override
+    @Cacheable(value = "queryDeptList", keyGenerator = "myKeyGenerator")
     public List<DeptInfoBean> queryDeptList() {
         return deptMapper.queryDeptList();
     }
