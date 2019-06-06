@@ -49,11 +49,19 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/image/**", "anon");
         filterChainDefinitionMap.put("/saleexport/**", "anon");
         filterChainDefinitionMap.put("/import/**", "anon");
+
+
+        filterChainDefinitionMap.put("/favicon.ico", "anon");
+        filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+        filterChainDefinitionMap.put("/webjars/**/**.js", "anon");
+        filterChainDefinitionMap.put("/webjars/**/**.css", "anon");
+        filterChainDefinitionMap.put("/webjars/**/**.png", "anon");
+        filterChainDefinitionMap.put("/webjars/**/**.ttf", "anon");
+        filterChainDefinitionMap.put("/swagger-resources/**", "anon");
+        filterChainDefinitionMap.put("/v2/**", "anon");
+
         //filterChainDefinitionMap.put("/logistics/trail/**", "anon");
 
-
-        //filterChainDefinitionMap.put("/**.js", "anon");
-        //filterChainDefinitionMap.put("/**.css", "anon");
 
         // 添加自己的过滤器并且取名为jwt
         Map<String, Filter> filterMap = new HashMap<String, Filter>(1);
