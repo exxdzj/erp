@@ -138,6 +138,12 @@
       <if test="salesmanCode != null and salesmanCode != ''">
         AND  SINFO.salesman_code=#{salesmanCode}
       </if>
+      <if test="paymentStatus != null and paymentStatus != ''">
+        AND  SINFO.payment_status=#{paymentStatus}
+      </if>
+      <if test="subordinateCompanyCode != null and subordinateCompanyCode != ''">
+        AND  SINFO.subordinate_company_code=#{subordinateCompanyCode}
+      </if>
       /*AND SINFO.is_enable = 1*/
       ORDER BY SINFO.create_time  DESC
   </select>
@@ -907,4 +913,9 @@
             </if>
             GROUP BY SGD.stock_code ORDER BY goodsNum DESC LIMIT 20
     </select>
+
+  <select id="querySubordinateCompanySelect" resultType="com.exx.dzj.entity.market.SaleInfo">
+    SELECT subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
+	  FROM tab_sale_info where subordinate_company_code is not null GROUP BY subordinate_company_code
+  </select>
 </mapper>

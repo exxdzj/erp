@@ -2,6 +2,7 @@ package com.exx.dzj.facade.homepage;
 
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.customer.InsuranceCustomer;
+import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.SaleGoodsTop;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.statistics.sales.HomePageReport;
@@ -12,7 +13,9 @@ import com.exx.dzj.service.purchaseticket.PurchaseTicketService;
 import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
 import com.exx.dzj.service.stock.StockService;
+import com.exx.dzj.service.sys.DeptService;
 import com.exx.dzj.util.DateUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -262,9 +265,36 @@ public class HomePageFacade {
         return list;
     }
 
+    @Autowired
+    private DeptService deptService;
+
     public List<SaleGoodsTop> querySaleGoodsTop (String type){
         List<SaleGoodsTop> saleGoodsTops = salesTicketService.querySaleGoodsTop(type);
+
+        List<DeptInfoBean> list = deptService.queryDeptList();
+
+        DeptInfoBean deptInfoBean = new DeptInfoBean();
+        deptInfoBean.setDeptCode("201905081453361");
+//        String code = "201905081454131";
+
+
+        DeptInfoBean aa = aa(list, deptInfoBean);
+        System.out.println(aa);
+
         return saleGoodsTops;
+    }
+
+    public DeptInfoBean aa (List<DeptInfoBean> list, DeptInfoBean deptInfoBean){
+        for (DeptInfoBean db : list){
+            if (StringUtils.equals(db.getDeptCode(), deptInfoBean.getDeptCode())){
+                deptInfoBean.setDeptCode(db.getParentCode());
+                if (db.getIsCompare().equals(1)){
+                    return db;
+                }
+            }
+        }
+
+        return aa(list, deptInfoBean);
     }
 
 

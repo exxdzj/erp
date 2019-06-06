@@ -51,4 +51,6 @@ public interface SaleInfoMapper {
     List<SaleInfo> queryCustomerSalesToday (SaleInfo saleInfo);
 
     List<SaleGoodsTop> querySaleGoodsTop(@Param("type") String type);
+
+    List<SaleInfo> querySubordinateCompanySelect();
 }

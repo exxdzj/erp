@@ -149,4 +149,9 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     public List<SaleGoodsTop> querySaleGoodsTop(String type) {
         return saleInfoMapper.querySaleGoodsTop(type);
     }
+
+    @Override
+    public List<SaleInfo> querySubordinateCompanySelect() {
+        return saleInfoMapper.querySubordinateCompanySelect();
+    }
 }

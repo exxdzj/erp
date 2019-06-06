@@ -2,6 +2,7 @@ package com.exx.dzj.facade.market;
 
 import com.exx.dzj.annotation.SaleLog;
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockInfo;
@@ -14,9 +15,11 @@ import com.exx.dzj.service.salesgoodsdetail.SalesGoodsDetailService;
 import com.exx.dzj.service.salesreceiptsdetail.SaleReceiptsDetailService;
 import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.stock.StockService;
+import com.exx.dzj.service.sys.DeptService;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -55,6 +58,9 @@ public class SalesTicketFacade {
 
     @Autowired
     private BusEncodeFacade busEncodeFacade;
+
+    @Autowired
+    private DeptService deptService;
 
 
     @Transactional
@@ -111,6 +117,10 @@ public class SalesTicketFacade {
         setPaymentStatus(saleInfo);
         saleInfo.setSaleTicketType(CommonConstant.DEFAULT_VALUE_ONE);
         saleInfo.setIsEnable(CommonConstant.DEFAULT_VALUE_ONE);
+
+        // 获取部门信息
+        List<DeptInfoBean> deptInfos = deptService.queryDeptList();
+
         salesTicketService.saveSaleInfo(saleInfo);
         if(!CollectionUtils.isEmpty(goodsDetailBeanList)){
             goodsDetailBeanList = setGoodsSaleCode(goodsDetailBeanList, saleInfo.getSaleCode());
@@ -488,6 +498,10 @@ public class SalesTicketFacade {
     public List<SaleInfo> queryCustomerSalesToday (SaleInfo saleInfo){
         List<SaleInfo> list = salesTicketService.queryCustomerSalesToday(saleInfo);
         return list;
+    }
+
+    public List<SaleInfo> querySubordinateCompanySelect() {
+        return salesTicketService.querySubordinateCompanySelect();
     }
 
 }

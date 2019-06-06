@@ -148,6 +148,13 @@ public class HomePageController {
         return result;
     }
 
+    /**
+     * @description 热销商品
+     * @author yangyun
+     * @date 2019/6/5 0005
+     * @param type  月 周 日
+     * @return com.exx.dzj.result.Result
+     */
     @GetMapping("querysalegoodstop/{type}")
     public Result querySaleGoodsTop (@PathVariable("type") String type){
         Result result = Result.responseSuccess();
@@ -155,5 +162,4 @@ public class HomePageController {
         result.setData(data);
         return result;
     }
-
 }

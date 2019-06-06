@@ -52,7 +52,7 @@ public class SalesTickeContorller {
     }
 
     /**
-     * @description 销售单查询
+     * @description 销售单列表查询
      * @author yangyun
      * @date 2019/1/8 0008
      * @param request
@@ -241,6 +241,21 @@ public class SalesTickeContorller {
     public Result queryCustomerSalesToday (@RequestBody SaleInfo saleInfo){
         Result result = Result.responseSuccess();
         List<SaleInfo> list = salesTicketFacade.queryCustomerSalesToday(saleInfo);
+        result.setData(list);
+        return result;
+    }
+
+    /**
+     * @description 查询销售单分公司下拉
+     * @author yangyun
+     * @date 2019/6/6 0006
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @PostMapping("querysubordinatecompanyselect")
+    public Result querySubordinateCompanySelect(){
+        Result result = Result.responseSuccess();
+        List<SaleInfo> list = salesTicketFacade.querySubordinateCompanySelect();
         result.setData(list);
         return result;
     }

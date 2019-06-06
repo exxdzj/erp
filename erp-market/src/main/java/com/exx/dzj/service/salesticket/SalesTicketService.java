@@ -50,4 +50,6 @@ public interface SalesTicketService {
     List<SaleInfo> queryCustomerSalesToday (SaleInfo saleInfo);
 
     List<SaleGoodsTop> querySaleGoodsTop (String type);
+
+    List<SaleInfo> querySubordinateCompanySelect();
 }
