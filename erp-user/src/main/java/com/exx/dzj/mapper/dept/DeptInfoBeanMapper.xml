@@ -6,6 +6,7 @@
     <result column="dept_code" jdbcType="VARCHAR" property="deptCode" />
     <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
     <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
     <result column="dept_describe" jdbcType="VARCHAR" property="deptDescribe" />
     <result column="seq" jdbcType="INTEGER" property="seq" />
     <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
@@ -74,7 +75,7 @@
   </sql>
 
   <sql id="Base_Column_List">
-    id, dept_code, dept_name, parent_code, dept_describe, seq, is_enable, create_time, 
+    id, dept_code, dept_name, parent_code, org_code, dept_describe, seq, is_enable, create_time,
     create_user, update_time, update_user
   </sql>
 

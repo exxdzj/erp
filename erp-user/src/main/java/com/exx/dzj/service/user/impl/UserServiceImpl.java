@@ -6,11 +6,13 @@ import com.exx.dzj.annotation.SysLog;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.constant.LogLevel;
 import com.exx.dzj.constant.LogType;
+import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.user.*;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.mapper.user.UserInfoMapper;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.service.sys.DeptService;
 import com.exx.dzj.service.user.UserService;
 import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.GenerateSequenceUtil;
@@ -37,6 +39,9 @@ public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> imple
     @Autowired
     private UserInfoMapper userMapper;
 
+    @Autowired
+    private DeptService deptService;
+
     /**
      * 查询 业务员列表
      * @return
@@ -56,6 +61,14 @@ public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> imple
     public String saveSalesman(UserVo bean) throws ErpException{
         try{
             String userCode = null;
+
+            // 通过 detpCode 查询 orgCode
+
+            DeptInfoBean deptBean = deptService.queryDeptInfo(bean.getDeptCode());
+            if(null != deptBean) {
+                bean.setOrgCode(bean.getDeptCode());
+            }
+
             if(null != bean && StringUtils.isBlank(bean.getUserCode())){
                 //获取 userCode
                 userCode = GenerateSequenceUtil.generateSequenceNo();
@@ -65,10 +78,6 @@ public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> imple
                     saveSalesman(bean);
                 }
                 bean.setUserCode(userCode);
-                /**
-                 * 默认密码
-                 * info.setPassWord("exx88dzj");
-                 */
                 userMapper.insertSelective(bean);
             }else{
                 userMapper.updateByPrimaryKeySelective(bean);

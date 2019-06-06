@@ -125,31 +125,34 @@
   <insert id="insertSelective" parameterType="com.exx.dzj.entity.user.UserInfo">
     insert into tab_user_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userCode != null">
+      <if test="userCode != null and userCode!=''">
         user_code,
       </if>
-      <if test="userName != null">
+      <if test="userName != null and userName!=''">
         user_name,
       </if>
-      <if test="passWord != null">
+      <if test="passWord != null and passWord!=''">
         pass_word,
       </if>
-      <if test="realName != null">
+      <if test="realName != null and realName!=''">
         real_name,
       </if>
-      <if test="deptCode != null">
+      <if test="deptCode != null and deptCode!=''">
         dept_code,
       </if>
-      <if test="salesmanCode != null">
+      <if test="orgCode != null and orgCode!=''">
+        org_code,
+      </if>
+      <if test="salesmanCode != null and salesmanCode!=''">
         salesman_code,
       </if>
-      <if test="headImg != null">
+      <if test="headImg != null and headImg!=''">
         head_img,
       </if>
-      <if test="phoneNum != null">
+      <if test="phoneNum != null and phoneNum!=''">
         phone_num,
       </if>
-      <if test="email != null">
+      <if test="email != null and email!=''">
         email,
       </if>
       <if test="birthday != null">
@@ -161,31 +164,34 @@
       create_time,
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userCode != null">
+      <if test="userCode != null and userCode!=''">
         #{userCode,jdbcType=VARCHAR},
       </if>
-      <if test="userName != null">
+      <if test="userName != null and userName!=''">
         #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="passWord != null">
+      <if test="passWord != null and passWord!=''">
         #{passWord,jdbcType=VARCHAR},
       </if>
-      <if test="realName != null">
+      <if test="realName != null and realName!=''">
         #{realName,jdbcType=VARCHAR},
       </if>
-      <if test="deptCode != null">
+      <if test="deptCode != null and deptCode!=''">
         #{deptCode,jdbcType=VARCHAR},
       </if>
-      <if test="salesmanCode != null">
+      <if test="orgCode != null and orgCode!=''">
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="salesmanCode != null and salesmanCode!=''">
         #{salesmanCode,jdbcType=VARCHAR},
       </if>
-      <if test="headImg != null">
+      <if test="headImg != null and headImg!=''">
         #{headImg,jdbcType=VARCHAR},
       </if>
-      <if test="phoneNum != null">
+      <if test="phoneNum != null and phoneNum!=''">
         #{phoneNum,jdbcType=VARCHAR},
       </if>
-      <if test="email != null">
+      <if test="email != null and email!=''">
         #{email,jdbcType=VARCHAR},
       </if>
       <if test="birthday != null">
@@ -270,6 +276,9 @@
       </if>
       <if test="deptCode != null and deptCode!=''">
         dept_code = #{deptCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null and orgCode!=''">
+        dept_code = #{orgCode,jdbcType=VARCHAR},
       </if>
       <if test="salesmanCode != null and salesmanCode!=''">
         salesman_code = #{salesmanCode,jdbcType=VARCHAR},
