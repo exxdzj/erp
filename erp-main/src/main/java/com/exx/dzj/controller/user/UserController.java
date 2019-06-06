@@ -11,6 +11,9 @@ import com.exx.dzj.query.QueryGenerator;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.JsonUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +27,7 @@ import java.util.List;
  * @Date 2019/1/8 0008 17:18
  * @Description 获取用户信息
  */
+@Api(value = "用户接口服务", description = "用户接口服务")
 @RestController
 @RequestMapping("user/")
 public class UserController {
@@ -35,6 +39,8 @@ public class UserController {
      * 当用户登录成功后,进入主页通过 token 获取用户信息和用户角色
      * @return
      */
+    @ApiOperation(nickname = "getUserRoles", value="查询用户信息和角色", notes="查询用户信息和角色", httpMethod = "GET")
+    @ApiImplicitParam(name = "token", value = "登录凭证", required = true, dataType = "String")
     @GetMapping("getUserRoles")
     public Result getUserInfo(HttpServletRequest request, @RequestParam(value="token") String token){
         Result result = Result.responseSuccess();
@@ -46,6 +52,7 @@ public class UserController {
      * 查询业务员列表数据
      * @return
      */
+    @ApiOperation(nickname = "querySalesman", value="查询业务员列表", notes="查询业务员列表", httpMethod = "GET")
     @GetMapping("querySalesman")
     public Result querySalesman() {
         Result result = Result.responseSuccess();
@@ -77,6 +84,8 @@ public class UserController {
      * @param query
      * @return
      */
+    @ApiOperation(nickname = "queryList", value="查询用户列表", notes="查询用户列表", httpMethod = "GET")
+    @ApiImplicitParam(name = "query", value = "查询条件和分页参数", required = true, dataType = "String")
     @GetMapping("list")
     @DataPermission(pageComponent="system/user/list")
     public Result queryList(HttpServletRequest request, HttpServletResponse response, String query) {
@@ -201,6 +210,8 @@ public class UserController {
      * @param
      * @return com.exx.dzj.result.Result
      */
+    @ApiOperation(value="查询销售员或采购员", notes="查询销售员或采购员")
+    @ApiImplicitParam(name = "type", value = "用于区分是采购还是销售", required = true, dataType = "Integer", paramType = "path")
     @GetMapping("querySalesmanList/{type}")
     public Result querySalesmanList (@PathVariable("type") Integer type){
         Result result = Result.responseSuccess();
