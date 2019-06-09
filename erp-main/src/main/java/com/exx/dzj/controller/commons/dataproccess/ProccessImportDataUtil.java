@@ -4,6 +4,7 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
+import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
@@ -21,10 +22,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -35,6 +34,20 @@ public class ProccessImportDataUtil {
 
     @Autowired
     private UserFacade userFacade;
+
+    private DeptInfoBean gainSubordinateCompanyInfo (List<DeptInfoBean> list, DeptInfoBean deptInfoBean){
+
+        for (DeptInfoBean db : list){
+            if (StringUtils.equals(db.getDeptCode(), deptInfoBean.getDeptCode())){
+                deptInfoBean.setDeptCode(db.getParentCode());
+                if (db.getIsCompare().equals(CommonConstant.DEFAULT_VALUE_ONE)){
+                    return db;
+                }
+            }
+        }
+
+        return gainSubordinateCompanyInfo(list, deptInfoBean);
+    }
 
     /**
      * @description 销售单excel 数据导入
@@ -51,6 +64,7 @@ public class ProccessImportDataUtil {
 
         SaleModel info = null;
         String sharePro ="";
+        Date saleDate = null;
         for (Object o : data) {
             info = (SaleModel)o;
 
@@ -80,6 +94,13 @@ public class ProccessImportDataUtil {
             }
 
             BeanUtils.copyProperties(info, saleInfo);
+
+
+            saleInfo.setIsReceipt(2);
+            saleDate = info.getSaleDate();
+            if (saleDate != null){
+                saleInfo.setSaleDate(new Timestamp(saleDate.getTime()));
+            }
             setSalesInfo(saleInfo, userInfoMap, stringMap, customerSupplierBeanMap);
             saleInfoMap.put(saleCode, saleInfo);
             sharePro = saleCode;
@@ -94,7 +115,6 @@ public class ProccessImportDataUtil {
                 setSaleGoodsDetail(saleGoodsDetail, stringMap);
                 saleGoodsMap.put(info.getStockCode(), saleGoodsDetail);
             }
-
         }
 
         setSaleInfo(saleInfoMap, saleReceiptsMap, saleGoodsMap, sharePro);
@@ -356,10 +376,16 @@ public class ProccessImportDataUtil {
 
     private static void setStockClass(StockInfo stockInfo, Map<String, String> stringMap) {
         String aClass = stockInfo.getStockClass();
+        String stockAddress = stockInfo.getStockAddress();
         if (StringUtils.isNotEmpty(aClass)){
             String value = stringMap.get(aClass);
             stockInfo.setStockClass(value);
             stockInfo.setStockClassName(aClass);
+        }
+        if (StringUtils.isNotEmpty(stockAddress)){
+            String s = stringMap.get(stockAddress);
+            stockInfo.setStockAddressCode(s);
+            stockInfo.setStockAddress(stockAddress);
         }
 
     }

@@ -65,9 +65,9 @@ public class AsyncSaleTask implements Runnable {
             }
 
             // 更新分公司信息
-            salesTicketService.updateSalesmanSubordinateCompany(saleInfo);
 
             if (times != CommonConstant.SALE_TIME_OUT){
+                salesTicketService.updateSalesmanSubordinateCompany(saleInfo);
 
                 logger.info("更新销售单销售员所属分公司信息完成, 销售单: {}, 所属分公司: {}", saleInfo.getSaleCode(), deptInfo.getDeptName());
             }

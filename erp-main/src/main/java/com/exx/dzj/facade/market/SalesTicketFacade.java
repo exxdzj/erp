@@ -393,7 +393,16 @@ public class SalesTicketFacade {
         List<SaleInfo> importFailData = new ArrayList<>();
         for (SaleInfo s : saleInfos){
             try {
+                // 获取部门信息
+                List<DeptInfoBean> deptInfos = deptService.queryDeptList();
+
+                // 查询销售员部门编码
+                String deptCode = salesmanService.querySalesmanDeptCode(s.getSalesmanCode());
+
                 saveSalesTicket2(s);
+
+                setSubordinateCompany(s, deptInfos, deptCode);
+
             } catch (Exception e){
                 e.printStackTrace();
                 importFailData.add(s);

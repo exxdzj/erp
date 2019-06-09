@@ -7,9 +7,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author
@@ -39,7 +37,15 @@ public class DictionaryFacade {
         Map<String, String> map = new HashMap<>();
         List<Map<String, String>> mapList = dictService.queryDictionaryCodeAndName();
         for (Map<String, String> mapi : mapList){
-            map.put(mapi.get("dict_name"), mapi.get("dict_code"));
+//            Iterator<String> iterator = mapi.keySet().iterator();
+//            while (iterator.hasNext()){
+//                String next = iterator.next();
+//                System.out.println(next);
+//                String s = mapi.get(next);
+//
+//                System.out.println(s);
+//            }
+            map.put(mapi.get("dictName"), mapi.get("dictCode"));
         }
         return map;
     }

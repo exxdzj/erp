@@ -463,11 +463,11 @@
   
   <insert id="batchInsertStockInfo">
     INSERT INTO tab_stock_info
-      (stock_code, nature, stock_name, specificate_type, stock_class, stock_class_name, meter_unit, pictures,
+      (stock_code, stock_address, stock_address_code, nature, stock_name, specificate_type, stock_class, stock_class_name, meter_unit, pictures,
         bar_code, is_shelves, is_enable, is_comm_sale, create_user, update_user, create_time, update_time)
     VALUES 
     <foreach collection="list" item="item" separator=",">
-      (#{item.stockCode}, #{item.nature}, #{item.stockName}, #{item.specificateType}, #{item.stockClass}, #{item.stockClassName}, #{item.meterUnit}, #{item.pictures},
+      (#{item.stockCode}, #{item.stockAddress}, #{item.stockAddressCode}, #{item.nature}, #{item.stockName}, #{item.specificateType}, #{item.stockClass}, #{item.stockClassName}, #{item.meterUnit}, #{item.pictures},
       #{item.barCode}, #{item.isShelves}, #{item.isEnable}, #{item.isCommSale}, #{item.createUser}, #{item.updateUser}, SYSDATE(), SYSDATE())
     </foreach>
   </insert>
