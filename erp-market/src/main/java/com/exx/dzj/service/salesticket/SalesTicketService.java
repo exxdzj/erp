@@ -1,9 +1,6 @@
 package com.exx.dzj.service.salesticket;
 
-import com.exx.dzj.entity.market.SaleGoodsTop;
-import com.exx.dzj.entity.market.SaleInfo;
-import com.exx.dzj.entity.market.SaleInfoExample;
-import com.exx.dzj.entity.market.SaleReceiptsDetails;
+import com.exx.dzj.entity.market.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,7 +18,7 @@ public interface SalesTicketService {
 
     void saveSaleInfo(SaleInfo saleInfo);
 
-    List<SaleInfo> querySalesTicketList(SaleInfo saleInfo);
+    List<SaleInfo> querySalesTicketList(SaleInfoQuery query);
 
     SaleInfo querySalesTicketById(Integer id);
 

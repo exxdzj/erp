@@ -18,7 +18,7 @@ public interface SaleInfoMapper {
 
     int insertSelective(SaleInfo record);
 
-    List<SaleInfo> querySalesTicketList(SaleInfo saleInfo);
+    List<SaleInfo> querySalesTicketList(SaleInfoQuery query);
 
     SaleInfo selectByPrimaryKey(Integer id);
 

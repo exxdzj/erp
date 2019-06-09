@@ -164,9 +164,9 @@ public class SalesTicketFacade {
         asyncSaleExecutr.execute(asyncSaleTask);
     }
 
-    public ERPage<SaleInfo> querySalesTicketList(SaleInfo saleInfo, int pageNum, int pageSize){
+    public ERPage<SaleInfo> querySalesTicketList(SaleInfoQuery query, int pageNum, int pageSize){
         PageHelper.startPage(pageNum, pageSize);
-        List<SaleInfo> saleInfoList = salesTicketService.querySalesTicketList(saleInfo);
+        List<SaleInfo> saleInfoList = salesTicketService.querySalesTicketList(query);
         ERPage<SaleInfo> saleInfoPage = new ERPage<>(saleInfoList);
         return saleInfoPage;
     }

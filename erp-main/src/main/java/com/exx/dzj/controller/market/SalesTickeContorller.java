@@ -1,10 +1,7 @@
 package com.exx.dzj.controller.market;
 
 import com.exx.dzj.constant.CommonConstant;
-import com.exx.dzj.entity.market.LogisticsInfo;
-import com.exx.dzj.entity.market.SaleGoodsSelected;
-import com.exx.dzj.entity.market.SaleInfo;
-import com.exx.dzj.entity.market.SaleReceiptsDetails;
+import com.exx.dzj.entity.market.*;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.market.SalesTicketFacade;
 import com.exx.dzj.page.ERPage;
@@ -61,11 +58,11 @@ public class SalesTickeContorller {
      * @return com.exx.dzj.result.Result
      */
     @GetMapping("querysalesticket")
-    public Result querySalesTickets(HttpServletRequest request, HttpServletResponse response, SaleInfo saleInfo){
+    public Result querySalesTickets(HttpServletRequest request, HttpServletResponse response, SaleInfoQuery query){
         Result result = Result.responseSuccess();
-        int pageNum = MathUtil.toInt(saleInfo.getPageNum(), CommonConstant.DEFAULT_VALUE_ZERO);
-        int pageSize = MathUtil.toInt(saleInfo.getPageSize(), CommonConstant.DEFAULT_PAGE_SIZE);
-        ERPage<SaleInfo> saleInfoPage = salesTicketFacade.querySalesTicketList(saleInfo, pageNum, pageSize);
+        int pageNum = MathUtil.toInt(query.getPageNum(), CommonConstant.DEFAULT_VALUE_ZERO);
+        int pageSize = MathUtil.toInt(query.getPageSize(), CommonConstant.DEFAULT_PAGE_SIZE);
+        ERPage<SaleInfo> saleInfoPage = salesTicketFacade.querySalesTicketList(query, pageNum, pageSize);
         result.setData(saleInfoPage);
         return result;
     }

@@ -1,9 +1,6 @@
 package com.exx.dzj.service.salesticket.impl;
 
-import com.exx.dzj.entity.market.SaleGoodsTop;
-import com.exx.dzj.entity.market.SaleInfo;
-import com.exx.dzj.entity.market.SaleInfoExample;
-import com.exx.dzj.entity.market.SaleReceiptsDetails;
+import com.exx.dzj.entity.market.*;
 import com.exx.dzj.mapper.market.SaleInfoMapper;
 import com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper;
 import com.exx.dzj.service.salesticket.SalesTicketService;
@@ -59,12 +56,12 @@ public class SalesTicketServiceImpl implements SalesTicketService {
      * @description 销售单列表查询
      * @author yangyun
      * @date 2019/1/9 0009
-     * @param saleInfo
+     * @param query
      * @return java.util.List<com.exx.dzj.entity.market.SaleInfo>
      */
     @Override
-    public List<SaleInfo> querySalesTicketList(SaleInfo saleInfo) {
-        return saleInfoMapper.querySalesTicketList(saleInfo);
+    public List<SaleInfo> querySalesTicketList(SaleInfoQuery query) {
+        return saleInfoMapper.querySalesTicketList(query);
     }
 
     /**
