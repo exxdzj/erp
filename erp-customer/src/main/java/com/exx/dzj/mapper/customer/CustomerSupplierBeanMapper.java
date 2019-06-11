@@ -45,7 +45,7 @@ public interface CustomerSupplierBeanMapper {
      * @param custCode
      * @return
      */
-    CustomerSupplierInfo queryCustomerSupplierInfo(@Param("custCode") String custCode);
+    CustomerSupplierInfo queryCustomerSupplierInfo(@Param("custType") int custType, @Param("custCode") String custCode);
 
     /**
      * 修改  数据状态

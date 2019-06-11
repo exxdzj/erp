@@ -476,9 +476,54 @@
 
   <!-- 查询 客户或供应商详细信息 -->
   <select id="queryCustomerSupplierInfo" resultMap="CustomerSupplierResultMap">
-    <include refid="QueryCustomerSupplierSql"/>
+    SELECT
+    cs.cust_code custCode,
+    cs.cust_name custName,
+    cs.cust_type custType,
+    cs.cust_level custLevel,
+    cs.level_name levelName,
+    cs.salesman_code salesmanCode,
+    cs.user_code userCode,
+    cs.identity,
+    cs.rank_code rankCode,
+    cs.rank_name rankName,
+    cs.region_code regionCode,
+    cs.region_name regionName,
+    cs.ship_code shipCode,
+    cs.ship_address shipAddress,
+    cs.remarks,
+    cs.birthday,
+    cw.link_man linkMan,
+    cw.telephone_num telephoneNum,
+    cw.phone_num phoneNum,
+    cw.fax_num faxNum,
+    cw.email email,
+    cw.postal_address postalAddress,
+    cw.postal_address_eng postalAddressEng,
+    cw.delivery_address_one deliveryAddressOne,
+    cw.delivery_address_two deliveryAddressTwo,
+    cw.zip_code zipCode,
+    ta.payment_method paymentMethod,
+    di.dict_name paymentMethodName,
+    ta.discount_rate discountRate,
+    ta.account_period accountPeriod,
+    ta.line_credit lineCredit,
+    ta.pay_taxes_num payTaxesNum,
+    ta.bill_type billType,
+    ta.bank_deposit bankDeposit,
+    ta.open_account openAccount
+    FROM
+    tab_customer_supplier cs
+    LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code AND cw.source IN (#{custType}, 3)
+    LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code AND ta.source IN (#{custType}, 3)
+    LEFT JOIN tab_dictionary_info di ON di.dict_code = ta.payment_method AND di.data_type = 'receivables_payment_method'
+    WHERE
+    1 = 1
     <if test="custCode != null and custCode !=''">
       AND cs.cust_code = #{custCode}
+    </if>
+    <if test="custType != null and custType !=''">
+      AND cs.cust_type IN (#{custType}, 3)
     </if>
   </select>
 

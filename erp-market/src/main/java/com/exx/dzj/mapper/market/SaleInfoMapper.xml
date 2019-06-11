@@ -157,7 +157,7 @@
       </if>
 
       /*AND SINFO.is_enable = 1*/
-      ORDER BY SINFO.create_time  DESC
+      ORDER BY SINFO.sale_date  DESC
   </select>
   <resultMap id="saleListMap" type="com.exx.dzj.entity.market.SaleInfo">
     <result column="id" property="id"/>

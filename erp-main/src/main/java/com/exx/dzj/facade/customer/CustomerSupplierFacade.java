@@ -78,7 +78,7 @@ public class CustomerSupplierFacade {
     public Result queryCustomerSupplierInfo(int custType, String custCode) {
         Result result = Result.responseSuccess();
         //查询详细信息
-        result.setData(customerSupplierService.queryCustomerSupplierInfo(custCode));
+        result.setData(customerSupplierService.queryCustomerSupplierInfo(custType, custCode));
         return result;
     }
 

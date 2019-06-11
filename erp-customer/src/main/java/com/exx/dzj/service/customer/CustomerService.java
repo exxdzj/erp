@@ -32,7 +32,7 @@ public interface CustomerService {
      * @param custCode
      * @return
      */
-    CustomerSupplierInfo queryCustomerSupplierInfo(String custCode);
+    CustomerSupplierInfo queryCustomerSupplierInfo(int custType, String custCode);
 
     /**
      * 保存 客户或供应商基础信息数据

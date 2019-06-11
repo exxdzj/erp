@@ -393,11 +393,11 @@
 
   <insert id="batchContactWay">
     INSERT INTO tab_contact_way
-      (cust_code, link_man, telephone_num, phone_num, fax_num, email, postal_address, postal_address_eng,
+      (cust_code, source, link_man, telephone_num, phone_num, fax_num, email, postal_address, postal_address_eng,
        delivery_address_one, delivery_address_two, zip_code, is_enable, create_time, create_user, update_time, update_user)
     VALUES
     <foreach collection="list" item="item" separator=",">
-      (#{item.custCode}, #{item.linkMan}, #{item.telephoneNum}, #{item.phoneNum}, #{item.faxNum}, #{item.email}, #{item.postalAddress}, #{item.postalAddressEng},
+      (#{item.custCode}, #{item.source}, #{item.linkMan}, #{item.telephoneNum}, #{item.phoneNum}, #{item.faxNum}, #{item.email}, #{item.postalAddress}, #{item.postalAddressEng},
        #{item.deliveryAddressOne}, #{item.deliveryAddressTwo}, #{item.zipCode}, #{item.isEnable}, #{item.createTime}, #{item.createUser}, #{item.updateTime}, #{item.updateUser})
     </foreach>
   </insert>

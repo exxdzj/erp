@@ -68,8 +68,8 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
-    public CustomerSupplierInfo queryCustomerSupplierInfo(String custCode) {
-        return csMapper.queryCustomerSupplierInfo(custCode);
+    public CustomerSupplierInfo queryCustomerSupplierInfo(int custType, String custCode) {
+        return csMapper.queryCustomerSupplierInfo(custType, custCode);
     }
 
     /**
