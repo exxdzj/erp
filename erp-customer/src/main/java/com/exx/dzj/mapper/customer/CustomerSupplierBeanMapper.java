@@ -76,4 +76,6 @@ public interface CustomerSupplierBeanMapper {
     List<InsuranceCustomer> queryStatisticsCustomer();
 
     List<InsuranceCustomer> queryIncreaseCutomerForMonth();
+
+    List<CustomerSupplierBean> queryCustomerSelect(@Param("custName") String custName);
 }

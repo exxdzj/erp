@@ -2,9 +2,12 @@ package com.exx.dzj.entity.purchase;
 
 import lombok.Data;
 import lombok.ToString;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +30,7 @@ public class PurchaseInfo implements Serializable {
     /**项目*/
     private String purchaseProject;
     /**日期*/
-    private Date purchaseDate;
+    private Timestamp purchaseDate;
     /**采购订单号*/
     private String purchaseOrderCode;
     /**币别*/
@@ -73,9 +76,9 @@ public class PurchaseInfo implements Serializable {
 
     private String updateUser;
 
-    private List<PurchaseReceiptsDetailsBean> purchaseReceiptsDetailsBeans;
+    private List<PurchaseReceiptsDetailsBean> purchaseReceiptsDetailsBeans = new ArrayList<>();;
 
-    private List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans;
+    private List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans = new ArrayList<>();;
 
     /**付款状态**/
     private String paymentStatus;

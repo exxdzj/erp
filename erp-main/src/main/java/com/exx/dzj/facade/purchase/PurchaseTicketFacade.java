@@ -4,6 +4,7 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.purchase.*;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockNumPrice;
+import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
 @Component
 public class PurchaseTicketFacade {
 
+    private static final String REG = "[\u4e00-\u9fa5]";
+
     @Autowired
     private PurchaseTicketService purchaseTicketService;
 
@@ -49,6 +52,85 @@ public class PurchaseTicketFacade {
 
     @Autowired
     private BusEncodeFacade busEncodeFacade;
+
+    public void importData (List<PurchaseInfo> purchaseInfoList){
+        for (PurchaseInfo p : purchaseInfoList){
+            try{
+                savePurchaseTicket2(p);
+            } catch (ErpException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Transactional
+    public void savePurchaseTicket2(PurchaseInfo purchaseInfo){
+        Optional.of(purchaseInfo);
+        List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans = purchaseInfo.getPurchaseGoodsDetailBeans();
+        List<PurchaseReceiptsDetailsBean> purchaseReceiptsDetailsBeans = purchaseInfo.getPurchaseReceiptsDetailsBeans();
+        setStatus2(purchaseInfo);
+
+        purchaseInfo.setIsEnable(CommonConstant.DEFAULT_VALUE_ONE);
+
+
+        if (!CollectionUtils.isEmpty(purchaseGoodsDetailBeans)){
+            // 该部分代码用于金蝶导入金额计算, 优惠后金额
+            BigDecimal receivableAccoun = new BigDecimal(0);
+            BigDecimal hundred = new BigDecimal(100);
+            BigDecimal divide = new BigDecimal(0);
+            BigDecimal price = new BigDecimal(0);
+
+            for (PurchaseGoodsDetailBean pdb : purchaseGoodsDetailBeans){
+                divide = hundred.subtract(pdb.getDiscountRate()).divide(hundred);
+                price = pdb.getUnitPrice().multiply(new BigDecimal(pdb.getGoodsNum()));
+
+                receivableAccoun = receivableAccoun.add(price.multiply(divide));
+
+            }
+            purchaseInfo.setReceivableAccoun(receivableAccoun.setScale(2, BigDecimal.ROUND_HALF_UP));
+
+            purchaseGoodsDetailBeans = setGoodsPurchaseCode(purchaseGoodsDetailBeans, purchaseInfo.getPurchaseCode());
+            purchaseGoodsService.batchInsertPurchaseGoods(purchaseGoodsDetailBeans);
+        }
+
+        if (!CollectionUtils.isEmpty(purchaseReceiptsDetailsBeans)){
+            purchaseReceiptsDetailsBeans = setReceiptsPurchaseCode(purchaseReceiptsDetailsBeans, purchaseInfo.getPurchaseCode());
+            purchaseReceiptsService.batchInsertPurchaseReceipts(purchaseReceiptsDetailsBeans);
+        }
+
+        String userCode = purchaseInfo.getUserCode();
+
+        if (StringUtils.isNotEmpty(userCode)){
+            int index = -1;
+            if (userCode.matches(".*" + REG + ".*")){
+
+                index = userCode.split(REG).length;
+                if (index > 0){
+                    index = userCode.split(REG)[0].length();
+                    String substring = userCode.substring(0, index);
+                    purchaseInfo.setUserCode(substring);
+                }
+
+            }
+        }
+
+        purchaseTicketService.savePurchaseTicket(purchaseInfo);
+    }
+
+    public void setStatus2 (PurchaseInfo purchaseInfo){
+        String paymentStatus = purchaseInfo.getPaymentStatus();
+        switch (paymentStatus){
+            case "未付款" :
+                purchaseInfo.setPaymentStatus("cs01");
+                break;
+            case "全部已付款" :
+                purchaseInfo.setPaymentStatus("cs03");
+                break;
+            case "部分付款" :
+                purchaseInfo.setPaymentStatus("cs02");
+                break;
+        }
+    }
 
     /**
      * @description 新增采购单

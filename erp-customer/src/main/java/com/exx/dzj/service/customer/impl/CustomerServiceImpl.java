@@ -205,4 +205,9 @@ public class CustomerServiceImpl implements CustomerService {
     public List<InsuranceCustomer> queryIncreaseCutomerForMonth() {
         return csMapper.queryIncreaseCutomerForMonth();
     }
+
+    @Override
+    public List<CustomerSupplierBean> queryCustomerSelect(String custName) {
+        return csMapper.queryCustomerSelect(custName);
+    }
 }

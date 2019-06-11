@@ -2,6 +2,7 @@ package com.exx.dzj.facade.market;
 
 import com.exx.dzj.annotation.SaleLog;
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.stock.StockBean;
@@ -11,6 +12,7 @@ import com.exx.dzj.facade.market.task.AsyncSaleTask;
 import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
+import com.exx.dzj.service.customer.CustomerService;
 import com.exx.dzj.service.dictionary.DictionaryService;
 import com.exx.dzj.service.salesgoodsdetail.SalesGoodsDetailService;
 import com.exx.dzj.service.salesreceiptsdetail.SaleReceiptsDetailService;
@@ -67,6 +69,9 @@ public class SalesTicketFacade {
 
     @Autowired
     private UserService salesmanService;
+
+    @Autowired
+    private CustomerService customerService;
 
 
     @Transactional
@@ -539,6 +544,13 @@ public class SalesTicketFacade {
 
     public List<SaleInfo> querySubordinateCompanySelect() {
         return salesTicketService.querySubordinateCompanySelect();
+    }
+
+    public ERPage<CustomerSupplierBean> queryCustomerSelect (int pageNum, int pageSize, String custName){
+        PageHelper.startPage(pageNum, pageSize);
+        List<CustomerSupplierBean> customerSupplierBeans = customerService.queryCustomerSelect(custName);
+        ERPage<CustomerSupplierBean> saleInfoPage = new ERPage<>(customerSupplierBeans);
+        return saleInfoPage;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.exx.dzj.controller.market;
 
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.market.SalesTicketFacade;
@@ -54,7 +55,7 @@ public class SalesTickeContorller {
      * @date 2019/1/8 0008
      * @param request
      * @param response
-     * @param saleInfo 查询条件
+     * @param query 查询条件
      * @return com.exx.dzj.result.Result
      */
     @GetMapping("querysalesticket")
@@ -254,6 +255,24 @@ public class SalesTickeContorller {
         Result result = Result.responseSuccess();
         List<SaleInfo> list = salesTicketFacade.querySubordinateCompanySelect();
         result.setData(list);
+        return result;
+    }
+
+    /**
+     * @description 客户下拉
+     * @author yangyun
+     * @date 2019/6/10 0010
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querycustomerselect")
+    public Result queryCustomerSelect (HttpServletRequest request){
+        Result result = Result.responseSuccess();
+        int pageNum = MathUtil.toInt(request.getParameter("pageNum"), CommonConstant.DEFAULT_VALUE_ONE);
+        int pageSize = MathUtil.toInt(request.getParameter("pageSize"), CommonConstant.DEFAULT_PAGE_SIZE);
+        String custName = request.getParameter("custName");
+        ERPage<CustomerSupplierBean> page = salesTicketFacade.queryCustomerSelect(pageNum, pageSize, custName);
+        result.setData(page);
         return result;
     }
 }

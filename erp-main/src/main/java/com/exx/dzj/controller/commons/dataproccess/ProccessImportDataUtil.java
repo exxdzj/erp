@@ -8,12 +8,16 @@ import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
+import com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean;
+import com.exx.dzj.entity.purchase.PurchaseInfo;
+import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
 import com.exx.dzj.entity.stock.StockInfo;
 import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.enummodel.PayStatusEnum;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.model.CustomerModel;
+import com.exx.dzj.model.PurchaseModel;
 import com.exx.dzj.model.SaleModel;
 import com.exx.dzj.model.StockModel;
 import com.exx.dzj.util.enums.EnumsUtils;
@@ -47,6 +51,109 @@ public class ProccessImportDataUtil {
         }
 
         return gainSubordinateCompanyInfo(list, deptInfoBean);
+    }
+
+    private static void setPurchaseInfo (Map<String, PurchaseInfo> purchaseInfoMap, Map<BigDecimal, PurchaseReceiptsDetailsBean> purchaseReceiptsMap, Map<String, PurchaseGoodsDetailBean> purchaseGoodsMap, String sharePro){
+        if (!purchaseReceiptsMap.isEmpty()){
+            PurchaseInfo s = purchaseInfoMap.get(sharePro);
+            s.getPurchaseReceiptsDetailsBeans().addAll(purchaseReceiptsMap.values());
+            purchaseReceiptsMap.clear();
+        }
+
+        if(!purchaseGoodsMap.isEmpty()){
+            PurchaseInfo s = purchaseInfoMap.get(sharePro);
+            s.getPurchaseGoodsDetailBeans().addAll(purchaseGoodsMap.values());
+            purchaseGoodsMap.clear();
+        }
+    }
+
+
+    private static void setPurchaseGoodsDetail (PurchaseGoodsDetailBean purchaseGoodsDetail, Map<String, String> stringMap){
+        String stockAddress = purchaseGoodsDetail.getStockAddress();
+        String s = stringMap.get(stockAddress);
+        purchaseGoodsDetail.setStockAddressCode(s);
+    }
+
+    public static List<PurchaseInfo> proccessPurchaseInfo(List<Object> purchaseList, Map<String, String> stringMap, Map<String, CustomerSupplierBean> customerSupplierBeanMap){
+        List<PurchaseInfo> list = new ArrayList<>();
+        Map<String, PurchaseInfo> purchaseInfoMap = new ConcurrentHashMap<>();
+        Map<BigDecimal, PurchaseReceiptsDetailsBean> purchaseReceiptsMap = new ConcurrentHashMap<>();
+        Map<String, PurchaseGoodsDetailBean> purchaseGoodsMap = new ConcurrentHashMap<>();
+
+        PurchaseModel info = null;
+        String sharePro = "";
+        Date purhcaseDate = null;
+
+        for (Object o : purchaseList){
+            info = (PurchaseModel)o;
+
+            PurchaseInfo purchaseInfo = new PurchaseInfo();
+            PurchaseReceiptsDetailsBean purchaseReceiptsDetails = new PurchaseReceiptsDetailsBean();
+            PurchaseGoodsDetailBean purchaseGoodsDetail = new PurchaseGoodsDetailBean();
+
+            String purhcaseCode = info.getPurchaseCode();
+
+            if (purchaseInfoMap.containsKey(purhcaseCode)){
+                BeanUtils.copyProperties(info, purchaseReceiptsDetails);
+
+                if (info.getCollectedAmount().compareTo(BigDecimal.ZERO) > CommonConstant.DEFAULT_VALUE_ZERO){
+                    purchaseReceiptsMap.put(info.getCollectedAmount(), purchaseReceiptsDetails);
+                }
+
+                BeanUtils.copyProperties(info, purchaseGoodsDetail);
+                if (StringUtils.isNotEmpty(info.getStockCode())){
+                    setPurchaseGoodsDetail(purchaseGoodsDetail, stringMap);
+                    purchaseGoodsMap.put(info.getStockCode(), purchaseGoodsDetail);
+                }
+
+                continue;
+            } else {
+                setPurchaseInfo(purchaseInfoMap, purchaseReceiptsMap, purchaseGoodsMap, sharePro);
+            }
+
+            BeanUtils.copyProperties(info, purchaseInfo);
+
+
+            purhcaseDate = info.getPurchaseDate();
+            if (purhcaseDate != null){
+                purchaseInfo.setPurchaseDate(new Timestamp(purhcaseDate.getTime()));
+            }
+
+            setPurchaseInfo(purchaseInfo, stringMap, customerSupplierBeanMap);
+
+            purchaseInfoMap.put(purhcaseCode, purchaseInfo);
+
+            sharePro = purhcaseCode;
+
+
+            BeanUtils.copyProperties(info, purchaseReceiptsDetails);
+            if (info.getCollectedAmount().compareTo(BigDecimal.ZERO) > CommonConstant.DEFAULT_VALUE_ZERO){
+                purchaseReceiptsMap.put(info.getCollectedAmount(), purchaseReceiptsDetails);
+            }
+
+            BeanUtils.copyProperties(info, purchaseGoodsDetail);
+            if (StringUtils.isNotEmpty(info.getStockCode())){
+                setPurchaseGoodsDetail(purchaseGoodsDetail, stringMap);
+                purchaseGoodsMap.put(info.getStockCode(), purchaseGoodsDetail);
+            }
+        }
+
+        setPurchaseInfo(purchaseInfoMap, purchaseReceiptsMap, purchaseGoodsMap, sharePro);
+        list.addAll(purchaseInfoMap.values());
+
+        return list;
+    }
+
+    private static void setPurchaseInfo (PurchaseInfo purchaseInfo, Map<String, String> stringMap,Map<String, CustomerSupplierBean> customerSupplierBeanMap){
+        String custCode = purchaseInfo.getCustCode();
+        if (StringUtils.isNotEmpty(custCode)){
+            CustomerSupplierBean supplierBean = customerSupplierBeanMap.get(custCode);
+
+            if (supplierBean != null){
+
+                purchaseInfo.setCustCode(supplierBean.getCustCode());
+            }
+        }
     }
 
     /**

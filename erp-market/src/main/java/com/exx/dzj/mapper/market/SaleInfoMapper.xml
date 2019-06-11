@@ -111,10 +111,11 @@
       SINFO.discount_amount,
       SINFO.receivable_accoun,
       SINFO.due_date,
-      DICTIONPAY.dict_name AS paymentStatus,
+      /*DICTIONPAY.dict_name AS paymentStatus,*/
+      SINFO.payment_status AS paymentStatus,
       SINFO.invoice_code AS invoiceCode,
       DICTIONPRO.dict_name AS saleProject,
-      SALESOURCE.dict_name AS saleSourceName,
+      /*SALESOURCE.dict_name AS saleSourceName,*/
       UINFO.real_name AS userName,
       SINFO.user_code AS userCode,
       SINFO.create_user AS createUser,
@@ -126,12 +127,19 @@
       SINFO.remarks AS remarks
     FROM tab_sale_info SINFO
    /* LEFT JOIN tab_sale_logistic_info logistics ON SINFO.sale_code = logistics.sale_code*/
-    LEFT JOIN tab_dictionary_info DICTIONPAY ON SINFO.payment_status=DICTIONPAY.dict_code AND DICTIONPAY.data_type='collection_status'
+    /*LEFT JOIN tab_dictionary_info DICTIONPAY ON SINFO.payment_status=DICTIONPAY.dict_code AND DICTIONPAY.data_type='collection_status'*/
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
-    LEFT JOIN tab_dictionary_info SALESOURCE ON SINFO.sale_project=SALESOURCE.dict_code AND DICTIONPRO.data_type='source_sales_order'
+   /* LEFT JOIN tab_dictionary_info SALESOURCE ON SINFO.sale_project=SALESOURCE.dict_code AND DICTIONPRO.data_type='source_sales_order'*/
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
     LEFT JOIN tab_user_info UINFO ON SINFO.salesman_code = UINFO.salesman_code
     WHERE 1=1
+      <if test="startTime != null and startTime != ''">
+        AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')]]>
+      </if>
+      <if test="endTime != null and endTime != ''">
+        AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{endTime},'%Y-%m-%d 23:59:59')]]>
+      </if>
+
       <if test="saleCode != null and saleCode != ''">
         AND  SINFO.sale_code LIKE CONCAT(#{saleCode}, '%')
       </if>
@@ -144,13 +152,10 @@
       <if test="subordinateCompanyCode != null and subordinateCompanyCode != ''">
         AND  SINFO.subordinate_company_code=#{subordinateCompanyCode}
       </if>
-      <if test="startTime != null and startTime != ''">
-        AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')]]>
+      <if test="custCode != null and custCode != ''">
+        AND  SINFO.cust_code=#{custCode}
+      </if>
 
-      </if>
-      <if test="endTime != null and endTime != ''">
-        AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{endTime},'%Y-%m-%d 23:59:59')]]>
-      </if>
       /*AND SINFO.is_enable = 1*/
       ORDER BY SINFO.create_time  DESC
   </select>

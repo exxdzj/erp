@@ -7,19 +7,23 @@ import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.SaleInfo;
+import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.facade.customer.CustomerSupplierFacade;
 import com.exx.dzj.facade.dictionary.DictionaryFacade;
 import com.exx.dzj.facade.market.SalesTicketFacade;
+import com.exx.dzj.facade.purchase.PurchaseTicketFacade;
 import com.exx.dzj.facade.stock.StockFacade;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.model.CustomerModel;
+import com.exx.dzj.model.PurchaseModel;
 import com.exx.dzj.model.SaleModel;
 import com.exx.dzj.model.StockModel;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.sys.DeptService;
 import com.exx.dzj.util.excel.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,6 +55,9 @@ public class DataImportController {
     @Autowired
     private StockFacade stockFacade;
 
+    @Autowired
+    private PurchaseTicketFacade purchaseTicketFacade;
+
     @PostMapping("dataimport")
     public Result dataImport(@RequestParam("excelFile") MultipartFile excelFile, @RequestParam("type") Integer type){
         Result result = Result.responseSuccess();
@@ -80,7 +87,10 @@ public class DataImportController {
                     salesTicketFacade.importData(saleInfoList);
                     break;
                 case 2: // 采购单
+                    List<Object> purchaseList = ExcelUtil.readExcel(excelFile, new PurchaseModel(), CommonConstant.DEFAULT_VALUE_ONE);
 
+                    List<PurchaseInfo> purchaseInfoList = ProccessImportDataUtil.proccessPurchaseInfo(purchaseList, stringMap, customerSupplierBeanMap);
+                    purchaseTicketFacade.importData(purchaseInfoList);
                     break;
                 case 3: // 存货
                     List<Object> stockList = ExcelUtil.readExcel(excelFile, new StockModel(), CommonConstant.DEFAULT_VALUE_ONE);
