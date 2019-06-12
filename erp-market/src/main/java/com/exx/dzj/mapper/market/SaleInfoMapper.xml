@@ -794,19 +794,30 @@
       DELETE FROM tab_sale_logistic_info WHERE id = #{id}
   </delete>
 
-  <select id="querySumSalesOnDay" resultType="java.math.BigDecimal">
-    SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
+  <select id="querySumSalesOnDay" resultType="com.exx.dzj.entity.market.SaleInfo">
+    /*SELECT SUM(receivable_accoun) AS receivableAccoun, subordinate_company_code AS subordinateCompanyCode,
+      subordinate_company_name AS subordinateCompanyName
+      FROM tab_sale_info sinfo
 	  WHERE sinfo.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
+	        GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC*/
+	SELECT SUM(receivable_accoun) AS receivableAccoun, subordinate_company_code AS subordinateCompanyCode,
+      subordinate_company_name AS subordinateCompanyName
+      FROM tab_sale_info sinfo
+	  WHERE sinfo.sale_date BETWEEN DATE_FORMAT('2019-06-01','%Y-%m-%d %H:%i:%s') AND DATE_FORMAT("2019-06-01",'%Y-%m-%d 23:59:59')
+	        GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
-  <select id="querySumSalesOnMonth" resultType="java.math.BigDecimal">
-    SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
+  <select id="querySumSalesOnMonth" resultType="com.exx.dzj.entity.market.SaleInfo">
+    SELECT SUM(receivable_accoun) AS receivableAccoun, subordinate_company_code AS subordinateCompanyCode,
+      subordinate_company_name AS subordinateCompanyName
+    FROM tab_sale_info sinfo
 	  WHERE sinfo.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
                             AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
+                            GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
-  <select id="queryAdditionalSumSalesOnDay" resultType="java.math.BigDecimal">
-    SELECT
+  <select id="queryAdditionalSumSalesOnDay" resultType="com.exx.dzj.entity.market.SaleInfo">
+    /*SELECT
         SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
         +
         sum((SELECT
@@ -816,11 +827,26 @@
                     END)
               FROM tab_sale_goods_detail bb WHERE bb.sale_code = s.sale_code))
     FROM tab_sale_info s
-    WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
+    WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')*/
+
+
+    SELECT
+        SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
+        +
+        sum((SELECT
+                sum(CASE
+                        WHEN bb.real_sell_price > 0 THEN bb.goods_num * bb.real_sell_price
+                    ELSE 0
+                    END)
+              FROM tab_sale_goods_detail bb WHERE bb.sale_code = s.sale_code)) AS receivableAccoun
+				, subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
+    FROM tab_sale_info s
+    WHERE s.sale_date BETWEEN DATE_FORMAT('2019-06-01','%Y-%m-%d %H:%i:%s') AND DATE_FORMAT('2019-06-01','%Y-%m-%d 23:59:59')
+					GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
-  <select id="queryAdditionalSumSalesOnMonth" resultType="java.math.BigDecimal">
-    SELECT
+  <select id="queryAdditionalSumSalesOnMonth" resultType="com.exx.dzj.entity.market.SaleInfo">
+    /*SELECT
         SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
         +
         sum((SELECT
@@ -831,12 +857,33 @@
               FROM tab_sale_goods_detail bb WHERE bb.sale_code = s.sale_code))
     FROM tab_sale_info s
     WHERE s.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
+                      AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )*/
+
+    SELECT
+        SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
+        +
+        sum((SELECT
+                sum(CASE
+                        WHEN bb.real_sell_price > 0 THEN bb.goods_num * bb.real_sell_price
+                    ELSE 0
+                    END)
+              FROM tab_sale_goods_detail bb WHERE bb.sale_code = s.sale_code)) AS receivableAccoun,
+				subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
+    FROM tab_sale_info s
+    WHERE s.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
                       AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
+                      GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
-  <select id="querySumSalesOnYear" resultType="java.math.BigDecimal">
-    SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
-	  WHERE sinfo.sale_date BETWEEN DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY) AND concat(YEAR(now()),'-12-31');
+  <select id="querySumSalesOnYear" resultType="com.exx.dzj.entity.market.SaleInfo">
+    /*SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
+	  WHERE sinfo.sale_date BETWEEN DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY) AND concat(YEAR(now()),'-12-31')*/
+
+    SELECT SUM(receivable_accoun) AS receivableAccoun,
+	  subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
+	FROM tab_sale_info sinfo
+	  WHERE sinfo.sale_date BETWEEN DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY) AND concat(YEAR(now()),'-12-31')
+            GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
   <select id="querySalesTop" resultMap="salesTopMap">
@@ -844,7 +891,16 @@
       u.real_name,SUM(s.receivable_accoun) AS receivable_accoun
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.salesman_code = u.salesman_code
-    WHERE DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d') <!-- DATE_FORMAT(sysdate(), '%Y-%m-%d')-->
+    WHERE
+    s.sale_date
+    <if test="type == 'day'">
+      BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
+    </if>
+    <if test="type == 'month'">
+      BETWEEN concat(date_format(LAST_DAY(now()),'%Y-%m-'),'01') AND LAST_DAY(now())
+    </if>
+
+    <!--DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')  DATE_FORMAT(sysdate(), '%Y-%m-%d')-->
     AND s.salesman_code = u.user_code
     GROUP BY s.salesman_code,u.real_name
     ORDER BY SUM(s.receivable_accoun) DESC

@@ -7,6 +7,7 @@ import com.exx.dzj.entity.market.SaleGoodsTop;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.statistics.sales.HomePageReport;
 import com.exx.dzj.entity.stock.StockBean;
+import com.exx.dzj.enummodel.CompanyEnum;
 import com.exx.dzj.enummodel.InsuranceCustomerLevelEnum;
 import com.exx.dzj.service.customer.CustomerService;
 import com.exx.dzj.service.purchaseticket.PurchaseTicketService;
@@ -18,6 +19,7 @@ import com.exx.dzj.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -59,39 +61,116 @@ public class HomePageFacade {
         topData.put("newlyCount", newlyCount);
 
         // 今日销售额
-        BigDecimal sumSalesOnDay = salesTicketService.querySumSalesOnDay();
-        if (sumSalesOnDay == null){
-            sumSalesOnDay = ZERO;
+        BigDecimal sumSalesOnDay = new BigDecimal(0);
+        List<SaleInfo> salesOnDayList = salesTicketService.querySumSalesOnDay();
+        if (!CollectionUtils.isEmpty(salesOnDayList)){
+            sumSalesOnDay = salesOnDayList.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add);
         }
         topData.put("sumSalesOnDay", sumSalesOnDay);
 
-        // 当月销售额
-        BigDecimal sumSalesOnMonth = salesTicketService.querySumSalesOnMonth();
+        List<SaleInfo> companySalesOnDay = salesOnDayList.stream().filter(o -> StringUtils.isNotEmpty(o.getSubordinateCompanyCode())).collect(Collectors.toList());
+        topData.put("companySalesOnDay", companySalesOnDay);
+
+        // 当月分公司销售额
+        List<SaleInfo> salesOnMonthList = salesTicketService.querySumSalesOnMonth();
+        BigDecimal sumSalesOnMonth = new BigDecimal(0);
+        if (!CollectionUtils.isEmpty(salesOnMonthList)){
+            sumSalesOnMonth = salesOnMonthList.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
         topData.put("sumSalesOnMonth", sumSalesOnMonth);
 
-        // 今日额外支付费用 商品成本 + 商品编码以cb开头(快递费用)
-        BigDecimal sumAdditionalSalesOnDay = salesTicketService.queryAdditionalSumSalesOnDay();
+        // 分公司销售额处理
+        List<SaleInfo> collect = salesOnMonthList.stream().filter(o -> StringUtils.isNotEmpty(o.getSubordinateCompanyCode())).collect(Collectors.toList());
+        topData.put("companySalesOnMonth", collect);
 
-        if (sumAdditionalSalesOnDay == null){
-            sumAdditionalSalesOnDay = ZERO;
+        // 今日额外支付费用 商品成本 + 商品编码以cb开头(快递费用)
+        List<SaleInfo> additionalSalesOnDayList = salesTicketService.queryAdditionalSumSalesOnDay();
+
+        BigDecimal sumAdditionalSalesOnDay = new BigDecimal(0);
+        if (!CollectionUtils.isEmpty(additionalSalesOnDayList)){
+            sumAdditionalSalesOnDay = additionalSalesOnDayList.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add);
         }
+
+        List<SaleInfo> companyAddionalSalesOnDay = additionalSalesOnDayList.stream().filter(o -> StringUtils.isNotEmpty(o.getSubordinateCompanyCode())).collect(Collectors.toList());
+
+        List<SaleInfo> companyProfitSaleListOnDay = new ArrayList<>();
+
+        companySalesOnDay.stream().forEach(
+                o -> {
+                    companyAddionalSalesOnDay.stream().forEach(
+                            b -> {
+                                if (StringUtils.equals(o.getSubordinateCompanyCode(), b.getSubordinateCompanyCode())){
+                                    SaleInfo s = new SaleInfo();
+                                    BigDecimal subtract = o.getReceivableAccoun().subtract(b.getReceivableAccoun());
+                                    s.setReceivableAccoun(subtract);
+                                    s.setSubordinateCompanyName(o.getSubordinateCompanyName());
+                                    s.setSubordinateCompanyCode(o.getSubordinateCompanyCode());
+                                    companyProfitSaleListOnDay.add(s);
+                                }
+                            }
+                    );
+                }
+        );
+
+        // 各分公司今日利润
+        topData.put("companyProfitSaleListOnDay", companyProfitSaleListOnDay);
+
+        // 分公司今日总利润
+        BigDecimal subtractDay = sumSalesOnDay.subtract(sumAdditionalSalesOnDay);
+        topData.put("sumAdditionalSalesOnDay", subtractDay);
 
         // 当月额外支付费用
-        BigDecimal sumAdditionalSalesOnMonth = salesTicketService.queryAdditionalSumSalesOnMonth();
-        if (sumAdditionalSalesOnMonth == null){
-            sumAdditionalSalesOnMonth = ZERO;
+        List<SaleInfo> additionalSalesOnMonthList = salesTicketService.queryAdditionalSumSalesOnMonth();
+
+        BigDecimal sumAdditionalSalesOnMonth = new BigDecimal(0);
+        if (!CollectionUtils.isEmpty(additionalSalesOnMonthList)){
+            sumAdditionalSalesOnMonth = additionalSalesOnMonthList.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add);
         }
 
-        // 计算日利润
-        BigDecimal subtractDay = sumSalesOnDay.subtract(sumAdditionalSalesOnDay);
-        // 计算月利润
+        // 各公司额外费用
+        List<SaleInfo> companyAddionalSalesOnMonth = additionalSalesOnMonthList.stream().filter(o -> StringUtils.isNotEmpty(o.getSubordinateCompanyCode())).collect(Collectors.toList());
+
+        // 各分公司月利润
+        List<SaleInfo> companyProfitSaleListOnMonth = new ArrayList<>();
+
+        salesOnMonthList.stream().forEach(
+                o -> {
+                    companyAddionalSalesOnMonth.stream().forEach(
+                            b -> {
+                                if (StringUtils.equals(o.getSubordinateCompanyCode(), b.getSubordinateCompanyCode())){
+                                    SaleInfo s = new SaleInfo();
+                                    BigDecimal subtract = o.getReceivableAccoun().subtract(b.getReceivableAccoun());
+                                    s.setReceivableAccoun(subtract);
+                                    s.setSubordinateCompanyName(o.getSubordinateCompanyName());
+                                    s.setSubordinateCompanyCode(o.getSubordinateCompanyCode());
+                                    companyProfitSaleListOnMonth.add(s);
+                                }
+                            }
+                    );
+                }
+        );
+
+        topData.put("companyProfitSaleListOnMonth", companyProfitSaleListOnMonth);
+
+        // 公司总月利润
         BigDecimal subtractMonth = sumSalesOnMonth.subtract(sumAdditionalSalesOnMonth);
 
-        topData.put("sumAdditionalSalesOnDay", subtractDay);
+
         topData.put("sumAdditionalSalesOnMonth", subtractMonth);
 
-        //年度销售额
-        BigDecimal sumSalesOnYear = salesTicketService.querySumSalesOnYear();
+        // 各分公司年度销售额
+        List<SaleInfo> sumSalesOnYearList = salesTicketService.querySumSalesOnYear();
+
+        BigDecimal sumSalesOnYear = new BigDecimal(0);
+        if (!CollectionUtils.isEmpty(sumSalesOnYearList)){
+            sumSalesOnYear = sumSalesOnYearList.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+
+        // 各分公司年度销售额
+        List<SaleInfo> companySalesOnYearList = sumSalesOnYearList.stream().filter(o -> StringUtils.isNotEmpty(o.getSubordinateCompanyCode())).collect(Collectors.toList());
+        topData.put("companySalesOnYearList", companySalesOnYearList);
+
+        // 年度销售额
         topData.put("sumSalesOnYear", sumSalesOnYear);
 
         // 采购总金额
@@ -115,7 +194,13 @@ public class HomePageFacade {
         Object[] yearData = new Object[CommonConstant.HOME_PAGE_DEFAULT_YEAR];
 
         for (int i =0; i< CommonConstant.HOME_PAGE_DEFAULT_YEAR; i++){
-            years.add(currentyear + "年");
+//            if (i == CommonConstant.HOME_PAGE_DEFAULT_YEAR - 1){
+//                years.add(currentyear + "年(同比销售额折线图)");
+//
+//            } else {
+                years.add(currentyear + "年");
+//            }
+
             Map<String, List<HomePageReport>> stringListMap = collect.get(currentyear + "");
             --currentyear;
 
@@ -233,8 +318,8 @@ public class HomePageFacade {
 
     }
 
-    public List<SaleInfo> querySalesTop(){
-        List<SaleInfo> list = salesTicketService.querySalesTop();
+    public List<SaleInfo> querySalesTop(String data){
+        List<SaleInfo> list = salesTicketService.querySalesTop(data);
         return list;
     }
     public List<SaleInfo> salesUncollectedTop(){
@@ -265,37 +350,42 @@ public class HomePageFacade {
         return list;
     }
 
-    @Autowired
-    private DeptService deptService;
-
     public List<SaleGoodsTop> querySaleGoodsTop (String type){
         List<SaleGoodsTop> saleGoodsTops = salesTicketService.querySaleGoodsTop(type);
-
-        List<DeptInfoBean> list = deptService.queryDeptList();
-
-        DeptInfoBean deptInfoBean = new DeptInfoBean();
-        deptInfoBean.setDeptCode("201905081453361");
-//        String code = "201905081454131";
-
-
-        DeptInfoBean aa = aa(list, deptInfoBean);
-        System.out.println(aa);
 
         return saleGoodsTops;
     }
 
-    public DeptInfoBean aa (List<DeptInfoBean> list, DeptInfoBean deptInfoBean){
-        for (DeptInfoBean db : list){
-            if (StringUtils.equals(db.getDeptCode(), deptInfoBean.getDeptCode())){
-                deptInfoBean.setDeptCode(db.getParentCode());
-                if (db.getIsCompare().equals(1)){
-                    return db;
+    public List<SaleInfo> queryCompanySalesForMonth (){
+        List<SaleInfo> salesOnMonthList = salesTicketService.querySumSalesOnMonth();
+
+        Map<String, SaleInfo> map = new HashMap<>();
+        salesOnMonthList.stream().forEach(
+                o -> {
+                    map.put(o.getSubordinateCompanyCode(), o);
                 }
+        );
+
+        CompanyEnum[] values = CompanyEnum.values();
+        List<SaleInfo> data = new ArrayList<>();
+
+        String code = "";
+        SaleInfo saleInfo = null;
+        for (CompanyEnum ce : values){
+            code = ce.getCode();
+            saleInfo = map.get(code);
+            if (saleInfo == null){
+                saleInfo = new SaleInfo();
+                saleInfo.setSubordinateCompanyCode(code);
+                saleInfo.setSubordinateCompanyName(ce.getValue());
+                saleInfo.setReceivableAccoun(ZERO);
+                data.add(saleInfo);
+            } else {
+                data.add(saleInfo);
             }
         }
 
-        return aa(list, deptInfoBean);
+
+        return data;
     }
-
-
 }

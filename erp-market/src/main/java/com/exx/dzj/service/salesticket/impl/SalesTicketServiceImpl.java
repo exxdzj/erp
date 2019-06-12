@@ -99,33 +99,33 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     }
 
     @Override
-    public BigDecimal querySumSalesOnDay() {
+    public List<SaleInfo> querySumSalesOnDay() {
         return saleInfoMapper.querySumSalesOnDay();
     }
 
     @Override
-    public BigDecimal querySumSalesOnMonth() {
+    public List<SaleInfo> querySumSalesOnMonth() {
         return saleInfoMapper.querySumSalesOnMonth();
     }
 
     @Override
-    public BigDecimal queryAdditionalSumSalesOnDay() {
+    public List<SaleInfo> queryAdditionalSumSalesOnDay() {
         return saleInfoMapper.queryAdditionalSumSalesOnDay();
     }
 
     @Override
-    public BigDecimal queryAdditionalSumSalesOnMonth() {
+    public List<SaleInfo> queryAdditionalSumSalesOnMonth() {
         return saleInfoMapper.queryAdditionalSumSalesOnMonth();
     }
 
     @Override
-    public BigDecimal querySumSalesOnYear() {
+    public List<SaleInfo> querySumSalesOnYear() {
         return saleInfoMapper.querySumSalesOnYear();
     }
 
     @Override
-    public List<SaleInfo> querySalesTop() {
-        return saleInfoMapper.querySalesTop();
+    public List<SaleInfo> querySalesTop(String data) {
+        return saleInfoMapper.querySalesTop(data);
     }
     @Override
     public List<SaleInfo> salesUncollectedTop() {

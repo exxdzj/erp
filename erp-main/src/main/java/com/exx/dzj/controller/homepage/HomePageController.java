@@ -102,10 +102,10 @@ public class HomePageController {
      * @param
      * @return com.exx.dzj.result.Result
      */
-    @GetMapping("querySalesTop")
-    public Result querySalesTop (){
+    @GetMapping("querySalesTop/{data}")
+    public Result querySalesTop (@PathVariable("data") String data){
         Result result = Result.responseSuccess();
-        List<SaleInfo> list = homePageFacade.querySalesTop();
+        List<SaleInfo> list = homePageFacade.querySalesTop(data);
         result.setData(list);
         return result;
     }
@@ -125,6 +125,7 @@ public class HomePageController {
         return result;
     }
 
+    @Deprecated
     @GetMapping("stockinventorywarning")
     public Result stockInventoryWarning (CustomerSupplierQuery query){
         Result result = Result.responseSuccess();
@@ -160,6 +161,14 @@ public class HomePageController {
         Result result = Result.responseSuccess();
         List<SaleGoodsTop> data = homePageFacade.querySaleGoodsTop(type);
         result.setData(data);
+        return result;
+    }
+
+    @GetMapping("querycompanysalesformonth")
+    public Result queryCompanySalesForMonth (){
+        Result result = Result.responseSuccess();
+        List<SaleInfo> list = homePageFacade.queryCompanySalesForMonth();
+        result.setData(list);
         return result;
     }
 }

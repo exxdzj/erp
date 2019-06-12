@@ -32,17 +32,17 @@ public interface SaleInfoMapper {
 
     void logisticsInfoDel(@Param("id") Integer id);
 
-    BigDecimal querySumSalesOnDay();
+    List<SaleInfo> querySumSalesOnDay();
 
-    BigDecimal querySumSalesOnMonth();
+    List<SaleInfo> querySumSalesOnMonth();
 
-    BigDecimal queryAdditionalSumSalesOnDay();
+    List<SaleInfo> queryAdditionalSumSalesOnDay();
 
-    BigDecimal queryAdditionalSumSalesOnMonth();
+    List<SaleInfo> queryAdditionalSumSalesOnMonth();
 
-    BigDecimal querySumSalesOnYear();
+    List<SaleInfo> querySumSalesOnYear();
 
-    List<SaleInfo> querySalesTop();
+    List<SaleInfo> querySalesTop(@Param("type") String type);
 
     List<SaleInfo> salesUncollectedTop();
 
