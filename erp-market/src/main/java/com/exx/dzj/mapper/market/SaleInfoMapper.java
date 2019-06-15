@@ -57,4 +57,8 @@ public interface SaleInfoMapper {
     int querySaleBySaleCode(@Param("saleCode") String saleCode);
 
     void updateSalesmanSubordinateCompany(SaleInfo saleInfo);
+
+    List<SaleListInfo> querySalesListForIds(SaleInfoQuery query);
+
+    List<SaleListInfo> exportSaleList(SaleInfoQuery query);
 }

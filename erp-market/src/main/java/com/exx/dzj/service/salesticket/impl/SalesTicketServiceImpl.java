@@ -161,4 +161,14 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     public void updateSalesmanSubordinateCompany(SaleInfo saleInfo) {
         saleInfoMapper.updateSalesmanSubordinateCompany(saleInfo);
     }
+
+    @Override
+    public List<SaleListInfo> querySalesListForIds(SaleInfoQuery query) {
+        return saleInfoMapper.querySalesListForIds(query);
+    }
+
+    @Override
+    public List<SaleListInfo> exportSaleList(SaleInfoQuery query) {
+        return saleInfoMapper.exportSaleList(query);
+    }
 }

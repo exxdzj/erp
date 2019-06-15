@@ -293,8 +293,8 @@
         SELECT
           YEAR(sale_date) AS `year`,MONTH(sale_date) AS `month`, SUM(receivable_accoun) AS sum_receivable_accoun
         FROM tab_sale_info
-            GROUP BY MONTH (sale_date)
-            ORDER BY YEAR(sale_date), MONTH(sale_date);
+            GROUP BY YEAR (sale_date), MONTH (sale_date)
+            ORDER BY YEAR(sale_date);
     </select>
     <resultMap id="salesMapForYear" type="com.exx.dzj.entity.statistics.sales.HomePageReport">
         <result column="month" property="month"/>

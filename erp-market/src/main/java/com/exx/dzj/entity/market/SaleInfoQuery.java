@@ -2,6 +2,8 @@ package com.exx.dzj.entity.market;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author yangyun
  * @create 2019-06-09-17:11
@@ -12,4 +14,8 @@ public class SaleInfoQuery extends SaleInfo {
 
     private String startTime;
     private String endTime;
+
+    private int type;// 1 按列表样式 2 按单据明细
+
+    private List<Integer> idList;
 }

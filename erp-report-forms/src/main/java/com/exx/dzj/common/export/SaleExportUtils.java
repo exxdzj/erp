@@ -7,15 +7,17 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
+import com.exx.dzj.entity.market.LogisticsInfo;
+import com.exx.dzj.entity.market.SaleInfo;
+import com.exx.dzj.entity.market.SaleListInfo;
 import com.exx.dzj.entity.statistics.sales.*;
 import com.exx.dzj.entity.user.UserVo;
+import com.exx.dzj.enummodel.PayStatusEnum;
+import com.exx.dzj.enummodel.SalesClassesEnum;
 import com.exx.dzj.util.DateUtil;
 import com.exx.dzj.util.MathUtil;
 import com.exx.dzj.util.enums.ExportFileNameEnum;
-import com.exx.dzj.util.excel.export.model.CustomerSaleModel;
-import com.exx.dzj.util.excel.export.model.InventorySaleModel;
-import com.exx.dzj.util.excel.export.model.SaleDeductionModel;
-import com.exx.dzj.util.excel.export.model.SalesManSaleModel;
+import com.exx.dzj.util.excel.export.model.*;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.springframework.util.CollectionUtils;
 
@@ -576,6 +578,142 @@ public class SaleExportUtils {
         itemEnd.setSaleMan("公司名称: 正诚文化");
         itemEnd.setSaleVolume("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
+
+        return writer;
+    }
+
+    public static ExcelWriter exportSaleList (ServletOutputStream outputStream, List<SaleListInfo> list){
+        ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
+        String sheetName = "销售单";
+        Sheet sheet = new Sheet(1,0);
+        sheet.setSheetName(sheetName);
+
+        Table title = new Table(1);
+        title.setClazz(SaleListModel.class);
+        writer.write(null, sheet, title);
+
+        List<SaleListModel> content = new ArrayList<>();
+        SaleListModel model = null;
+
+        for (SaleListInfo sli : list){
+            model = new SaleListModel();
+            model.setSaleCode(sli.getSaleCode());
+            model.setSaleDate(sli.getSaleDate());
+            model.setPaymentStatus(PayStatusEnum.getPayStatusEnumByKey(sli.getPaymentStatus()).getValue());
+            model.setCustName(sli.getCustName());
+            model.setCurrency(sli.getCurrency());
+            model.setExchangeRate(formateBigdecimal(sli.getExchangeRate()));
+            model.setSalesmanName(sli.getSalesmanName());
+            model.setSaleProject(sli.getSaleProject());
+            model.setDeliveryAddress(sli.getDeliveryAddress());
+            model.setSaleRemark(sli.getSaleRemark());
+            model.setIsReceipt(SalesClassesEnum.getSalesClassesEnum(sli.getIsReceipt()).getValue());
+            model.setSubordinateCompanyName(sli.getSubordinateCompanyName());
+            model.setDiscountAmount(formateBigdecimal(sli.getDiscountAmount()));
+            model.setCollectedAmount(formateBigdecimal(sli.getCollectedAmount()));
+            model.setCollectionAccount(sli.getCollectionAccount());
+            model.setPaymentMethod(sli.getPaymentMethod());
+            model.setCollectionTerms(sli.getCollectionTerms());
+            model.setAccountPeriod(formateBigdecimal(sli.getAccountPeriod()));
+            model.setCollectionUserName(sli.getCollectionUserName());
+            model.setDueDate(sli.getDueDate());
+            model.setStockName(sli.getStockName());
+            model.setStockAddress(sli.getStockAddress());
+            model.setGoodsNum(formateBigdecimal(sli.getGoodsNum()));
+            model.setUnitPrice(formateBigdecimal(sli.getUnitPrice()));
+            model.setDiscountRate(formateBigdecimal(sli.getDiscountRate()) + "%");
+            model.setGoodsDiscountAmount(formateBigdecimal(sli.getGoodsDiscountAmount()));
+            model.setSalesVolume(formateBigdecimal(sli.getSalesVolume()));
+            model.setGoodsRemark(sli.getGoodsRemark());
+
+            content.add(model);
+        }
+
+        writer.write(content, sheet);
+
+        return writer;
+    }
+
+    private static String formateBigdecimal (Object b){
+        if (b == null){
+            return "";
+        }
+        return b.toString();
+    }
+
+//    private static String formateDate (){
+//
+//    }
+
+    public static ExcelWriter exportSaleListTenet (ServletOutputStream outputStream, List<SaleListInfo> list){
+        ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
+        String sheetName = "销售单列表";
+        Sheet sheet = new Sheet(1,0);
+        sheet.setSheetName(sheetName);
+
+        Table title = new Table(1);
+        title.setClazz(SaleListTenetModel.class);
+        writer.write(null, sheet, title);
+
+        List<SaleListTenetModel> content = new ArrayList<>();
+        SaleListTenetModel model = null;
+
+        List<LogisticsInfo> logisticsLsit = null;
+        StringBuilder logisticsCompamyName = null;
+        StringBuilder freihtCode = null;
+        StringBuilder deliverGoodsTime = null;
+        StringBuilder selectorPhoneNum = null;
+        StringBuilder remark = null;
+
+        for (SaleListInfo info : list){
+            model = new SaleListTenetModel();
+            model.setSaleCode(info.getSaleCode());
+            model.setSaleDate(info.getSaleDate());
+            model.setCustCode(info.getCustCode());
+            model.setCustName(info.getCustName());
+            model.setCurrency(info.getCurrency());
+            model.setExchangeRate(formateBigdecimal(info.getExchangeRate()));
+            model.setReceivableAccoun(formateBigdecimal(info.getReceivableAccoun()));
+            model.setPaymentStatus(PayStatusEnum.getPayStatusEnumByKey(info.getPaymentStatus()).getValue());
+            model.setIsReceipt(formateBigdecimal(SalesClassesEnum.getSalesClassesEnum(info.getIsReceipt()).getValue()));
+            model.setSalesmanName(info.getSalesmanName());
+            model.setCollectionUserName(info.getCollectionUserName());
+            model.setSaleRemark(info.getSaleRemark());
+            model.setDeliveryAddress(info.getDeliveryAddress());
+
+            logisticsLsit = info.getLogisticsLsit();
+            if (!CollectionUtils.isEmpty(logisticsLsit)){
+                logisticsCompamyName = new StringBuilder("");
+                freihtCode = new StringBuilder("");
+                deliverGoodsTime = new StringBuilder("");
+                selectorPhoneNum = new StringBuilder("");
+                remark = new StringBuilder("");
+                for (LogisticsInfo li : logisticsLsit){
+                    logisticsCompamyName.append(li.getLogisticsCompamyName() + ";");
+                    freihtCode.append(li.getFreihtCode() + ";");
+                    deliverGoodsTime.append(li.getDeliverGoodsTime() + ";");
+                    selectorPhoneNum.append(li.getSelectorPhoneNum() + ";");
+                    remark.append(li.getRemark() + ";");
+                }
+                model.setLogisticsCompamyName(logisticsCompamyName.toString());
+                model.setFreihtCode(freihtCode.toString());
+                model.setDeliverGoodsTime(deliverGoodsTime.toString());
+                model.setSelectorPhoneNum(selectorPhoneNum.toString());
+                model.setRemark(remark.toString());
+
+            }
+            model.setSaleProject(info.getSaleProject());
+            model.setDiscountAmount(formateBigdecimal(info.getDiscountAmount()));
+            model.setCollectionTerms(info.getCollectionTerms());
+            model.setAccountPeriod(formateBigdecimal(info.getAccountPeriod()));
+            model.setSubordinateCompanyName(formateBigdecimal(info.getSubordinateCompanyName()));
+            model.setSubordinateCompanyName(info.getSubordinateCompanyName());
+
+
+            content.add(model);
+        }
+
+        writer.write(content, sheet);
 
         return writer;
     }

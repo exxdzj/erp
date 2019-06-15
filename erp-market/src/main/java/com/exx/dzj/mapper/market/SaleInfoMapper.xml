@@ -119,6 +119,7 @@
       UINFO.real_name AS userName,
       SINFO.user_code AS userCode,
       SINFO.create_user AS createUser,
+      SINFO.collection_user_name AS collectionUserName,
       SINFO.sale_source AS saleSource,
       SINFO.is_receipt AS isReceipt,
       SINFO.subordinate_company_name AS subordinateCompanyName,
@@ -181,13 +182,20 @@
     <result column="cust_name" property="custName"/>
     <result column="sale_date" property="saleDate"/>
     <result column="sale_code" property="saleCode"/>
+    <!-- 查询关联收款记录 -->
+    <collection property="saleReceiptsDetailsList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleReceiptsDetails" javaType="java.util.List"
+                select="com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper.querySaleReceiptsDetailsList" />
+    <!-- 查询关联商品详情 -->
+    <collection property="saleGoodsDetailBeanList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleGoodsDetailBean" javaType="java.util.List"
+                select="com.exx.dzj.mapper.market.SaleGoodsDetailBeanMapper.querySaleGoodsDetailBeanList" />
     <collection property="logisticsInfoList" column="sale_code" ofType="com.exx.dzj.entity.market.LogisticsInfo"
                 javaType="java.util.List" select="logisticsInfoList"></collection>
   </resultMap>
 
   <select id="logisticsInfoList" parameterType="String" resultType="com.exx.dzj.entity.market.LogisticsInfo">
     SELECT
-      id AS id, freight_code AS freihtCode, logistic_company_name AS logisticsCompamyName
+      id AS id, freight_code AS freihtCode, logistic_company_name AS logisticsCompamyName,
+      selector_phone_num AS selectorPhoneNum, deliver_goods_time AS deliverGoodsTime, remark AS remark
     FROM tab_sale_logistic_info
     WHERE sale_code = #{saleCode}
   </select>
@@ -982,14 +990,14 @@
             GROUP BY SGD.stock_code ORDER BY goodsNum DESC LIMIT 20
     </select>
 
-  <select id="querySubordinateCompanySelect" resultType="com.exx.dzj.entity.market.SaleInfo">
-    SELECT subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
-	  FROM tab_sale_info where subordinate_company_code is not null GROUP BY subordinate_company_code
-  </select>
+      <select id="querySubordinateCompanySelect" resultType="com.exx.dzj.entity.market.SaleInfo">
+        SELECT subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
+          FROM tab_sale_info where subordinate_company_code is not null GROUP BY subordinate_company_code
+      </select>
 
-  <select id="querySaleBySaleCode" resultType="int">
-    SELECT COUNT(1) FROM tab_sale_info WHERE sale_code = #{saleCode}
-  </select>
+      <select id="querySaleBySaleCode" resultType="int">
+        SELECT COUNT(1) FROM tab_sale_info WHERE sale_code = #{saleCode}
+      </select>
 
   <update id="updateSalesmanSubordinateCompany" parameterType="com.exx.dzj.entity.market.SaleInfo">
     UPDATE tab_sale_info SET
@@ -998,4 +1006,169 @@
     WHERE sale_code = #{saleCode}
 
   </update>
+    
+    <select id="querySalesListForIds" resultType="com.exx.dzj.entity.market.SaleListInfo" parameterType="com.exx.dzj.entity.market.SaleInfoQuery">
+      SELECT
+      SINFO.sale_code AS saleCode,
+      SINFO.sale_date AS saleDate,
+      SINFO.payment_status AS paymentStatus,
+      CSUPPLIER.cust_name AS custName,
+      SINFO.currency AS currency,
+      SINFO.exchange_rate AS exchangeRate,
+      CONCAT(SINFO.user_code, UINFO.real_name) AS salesmanName,
+      DICTIONPRO.dict_name AS saleProject,
+      SINFO.delivery_address AS deliveryAddress,
+      SINFO.remarks AS saleRemark,
+     /* CASE
+      WHEN SINFO.is_receipt = 0 THEN '未签收'
+      WHEN SINFO.is_receipt = 1 THEN '已签收'
+      WHEN SINFO.is_receipt = 2 THEN '其他'
+      END isReceipt,*/
+      SINFO.subordinate_company_name AS subordinateCompanyName,
+      SINFO.discount_amount AS discountAmount,
+      SINFO.collection_terms AS collectionTerms,
+      SINFO.account_period AS accountPeriod,
+      SINFO.create_user AS saleCreateUser,
+      SINFO.invoice_code AS invoiceCode,
+      SINFO.collection_user_name AS collectionUserName,
+      SINFO.due_date AS dueDate,
+      SINFO.sale_source AS saleSource,
+      SINFO.is_receipt AS isReceipt,
+
+      sgoods.stock_name AS stockName,
+      sgoods.stock_address AS stockAddress,
+      sgoods.goods_num AS goodsNum,
+      sgoods.unit_price AS unitPrice,
+      sgoods.discount_rate AS discountRate,
+      sgoods.discount_amount AS goodsDiscountAmount,
+      sgoods.sales_volume salesVolume,
+      sgoods.remarks AS goodsRemark,
+
+      srd.collected_amount AS collectedAmount,
+      srd.collection_account AS collectionAccount,
+      srd.payment_method AS paymentMethod
+
+      FROM tab_sale_info SINFO
+      LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
+      LEFT JOIN tab_sale_goods_detail sgoods ON SINFO.sale_code = sgoods.sale_code
+      LEFT JOIN tab_sale_receipts_details srd ON SINFO.sale_code = srd.sale_code
+      LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
+      LEFT JOIN tab_user_info UINFO ON SINFO.salesman_code = UINFO.salesman_code
+        WHERE 1=1
+        <if test="startTime != null and startTime != ''">
+          AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+          AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{endTime},'%Y-%m-%d 23:59:59')]]>
+        </if>
+
+        <if test="saleCode != null and saleCode != ''">
+          AND  SINFO.sale_code LIKE CONCAT(#{saleCode}, '%')
+        </if>
+        <if test="salesmanCode != null and salesmanCode != ''">
+          AND  SINFO.salesman_code=#{salesmanCode}
+        </if>
+        <if test="paymentStatus != null and paymentStatus != ''">
+          AND  SINFO.payment_status=#{paymentStatus}
+        </if>
+        <if test="subordinateCompanyCode != null and subordinateCompanyCode != ''">
+          AND  SINFO.subordinate_company_code=#{subordinateCompanyCode}
+        </if>
+        <if test="custCode != null and custCode != ''">
+          AND  SINFO.cust_code=#{custCode}
+        </if>
+        <if test="idList.size() > 0">
+          AND SINFO.id IN
+          <foreach collection="idList" item="id" separator="," open="(" close=")" index="index">
+              #{id}
+          </foreach>
+        </if>
+        ORDER BY SINFO.sale_date  DESC
+    </select>
+
+
+  <select id="exportSaleList" resultMap="exportSaleListMap" parameterType="com.exx.dzj.entity.market.SaleInfoQuery">
+    SELECT
+      SINFO.sale_code AS saleCode,
+      SINFO.sale_date AS saleDate,
+      CSUPPLIER.cust_code AS custCode,
+      CSUPPLIER.cust_name AS custName,
+      SINFO.currency AS currency,
+      SINFO.exchange_rate AS exchangeRate,
+      SINFO.receivable_accoun AS receivableAccoun,
+      SINFO.due_date AS dueDate,
+      SINFO.payment_status AS paymentStatus,
+      SINFO.is_receipt AS isReceipt,
+      CONCAT(SINFO.user_code, UINFO.real_name) AS salesmanName,
+      SINFO.collection_user_name AS collectionUserName,
+      SINFO.remarks AS saleRemark,
+      SINFO.delivery_address AS deliveryAddress,
+      DICTIONPRO.dict_name AS saleProject,
+      SINFO.discount_amount AS discountAmount,
+      SINFO.collection_terms AS collectionTerms,
+      SINFO.account_period AS accountPeriod,
+      (SELECT SUM(collected_amount) FROM tab_sale_receipts_details srd WHERE SINFO.sale_code = srd.sale_code) AS sumCollectedAmount,
+      SINFO.subordinate_company_name AS subordinateCompanyName,
+      SINFO.sale_source AS saleSource
+    FROM tab_sale_info SINFO
+    LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
+    LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
+    LEFT JOIN tab_user_info UINFO ON SINFO.salesman_code = UINFO.salesman_code
+    WHERE 1=1
+    <if test="startTime != null and startTime != ''">
+      AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')]]>
+    </if>
+    <if test="endTime != null and endTime != ''">
+      AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{endTime},'%Y-%m-%d 23:59:59')]]>
+    </if>
+
+    <if test="saleCode != null and saleCode != ''">
+      AND  SINFO.sale_code LIKE CONCAT(#{saleCode}, '%')
+    </if>
+    <if test="salesmanCode != null and salesmanCode != ''">
+      AND  SINFO.salesman_code=#{salesmanCode}
+    </if>
+    <if test="paymentStatus != null and paymentStatus != ''">
+      AND  SINFO.payment_status=#{paymentStatus}
+    </if>
+    <if test="subordinateCompanyCode != null and subordinateCompanyCode != ''">
+      AND  SINFO.subordinate_company_code=#{subordinateCompanyCode}
+    </if>
+    <if test="custCode != null and custCode != ''">
+      AND  SINFO.cust_code=#{custCode}
+    </if>
+    <if test="idList.size() > 0">
+      AND SINFO.id IN
+      <foreach collection="idList" item="id" separator="," open="(" close=")" index="index">
+        #{id}
+      </foreach>
+    </if>
+    ORDER BY SINFO.sale_date  DESC
+  </select>
+
+  <resultMap id="exportSaleListMap" type="com.exx.dzj.entity.market.SaleListInfo">
+    <result column="saleCode" property="saleCode"/>
+    <result column="saleDate" property="saleDate"/>
+    <result column="custCode" property="custCode"/>
+    <result column="custName" property="custName"/>
+    <result column="currency" property="currency"/>
+    <result column="exchangeRate" property="exchangeRate"/>
+    <result column="receivableAccoun" property="receivableAccoun"/>
+    <result column="dueDate" property="dueDate"/>
+    <result column="paymentStatus" property="paymentStatus"/>
+    <result column="isReceipt" property="isReceipt"/>
+    <result column="salesmanName" property="salesmanName"/>
+    <result column="collectionUserName" property="collectionUserName"/>
+    <result column="saleRemark" property="saleRemark"/>
+    <result column="deliveryAddress" property="deliveryAddress"/>
+    <result column="saleProject" property="saleProject"/>
+    <result column="discountAmount" property="discountAmount"/>
+    <result column="collectionTerms" property="collectionTerms"/>
+    <result column="accountPeriod" property="accountPeriod"/>
+    <result column="sumCollectedAmount" property="sumCollectedAmount"/>
+    <result column="subordinateCompanyName" property="subordinateCompanyName"/>
+    <!--<result column="saleSource" property="saleSource"/>-->
+    <collection property="logisticsLsit" column="saleCode" ofType="com.exx.dzj.entity.market.LogisticsInfo"
+                javaType="java.util.List" select="logisticsInfoList"></collection>
+   </resultMap>
 </mapper>

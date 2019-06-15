@@ -2,20 +2,22 @@ package com.exx.dzj.controller.reportforms.export;
 
 import com.alibaba.excel.ExcelWriter;
 import com.exx.dzj.common.export.SaleExportUtils;
+import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
+import com.exx.dzj.entity.market.SaleInfo;
+import com.exx.dzj.entity.market.SaleInfoQuery;
+import com.exx.dzj.entity.market.SaleListInfo;
 import com.exx.dzj.entity.statistics.sales.StockTypeReport;
 import com.exx.dzj.entity.user.UserVo;
+import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.reportforms.sale.SaleTicketReportFacade;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.util.enums.ExportFileNameEnum;
 import com.exx.dzj.util.excel.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +39,9 @@ public class SaleExportController {
 
     @Autowired
     private UserFacade userFacade;
+
+    @Autowired
+    private SaleTicketReportFacade saleTicketReportFacade;
 
     @GetMapping("exportinventorysale/{userCode}")
     public void exportInventorySale (HttpServletRequest request, HttpServletResponse response, @PathVariable("userCode") String userCode, StockInfoQuery query){
@@ -146,6 +151,50 @@ public class SaleExportController {
             writer.finish();
         } catch (IOException e){
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * @description 销售单列表导出
+     * @author yangyun
+     * @date 2019/6/13 0013
+     * @param request
+     * @param response
+     * @param realName
+     * @param query
+     * @return void
+     */
+    @GetMapping("exportSaleList/{realName}")
+    public void exportSaleList (HttpServletRequest request, HttpServletResponse response, @PathVariable("realName") String realName, SaleInfoQuery query){
+        try {
+            String code = ExcelUtil.getCode();
+
+            List<SaleListInfo> list = null;
+            response.setContentType("application/x-excel");
+            response.setHeader("Content-Disposition", "attachment;filename=" + new String(("Sale-" + code + ".xlsx").getBytes(), "ISO-8859-1"));
+
+            ServletOutputStream outputStream = response.getOutputStream();
+            ExcelWriter writer = null;
+            int type = query.getType();
+            switch (type){
+                case CommonConstant.DEFAULT_VALUE_ONE:
+                    list = saleTicketReportFacade.exportSaleList(query);
+                    writer = SaleExportUtils.exportSaleListTenet(outputStream, list);
+                    break;
+                case CommonConstant.DEFAULT_VALUE_TWO:
+                    list = saleTicketReportFacade.querySalesListForIds(query);
+                    writer = SaleExportUtils.exportSaleList(outputStream, list);
+                    break;
+                default:
+
+                    break;
+            }
+
+            writer.finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
         }
     }
 }

@@ -5,22 +5,20 @@ import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
-import com.exx.dzj.entity.customer.CustomerSupplierBean;
+import com.exx.dzj.entity.market.SaleInfo;
+import com.exx.dzj.entity.market.SaleInfoQuery;
+import com.exx.dzj.entity.market.SaleListInfo;
 import com.exx.dzj.entity.statistics.sales.*;
+import com.exx.dzj.enummodel.SalesClassesEnum;
+import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
 import com.exx.dzj.util.MathUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.*;
 
 /**
  * @author yangyun
@@ -31,6 +29,9 @@ public class SaleTicketReportFacade {
 
     @Autowired
     private SaleTicketReportService stockTypeReportService;
+
+    @Autowired
+    private SalesTicketService salesTicketService;
 
     /**
      * @description 销售单依库存统计
@@ -351,7 +352,21 @@ public class SaleTicketReportFacade {
         return deptSaleReports;
     }
 
+    public List<SaleListInfo> querySalesListForIds(SaleInfoQuery query){
 
+        List<SaleListInfo> saleInfoList = salesTicketService.querySalesListForIds(query);
+
+//        for(SaleInfo si : saleInfoList){
+//            SalesClassesEnum.getSalesClassesEnum(si.getIsReceipt()).
+//        }
+
+        return saleInfoList;
+    }
+
+    public List<SaleListInfo> exportSaleList (SaleInfoQuery query){
+        List<SaleListInfo> saleInfoList = salesTicketService.exportSaleList(query);
+        return saleInfoList;
+    }
 
 
 }
