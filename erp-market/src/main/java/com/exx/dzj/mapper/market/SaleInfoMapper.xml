@@ -825,7 +825,7 @@
   </select>
 
   <select id="queryAdditionalSumSalesOnDay" resultType="com.exx.dzj.entity.market.SaleInfo">
-    SELECT
+    /*SELECT
         SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
         +
         sum((SELECT
@@ -836,9 +836,10 @@
               FROM tab_sale_goods_detail bb WHERE bb.sale_code = s.sale_code))
     FROM tab_sale_info s
     WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
+                      GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC*/
 
 
-    /*SELECT
+    SELECT
         SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
         +
         sum((SELECT
@@ -849,12 +850,12 @@
               FROM tab_sale_goods_detail bb WHERE bb.sale_code = s.sale_code)) AS receivableAccoun
 				, subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info s
-    WHERE s.sale_date BETWEEN DATE_FORMAT('2019-06-01','%Y-%m-%d %H:%i:%s') AND DATE_FORMAT('2019-06-01','%Y-%m-%d 23:59:59')
-					GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC*/
+    WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
+					GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
   <select id="queryAdditionalSumSalesOnMonth" resultType="com.exx.dzj.entity.market.SaleInfo">
-    SELECT
+    /*SELECT
         SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
         +
         sum((SELECT
@@ -866,8 +867,9 @@
     FROM tab_sale_info s
     WHERE s.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
                       AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
+                      GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC*/
 
-    /*SELECT
+    SELECT
         SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
         +
         sum((SELECT
@@ -880,7 +882,7 @@
     FROM tab_sale_info s
     WHERE s.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
                       AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
-                      GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC*/
+                      GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
   <select id="querySumSalesOnYear" resultType="com.exx.dzj.entity.market.SaleInfo">
