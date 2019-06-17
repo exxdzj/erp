@@ -6,7 +6,7 @@ import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.statistics.sales.*;
-import com.exx.dzj.entity.user.UserVo;
+import com.exx.dzj.enummodel.SaleListFieldEnum;
 import com.exx.dzj.facade.reportforms.sale.SaleTicketReportFacade;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.result.Result;
@@ -148,6 +148,21 @@ public class SaleReportFormsController {
         Result result = Result.responseSuccess();
         List<DeptSaleReport> deptSaleReports = saleTicketReportFacade.queryDeptSaleReport(query);
         result.setData(deptSaleReports);
+        return result;
+    }
+
+    /**
+     * @description 销售单导出字段
+     * @author yangyun
+     * @date 2019/6/17 0017
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("queryexoprtfieldlist")
+    public Result queryExoprtFieldList (){
+        Result result = Result.responseSuccess();
+        List<SaleExportFieldReport> fieldReports = saleTicketReportFacade.queryExoprtFieldList();
+        result.setData(fieldReports);
         return result;
     }
 }

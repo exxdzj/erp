@@ -5,11 +5,10 @@ import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
-import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleInfoQuery;
 import com.exx.dzj.entity.market.SaleListInfo;
 import com.exx.dzj.entity.statistics.sales.*;
-import com.exx.dzj.enummodel.SalesClassesEnum;
+import com.exx.dzj.enummodel.SaleListFieldEnum;
 import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
 import com.exx.dzj.util.MathUtil;
@@ -368,5 +367,17 @@ public class SaleTicketReportFacade {
         return saleInfoList;
     }
 
+    public List<SaleExportFieldReport> queryExoprtFieldList (){
+        List<SaleExportFieldReport> fieldList = new ArrayList<>();
+        SaleExportFieldReport sep = null;
+        for (SaleListFieldEnum temp : SaleListFieldEnum.values()){
+            sep = new SaleExportFieldReport();
+            sep.setKey(temp.getKey());
+            sep.setName(temp.getName());
+            fieldList.add(sep);
+        }
+
+        return fieldList;
+    }
 
 }

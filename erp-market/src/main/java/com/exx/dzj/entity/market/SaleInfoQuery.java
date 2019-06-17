@@ -18,4 +18,6 @@ public class SaleInfoQuery extends SaleInfo {
     private int type;// 1 按列表样式 2 按单据明细
 
     private List<Integer> idList;
+
+    private List<String> fieldList;
 }

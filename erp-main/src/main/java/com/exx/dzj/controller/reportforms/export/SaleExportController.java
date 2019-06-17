@@ -16,6 +16,7 @@ import com.exx.dzj.facade.reportforms.sale.SaleTicketReportFacade;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.util.enums.ExportFileNameEnum;
 import com.exx.dzj.util.excel.ExcelUtil;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -155,7 +156,7 @@ public class SaleExportController {
     }
 
     /**
-     * @description 销售单列表导出
+     * @description 销售单列表导出 1 列表样式导出 2 详情导出
      * @author yangyun
      * @date 2019/6/13 0013
      * @param request
@@ -174,16 +175,52 @@ public class SaleExportController {
             response.setHeader("Content-Disposition", "attachment;filename=" + new String(("Sale-" + code + ".xlsx").getBytes(), "ISO-8859-1"));
 
             ServletOutputStream outputStream = response.getOutputStream();
+            XSSFWorkbook writer = null;
+            int type = query.getType();
+            switch (type){
+                case CommonConstant.DEFAULT_VALUE_ONE:
+                    list = saleTicketReportFacade.exportSaleList(query);
+                    writer = SaleExportUtils.exportSaleList(outputStream, list, query.getFieldList());
+//                    writer = SaleExportUtils.exportSaleList2(outputStream, list);
+                    break;
+                case CommonConstant.DEFAULT_VALUE_TWO:
+                    list = saleTicketReportFacade.querySalesListForIds(query);
+//                    writer = SaleExportUtils.exportSaleListTenet(outputStream, list, query.getFieldList());
+                    SaleExportUtils.exportSaleListTenet2(outputStream, list);
+                    break;
+                default:
+
+                    break;
+            }
+
+            writer.write(outputStream);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+        }
+    }
+
+    @GetMapping("exportSaleList2/{realName}")
+    public void exportSaleList2 (HttpServletRequest request, HttpServletResponse response, @PathVariable("realName") String realName, SaleInfoQuery query){
+        try {
+            String code = ExcelUtil.getCode();
+
+            List<SaleListInfo> list = null;
+            response.setContentType("application/x-excel");
+            response.setHeader("Content-Disposition", "attachment;filename=" + new String(("Sale-" + code + ".xlsx").getBytes(), "ISO-8859-1"));
+
+            ServletOutputStream outputStream = response.getOutputStream();
             ExcelWriter writer = null;
             int type = query.getType();
             switch (type){
                 case CommonConstant.DEFAULT_VALUE_ONE:
                     list = saleTicketReportFacade.exportSaleList(query);
-                    writer = SaleExportUtils.exportSaleListTenet(outputStream, list);
+                    writer = SaleExportUtils.exportSaleListTenet2(outputStream, list);
                     break;
                 case CommonConstant.DEFAULT_VALUE_TWO:
                     list = saleTicketReportFacade.querySalesListForIds(query);
-                    writer = SaleExportUtils.exportSaleList(outputStream, list);
+                    writer = SaleExportUtils.exportSaleList2(outputStream, list);
                     break;
                 default:
 

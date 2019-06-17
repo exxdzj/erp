@@ -31,7 +31,7 @@ public class SaleListTenetModel extends BaseRowModel {
     @ExcelProperty(value = "汇率", index = 5)
     private String exchangeRate;
 
-    @ExcelProperty(value = "金额", index = 6)
+    @ExcelProperty(value = "总金额", index = 6)
     private String receivableAccoun;
 
     @ExcelProperty(value = "状态", index = 7)
