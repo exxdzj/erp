@@ -1,5 +1,7 @@
 package com.exx.dzj.entity.role;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
@@ -14,6 +16,8 @@ import java.util.Date;
 @ToString
 @TableName("tab_role_menu")
 public class RoleMenuBean implements Serializable {
+
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
 
     private String roleCode;

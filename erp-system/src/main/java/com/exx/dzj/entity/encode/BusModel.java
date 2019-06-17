@@ -1,5 +1,7 @@
 package com.exx.dzj.entity.encode;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -18,6 +20,7 @@ public class BusModel implements Serializable {
     /**
      * 主键
      */
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     /**
      * 业务类型(业务编码)
