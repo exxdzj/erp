@@ -268,6 +268,8 @@ public class ProccessImportDataUtil {
         saleGoodsDetail.setStockAddressCode(stockAddressCode);
     }
 
+    private static final String REG = "[\u4e00-\u9fa5]";
+
     /**
      * @description 设置关联销售员信息, 项目信息
      * @author yangyun
@@ -280,10 +282,56 @@ public class ProccessImportDataUtil {
      */
     public static void setSalesInfo (SaleInfo saleInfo, Map<String, UserInfo> userInfoMap, Map<String, String> stringMap, Map<String, CustomerSupplierBean> customerSupplierBeanMap){
         if (StringUtils.isNotEmpty(saleInfo.getSaleCode())){
-            UserInfo userInfo = userInfoMap.get(saleInfo.getUserCode());
-            if (userInfo != null){
-                saleInfo.setUserCode(userInfo.getUserCode());
-                saleInfo.setSalesmanCode(userInfo.getSalesmanCode());
+            if (StringUtils.isNotEmpty(saleInfo.getUserCode())){
+                switch (saleInfo.getUserCode()){
+                    case "E行销深圳成本中心":
+                        saleInfo.setUserCode("CB");
+                        saleInfo.setSalesmanCode("CB");
+                        break;
+                    case "家庭成本中心":
+                        saleInfo.setUserCode("CB1");
+                        saleInfo.setSalesmanCode("CB1");
+                        break;
+                    case "E行销培训成本中心":
+                        saleInfo.setUserCode("CB2");
+                        saleInfo.setSalesmanCode("CB2");
+                        break;
+                    case "E行销北京成本中心":
+                        saleInfo.setUserCode("CB3");
+                        saleInfo.setSalesmanCode("CB3");
+                        break;
+                    case "E行销上海成本中心":
+                        saleInfo.setUserCode("CB4");
+                        saleInfo.setSalesmanCode("CB4");
+                        break;
+                    case "E行销温州成本中心":
+                        saleInfo.setUserCode("CB5");
+                        saleInfo.setSalesmanCode("CB5");
+                        break;
+                    case "E行销APP成本中心":
+                        saleInfo.setUserCode("CB6");
+                        saleInfo.setSalesmanCode("CB6");
+                        break;
+                    case "E行销西安成本中心":
+                        saleInfo.setUserCode("CB7");
+                        saleInfo.setSalesmanCode("CB7");
+                        break;
+                    default:
+                        int index = -1;
+                        String substring = "";
+                        if (saleInfo.getUserCode().matches(".*" + REG + ".*")){
+
+                            index = saleInfo.getUserCode().split(REG).length;
+                            if (index > 0){
+                                index = saleInfo.getUserCode().split(REG)[0].length();
+                                substring = saleInfo.getUserCode().substring(0, index);
+                                saleInfo.setUserCode(userInfoMap.get(substring)  == null ? substring : userInfoMap.get(substring).getUserCode());
+                                saleInfo.setSalesmanCode(substring);
+                            }
+
+                        }
+                        break;
+                }
             }
 
             PayStatusEnum payStatusEnum = EnumsUtils.getEnumObject(PayStatusEnum.class, e -> e.getValue().equals(saleInfo.getPaymentStatus())).get();

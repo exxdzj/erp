@@ -109,6 +109,11 @@ public class SalesTicketFacade {
             receiptsDetailsList = setReceiptsSaleCode(receiptsDetailsList, saleInfo.getSaleCode());
             saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
         }
+        if (StringUtils.isNotEmpty(saleInfo.getInvoiceCode()) && saleInfo.getInvoiceCode().contains("签收")){
+
+            saleInfo.setIsReceipt(1);
+        }
+
         salesTicketService.saveSaleInfo(saleInfo);
     }
 

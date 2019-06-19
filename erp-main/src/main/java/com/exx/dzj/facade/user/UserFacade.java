@@ -127,7 +127,7 @@ public class UserFacade {
 
     public Map<String, UserInfo> querySaleManCodeName (){
         List<UserInfo> userInfos = querySalesman();
-        Map<String, UserInfo> userInfoMap = userInfos.stream().collect(Collectors.toMap(UserInfo::getRealName, u -> u, (k1, k2) -> k1));
+        Map<String, UserInfo> userInfoMap = userInfos.stream().collect(Collectors.toMap(UserInfo::getSalesmanCode, u -> u, (k1, k2) -> k1));
         return userInfoMap;
     }
 

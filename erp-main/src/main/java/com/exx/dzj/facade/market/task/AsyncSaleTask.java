@@ -54,7 +54,7 @@ public class AsyncSaleTask implements Runnable {
 
             // 查询销售单是否已经新增
             while (count == CommonConstant.DEFAULT_VALUE_ZERO) {
-                Thread.sleep(500);
+                Thread.sleep(300);
                 count = salesTicketService.querySaleBySaleCode(saleCode);
                 times ++;
                 if (times == CommonConstant.SALE_TIME_OUT){

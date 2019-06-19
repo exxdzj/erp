@@ -208,7 +208,7 @@
             #{item}
           </foreach>
       </if>
-      AND si.create_time BETWEEN #{startDate} AND #{endDate}
+      AND si.sale_date BETWEEN #{startDate} AND #{endDate}
       <if test="paymentStatu == '1'" >
           AND si.payment_status = 'cs03'
       </if>

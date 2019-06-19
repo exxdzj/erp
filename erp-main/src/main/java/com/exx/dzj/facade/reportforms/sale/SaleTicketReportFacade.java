@@ -15,9 +15,11 @@ import com.exx.dzj.util.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author yangyun
@@ -288,17 +290,18 @@ public class SaleTicketReportFacade {
      */
     public Map<String, Object> statisticSalesDeductionBySaleman (UserInfoQuery query) {
         List<SaleDeductionReport> saleDeductionReports = stockTypeReportService.querySalesDeductionBySaleman(query);
-        double sumGoodsNum = saleDeductionReports.stream().mapToDouble(SaleDeductionReport::getSumGoodsNum).sum();
-        BigDecimal sumSaleVolume = saleDeductionReports.stream().map(SaleDeductionReport::getSumSaleVolume).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumSaleCost = saleDeductionReports.stream().map(SaleDeductionReport::getSumSaleCost).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumGrossMargin = saleDeductionReports.stream().map(SaleDeductionReport::getSumGrossMargin).reduce(BigDecimal.ZERO, BigDecimal::add);
+        List<SaleDeductionReport> collect = saleDeductionReports.stream().filter(o -> !StringUtils.isEmpty(o.getUserCode())).collect(Collectors.toList());
+        double sumGoodsNum = collect.stream().mapToDouble(SaleDeductionReport::getSumGoodsNum).sum();
+        BigDecimal sumSaleVolume = collect.stream().map(SaleDeductionReport::getSumSaleVolume).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumSaleCost = collect.stream().map(SaleDeductionReport::getSumSaleCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumGrossMargin = collect.stream().map(SaleDeductionReport::getSumGrossMargin).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal sumGrossRate = MathUtil.keepTwoBigdecimal(sumGrossMargin, sumSaleVolume, CommonConstant.DEFAULT_VALUE_FOUR);//毛利率总计
-        BigDecimal sumCost = saleDeductionReports.stream().map(SaleDeductionReport::getSumCost).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumPureProfit = saleDeductionReports.stream().map(SaleDeductionReport::getPureProfit).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumCommission = saleDeductionReports.stream().map(SaleDeductionReport::getCommission).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumCost = collect.stream().map(SaleDeductionReport::getSumCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumPureProfit = collect.stream().map(SaleDeductionReport::getPureProfit).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumCommission = collect.stream().map(SaleDeductionReport::getCommission).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Map<String, Object> map = new HashMap<>();
-        map.put("saleDeductionReports", saleDeductionReports);
+        map.put("saleDeductionReports", collect);
         map.put("sumGoodsNum", sumGoodsNum);
         map.put("sumSaleVolume", sumSaleVolume);
         map.put("sumSaleCost", sumSaleCost);
