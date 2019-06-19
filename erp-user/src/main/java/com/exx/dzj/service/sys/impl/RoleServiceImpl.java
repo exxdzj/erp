@@ -273,7 +273,7 @@ public class RoleServiceImpl implements RoleService {
                 roleMenuMapper.grantAuth(list);
             }
         } catch(Exception ex) {
-            LOGGER.error("异常方法:{}异常信息:{}", RoleServiceImpl.class.getName()+".authorize", ex.getMessage());
+            LOGGER.error("异常方法:{}异常信息:{}", RoleServiceImpl.class.getName()+".grantAuth", ex.getMessage());
             throw new ErpException(400, "角色授权失败!");
         }
     }

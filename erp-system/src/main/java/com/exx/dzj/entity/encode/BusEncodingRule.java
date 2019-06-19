@@ -1,5 +1,7 @@
 package com.exx.dzj.entity.encode;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -15,6 +17,7 @@ import java.util.Date;
 @TableName("tab_bus_encoding_rule")
 public class BusEncodingRule implements Serializable {
 
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     private String encodeCode;
     private String encodeName;
