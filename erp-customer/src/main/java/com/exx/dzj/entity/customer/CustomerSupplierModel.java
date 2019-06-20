@@ -53,4 +53,6 @@ public class CustomerSupplierModel implements Serializable {
      * 职级
      */
     private String rankName;
+
+    private String phoneNum;
 }

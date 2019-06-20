@@ -231,13 +231,14 @@ public class SalesTicketFacade {
 
         SaleInfo oldSaleInfo = querySalesTicketById(saleInfo.getId());
 
-        List<DeptInfoBean> deptInfos = deptService.queryDeptList();
+        if (StringUtils.isEmpty(oldSaleInfo.getSubordinateCompanyCode())){
+            List<DeptInfoBean> deptInfos = deptService.queryDeptList();
 
-        // 查询销售员部门编码
-        String deptCode = salesmanService.querySalesmanDeptCode(saleInfo.getSalesmanCode());
+            // 查询销售员部门编码
+            String deptCode = salesmanService.querySalesmanDeptCode(saleInfo.getSalesmanCode());
 
-
-        setSubordinateCompany(saleInfo, deptInfos, deptCode);
+            setSubordinateCompany(saleInfo, deptInfos, deptCode);
+        }
 
         List<SaleGoodsDetailBean> saleGoodsDetailBeanList = oldSaleInfo.getSaleGoodsDetailBeanList();
         List<SaleGoodsDetailBean> centreGoods = null;

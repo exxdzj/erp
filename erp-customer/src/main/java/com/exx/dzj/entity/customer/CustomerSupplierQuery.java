@@ -23,4 +23,7 @@ public class CustomerSupplierQuery implements Serializable {
     private String linkMan;
 
     private int custType;
+
+    private String custLevel;
+    private String phoneNum;
 }

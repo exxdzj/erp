@@ -125,4 +125,7 @@ public class SaleInfo extends BaseModule {
     private Integer isReceipt;
 
     private Integer countTicket;
+
+    /**客户手机号码**/
+    private String custPhoneNum;
 }

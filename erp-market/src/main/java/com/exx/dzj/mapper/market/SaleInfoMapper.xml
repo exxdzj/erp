@@ -110,6 +110,7 @@
       SINFO.total_sum,
       SINFO.discount_amount,
       SINFO.receivable_accoun,
+      SINFO.cust_phone_num,
       SINFO.due_date,
       /*DICTIONPAY.dict_name AS paymentStatus,*/
       SINFO.payment_status AS paymentStatus,
@@ -142,7 +143,7 @@
       </if>
 
       <if test="saleCode != null and saleCode != ''">
-        AND  SINFO.sale_code LIKE CONCAT(#{saleCode}, '%')
+        AND  SINFO.sale_code LIKE CONCAT('%', #{saleCode}, '%')
       </if>
       <if test="salesmanCode != null and salesmanCode != ''">
         AND  SINFO.salesman_code=#{salesmanCode}
@@ -181,6 +182,7 @@
     <result column="currency" property="currency"/>
     <result column="cust_name" property="custName"/>
     <result column="sale_date" property="saleDate"/>
+    <result column="cust_phone_num" property="custPhoneNum"/>
     <result column="sale_code" property="saleCode"/>
     <!-- 查询关联收款记录 -->
     <collection property="saleReceiptsDetailsList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleReceiptsDetails" javaType="java.util.List"
@@ -213,6 +215,7 @@
       IFNULL(CSUPPLIER.cust_name,'') AS custName,
       UINFO.user_name AS userName,
       SINFO.sale_project,
+      SINFO.cust_phone_num,
       DICTIONPRO.dict_name AS saleProjectName,
       IFNULL(SUM(collected_amount), 0) AS sumCollectedAmount,
       SINFO.sale_date ,
@@ -253,6 +256,7 @@
   <resultMap id="saleTicketMap" type="com.exx.dzj.entity.market.SaleInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="sale_code" property="saleCode" />
+    <result column="cust_phone_num" property="custPhoneNum" />
     <result column="user_code" property="userCode" />
     <result column="salesman_code" jdbcType="VARCHAR" property="salesmanCode" />
     <result column="payment_term" jdbcType="VARCHAR" property="paymentTerm" />
@@ -426,6 +430,9 @@
       <if test="isReceipt != null">
         is_receipt,
       </if>
+      <if test="custPhoneNum != null and custPhoneNum != ''">
+        cust_phone_num,
+      </if>
       create_time
     </trim>
     <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
@@ -527,6 +534,9 @@
       </if>
       <if test="isReceipt != null">
         #{isReceipt},
+      </if>
+      <if test="custPhoneNum != null and custPhoneNum != ''">
+        #{custPhoneNum},
       </if>
       sysdate()
     </trim>
@@ -672,6 +682,9 @@
     <set>
       <if test="saleCode != null">
         sale_code = #{saleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="custPhoneNum != null and custPhoneNum != ''">
+        cust_phone_num = #{custPhoneNum,jdbcType=VARCHAR},
       </if>
       <if test="userCode != null">
         user_code = #{userCode,jdbcType=VARCHAR},
