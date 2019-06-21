@@ -139,14 +139,16 @@
       <if test="isEnable != null">
         is_enable,
       </if>
-        create_time,
+
       <if test="createUser != null and createUser!=''">
         create_user,
       </if>
-        update_time,
+
       <if test="updateUser != null and updateUser!=''">
         update_user,
       </if>
+      update_time,
+      create_time
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="stockCode != null and stockCode!=''">
@@ -167,18 +169,28 @@
       <if test="minInventory != null">
         #{minInventory,jdbcType=INTEGER},
       </if>
-      warn_num, stock_address, stock_address_code
+      <if test="warnNum != null">
+        warn_num,
+      </if>
+      <if test="stockAddress != null and stockAddress!=''">
+        stock_address,
+      </if>
+      <if test="stockAddressCode != null and stockAddressCode!=''">
+        stock_address_code,
+      </if>
       <if test="isEnable != null">
         #{isEnable,jdbcType=INTEGER},
       </if>
-        SYSDATE(),
+
       <if test="createUser != null and createUser!=''">
         #{createUser,jdbcType=VARCHAR},
       </if>
-        SYSDATE(),
+
       <if test="updateUser != null and updateUser!=''">
         #{updateUser,jdbcType=VARCHAR},
       </if>
+      SYSDATE(),
+      SYSDATE()
     </trim>
   </insert>
 

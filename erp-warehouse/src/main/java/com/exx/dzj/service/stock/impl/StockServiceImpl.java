@@ -98,7 +98,7 @@ public class StockServiceImpl implements StockService {
                 stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_THREE);
             }
 
-            if(StringUtils.isNotBlank(stockInfo.getStockCode())){
+            if(stockInfo.getId() != null){
                 stockMapper.updateByPrimaryKeySelective(stockInfo);
 
                 stockNumPrice.setStockCode(null);

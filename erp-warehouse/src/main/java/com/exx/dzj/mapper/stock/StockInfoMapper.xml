@@ -408,6 +408,7 @@
   <!-- SQL 片段 -->
   <sql id="QueryStockInfoSql">
     SELECT
+      ti.id id,
       ti.stock_code stockCode,
       ti.nature,
       ti.stock_name stockName,
