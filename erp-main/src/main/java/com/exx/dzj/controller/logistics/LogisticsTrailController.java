@@ -23,7 +23,7 @@ public class LogisticsTrailController {
     private LogisticsTrailFacade logisticsTrailFacade;
 
     /**
-     * 获取 物流信息
+     * 获取 物流信息queryTrails
      * busModule : 1-销售单 、2-采购单
      * @return
      */

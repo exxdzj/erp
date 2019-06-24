@@ -55,4 +55,5 @@ public class CustomerSupplierModel implements Serializable {
     private String rankName;
 
     private String phoneNum;
+    private String deliveryAddressOne;
 }

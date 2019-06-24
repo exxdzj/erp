@@ -350,6 +350,7 @@
         IFNULL(cw.link_man, '无') linkMan,
         cw.email email,
         cw.phone_num phoneNum,
+        cw.delivery_address_one deliveryAddressOne,
         IFNULL(ui.real_name, '无') salesman,
         cs.level_name levelName,
         ta.discount_rate discountRate,
@@ -389,7 +390,7 @@
       AND cs.cust_level = #{custLevel}
     </if>
     <if test="phoneNum != null and phoneNum != ''">
-      AND cw.phone_num = #{phoneNum}
+      AND cw.phone_num LIKE CONCAT("%", #{phoneNum}, "%")
     </if>
     ORDER BY cs.create_time DESC
   </select>

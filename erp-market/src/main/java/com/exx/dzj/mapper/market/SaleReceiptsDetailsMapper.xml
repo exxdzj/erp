@@ -412,6 +412,7 @@
       remark,
       express_fee,
       charge_method,
+      stock_address_code,
       logistics_kind
     FROM tab_sale_logistic_info WHERE sale_code = #{saleCode}
   </select>
@@ -430,6 +431,7 @@
     <result property="remark" column="remark"/>
     <result property="expressFee" column="express_fee"/>
     <result property="chargeMethod" column="charge_method"/>
+    <result property="stockAddressCode" column="stock_address_code"/>
   </resultMap>
 
   <select id="getSaleGoodsSelected" resultMap="goodsSelected">

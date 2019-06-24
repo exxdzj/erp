@@ -188,6 +188,7 @@ public class ProccessImportDataUtil {
                 }
 
                 BeanUtils.copyProperties(info, saleGoodsDetail);
+                saleGoodsDetail.setRemarks(info.getGoodsRemark());
                 if (StringUtils.isNotEmpty(info.getStockCode())){
                     setSaleGoodsDetail(saleGoodsDetail, stringMap);
                     saleGoodsMap.put(info.getStockCode(), saleGoodsDetail);
@@ -218,6 +219,7 @@ public class ProccessImportDataUtil {
             }
 
             BeanUtils.copyProperties(info, saleGoodsDetail);
+            saleGoodsDetail.setRemarks(info.getGoodsRemark());
             if (StringUtils.isNotEmpty(info.getStockCode())){
                 setSaleGoodsDetail(saleGoodsDetail, stringMap);
                 saleGoodsMap.put(info.getStockCode(), saleGoodsDetail);
