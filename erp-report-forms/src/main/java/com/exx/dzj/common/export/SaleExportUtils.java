@@ -7,9 +7,7 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
-import com.exx.dzj.entity.market.LogisticsInfo;
-import com.exx.dzj.entity.market.SaleInfo;
-import com.exx.dzj.entity.market.SaleListInfo;
+import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.statistics.sales.*;
 import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.enummodel.PayStatusEnum;
@@ -789,6 +787,7 @@ public class SaleExportUtils {
             model.setSaleDate(info.getSaleDate());
             model.setCustCode(info.getCustCode());
             model.setCustName(info.getCustName());
+            model.setCustPhoneNum(info.getCustPhoneNum());
             model.setCurrency(info.getCurrency());
             model.setExchangeRate(formateBigdecimal(info.getExchangeRate()));
             model.setReceivableAccoun(formateBigdecimal(info.getReceivableAccoun()));
@@ -836,16 +835,7 @@ public class SaleExportUtils {
         return writer;
     }
 
-    /**
-     * @description 销售单列表导出
-     * @author yangyun
-     * @date 2019/6/17 0017
-     * @param outputStream
-     * @param list
-     * @return com.alibaba.excel.ExcelWriter
-     */
-    @Deprecated
-    public static ExcelWriter exportSaleList2 (ServletOutputStream outputStream, List<SaleListInfo> list){
+    public static ExcelWriter exportSaleList3 (ServletOutputStream outputStream, List<SaleListInfo> list){
         ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
         String sheetName = "销售单";
         Sheet sheet = new Sheet(1,0);
@@ -897,10 +887,125 @@ public class SaleExportUtils {
         return writer;
     }
 
+    /**
+     * @description 销售单列表导出
+     * @author yangyun
+     * @date 2019/6/17 0017
+     * @param outputStream
+     * @param list
+     * @return com.alibaba.excel.ExcelWriter
+     */
+    @Deprecated
+    public static ExcelWriter exportSaleList2 (ServletOutputStream outputStream, List<SaleListInfo> list){
+        ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
+        String sheetName = "销售单";
+        Sheet sheet = new Sheet(1,0);
+        sheet.setSheetName(sheetName);
+
+        Table title = new Table(1);
+        title.setClazz(SaleListModel.class);
+        writer.write(null, sheet, title);
+
+        List<SaleListModel> content = new ArrayList<>();
+        SaleListModel model = null;
+
+        int receiptSize = 0;
+        int goodsSize = 0;
+        int froNum = 0;
+        SaleReceiptsDetails receiptsDetails = null;
+        SaleGoodsDetailBean goodsDetailBean =  null;
+
+        for (SaleListInfo sli : list){
+            model = new SaleListModel();
+            model.setSaleCode(sli.getSaleCode());
+            model.setSaleDate(sli.getSaleDate());
+            model.setPaymentStatus(PayStatusEnum.getPayStatusEnumByKey(sli.getPaymentStatus()).getValue());
+            model.setCustName(sli.getCustName());
+            model.setCustPhoneNum(sli.getCustPhoneNum());
+            model.setCurrency(sli.getCurrency());
+            model.setExchangeRate(formateBigdecimal(sli.getExchangeRate()));
+            model.setSalesmanName(sli.getSalesmanName());
+            model.setSaleProject(sli.getSaleProject());
+            model.setDeliveryAddress(sli.getDeliveryAddress());
+            model.setSaleRemark(sli.getSaleRemark());
+            model.setIsReceipt(SalesClassesEnum.getSalesClassesEnum(sli.getIsReceipt()).getValue());
+            model.setSubordinateCompanyName(sli.getSubordinateCompanyName());
+            model.setDiscountAmount(formateBigdecimal(sli.getDiscountAmount()));
+            model.setAccountPeriod(formateBigdecimal(sli.getAccountPeriod()));
+            model.setCollectionUserName(sli.getCollectionUserName());
+            model.setDueDate(sli.getDueDate());
+            model.setCollectionTerms(sli.getCollectionTerms());
+            content.add(model);
+            // 收款信息
+            List<SaleReceiptsDetails> saleReceiptsDetailsList = sli.getSaleReceiptsDetailsList();
+
+            //商品信息
+            List<SaleGoodsDetailBean> saleGoodsDetailBeanList = sli.getSaleGoodsDetailBeanList();
+
+            receiptSize = saleReceiptsDetailsList.size();
+            goodsSize = saleGoodsDetailBeanList.size();
+            froNum = goodsSize >= receiptSize ? goodsSize : receiptSize;
+
+            if (froNum > CommonConstant.DEFAULT_VALUE_ONE){ // 说明商品详情和收款详情中至少有一个记录数多余 1 条
+                for (int i = 0; i < froNum; i++){
+                    if (goodsSize > i){
+                        goodsDetailBean = saleGoodsDetailBeanList.get(i);
+                    } else {
+                        goodsDetailBean = null;
+                    }
+                    if (receiptSize > i){
+                        receiptsDetails = saleReceiptsDetailsList.get(i);
+                    } else {
+                        receiptsDetails = null;
+                    }
+                    if (i == 0){
+                        setModelValue(model, receiptsDetails, goodsDetailBean);
+                    } else {
+                        SaleListModel model1 = new SaleListModel();
+                        setModelValue(model1, receiptsDetails, goodsDetailBean);
+                        content.add(model1);
+                    }
+                }
+            } else { // 说明商品详情和收款详情最多都只有一条记录
+                if (goodsSize > 0){
+                    goodsDetailBean = saleGoodsDetailBeanList.get(0);
+                }
+                if (receiptSize > 0){
+
+                    receiptsDetails = saleReceiptsDetailsList.get(0);
+                }
+                setModelValue(model, receiptsDetails, goodsDetailBean);
+            }
+        }
+
+        writer.write(content, sheet);
+
+        return writer;
+    }
+
     private static String formateBigdecimal (Object b){
         if (b == null){
             return "0";
         }
         return b.toString();
+    }
+
+    private static void setModelValue (SaleListModel model, SaleReceiptsDetails receiptsDetails, SaleGoodsDetailBean goodsDetailBean){
+        if (receiptsDetails != null){
+            model.setCollectedAmount(formateBigdecimal(receiptsDetails.getCollectedAmount()));
+            model.setCollectionAccount(receiptsDetails.getCollectionAccount());
+            model.setPaymentMethod(receiptsDetails.getPaymentMethod());
+        }
+
+        if (goodsDetailBean != null){
+            model.setStockName(goodsDetailBean.getStockName());
+            model.setStockAddress(goodsDetailBean.getStockAddress());
+            model.setGoodsNum(formateBigdecimal(goodsDetailBean.getGoodsNum()));
+            model.setUnitPrice(formateBigdecimal(goodsDetailBean.getUnitPrice()));
+            model.setDiscountRate(formateBigdecimal(goodsDetailBean.getDiscountRate()) + "%");
+            model.setGoodsDiscountAmount(formateBigdecimal(goodsDetailBean.getDiscountAmount()));
+            model.setSalesVolume(formateBigdecimal(goodsDetailBean.getSalesVolume()));
+            model.setGoodsRemark(goodsDetailBean.getRemarks());
+        }
     }
 }

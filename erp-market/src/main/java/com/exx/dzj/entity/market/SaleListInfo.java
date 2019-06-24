@@ -1,9 +1,12 @@
 package com.exx.dzj.entity.market;
 
 import lombok.Data;
+import lombok.ToString;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,8 +14,10 @@ import java.util.List;
  * @create 2019-06-14-14:31
  */
 @Data
-public class SaleListInfo {
+@ToString
+public class SaleListInfo implements Serializable {
 
+    private static final long serialVersionUID = 4524804452219480914L;
     private String saleCode;
 
     private Timestamp saleDate;
@@ -22,6 +27,8 @@ public class SaleListInfo {
     private String custName;
 
     private String custCode;
+
+    private String custPhoneNum;
 
     private String currency;
 
@@ -76,4 +83,10 @@ public class SaleListInfo {
     private List<LogisticsInfo> logisticsLsit; // 物流信息
 
     private BigDecimal receivableAccoun; // 收款额
+
+    /**销售单关联收款记录详情**/
+    private List<SaleReceiptsDetails> saleReceiptsDetailsList = new ArrayList<>();
+
+    /**销售关联单商品详情**/
+    private List<SaleGoodsDetailBean> saleGoodsDetailBeanList = new ArrayList<>();
 }
