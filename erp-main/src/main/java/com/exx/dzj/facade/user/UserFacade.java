@@ -1,18 +1,24 @@
 package com.exx.dzj.facade.user;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.entity.user.UserModel;
 import com.exx.dzj.entity.user.UserQuery;
 import com.exx.dzj.entity.user.UserVo;
+import com.exx.dzj.enummodel.CompanyEnum;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.sys.RoleFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.result.SelectionSaleInfo;
+import com.exx.dzj.service.sys.DeptService;
 import com.exx.dzj.service.user.UserRoleService;
 import com.exx.dzj.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -42,6 +48,9 @@ public class UserFacade {
 
     @Autowired
     private UserRoleService userRolesService;
+
+    @Autowired
+    private DeptService deptService;
 
     /**
      * 获取用户信息和用户角色
@@ -193,34 +202,52 @@ public class UserFacade {
         return salesmanService.queryUserInfo(userInfo);
     }
 
+    @Cacheable(value = "selectionUserInfo", keyGenerator = "myKeyGenerator")
     public List<SelectionSaleInfo> selectionUserInfo (){
         List<UserModel> userModels = salesmanService.selectionUserInfo();
-        Map<String, Map<String, List<UserModel>>> collect = userModels.stream().collect(Collectors.groupingBy(UserModel::getDeptCode, Collectors.groupingBy(UserModel::getDeptName)));
         List<SelectionSaleInfo> list = new ArrayList<>();
-        collect.keySet().stream().forEach(
-                deptCode -> {
-                    Map<String, List<UserModel>> stringListMap = collect.get(deptCode);
-                    stringListMap.keySet().stream().forEach(
-                            deptName -> {
-                                SelectionSaleInfo s = new SelectionSaleInfo();
-                                s.setCode(deptCode);
-                                s.setLabel(deptName);
-                                List<UserModel> userModels1 = stringListMap.get(deptName);
-                                userModels1.stream().forEach(
-                                    userModel -> {
-                                        SelectionSaleInfo s2 = new SelectionSaleInfo();
-                                        s2.setCode(userModel.getUserCode());
-                                        s2.setLabel(userModel.getRealName());
-                                        s.getChildren().add(s2);
-                                    }
-                                );
-                                list.add(s);
-                            }
-                    );
+        SelectionSaleInfo s = null;
+
+        for (CompanyEnum temp : CompanyEnum.values()){
+            s = new SelectionSaleInfo();
+            s.setCode(temp.getCode());
+            s.setLabel(temp.getValue());
+            list.add(s);
+        }
+
+        // 获取部门信息
+        List<DeptInfoBean> deptInfos = deptService.queryDeptList();
+        userModels.stream().forEach(
+                o -> {
+                    DeptInfoBean deptInfoBean = new DeptInfoBean();
+                    deptInfoBean.setDeptCode(o.getDeptCode());
+                    DeptInfoBean bean = gainSubordinateCompanyInfo(deptInfos, deptInfoBean);
+
+                    for (SelectionSaleInfo ssi : list){
+                        if (StringUtils.equals(ssi.getCode(), bean.getDeptCode())) {
+                            SelectionSaleInfo ss = new SelectionSaleInfo();
+                            ss.setCode(o.getUserCode());
+                            ss.setLabel(o.getRealName());
+                            ssi.getChildren().add(ss);
+                        }
+                    }
                 }
         );
-
         return list;
+    }
+
+    private DeptInfoBean gainSubordinateCompanyInfo (List<DeptInfoBean> list, DeptInfoBean deptInfoBean){
+
+        for (DeptInfoBean db : list){
+            if (StringUtils.equals(db.getDeptCode(), deptInfoBean.getDeptCode())){
+                deptInfoBean.setDeptCode(db.getParentCode());
+                if (db.getIsCompare().equals(CommonConstant.DEFAULT_VALUE_ONE)){
+                    return db;
+                }
+            }
+        }
+
+        return gainSubordinateCompanyInfo(list, deptInfoBean);
     }
 
     public List<UserInfo> querySalesmanList(Integer type){
