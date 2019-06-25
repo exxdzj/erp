@@ -4,6 +4,7 @@ import com.exx.dzj.entity.market.SaleInfo;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
 public class SaleInfoReport extends SaleInfo {
     private static final long serialVersionUID = 8856171790032864975L;
 
-    private List<SaleGoodsReport> saleGoodsReportList;
+    private List<SaleGoodsReport> saleGoodsReportList = new ArrayList<>();
 
     private BigDecimal collectedAmountTotal;
 

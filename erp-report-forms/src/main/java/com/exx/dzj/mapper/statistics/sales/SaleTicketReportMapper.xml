@@ -2,183 +2,154 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.exx.dzj.mapper.statistics.sales.SaleTicketReportMapper">
     <select id="statisticsSaleByInventory" resultMap="stockTypeMap" parameterType="com.exx.dzj.entity.bean.StockInfoQuery">
-      SELECT dict.dict_code, dict.dict_name, #{startDate} AS startDate, #{endDate} AS endDate, #{businessType} AS businessType FROM tab_dictionary_info dict
-        WHERE dict.data_type='inventory_type'
-          <if test="stockCode != null and stockCode != ''">
-              AND dict.dict_code = #{stockCode}
-          </if>
-    </select>
-    
-    <resultMap id="stockTypeMap" type="com.exx.dzj.entity.statistics.sales.StockTypeReport">
-        <result column="dict_code" property="stockTypeCode"/>
-        <result column="dict_name" property="stockTypeName"/>
-        <collection property="stockReportList" column="{startDate=startDate, endDate=endDate, dict_code=dict_code, businessType = businessType}" javaType="java.util.List" ofType="com.exx.dzj.entity.statistics.sales.StockInfoReport"
-            select="com.exx.dzj.mapper.statistics.sales.SaleTicketReportMapper.queryStockReportList"/>
-    </resultMap>
-    
-    <select id="queryStockReportList" parameterType="java.util.Map" resultMap="stockReportMap">
-      SELECT a.stock_code, a.stock_name, a.meter_unit, b.standard_buy_price, #{startDate} AS startDate, #{endDate} AS endDate, #{businessType} AS businessType
-        FROM (SELECT stock_code, stock_name, meter_unit  FROM tab_stock_info WHERE stock_class = #{dict_code}) a
-        LEFT JOIN tab_stock_num_price b on a.stock_code = b.stock_code
-        <!-- WHERE a.stock_class = #{dict_code} -->
-    </select>
-    
-    <resultMap id="stockReportMap" type="com.exx.dzj.entity.statistics.sales.StockInfoReport">
-        <result column="stock_code" property="stockCode" />
-        <result column="stock_name" property="stockName" />
-        <result column="meter_unit" property="meterUnit" />
-        <result column="standard_buy_price" property="standardBuyPrice" />
-        <collection column="{standard_buy_price=standard_buy_price, stock_code=stock_code, startDate=startDate, endDate=endDate, businessType = businessType}" property="saleInfoReports"
-            ofType="com.exx.dzj.entity.statistics.sales.SaleGoodsReport" javaType="java.util.List"
-            select="com.exx.dzj.mapper.statistics.sales.SaleTicketReportMapper.querySaleInfoReports"/>
-    </resultMap>
-    
-    <select id="querySaleInfoReports" parameterType="java.util.Map" resultMap="saleGoodsMap">
-      SELECT userinfo.salesman_code, userinfo.real_name, a.sale_code, a.create_time, a.cust_code, c.cust_name, b.stock_address, b.goods_num, b.unit_price, b.sales_volume, <!-- 销售额 -->
-        <!-- 进价 --> #{standard_buy_price} AS standardBuyPrice,
-        <!--&lt;!&ndash; 成本 --> b.goods_num * #{standard_buy_price} AS cost,
-        <!-- 销售收入 --> b.goods_num * b.unit_price AS saleIncome,
-        <!-- 毛利 --> (b.goods_num * b.unit_price) - (b.goods_num * #{standard_buy_price}) AS grossMargin,
-        <!-- 毛利率 --> IFNULL(CONVERT((b.goods_num * (b.unit_price - #{standard_buy_price})) / (b.goods_num * b.unit_price), DECIMAL(10, 5)), 0.00) * 100 AS grossRate
-        FROM (SELECT aa.sale_code, aa.create_time, aa.cust_code, aa.salesman_code FROM tab_sale_info aa
-          WHERE aa.sale_ticket_type = #{businessType} AND aa.create_time BETWEEN #{startDate} AND #{endDate}) a
-        INNER JOIN tab_sale_goods_detail b ON a.sale_code = b.sale_code AND b.stock_code = #{stock_code}
-        LEFT JOIN tab_customer_supplier c ON a.cust_code = c.cust_code AND c.cust_type = 1
-        LEFT JOIN tab_user_info userinfo ON a.salesman_code = userinfo.salesman_code
-        <!--WHERE a.create_time BETWEEN #{startDate} and #{endDate}-->
-
+      SELECT
+        sgd.stock_code, sgd.stock_name, dinfo.dict_name,
+        CASE
+            WHEN sgd.real_sell_price > 0 THEN sgd.real_sell_price
+        ELSE
+            sgd.unit_price
+        END unitPrice,
+        snp.standard_buy_price, uinfo.real_name,
+        sgd.goods_num, snp.stock_address,
+        sinfo.sale_code, sinfo.sale_date,
+        cs.cust_code, cs.cust_name
+      FROM tab_sale_info sinfo
+        LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code
+        LEFT JOIN tab_stock_info stinfo ON stinfo.stock_code = sgd.stock_code
+        LEFT JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
+        LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code
+        INNER JOIN tab_dictionary_info dinfo ON dinfo.dict_code = stinfo.stock_class AND dinfo.data_type = 'inventory_type'
+        INNER JOIN tab_stock_num_price snp ON sgd.stock_code = snp.stock_code
+      WHERE 1 =1
+        <if test="startDate != null and startDate != ''">
+            AND  <![CDATA[sinfo.sale_date >= DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND  <![CDATA[sinfo.sale_date <= DATE_FORMAT(#{endDate},'%Y-%m-%d 23:59:59')]]>
+        </if>
+        <if test="stockClass != null and stockClass != ''">
+            AND stinfo.stock_class = #{stockClass}
+        </if>
     </select>
 
-    <resultMap id="saleGoodsMap" type="com.exx.dzj.entity.statistics.sales.SaleGoodsReport">
-        <result column="cost" property="cost" />
-        <result column="salesman_code" property="salesmanCode" />
-        <result column="real_name" property="realName" />
-        <result column="grossMargin" property="grossMargin" />
-        <result column="grossRate" property="grossRate" />
-        <result column="standardBuyPrice" property="standardBuyPrice" />
-        <result column="saleIncome" property="saleIncome" />
-        <result column="sale_code" property="saleCode" />
-        <result column="create_time" property="createTime" />
-        <result column="cust_code" property="custCode" />
-        <result column="cust_name" property="custName" />
-        <result column="stock_address" property="stockAddress" />
-        <result column="goods_num" property="goodsNum" />
-        <result column="unit_price" property="unitPrice" />
-        <result column="sales_volume" property="salesVolume" />
+    <resultMap id="stockTypeMap" type="com.exx.dzj.entity.statistics.sales.StockBaseReport">
+        <result column="stock_code" property="stockCode"/>
+        <result column="stock_name" property="stockName"/>
+        <result column="dict_name" property="stockClassName"/>
+        <result column="unitPrice" property="unitPrice"/>
+        <result column="standard_buy_price" property="standardBuyPrice"/>
+        <result column="goods_num" property="goodsNum"/>
+        <result column="stock_address" property="stockAddress"/>
+        <result column="sale_code" property="saleCode"/>
+        <result column="sale_date" property="saleDate"/>
+        <result column="cust_code" property="custCode"/>
+        <result column="real_name" property="realName"/>
+        <result column="cust_name" property="custName"/>
     </resultMap>
+
 
     <!-- 销售单-依销售 -->
     <select id="statisticsSaleBySalesMan" parameterType="com.exx.dzj.entity.bean.UserInfoQuery" resultMap="userReportMap">
-      SELECT user_code, salesman_code, real_name, #{startDate} AS startDate, #{endDate} AS endDate, #{businessType} AS businessType
-        FROM  tab_user_info
-        WHERE 1=1
-          <if test="userCodeList != null">
-            AND user_code IN
-            <foreach collection="userCodeList" item="item" separator="," open="(" close=")">
+      SELECT
+            sinfo.sale_code, sinfo.sale_date,sinfo.salesman_code,
+            IFNULL((SELECT SUM(srd.collected_amount) FROM tab_sale_receipts_details srd WHERE srd.sale_code = sinfo.sale_code), 0) AS collected_amount,
+            cs.cust_code, cs.cust_name,
+            uinfo.user_code, uinfo.real_name, uinfo.commission_rate,
+            sgd.goods_num, CASE
+                    WHEN sgd.real_sell_price > 0 THEN sgd.real_sell_price
+                ELSE
+                    sgd.unit_price
+                END unitPrice, snp.standard_buy_price, sgd.stock_code, sgd.stock_name
+        FROM
+            tab_sale_info sinfo
+            LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code
+            LEFT JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
+            LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code
+/*            LEFT JOIN tab_sale_receipts_details srd ON sinfo.sale_code = srd.sale_code*/
+            INNER JOIN tab_stock_num_price snp ON sgd.stock_code = snp.stock_code
+        WHERE 1 = 1
+        <if test="startDate != null and startDate != ''">
+            AND  <![CDATA[sinfo.sale_date >= DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND  <![CDATA[sinfo.sale_date <= DATE_FORMAT(#{endDate},'%Y-%m-%d 23:59:59')]]>
+        </if>
+        <if test="userCodeList != null and userCodeList.size() > 0">
+            AND uinfo.user_code IN
+            <foreach collection="userCodeList" item="item" close=")" open="(" separator=",">
                 #{item}
             </foreach>
-          </if>
-    </select>
-    
-    <resultMap id="userReportMap" type="com.exx.dzj.entity.statistics.sales.UserInfoReport">
-        <result column="user_code" property="userCode"/>
-        <result column="salesman_code" property="salesmanCode"/>
-        <result column="real_name" property="realName"/>
-        <collection property="saleInfoList" column="user_code = user_code,startDate=startDate, endDate=endDate, businessType=businessType"
-                    javaType="java.util.List" ofType="com.exx.dzj.entity.statistics.sales.SaleInfoReport"
-                    select="selectSaleInfoByUserCode"/>
-    </resultMap>
-    
-    <select id="selectSaleInfoByUserCode" resultMap="saleInfoReportMap">
-      SELECT si.create_time,
-        cs.cust_code,
-        cs.cust_name,
-        IFNULL((SELECT SUM(collected_amount) FROM tab_sale_receipts_details A WHERE si.sale_code = A.sale_code), 0) AS collected_amount_total, <!-- 回款额 -->
-        si.sale_code
-      FROM tab_sale_info si
-      LEFT JOIN tab_customer_supplier cs ON cs.cust_code = si.cust_code
-      WHERE 1 = 1
-        <if test="user_code != null">
-            AND si.user_code = #{user_code}
         </if>
-        AND si.create_time BETWEEN #{startDate} AND #{endDate}
-        AND si.sale_ticket_type = #{businessType}
+        AND uinfo.user_code is not null
     </select>
-    
-    <resultMap id="saleInfoReportMap" type="com.exx.dzj.entity.statistics.sales.SaleInfoReport">
-        <result column="create_time" property="createTime"/>
+
+    <resultMap id="userReportMap" type="com.exx.dzj.entity.statistics.sales.SalesmanBaseReport">
         <result column="sale_code" property="saleCode"/>
+        <result column="sale_date" property="saleDate"/>
+        <result column="collected_amount" property="collectedAmount"/>
         <result column="cust_code" property="custCode"/>
+        <result column="salesman_code" property="salesmanCode"/>
         <result column="cust_name" property="custName"/>
-        <result column="collected_amount_total" property="collectedAmountTotal"/>
-        <collection property="saleGoodsReportList" column="sale_code=sale_code" javaType="java.util.List"
-                    ofType="com.exx.dzj.entity.statistics.sales.SaleGoodsReport"
-                    select="selectSaleGoodsReportBySaleCode"/>
-    </resultMap>
-    
-    <select id="selectSaleGoodsReportBySaleCode" resultMap="saleGoodsReportMap">
-        SELECT saleGoods.stock_name, saleGoods.goods_num, saleGoods.unit_price, stockDetail.standard_sell_price,
-            saleGoods.sales_volume, stockDetail.standard_buy_price, saleGoods.goods_num * stockDetail.standard_buy_price AS cost,
-            (saleGoods.unit_price - stockDetail.standard_buy_price) * saleGoods.goods_num  AS grossMargin,
-            IFNULL(CONVERT(((saleGoods.unit_price - stockDetail.standard_buy_price) * saleGoods.goods_num) / saleGoods.sales_volume, DECIMAL(10, 5)), 0.00) * 100 AS grossRate
-        FROM tab_sale_goods_detail saleGoods
-        LEFT JOIN tab_stock_num_price stockDetail ON saleGoods.stock_code = stockDetail.stock_code
-        WHERE saleGoods.sale_code = #{sale_code}
-    </select>
-    
-    <resultMap id="saleGoodsReportMap" type="com.exx.dzj.entity.statistics.sales.SaleGoodsReport">
-        <result column="stock_name" property="stockName"/>
+        <result column="user_code" property="userCode"/>
+        <result column="real_name" property="realName"/>
+        <result column="commission_rate" property="commissionRate"/>
         <result column="goods_num" property="goodsNum"/>
-        <result column="unit_price" property="unitPrice"/>
-        <!--<result column="standard_sell_price" property="standard"/>-->
-        <result column="sales_volume" property="salesVolume"/>
+        <result column="unitPrice" property="unitPrice"/>
         <result column="standard_buy_price" property="standardBuyPrice"/>
-        <result column="cost" property="cost"/>
-        <result column="grossMargin" property="grossMargin"/>
-        <result column="grossRate" property="grossRate"/>
+        <result column="stock_code" property="stockCode"/>
+        <result column="stock_name" property="stockName"/>
     </resultMap>
+
 
     <!-- 销售单分析依客户 -->
     <select id="querySalesTicketByCust"  parameterType="com.exx.dzj.entity.bean.CustomerQuery" resultMap="customerReportMap">
-        SELECT cs.cust_code, cs.cust_name,
-          #{startDate} AS startDate, #{endDate} AS endDate, #{businessType} AS businessType
-        FROM tab_customer_supplier cs
-          WHERE 1 = 1
-          AND cust_type IN (#{custType}, 3)
-          <if test="fromCustId != null">
-              AND <![CDATA[cs.id >= #{fromCustId} ]]>
-          </if>
-          <if test="toCustId != null">
-            AND  <![CDATA[cs.id <= #{toCustId} ]]>
-          </if>
+        SELECT
+            sinfo.sale_code,
+            sinfo.sale_date,
+            cs.cust_code,
+            cs.cust_name,
+            sgd.goods_num,
+            CASE
+                WHEN sgd.real_sell_price > 0 THEN
+                  sgd.real_sell_price
+                ELSE
+                  sgd.unit_price
+                END unitPrice,
+            snp.standard_buy_price,
+            sgd.stock_code,
+            sgd.stock_name
+        FROM
+          tab_sale_info sinfo
+        LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code
+        LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code
+        INNER JOIN tab_stock_num_price snp ON sgd.stock_code = snp.stock_code
+        WHERE 1 = 1
+        <if test="startDate != null and startDate != ''">
+            AND  <![CDATA[sinfo.sale_date >= DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND  <![CDATA[sinfo.sale_date <= DATE_FORMAT(#{endDate},'%Y-%m-%d 23:59:59')]]>
+        </if>
+        <if test="fromCustId != null and fromCustId != ''">
+            AND <![CDATA[cs.id >= #{fromCustId}]]>
+        </if>
+        <if test="toCustId and toCustId != ''">
+            AND <![CDATA[cs.id <= #{toCustId}]]>
+        </if>
+        AND cs.cust_code IS NOT NULL
     </select>
     
-    <resultMap id="customerReportMap" type="com.exx.dzj.entity.statistics.sales.CustomerReport">
+    <resultMap id="customerReportMap" type="com.exx.dzj.entity.statistics.sales.CustomerBaseReport">
+        <result column="sale_code" property="saleCode"/>
+        <result column="sale_date" property="saleDate"/>
         <result column="cust_code" property="custCode"/>
         <result column="cust_name" property="custName"/>
-        <collection property="saleInfoReportList" column="cust_code=cust_code, startDate=startDate, endDate = endDate, businessType=businessType"
-                    javaType="java.util.List" ofType="com.exx.dzj.entity.statistics.sales.SaleInfoReport"
-                    select="selectSaleInfoByCustCode"/>
-    </resultMap>
+        <result column="goods_num" property="goodsNum"/>
+        <result column="unitPrice" property="unitPrice"/>
+        <result column="standard_buy_price" property="standardBuyPrice"/>
+        <result column="stock_code" property="stockCode"/>
+        <result column="stock_name" property="stockName"/>
 
-    <select id="selectSaleInfoByCustCode" resultMap="saleInfoReportMapForCust">
-        SELECT si.create_time,
-        si.sale_code
-        FROM tab_sale_info si
-        WHERE 1 = 1
-        <if test="cust_code != null">
-            AND si.cust_code = #{cust_code}
-        </if>
-        AND si.create_time BETWEEN #{startDate} AND #{endDate}
-        AND si.sale_ticket_type = #{businessType}
-    </select>
-
-    <resultMap id="saleInfoReportMapForCust" type="com.exx.dzj.entity.statistics.sales.SaleInfoReport">
-        <result column="create_time" property="createTime"/>
-        <result column="sale_code" property="saleCode"/>
-        <collection property="saleGoodsReportList" column="sale_code=sale_code" javaType="java.util.List"
-                    ofType="com.exx.dzj.entity.statistics.sales.SaleGoodsReport"
-                    select="selectSaleGoodsReportBySaleCode"/>
     </resultMap>
 
     <!-- 销售员提成汇总统计 -->

@@ -4,6 +4,7 @@ import com.exx.dzj.entity.stock.StockInfo;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class StockInfoReport extends StockInfo {
 
     private BigDecimal standardBuyPrice;
 
-    private List<SaleGoodsReport> saleInfoReports;
+    private List<SaleGoodsReport> saleInfoReports = new ArrayList<>();
 
     private Double countTotal; // 数量小计
 

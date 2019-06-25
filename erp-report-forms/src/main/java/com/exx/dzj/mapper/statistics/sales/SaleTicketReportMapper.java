@@ -15,11 +15,11 @@ import java.util.List;
  * @create 2019-04-11-14:18
  */
 public interface SaleTicketReportMapper {
-    List<StockTypeReport> statisticsSaleByInventory(StockInfoQuery query);
+    List<StockBaseReport> statisticsSaleByInventory(StockInfoQuery query);
 
-    List<UserInfoReport> statisticsSaleBySalesMan (UserInfoQuery query);
+    List<SalesmanBaseReport > statisticsSaleBySalesMan (UserInfoQuery query);
 
-    List<CustomerReport> querySalesTicketByCust(CustomerQuery query);
+    List<CustomerBaseReport> querySalesTicketByCust(CustomerQuery query);
 
     List<SaleDeductionReport> querySalesDeductionBySaleman(UserInfoQuery query);
 

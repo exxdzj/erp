@@ -4,6 +4,7 @@ import com.exx.dzj.page.BaseModule;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class StockTypeReport extends BaseModule {
 
     private String stockTypeName;
 
-    private List<StockInfoReport> stockReportList;
+    private List<StockInfoReport> stockReportList = new ArrayList<>();
 
     private Double countTotal; // 数量合计
 

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class CustomerReport extends CustomerSupplierBean {
 
     private static final long serialVersionUID = -8751834605624070698L;
 
-    private List<SaleInfoReport> saleInfoReportList;
+    private List<SaleInfoReport> saleInfoReportList = new ArrayList<>();
 
     private double totalGoodsNum;
 

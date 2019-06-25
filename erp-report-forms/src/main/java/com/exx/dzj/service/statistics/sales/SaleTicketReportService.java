@@ -15,11 +15,11 @@ import java.util.List;
  */
 public interface SaleTicketReportService {
 
-    public List<StockTypeReport> statisticsSaleByInventory(StockInfoQuery query);
+    public List<StockBaseReport> statisticsSaleByInventory(StockInfoQuery query);
 
-    List<UserInfoReport> statisticsSaleBySalesMan (UserInfoQuery query);
+    List<SalesmanBaseReport> statisticsSaleBySalesMan (UserInfoQuery query);
 
-    List<CustomerReport> querySalesTicketByCust (CustomerQuery query);
+    List<CustomerBaseReport> querySalesTicketByCust (CustomerQuery query);
 
     List<SaleDeductionReport> querySalesDeductionBySaleman (UserInfoQuery query);
 

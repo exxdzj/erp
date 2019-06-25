@@ -1,9 +1,11 @@
 package com.exx.dzj.entity.statistics.sales;
 
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
+import com.sun.tools.corba.se.idl.constExpr.Times;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 /**
  * @author yangyun
@@ -28,4 +30,5 @@ public class SaleGoodsReport extends SaleGoodsDetailBean {
     private String salesmanCode;
 
     private String realName;
+    private Timestamp saleDate;
 }

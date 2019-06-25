@@ -47,21 +47,24 @@ public class SaleReportFormsController {
     public Result inventoryReportList (StockInfoQuery query){
         Result result = Result.responseSuccess();
         List<StockTypeReport> stockTypeReports = saleTicketReportFacade.statisticsSaleByInventory(query);
-
+        Map<String, Object> map = new HashMap<>();
+        result.setData(map);
+        map.put("stockTypeReports", stockTypeReports);
+        if (stockTypeReports.size() == CommonConstant.DEFAULT_VALUE_ZERO){
+            return result;
+        }
         double sum = stockTypeReports.stream().mapToDouble(StockTypeReport::getCountTotal).sum(); // 数量总计
         BigDecimal salesTotal = stockTypeReports.stream().map(StockTypeReport::getSalesTotal).reduce(BigDecimal.ZERO, BigDecimal::add);// 销售额总计
         BigDecimal costTotal = stockTypeReports.stream().map(StockTypeReport::getCostTotal).reduce(BigDecimal.ZERO, BigDecimal::add); // 成本总计
         BigDecimal grossTotal = stockTypeReports.stream().map(StockTypeReport::getGrossTotal).reduce(BigDecimal.ZERO, BigDecimal::add); // 毛利总计
         BigDecimal rateTotal = MathUtil.keepTwoBigdecimal(grossTotal, salesTotal, CommonConstant.DEFAULT_VALUE_FOUR);//毛利率总计
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("stockTypeReports", stockTypeReports);
+
         map.put("sum", sum);
         map.put("salesTotal", salesTotal);
         map.put("costTotal", costTotal);
         map.put("grossTotal", grossTotal);
         map.put("rateTotal", rateTotal);
-        result.setData(map);
         return result;
     }
 

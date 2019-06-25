@@ -4,6 +4,7 @@ import com.exx.dzj.entity.user.UserInfo;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class UserInfoReport extends UserInfo {
 
     private static final long serialVersionUID = 7789500832886986588L;
 
-    private List<SaleInfoReport> saleInfoList;
+    private List<SaleInfoReport> saleInfoList = new ArrayList<>();
 
     private BigDecimal backAmountTotal;
 
