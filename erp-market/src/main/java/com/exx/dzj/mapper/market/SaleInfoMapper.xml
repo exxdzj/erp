@@ -1088,13 +1088,16 @@
   </update>
     
 
-  <select id="querySalesListForIds" resultType="com.exx.dzj.entity.market.SaleListInfo" parameterType="com.exx.dzj.entity.market.SaleInfoQuery">
+  <!--<select id="querySalesListForIds" resultType="com.exx.dzj.entity.market.SaleListInfo" parameterType="com.exx.dzj.entity.market.SaleInfoQuery">-->
+  <select id="querySalesListForIds" resultMap="saleListInfoMap" parameterType="com.exx.dzj.entity.market.SaleInfoQuery">
     SELECT
-    SINFO.sale_code AS saleCode,
+    SINFO.sale_code,
+    SINFO.receivable_accoun,
     SINFO.sale_date AS saleDate,
     SINFO.payment_status AS paymentStatus,
     CSUPPLIER.cust_name AS custName,
     SINFO.currency AS currency,
+    SINFO.cust_phone_num AS custPhoneNum,
     SINFO.exchange_rate AS exchangeRate,
     CONCAT(SINFO.user_code, UINFO.real_name) AS salesmanName,
     DICTIONPRO.dict_name AS saleProject,
@@ -1109,30 +1112,15 @@
     SINFO.discount_amount AS discountAmount,
     SINFO.collection_terms AS collectionTerms,
     SINFO.account_period AS accountPeriod,
-    SINFO.create_user AS saleCreateUser,
     SINFO.invoice_code AS invoiceCode,
     SINFO.collection_user_name AS collectionUserName,
     SINFO.due_date AS dueDate,
     SINFO.sale_source AS saleSource,
-    SINFO.is_receipt AS isReceipt,
-
-    sgoods.stock_name AS stockName,
-    sgoods.stock_address AS stockAddress,
-    sgoods.goods_num AS goodsNum,
-    sgoods.unit_price AS unitPrice,
-    sgoods.discount_rate AS discountRate,
-    sgoods.discount_amount AS goodsDiscountAmount,
-    sgoods.sales_volume salesVolume,
-    sgoods.remarks AS goodsRemark,
-
-    srd.collected_amount AS collectedAmount,
-    srd.collection_account AS collectionAccount,
-    srd.payment_method AS paymentMethod
-
+    SINFO.is_receipt AS isReceipt
     FROM tab_sale_info SINFO
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
-    LEFT JOIN tab_sale_goods_detail sgoods ON SINFO.sale_code = sgoods.sale_code
-    LEFT JOIN tab_sale_receipts_details srd ON SINFO.sale_code = srd.sale_code
+    /*      LEFT JOIN tab_sale_goods_detail sgoods ON SINFO.sale_code = sgoods.sale_code
+    LEFT JOIN tab_sale_receipts_details srd ON SINFO.sale_code = srd.sale_code*/
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
     LEFT JOIN tab_user_info UINFO ON SINFO.salesman_code = UINFO.salesman_code
     WHERE 1=1
@@ -1169,6 +1157,7 @@
 
   <resultMap id="saleListInfoMap" type="com.exx.dzj.entity.market.SaleListInfo">
     <result column="sale_code" property="saleCode"/>
+    <result column="receivable_accoun" property="receivableAccoun"/>
     <result column="saleDate" property="saleDate"/>
     <result column="paymentStatus" property="paymentStatus"/>
     <result column="custName" property="custName"/>

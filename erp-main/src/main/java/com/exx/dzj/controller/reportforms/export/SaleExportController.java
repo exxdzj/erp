@@ -220,7 +220,7 @@ public class SaleExportController {
                     break;
                 case CommonConstant.DEFAULT_VALUE_TWO:
                     list = saleTicketReportFacade.querySalesListForIds(query);
-                    writer = SaleExportUtils.exportSaleList3(outputStream, list);
+                    writer = SaleExportUtils.exportSaleList2(outputStream, list);
                     break;
                 default:
 

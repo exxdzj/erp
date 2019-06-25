@@ -100,7 +100,10 @@ public class SaleListModel extends BaseRowModel {
     @ExcelProperty(value = "销售额", index = 27)
     private String salesVolume;
 
-    @ExcelProperty(value = "说明", index = 28)
+    @ExcelProperty(value = "销售总额", index = 28)
+    private String salesSumVolume;
+
+    @ExcelProperty(value = "说明", index = 29)
     private String goodsRemark;
 
     /******商品信息******/

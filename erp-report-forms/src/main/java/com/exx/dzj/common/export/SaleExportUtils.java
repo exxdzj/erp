@@ -934,6 +934,7 @@ public class SaleExportUtils {
             model.setAccountPeriod(formateBigdecimal(sli.getAccountPeriod()));
             model.setCollectionUserName(sli.getCollectionUserName());
             model.setDueDate(sli.getDueDate());
+            model.setSalesSumVolume(formateBigdecimal(sli.getReceivableAccoun()));
             model.setCollectionTerms(sli.getCollectionTerms());
             content.add(model);
             // 收款信息
