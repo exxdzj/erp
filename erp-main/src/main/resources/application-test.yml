@@ -21,11 +21,11 @@ spring:
         poolPreparedStatements: true
         maxOpenPreparedStatements: 100
         ###########页面配置前缀
-    mvc:
-      view:
-        prefix: /WEB-INF/jsp/
+    #mvc:
+      #view:
+        #prefix: /WEB-INF/jsp/
         ###########后缀
-        suffix: .jsp
+        #suffix: .jsp
     aop:
       #auto: true
       proxy-target-class: true

@@ -1,12 +1,12 @@
 package com.exx.dzj.facade.market;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.annotation.SaleLog;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.stock.StockBean;
-import com.exx.dzj.entity.stock.StockInfo;
 import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.facade.market.task.AsyncSaleTask;
 import com.exx.dzj.facade.sys.BusEncodeFacade;
@@ -23,7 +23,6 @@ import com.exx.dzj.service.user.UserService;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -174,10 +173,32 @@ public class SalesTicketFacade {
         asyncSaleExecutr.execute(asyncSaleTask);
     }
 
+    /**
+     * 最初的未使用数据权限规则查询销售单列表数据
+     * @param query
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     public ERPage<SaleInfo> querySalesTicketList(SaleInfoQuery query, int pageNum, int pageSize){
         PageHelper.startPage(pageNum, pageSize);
         List<SaleInfo> saleInfoList = salesTicketService.querySalesTicketList(query);
         ERPage<SaleInfo> saleInfoPage = new ERPage<>(saleInfoList);
+        return saleInfoPage;
+    }
+
+    /**
+     * 使用数据权限规则查询销售单列表数据
+     * @param query
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    public ERPage<SaleInfo> getSalesTicketList(SaleInfoQuery query, QueryWrapper queryWrapper, int pageNum, int pageSize){
+        PageHelper.startPage(pageNum, pageSize);
+        List<SaleInfo> saleInfoList = salesTicketService.getSalesTicketList(query, queryWrapper);
+        ERPage<SaleInfo> saleInfoPage = new ERPage<>(saleInfoList);
+        saleInfoList = null;
         return saleInfoPage;
     }
 

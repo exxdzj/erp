@@ -1,8 +1,9 @@
 package com.exx.dzj.service.salesticket;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.exx.dzj.entity.market.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  * @create 2019-01-08-10:54
  * 销售单
  */
-public interface SalesTicketService {
+public interface SalesTicketService extends IService<SaleInfo> {
 
     long countByExample(SaleInfoExample example);
 
@@ -19,6 +20,8 @@ public interface SalesTicketService {
     void saveSaleInfo(SaleInfo saleInfo);
 
     List<SaleInfo> querySalesTicketList(SaleInfoQuery query);
+
+    List<SaleInfo> getSalesTicketList(SaleInfoQuery query, QueryWrapper queryWrapper);
 
     SaleInfo querySalesTicketById(Integer id);
 

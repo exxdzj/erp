@@ -1,13 +1,18 @@
 package com.exx.dzj.controller.market;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.exx.dzj.annotation.DataPermission;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.market.SalesTicketFacade;
 import com.exx.dzj.page.ERPage;
+import com.exx.dzj.query.QueryGenerator;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.MathUtil;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,11 +64,20 @@ public class SalesTickeContorller {
      * @return com.exx.dzj.result.Result
      */
     @GetMapping("querysalesticket")
+    @DataPermission(pageComponent="sale/saleticket/saleTicketList")
+    @ApiOperation(nickname = "querysalesticket", value="销售单列表", notes="销售单列表", httpMethod = "GET")
+    @ApiImplicitParam(name = "query", value = "查询条件和分页参数", required = true, dataType = "com.exx.dzj.entity.market.SaleInfoQuery")
     public Result querySalesTickets(HttpServletRequest request, HttpServletResponse response, SaleInfoQuery query){
         Result result = Result.responseSuccess();
+        SaleInfo saleInfo = new SaleInfo();
+        saleInfo.setSaleReceiptsDetailsList(null);
+        saleInfo.setSaleGoodsDetailBeanList(null);
+        // 查询条件
+        QueryWrapper<SaleInfo> queryWrapper = QueryGenerator.initQueryWrapper(saleInfo, request.getParameterMap());
         int pageNum = MathUtil.toInt(query.getPageNum(), CommonConstant.DEFAULT_VALUE_ZERO);
         int pageSize = MathUtil.toInt(query.getPageSize(), CommonConstant.DEFAULT_PAGE_SIZE);
-        ERPage<SaleInfo> saleInfoPage = salesTicketFacade.querySalesTicketList(query, pageNum, pageSize);
+        //ERPage<SaleInfo> saleInfoPage = salesTicketFacade.querySalesTicketList(query, pageNum, pageSize);
+        ERPage<SaleInfo> saleInfoPage = salesTicketFacade.getSalesTicketList(query, queryWrapper, pageNum, pageSize);
         result.setData(saleInfoPage);
         return result;
     }

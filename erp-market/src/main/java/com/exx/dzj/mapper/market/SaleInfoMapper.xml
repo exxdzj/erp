@@ -32,6 +32,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
   </resultMap>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -61,6 +62,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
@@ -90,6 +92,7 @@
       </foreach>
     </where>
   </sql>
+
   <sql id="Base_Column_List">
     id, sale_code, user_code, salesman_code, cust_code, sale_project, sale_date, sales_order_code,
     currency, exchange_rate, delivery_order_code, cust_order_code, delivery_address,
@@ -161,6 +164,64 @@
       /*AND SINFO.is_enable = 1*/
       ORDER BY SINFO.sale_date  DESC
   </select>
+
+  <!-- 根据数据权限查询销售单数据 -->
+  <select id="getSalesTicketList" resultMap="saleListMap">
+    SELECT
+    SINFO.id,
+    SINFO.sale_code,
+    SINFO.sale_date,
+    CSUPPLIER.cust_name,
+    SINFO.currency,
+    SINFO.exchange_rate,
+    SINFO.total_sum,
+    SINFO.discount_amount,
+    SINFO.receivable_accoun,
+    SINFO.cust_phone_num,
+    SINFO.due_date,
+    SINFO.payment_status AS paymentStatus,
+    SINFO.invoice_code AS invoiceCode,
+    DICTIONPRO.dict_name AS saleProject,
+    UINFO.real_name AS userName,
+    SINFO.user_code AS userCode,
+    SINFO.create_user AS createUser,
+    SINFO.collection_user_name AS collectionUserName,
+    SINFO.sale_source AS saleSource,
+    SINFO.is_receipt AS isReceipt,
+    SINFO.subordinate_company_name AS subordinateCompanyName,
+    SINFO.remarks AS remarks
+    FROM tab_sale_info SINFO
+    LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
+    LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
+    LEFT JOIN tab_user_info UINFO ON SINFO.salesman_code = UINFO.salesman_code
+    <where>
+      ${ew.sqlSegment}
+      <if test="query.startTime != null and query.startTime != ''">
+        AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{query.startTime},'%Y-%m-%d %H:%i:%s')]]>
+      </if>
+      <if test="query.endTime != null and query.endTime != ''">
+        AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{query.endTime},'%Y-%m-%d 23:59:59')]]>
+      </if>
+
+      <if test="query.saleCode != null and query.saleCode != ''">
+        AND  SINFO.sale_code LIKE CONCAT('%', #{query.saleCode}, '%')
+      </if>
+      <if test="query.salesmanCode != null and query.salesmanCode != ''">
+        AND  SINFO.salesman_code=#{query.salesmanCode}
+      </if>
+      <if test="query.paymentStatus != null and query.paymentStatus != ''">
+        AND  SINFO.payment_status=#{query.paymentStatus}
+      </if>
+      <if test="query.subordinateCompanyCode != null and query.subordinateCompanyCode != ''">
+        AND  SINFO.subordinate_company_code=#{query.subordinateCompanyCode}
+      </if>
+      <if test="query.custCode != null and query.custCode != ''">
+        AND  SINFO.cust_code=#{query.custCode}
+      </if>
+    </where>
+    ORDER BY SINFO.sale_date  DESC
+  </select>
+
   <resultMap id="saleListMap" type="com.exx.dzj.entity.market.SaleInfo">
     <result column="id" property="id"/>
     <result column="remarks" property="remarks"/>
@@ -548,6 +609,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
   <update id="updateByExampleSelective" parameterType="map">
     update tab_sale_info
     <set>
@@ -643,6 +705,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByExample" parameterType="map">
     update tab_sale_info
     set id = #{record.id,jdbcType=INTEGER},

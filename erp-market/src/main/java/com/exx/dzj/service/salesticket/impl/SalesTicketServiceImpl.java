@@ -1,5 +1,7 @@
 package com.exx.dzj.service.salesticket.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.mapper.market.SaleInfoMapper;
 import com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper;
@@ -7,7 +9,6 @@ import com.exx.dzj.service.salesticket.SalesTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
  * @create 2019-01-08-10:56
  */
 @Component
-public class SalesTicketServiceImpl implements SalesTicketService {
+public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo> implements SalesTicketService {
 
     @Autowired
     private SaleInfoMapper saleInfoMapper;
@@ -53,7 +54,7 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     }
 
     /**
-     * @description 销售单列表查询
+     * @description 销售单列表查询(未根据权限查询销售单)
      * @author yangyun
      * @date 2019/1/9 0009
      * @param query
@@ -62,6 +63,17 @@ public class SalesTicketServiceImpl implements SalesTicketService {
     @Override
     public List<SaleInfo> querySalesTicketList(SaleInfoQuery query) {
         return saleInfoMapper.querySalesTicketList(query);
+    }
+
+    /**
+     * 根据数据权限查询销售单
+     * @param query
+     * @param queryWrapper
+     * @return
+     */
+    @Override
+    public List<SaleInfo> getSalesTicketList(SaleInfoQuery query, QueryWrapper queryWrapper) {
+        return saleInfoMapper.getSalesTicketList(query, queryWrapper);
     }
 
     /**

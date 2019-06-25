@@ -67,9 +67,11 @@ public class QueryGenerator {
 	 */
 	public static <T> QueryWrapper<T> initQueryWrapper(T searchObj, Map<String, String[]> parameterMap){
 		long start = System.currentTimeMillis();
-		QueryWrapper<T> queryWrapper = new QueryWrapper<>();
+		QueryWrapper<T> queryWrapper = new QueryWrapper<>(searchObj);
+		System.out.println("最初的查询条件："+queryWrapper.getSqlSegment());
 		installMplus(queryWrapper, searchObj, parameterMap);
 		log.debug("---查询条件构造器初始化完成,耗时:"+(System.currentTimeMillis()-start)+"毫秒----");
+		System.out.println("构造的查询条件："+queryWrapper.getSqlSegment());
 		return queryWrapper;
 	}
 	
@@ -559,10 +561,12 @@ public class QueryGenerator {
 			addEasyQuery(queryWrapper, name, dataRule.getPrefix(), rule, objs);
 		}else {
 			if (propertyType.equals(String.class)) {
-				//addEasyQuery(queryWrapper, name, rule, converRuleValue(dataRule.getRuleValue()));
+				/**addEasyQuery(queryWrapper, name, rule, converRuleValue(dataRule.getRuleValue()));*/
+
 				addEasyQuery(queryWrapper, name, dataRule.getPrefix(), rule, converRuleValue(dataRule.getRuleValue()));
 			} else {
-				//addEasyQuery(queryWrapper, name, rule, NumberUtils.parseNumber(dataRule.getRuleValue(), propertyType));
+				/**addEasyQuery(queryWrapper, name, rule, NumberUtils.parseNumber(dataRule.getRuleValue(), propertyType));*/
+
 				addEasyQuery(queryWrapper, name, dataRule.getPrefix(), rule, NumberUtils.parseNumber(dataRule.getRuleValue(), propertyType));
 			}
 		}

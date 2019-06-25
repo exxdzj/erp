@@ -161,6 +161,7 @@ public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> imple
         List<UserModel> list = userMapper.queryList(queryWrapper);
         ERPage<UserModel> pages = new ERPage<UserModel>(list);
         result.setData(pages);
+        list = null;
         return result;
     }
 

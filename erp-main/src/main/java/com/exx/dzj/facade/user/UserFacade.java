@@ -141,7 +141,7 @@ public class UserFacade {
     }
 
     /**
-     * 查询公司员工列表数据
+     * 最初查询公司员工列表数据
      * @param pageNum
      * @param pageSize
      * @param query
@@ -151,6 +151,13 @@ public class UserFacade {
         return salesmanService.list(pageNum, pageSize, query);
     }
 
+    /**
+     * 可以根据数据权限查询公司员工列表数据
+     * @param pageNum
+     * @param pageSize
+     * @param queryWrapper
+     * @return
+     */
     public Result queryList(int pageNum, int pageSize, QueryWrapper queryWrapper) {
         return salesmanService.queryList(pageNum, pageSize, queryWrapper);
     }

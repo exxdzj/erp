@@ -50,7 +50,7 @@ public class RoleMenuFacade {
         } else {
             // 修改
             RoleMenuBean roleMenuBean = new RoleMenuBean();
-            roleMenuBean.setDataRuleIds(info.getDataRuleIds().substring(0, info.getDataRuleIds().length() - 1));
+            roleMenuBean.setDataRuleIds(info.getDataRuleIds());
             roleMenuService.update(roleMenuBean, query);
         }
         return result;

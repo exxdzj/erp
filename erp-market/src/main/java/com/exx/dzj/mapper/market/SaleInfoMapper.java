@@ -1,24 +1,28 @@
 package com.exx.dzj.mapper.market;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exx.dzj.entity.market.*;
 import org.apache.ibatis.annotations.Param;
+import org.apache.poi.ss.formula.functions.T;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
-public interface SaleInfoMapper {
+public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
     long countByExample(SaleInfoExample example);
 
     int deleteByExample(SaleInfoExample example);
 
     int deleteByPrimaryKey(Integer id);
 
+    @Override
     int insert(SaleInfo record);
 
     int insertSelective(SaleInfo record);
 
     List<SaleInfo> querySalesTicketList(SaleInfoQuery query);
+
+    List<SaleInfo> getSalesTicketList(@Param("query") SaleInfoQuery query, @Param("ew") Wrapper<T> queryWrapper);
 
     SaleInfo selectByPrimaryKey(Integer id);
 
