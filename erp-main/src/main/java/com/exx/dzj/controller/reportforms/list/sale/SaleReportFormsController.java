@@ -1,5 +1,6 @@
 package com.exx.dzj.controller.reportforms.list.sale;
 
+import com.exx.dzj.bean.SaleDetailReportQuery;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.DeptInfoQuery;
@@ -166,6 +167,22 @@ public class SaleReportFormsController {
         Result result = Result.responseSuccess();
         List<SaleExportFieldReport> fieldReports = saleTicketReportFacade.queryExoprtFieldList();
         result.setData(fieldReports);
+        return result;
+    }
+
+    /**
+     * @description 销售单明细
+     * @author yangyun
+     * @date 2019/6/26 0026
+     * @param query
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querysaledetaillist")
+    public Result querySaleDetailList (SaleDetailReportQuery query){
+        Result result = Result.responseSuccess();
+        Map<String, Object> map = saleTicketReportFacade.querySaleDetailList(query);
+
+        result.setData(map);
         return result;
     }
 }

@@ -1,5 +1,6 @@
 package com.exx.dzj.facade.reportforms.sale;
 
+import com.exx.dzj.bean.SaleDetailReportQuery;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.DeptInfoQuery;
@@ -533,6 +534,62 @@ public class SaleTicketReportFacade {
         }
 
         return fieldList;
+    }
+
+    public Map<String, Object> querySaleDetailList (SaleDetailReportQuery query) {
+        List<SaleDetailBaseReport> saleDetails = stockTypeReportService.querySaleDetailList(query);
+
+        Map<String, Object> map = new HashMap<>();
+        List<SaleInfoReport> data = new ArrayList<>();
+        map.put("listData", data);
+        if (saleDetails.size() <= CommonConstant.DEFAULT_VALUE_ZERO){
+            return map;
+        }
+        Map<String, List<SaleDetailBaseReport>> collect = saleDetails.stream().collect(Collectors.groupingBy(SaleDetailBaseReport::getSaleCode));
+
+
+        collect.keySet().stream().forEach(
+                first -> {
+                    SaleInfoReport sir = new SaleInfoReport();
+                    data.add(sir);
+                    sir.setSaleCode(first);
+                    List<SaleDetailBaseReport> saleDetailBaseReports = collect.get(first);
+                    sir.setSaleDate(saleDetailBaseReports.get(0).getSaleDate());
+                    sir.setCustCode(saleDetailBaseReports.get(0).getCustCode());
+                    sir.setCustName(saleDetailBaseReports.get(0).getCustName());
+                    sir.setUserCode(saleDetailBaseReports.get(0).getSalesmanCode());
+                    sir.setRealName(saleDetailBaseReports.get(0).getRealName());
+                    sir.setSumGoodsNum(saleDetailBaseReports.stream().mapToDouble(SaleDetailBaseReport::getGoodsNum).sum());
+                    saleDetailBaseReports.stream().forEach(
+                            goods -> {
+                                SaleGoodsReport sgr = new SaleGoodsReport();
+                                sir.getSaleGoodsReportList().add(sgr);
+                                sgr.setStockCode(goods.getStockCode());
+                                sgr.setStockName(goods.getStockName());
+                                sgr.setStockAddress(goods.getStockAddress());
+                                sgr.setGoodsNum(goods.getGoodsNum());
+                                sgr.setUnitPrice(goods.getUnitPrice());
+
+                                BigDecimal multiply = goods.getUnitPrice().multiply(new BigDecimal(goods.getGoodsNum() * goods.getExchangeRate()));
+
+                                sgr.setSalesVolume(multiply);
+                            }
+                    );
+
+                }
+        );
+
+        for (SaleInfoReport s: data){
+            s.setSumSaleVolume(s.getSaleGoodsReportList().stream().map(SaleGoodsReport::getSalesVolume).reduce(BigDecimal.ZERO, BigDecimal::add));
+        }
+
+        double sum = data.stream().mapToDouble(SaleInfoReport::getSumGoodsNum).sum();
+        BigDecimal reduce = data.stream().map(SaleInfoReport::getSumSaleVolume).reduce(BigDecimal.ZERO, BigDecimal::add);
+        map.put("sum", sum);
+        map.put("reduce", reduce);
+
+
+        return map;
     }
 
 }

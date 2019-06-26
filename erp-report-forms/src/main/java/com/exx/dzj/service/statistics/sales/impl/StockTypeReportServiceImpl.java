@@ -1,5 +1,6 @@
 package com.exx.dzj.service.statistics.sales.impl;
 
+import com.exx.dzj.bean.SaleDetailReportQuery;
 import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
@@ -66,5 +67,10 @@ public class StockTypeReportServiceImpl implements SaleTicketReportService {
     @Override
     public List<HomePageReport> queryStasticsSalesForMonth() {
         return stockTypeReportMapper.queryStasticsSalesForMonth();
+    }
+
+    @Override
+    public List<SaleDetailBaseReport> querySaleDetailList(SaleDetailReportQuery query) {
+        return stockTypeReportMapper.querySaleDetailList(query);
     }
 }

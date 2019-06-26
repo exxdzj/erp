@@ -3,6 +3,7 @@ package com.exx.dzj.common.export;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.*;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.exx.dzj.bean.SaleDetailReportQuery;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
@@ -1008,5 +1009,109 @@ public class SaleExportUtils {
             model.setSalesVolume(formateBigdecimal(goodsDetailBean.getSalesVolume()));
             model.setGoodsRemark(goodsDetailBean.getRemarks());
         }
+    }
+
+    public static ExcelWriter exportSaleDetail (ServletOutputStream outputStream, Map<String, Object> map, String realName, SaleDetailReportQuery query){
+        ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
+
+        List<SaleInfoReport> data = (List<SaleInfoReport>)map.get("listData");
+        String sheetName = "销售明细表";
+
+        Map<Integer, Integer> mapStyle = new HashMap<>();
+        mapStyle.put(0,4000);
+        mapStyle.put(1,4000);
+        mapStyle.put(2,4000);
+        mapStyle.put(3,4000);
+        mapStyle.put(4,6000);
+        mapStyle.put(5,4000);
+        mapStyle.put(6,4000);
+        mapStyle.put(7,4000);
+        mapStyle.put(8,4000);
+
+
+        Sheet sheet = gainSheet(mapStyle, sheetName);
+        sheet.setSheetName(sheetName);
+
+        Table title = new Table(1);
+        title.setClazz(SaleDetailModel.class);
+        writer.write(null, sheet, title);
+
+        List<SaleDetailModel> data1 = new ArrayList<>();
+        SaleDetailModel item = new SaleDetailModel();
+        item.setSaleDate("日期: 由" + query.getStartDate());
+        item.setSaleCode("至" + query.getEndDate());
+        item.setSaleVolume("打印日期: " + DateUtil.getDate(new Date()));
+        data1.add(item);
+        writer.write(data1, sheet);
+
+        List<SaleDetailModel> content = new ArrayList<>();
+
+        SaleDetailModel model = null;
+        List<SaleGoodsReport> saleGoodsReportList = null;
+        SaleGoodsReport goods = null;
+
+        for (SaleInfoReport s : data){
+            saleGoodsReportList = s.getSaleGoodsReportList();
+
+            model = new SaleDetailModel();
+            model.setSaleDate(DateUtil.getDate(s.getSaleDate()));
+            model.setSaleCode(s.getSaleCode());
+            model.setCustomer(s.getCustCode() + s.getCustName());
+            model.setSalesman(s.getUserCode() + s.getRealName());
+            content.add(model);
+
+            if (saleGoodsReportList.size() > CommonConstant.DEFAULT_VALUE_ONE){//此时商品数大于一个
+                for (int i = 0; i < saleGoodsReportList.size(); i++){
+                    goods = saleGoodsReportList.get(i);
+                    if (i == CommonConstant.DEFAULT_VALUE_ZERO){
+                        setSaleDetailModelValue(model, goods);
+                    } else {
+                        SaleDetailModel gg = new SaleDetailModel();
+                        setSaleDetailModelValue(gg, goods);
+                        content.add(gg);
+                    }
+                }
+            } else {
+
+                if (saleGoodsReportList.size() > CommonConstant.DEFAULT_VALUE_ZERO){
+                    goods = saleGoodsReportList.get(0);
+                    setSaleDetailModelValue(model, goods);
+                }
+            }
+
+            //  小计
+            SaleDetailModel subtotal = new SaleDetailModel();
+            subtotal.setStockAddress("小计: ");
+            subtotal.setGoodsNum(String.valueOf(s.getSumGoodsNum()));
+            subtotal.setSaleVolume(formateBigdecimal(s.getSumSaleVolume()));
+            content.add(subtotal);
+        }
+
+
+
+        writer.write(content, sheet);
+
+        List<SaleDetailModel> dataEnd = new ArrayList<>();
+        // 合计
+        SaleDetailModel total = new SaleDetailModel();
+        total.setStockAddress("合计: ");
+        total.setGoodsNum(String.valueOf(map.get("sum")));
+        total.setSaleVolume(formateBigdecimal(map.get("reduce")));
+        dataEnd.add(total);
+
+        SaleDetailModel itemEnd = new SaleDetailModel();
+        dataEnd.add(itemEnd);
+        itemEnd.setSaleDate("公司名称: 正诚文化");
+        itemEnd.setSaleVolume("操作员: " + realName);
+        writer.write(dataEnd, sheet);
+        return writer;
+    }
+
+    private static void setSaleDetailModelValue(SaleDetailModel model, SaleGoodsReport goods){
+        model.setStockName(goods.getStockCode() + goods.getStockName());
+        model.setStockAddress(goods.getStockAddress());
+        model.setGoodsNum(String.valueOf(goods.getGoodsNum()));
+        model.setUnitPrice(formateBigdecimal(goods.getUnitPrice()));
+        model.setSaleVolume(formateBigdecimal(goods.getSalesVolume()));
     }
 }

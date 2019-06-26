@@ -1,5 +1,6 @@
 package com.exx.dzj.service.statistics.sales;
 
+import com.exx.dzj.bean.SaleDetailReportQuery;
 import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
@@ -30,4 +31,6 @@ public interface SaleTicketReportService {
     List<HomePageReport> queryStasticsSalesForYear();
 
     List<HomePageReport> queryStasticsSalesForMonth();
+
+    List<SaleDetailBaseReport> querySaleDetailList(SaleDetailReportQuery query);
 }

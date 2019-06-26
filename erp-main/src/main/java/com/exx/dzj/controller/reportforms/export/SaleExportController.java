@@ -1,6 +1,7 @@
 package com.exx.dzj.controller.reportforms.export;
 
 import com.alibaba.excel.ExcelWriter;
+import com.exx.dzj.bean.SaleDetailReportQuery;
 import com.exx.dzj.common.export.SaleExportUtils;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.CustomerQuery;
@@ -9,6 +10,7 @@ import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleInfoQuery;
 import com.exx.dzj.entity.market.SaleListInfo;
+import com.exx.dzj.entity.statistics.sales.SaleInfoReport;
 import com.exx.dzj.entity.statistics.sales.StockTypeReport;
 import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.excepte.ErpException;
@@ -232,6 +234,36 @@ public class SaleExportController {
             e.printStackTrace();
         } finally {
 
+        }
+    }
+
+    /**
+     * @description 销售单明细导出
+     * @author yangyun
+     * @date 2019/6/26 0026
+     * @param request
+     * @param response
+     * @param realName
+     * @param query
+     * @return void
+     */
+    @GetMapping("exportsaledetail/{realName}")
+    public void exportSaleDetail (HttpServletRequest request, HttpServletResponse response, @PathVariable("realName") String realName, SaleDetailReportQuery query){
+        ExcelWriter writer = null;
+
+        String code = ExcelUtil.getCode();
+        try {
+            Map<String, Object> map = saleTicketReportFacade.querySaleDetailList(query);
+
+            response.setContentType("application/x-excel");
+            response.setHeader("Content-Disposition", "attachment;filename=" + new String(("SaleDetail-" + code + ".xlsx").getBytes(), "ISO-8859-1"));
+            ServletOutputStream outputStream = response.getOutputStream();
+
+            writer = SaleExportUtils.exportSaleDetail(outputStream, map, realName, query);
+
+            writer.finish();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

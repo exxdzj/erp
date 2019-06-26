@@ -648,7 +648,7 @@
   </resultMap>
 
   <select id="queryCustomerSelect" resultType="com.exx.dzj.entity.customer.CustomerSupplierBean">
-    SELECT cust_code AS custCode, cust_name AS custName FROM tab_customer_supplier WHERE 1 = 1
+    SELECT id AS id, cust_code AS custCode, cust_name AS custName FROM tab_customer_supplier WHERE 1 = 1
       <if test="custName != null and custName != ''">
         AND cust_name REGEXP #{custName}
       </if>
