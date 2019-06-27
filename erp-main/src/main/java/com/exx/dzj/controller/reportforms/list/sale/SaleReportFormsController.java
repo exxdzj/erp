@@ -47,7 +47,10 @@ public class SaleReportFormsController {
     @GetMapping("inventoryreportlist")
     public Result inventoryReportList (StockInfoQuery query){
         Result result = Result.responseSuccess();
+        long start = System.currentTimeMillis();
         List<StockTypeReport> stockTypeReports = saleTicketReportFacade.statisticsSaleByInventory(query);
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
         Map<String, Object> map = new HashMap<>();
         result.setData(map);
         map.put("stockTypeReports", stockTypeReports);

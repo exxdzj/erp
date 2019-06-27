@@ -374,7 +374,7 @@
       delivery_address, invoice_code, bill_type,
       total_sum, discount_amount, receivable_accoun,
       received_amoun, receipt_num, collection_terms,
-      account_period, due_date, is_enable,
+      account_period, due_date, is_enable,cust_phone_num,
       remarks, create_time, create_user,
       update_time, update_user)
     values (#{id,jdbcType=INTEGER}, #{saleCode,jdbcType=VARCHAR}, #{userCode,jdbcType=VARCHAR},
@@ -384,7 +384,7 @@
       #{deliveryAddress,jdbcType=VARCHAR}, #{invoiceCode,jdbcType=VARCHAR}, #{billType,jdbcType=VARCHAR},
       #{totalSum,jdbcType=DECIMAL}, #{discountAmount,jdbcType=DECIMAL}, #{receivableAccoun,jdbcType=DECIMAL},
       #{receivedAmoun,jdbcType=DECIMAL}, #{receiptNum,jdbcType=VARCHAR}, #{collectionTerms,jdbcType=VARCHAR},
-      #{accountPeriod,jdbcType=INTEGER}, #{dueDate,jdbcType=DATE}, #{isEnable,jdbcType=INTEGER},
+      #{accountPeriod,jdbcType=INTEGER}, #{dueDate,jdbcType=DATE}, #{isEnable,jdbcType=INTEGER}, #{custPhoneNum,jdbcType=INTEGER},
       #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
       #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
   </insert>

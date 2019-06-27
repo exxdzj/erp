@@ -347,6 +347,7 @@ public class ProccessImportDataUtil {
             CustomerSupplierBean customerSupplierBean = customerSupplierBeanMap.get(saleInfo.getCustCode());
             if (customerSupplierBean != null){
                 saleInfo.setCustCode(customerSupplierBean.getCustCode());
+                saleInfo.setCustPhoneNum(customerSupplierBean.getPhoneNum());
             }
         }
     }

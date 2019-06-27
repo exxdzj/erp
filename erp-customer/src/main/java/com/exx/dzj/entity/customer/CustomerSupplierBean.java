@@ -78,4 +78,6 @@ public class CustomerSupplierBean implements Serializable {
 
     // 是否有效
     private Integer isEnable;
+
+    private String phoneNum;
 }
