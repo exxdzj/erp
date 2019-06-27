@@ -95,6 +95,13 @@ public class UserFacade {
     @Transactional(rollbackFor = ErpException.class)
     public void saveUserInfo(UserVo bean) throws ErpException{
         try{
+            // 如果用户没有配置角色，则给一个默认的角色
+            if(CollectionUtils.isEmpty(bean.getRoles())) {
+                List<String> roles = new ArrayList<>();
+                // 临时角色
+                roles.add("temporary");
+                bean.setRoles(roles);
+            }
             String userCode = salesmanService.saveSalesman(bean);
             if(!CollectionUtils.isEmpty(bean.getRoles())){
                 roleFacade.delByUserCode(userCode);

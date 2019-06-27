@@ -379,11 +379,11 @@
       AND cw.link_man LIKE CONCAT('%',#{linkMan},'%')
     </if>
     <if test="custType != null and custType != '' and custType == '1'.toString()">
-      AND cs.cust_type in (1, 3)
+      AND  ( cs.cust_type = 1 OR cs.cust_type = 3)
       <!--AND cs.source = #{custType}-->
     </if>
     <if test="custType != null and custType != '' and custType == '2'.toString()">
-      AND cs.cust_type in (2, 3)
+      AND  ( cs.cust_type = 2 OR cs.cust_type = 3)
       <!--AND cs.source = #{custType}-->
     </if>
     <if test="custLevel != null and custLevel != ''">
@@ -392,8 +392,8 @@
     <if test="phoneNum != null and phoneNum != ''">
       AND cw.phone_num LIKE CONCAT("%", #{phoneNum}, "%")
     </if>
-    ORDER BY cs.create_time DESC
   </select>
+  <!-- ORDER BY cs.create_time DESC -->
 
   <!-- 查询  客户和供应商详细信息 -->
   <resultMap id="CustomerSupplierResultMap" type="com.exx.dzj.entity.customer.CustomerSupplierInfo">
