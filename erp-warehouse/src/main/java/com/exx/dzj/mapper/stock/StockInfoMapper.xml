@@ -292,6 +292,12 @@
       <if test="stockClassName != null and stockClassName!=''">
         stock_class_name = #{stockClassName,jdbcType=VARCHAR},
       </if>
+      <if test="stockAddress != null and stockAddress!=''">
+        stock_address = #{stockAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="stockAddressCode != null and stockAddressCode!=''">
+        stock_address_code = #{stockAddressCode,jdbcType=VARCHAR},
+      </if>
       <if test="meterUnit != null and meterUnit!=''">
         meter_unit = #{meterUnit,jdbcType=VARCHAR},
       </if>

@@ -170,13 +170,13 @@
         #{minInventory,jdbcType=INTEGER},
       </if>
       <if test="warnNum != null">
-        warn_num,
+        #{warnNum},
       </if>
       <if test="stockAddress != null and stockAddress!=''">
-        stock_address,
+        #{stockAddress},
       </if>
       <if test="stockAddressCode != null and stockAddressCode!=''">
-        stock_address_code,
+        #{stockAddressCode},
       </if>
       <if test="isEnable != null">
         #{isEnable,jdbcType=INTEGER},
@@ -246,6 +246,12 @@
       </if>
       <if test="minSellPrice != null">
         min_sell_price = #{minSellPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="stockAddress != null and stockAddress!=''">
+        stock_address = #{stockAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="stockAddressCode != null and stockAddressCode!=''">
+        stock_address_code = #{stockAddressCode,jdbcType=VARCHAR},
       </if>
       <if test="minInventory != null">
         min_inventory = #{minInventory,jdbcType=INTEGER},

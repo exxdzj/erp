@@ -71,7 +71,7 @@ public class DataImportController {
             // 客户供应商信息信息
             Map<String, CustomerSupplierBean> customerSupplierBeanMap = customerSupplierFacade.queryCustomerSupplierBeanList();
 
-            switch (type){
+             switch (type){
                 case 0:// 客户信息
                     List<Object> customerList = ExcelUtil.readExcel(excelFile, new CustomerModel(), CommonConstant.DEFAULT_VALUE_ONE);
                     // 查询客户等级
