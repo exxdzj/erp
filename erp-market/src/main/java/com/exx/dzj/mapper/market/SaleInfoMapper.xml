@@ -990,6 +990,7 @@
     </if>
 
     <!--DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')  DATE_FORMAT(sysdate(), '%Y-%m-%d')-->
+    AND u.real_name IS NOT NULL
     GROUP BY s.salesman_code,u.real_name
     ORDER BY SUM(s.receivable_accoun) DESC
     LIMIT 10
@@ -1067,6 +1068,7 @@
             <if test="type == 'month'">
                 BETWEEN concat(date_format(LAST_DAY(now()),'%Y-%m-'),'01') AND LAST_DAY(now())
             </if>
+            AND STINFO.stock_name IS NOT NULL
             GROUP BY SGD.stock_code ORDER BY goodsNum DESC LIMIT 20
     </select>
 
