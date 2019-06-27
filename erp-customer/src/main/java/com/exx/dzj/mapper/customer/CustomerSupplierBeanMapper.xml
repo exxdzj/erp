@@ -596,9 +596,11 @@
   
   <select id="queryCustomerSupplierBeanList" resultType="com.exx.dzj.entity.customer.CustomerSupplierBean">
     SELECT
-      cust_code AS custCode,
-      cust_name AS custName
-    FROM tab_customer_supplier
+      tt.cust_code AS custCode,
+      bb.phone_num AS phoneNum,
+      tt.cust_name AS custName
+    FROM tab_customer_supplier tt
+    LEFT JOIN tab_contact_way bb ON tt.cust_code = bb.cust_code
     WHERE  1=1
   </select>
 
