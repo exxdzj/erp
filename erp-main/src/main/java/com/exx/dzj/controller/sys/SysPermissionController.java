@@ -1,12 +1,10 @@
 package com.exx.dzj.controller.sys;
 
 import com.exx.dzj.facade.sys.SysPermissionFacade;
-import com.exx.dzj.mapper.sys.SysPermissionMapper;
 import com.exx.dzj.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +29,7 @@ public class SysPermissionController {
      * @return
      */
     @GetMapping("queryPermissionsByUser")
-    public Result queryPermissionsByUser(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="token") String token) {
+    public Result queryPermissionsByUser(HttpServletRequest request, HttpServletResponse response, String token) {
         Result result = Result.responseSuccess();
         result.setData(sysPermissionFacade.queryPermissionsByUser(token));
         return result;

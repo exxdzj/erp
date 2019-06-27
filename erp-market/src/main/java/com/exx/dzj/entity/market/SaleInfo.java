@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.exx.dzj.annotation.LIKE;
 import com.exx.dzj.page.BaseModule;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @Data
 @ToString
 @TableName("tab_sale_info")
+@JsonIgnoreProperties(value = {"handler"})
 public class SaleInfo extends BaseModule {
     private static final long serialVersionUID = 4886114971525378166L;
 

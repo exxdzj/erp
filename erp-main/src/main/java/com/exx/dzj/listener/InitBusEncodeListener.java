@@ -24,10 +24,10 @@ public class InitBusEncodeListener implements ApplicationListener<ContextRefresh
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        log.info("================================系统启动================================");
+        //log.info("================================系统启动================================");
         try {
             List<BusEncodeRuleCacheData> list = busEncodeFacade.queryList();
-            log.info(list.toString());
+            //log.info(list.toString());
             //BusEncodeThreadPool.init();
         } catch(Exception ex) {
             log.error("执行方法:{},异常信息:{}", InitBusEncodeListener.class.getName()+".onApplicationEvent", ex.getMessage());
