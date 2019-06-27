@@ -193,7 +193,7 @@
     FROM tab_sale_info SINFO
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
-    LEFT JOIN tab_user_info UINFO ON SINFO.salesman_code = UINFO.salesman_code
+    LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
     <where>
       ${ew.sqlSegment}
       <if test="query.startTime != null and query.startTime != ''">
@@ -206,8 +206,8 @@
       <if test="query.saleCode != null and query.saleCode != ''">
         AND  SINFO.sale_code LIKE CONCAT('%', #{query.saleCode}, '%')
       </if>
-      <if test="query.salesmanCode != null and query.salesmanCode != ''">
-        AND  SINFO.salesman_code=#{query.salesmanCode}
+      <if test="query.userCode != null and query.userCode != ''">
+        AND  SINFO.user_code=#{query.userCode}
       </if>
       <if test="query.paymentStatus != null and query.paymentStatus != ''">
         AND  SINFO.payment_status=#{query.paymentStatus}
