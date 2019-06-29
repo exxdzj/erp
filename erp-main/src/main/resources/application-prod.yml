@@ -1,9 +1,12 @@
 spring:
     datasource:
         name: dzj
-        url: jdbc:mysql://192.168.5.131:3306/test-erp?useUnicode=true&amp;characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false&rewriteBatchedStatements=true
-        username: dzjerp
-        password: dzj_EXX88
+        url: jdbc:mysql://rm-wz9p73l18gj48fn3zo.mysql.rds.aliyuncs.com:3306/test-erp?useUnicode=true&amp;characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false&rewriteBatchedStatements=true
+        username: dzj_user
+        password: dzj88_exx
+        #url: jdbc:mysql://192.168.5.131:3306/erp?useUnicode=true&amp;characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false&rewriteBatchedStatements=true
+        #username: dzjerp
+        #password: dzj_EXX88
         # \u4F7F\u7528druid\u6570\u636E\u6E90
         driver-class-name: com.mysql.jdbc.Driver
         platform: mysql
@@ -20,24 +23,10 @@ spring:
         testOnReturn: false
         poolPreparedStatements: true
         maxOpenPreparedStatements: 100
-        ###########页面配置前缀
-    #mvc:
-      #view:
-        #prefix: /WEB-INF/jsp/
-        ###########后缀
-        #suffix: .jsp
     aop:
       #auto: true
       proxy-target-class: true
-    #####配置序列化时,不返回null值到前端
-#    jackson:
-#      default-property-inclusion: ALWAYS
 
-
-#mybatis:
- # mapper-locations: com.dzj.exx.mapper.*/*.xml  #\u6CE8\u610F\uFF1A\u4E00\u5B9A\u8981\u5BF9\u5E94mapper\u6620\u5C04xml\u6587\u4EF6\u7684\u6240\u5728\u8DEF\u5F84
-  #type-aliases-package: com.dzj.exx.model  # \u6CE8\u610F\uFF1A\u5BF9\u5E94\u5B9E\u4F53\u7C7B\u7684\u8DEF\u5F84
-#pagehelper\u5206\u9875\u63D2\u4EF6
 pagehelper:
     helperDialect: mysql
     reasonable: true
@@ -46,10 +35,7 @@ pagehelper:
 
 #mybatis plus 设置
 mybatis-plus:
-  # 如果是放在src/main/java目录下 classpath:/com/yourpackage/*/mapper/*Mapper.xml
-  # 如果是放在resource目录 classpath:/mapper/*Mapper.xml
   mapper-locations: classpath*:com/exx/dzj/mapper/**/*Mapper.xml
-  #mp2.3+ 全局表前缀 mp_
   table-prefix: tab_
 
 # 阿里云存储配置

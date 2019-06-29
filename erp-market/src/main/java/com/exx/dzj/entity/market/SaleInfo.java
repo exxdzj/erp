@@ -139,6 +139,9 @@ public class SaleInfo extends BaseModule {
     @TableField(exist = false, select = false)
     List<LogisticsInfo> logisticsInfoList;
 
+    @TableField(exist = false, select = false)
+    private  String logistic;
+
 //    private String freightCode;
 //    private String logisticsCompamyName;
 

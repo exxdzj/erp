@@ -11,6 +11,7 @@
 	<artifactId>erp-main</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>erp-main</name>
+	<packaging>jar</packaging>
 	<description>Demo project for Spring Boot</description>
 
 	<dependencies>
@@ -152,6 +153,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>erp</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
