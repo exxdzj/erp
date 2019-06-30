@@ -332,6 +332,9 @@ public class ProccessImportDataUtil {
                             }
 
                         }
+//                        String salesmanCode = getSalesmanCode(saleInfo.getUserCode());
+//                        saleInfo.setUserCode(userInfoMap.get(salesmanCode)  == null ? salesmanCode : userInfoMap.get(salesmanCode).getUserCode());
+//                        saleInfo.setSalesmanCode(salesmanCode);
                         break;
                 }
             }
@@ -350,6 +353,22 @@ public class ProccessImportDataUtil {
                 saleInfo.setCustPhoneNum(customerSupplierBean.getPhoneNum());
             }
         }
+    }
+
+    private static String getSalesmanCode (String data){
+        int index = -1;
+        String substring = "";
+        if (data.matches(".*" + REG + ".*")){
+
+            index = data.split(REG).length;
+            if (index > 0){
+                index = data.split(REG)[0].length();
+                substring = data.substring(0, index);
+//                saleInfo.setUserCode(userInfoMap.get(substring)  == null ? substring : userInfoMap.get(substring).getUserCode());
+//                saleInfo.setSalesmanCode(substring);
+            }
+        }
+        return substring;
     }
 
     /**
@@ -376,6 +395,19 @@ public class ProccessImportDataUtil {
             ContactWayBean contactWay = new ContactWayBean();
 
             BeanUtils.copyProperties(cm, customerSupplier);
+            String salesmanCode = customerSupplier.getSalesmanCode();
+            if (StringUtils.isNotEmpty(salesmanCode)){
+                String code = getSalesmanCode(salesmanCode);
+                UserInfo userInfo = userInfoMap.get(code);
+                if (userInfo == null){
+                    customerSupplier.setSalesmanCode(code);
+                    customerSupplier.setUserCode(code);
+                } else {
+                    customerSupplier.setSalesmanCode(code);
+                    customerSupplier.setUserCode(userInfo.getUserCode());
+                }
+
+            }
             customerSupplier.setCustLevel(stringMap.get(cm.getLevelName()));
 
             customerSupplier(customerSupplier, cm.getSalesmanCode(), userInfoMap, cm);

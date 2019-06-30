@@ -347,6 +347,7 @@
     SELECT
         cs.cust_code custCode,
         cs.cust_name custName,
+        cs.user_code userCode,
         IFNULL(cw.link_man, '无') linkMan,
         cw.email email,
         cw.phone_num phoneNum,

@@ -16,6 +16,7 @@ public class CustomerSupplierModel implements Serializable {
 
     /** 编号 */
     private String custCode;
+    private String userCode;
 
     /** 供应商或客户的名称 */
     private String custName;
