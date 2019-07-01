@@ -303,8 +303,8 @@ public class CustomerSupplierFacade {
 
     public Map<String, CustomerSupplierBean> queryCustomerSupplierBeanList (){
         List<CustomerSupplierBean> customerSuppliers = customerSupplierService.queryCustomerSupplierBeanList();
-//        Map<String, CustomerSupplierBean> collect = customerSuppliers.stream().collect(Collectors.toMap(CustomerSupplierBean::getCustName, u -> u, (k1, k2) -> k1));
-        return null;
+        Map<String, CustomerSupplierBean> collect = customerSuppliers.stream().collect(Collectors.toMap(CustomerSupplierBean::getCustName, u -> u, (k1, k2) -> k1));
+        return collect;
     }
 
 

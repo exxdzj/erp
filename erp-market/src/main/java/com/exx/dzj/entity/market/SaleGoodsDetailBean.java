@@ -49,4 +49,6 @@ public class SaleGoodsDetailBean implements Serializable {
     private String updateUser;
 
     private Integer isSubtractInventory;
+
+    private String meterUnit;
 }

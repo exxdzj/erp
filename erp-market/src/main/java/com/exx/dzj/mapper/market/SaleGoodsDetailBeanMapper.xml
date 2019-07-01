@@ -416,8 +416,10 @@
     SGDETAIL.sales_volume ,
     SGDETAIL.remarks ,
     SGDETAIL.create_user ,
+    SINFO.meter_unit ,
     SGDETAIL.update_user
     FROM tab_sale_goods_detail SGDETAIL
+    LEFT JOIN tab_stock_info SINFO ON SINFO.stock_code = SGDETAIL.stock_code
     WHERE SGDETAIL.sale_code=#{saleCode}
   </select>
   <resultMap id="saleGoodsDetailBeanMap" type="com.exx.dzj.entity.market.SaleGoodsDetailBean">
@@ -430,6 +432,7 @@
     <result property="unitPrice" jdbcType="VARCHAR" column="unit_price" />
     <result property="realSellPrice" jdbcType="VARCHAR" column="real_sell_price" />
     <result property="priceType" jdbcType="VARCHAR" column="price_type" />
+    <result property="meterUnit" jdbcType="VARCHAR" column="meter_unit" />
     <result property="discountRate" jdbcType="DECIMAL" column="discount_rate" />
     <result property="discountAmount" jdbcType="DECIMAL" column="discount_amount" />
     <result property="salesVolume" jdbcType="DECIMAL" column="sales_volume" />
