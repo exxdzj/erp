@@ -157,6 +157,15 @@ public class SaleInfo extends BaseModule {
     @TableField(exist = false, select = false)
     private String orgCode;
 
+    @TableField(exist = false, select = false)
+    private String linkMan;
+
+    @TableField(exist = false, select = false)
+    private Integer goodsNum;
+
+    @TableField(exist = false, select = false)
+    private Date deliverGoodsTime;
+
     @LIKE
     public String getSaleCode() {
         return saleCode;

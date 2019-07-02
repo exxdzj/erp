@@ -89,6 +89,18 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     }
 
     /**
+     * @description 打印销售单
+     * @author yangyun
+     * @date 2019/1/10 0010
+     * @param saleCode
+     * @return com.exx.dzj.entity.market.SaleInfo
+     */
+    @Override
+    public SaleInfo printSalesTicket(String saleCode) {
+        return saleInfoMapper.printSalesTicket(saleCode);
+    }
+
+    /**
      * @description 销售单更新
      * @author yangyun
      * @date 2019/1/11 0011

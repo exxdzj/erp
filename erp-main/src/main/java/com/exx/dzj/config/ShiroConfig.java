@@ -49,7 +49,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/image/**", "anon");
         filterChainDefinitionMap.put("/saleexport/**", "anon");
         filterChainDefinitionMap.put("/import/**", "anon");
-
+        filterChainDefinitionMap.put("/print/**", "anon");
 
         filterChainDefinitionMap.put("/favicon.ico", "anon");
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");
@@ -59,6 +59,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/webjars/**/**.ttf", "anon");
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
         filterChainDefinitionMap.put("/v2/**", "anon");
+        filterChainDefinitionMap.put("/salesticket/printSalesTicket/**", "anon");
         //filterChainDefinitionMap.put("/swagger/**", "anon");
 
         //filterChainDefinitionMap.put("/logistics/trail/**", "anon");

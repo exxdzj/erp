@@ -100,6 +100,21 @@ public class SalesTickeContorller {
     }
 
     /**
+     * @description 打印销售单数据
+     * @param request
+     * @param response
+     * @param saleCode
+     * @return
+     */
+    @GetMapping("printSalesTicket/{saleCode}")
+    public Result printSalesTicket(HttpServletRequest request, HttpServletResponse response, @PathVariable("saleCode") String saleCode){
+        Result result = Result.responseSuccess();
+        SaleInfo saleInfo = salesTicketFacade.printSalesTicket(saleCode);
+        result.setData(saleInfo);
+        return result;
+    }
+
+    /**
      * @description 更新销售单
      * @author yangyun
      * @date 2019/1/11 0011

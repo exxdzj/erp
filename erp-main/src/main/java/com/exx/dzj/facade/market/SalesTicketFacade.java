@@ -206,6 +206,15 @@ public class SalesTicketFacade {
         return salesTicketService.querySalesTicketById(id);
     }
 
+    /**
+     * 打印销售单数据
+     * @param saleCode
+     * @return
+     */
+    public SaleInfo printSalesTicket(String saleCode) {
+        return salesTicketService.printSalesTicket(saleCode);
+    }
+
     private  List<SaleGoodsDetailBean> setGoodsSaleCode(List<SaleGoodsDetailBean> saleGoodsDetailBeans, String saleCode){
         for (SaleGoodsDetailBean s:saleGoodsDetailBeans) {
             s.setSaleCode(saleCode);

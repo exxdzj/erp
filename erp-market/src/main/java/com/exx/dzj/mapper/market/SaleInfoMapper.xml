@@ -360,16 +360,117 @@
       select="com.exx.dzj.mapper.market.SaleGoodsDetailBeanMapper.querySaleGoodsDetailBeanList" />
   </resultMap>
 
+  <resultMap id="PrintSalesTicketResult" type="com.exx.dzj.entity.market.SaleInfo">
+      <result column="sale_code" jdbcType="VARCHAR" property="saleCode" />
+      <result column="sale_date" jdbcType="DATE" property="saleDate" />
+      <result column="real_name" property="realName" />
+      <result column="cust_code" jdbcType="VARCHAR" property="custCode" />
+      <result column="cust_name" jdbcType="VARCHAR" property="custName" />
+      <result column="cust_phone_num" property="custPhoneNum" />
+      <result column="link_man" property="linkMan" />
+      <result column="total_sum" jdbcType="DECIMAL" property="totalSum" />
+      <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount" />
+      <result column="receivable_accoun" jdbcType="DECIMAL" property="receivableAccoun" />
+      <result column="receipt_num" jdbcType="VARCHAR" property="receiptNum" />
+      <result column="delivery_address" jdbcType="VARCHAR" property="deliveryAddress" />
+      <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+      <result column="goods_num" property="goodsNum" />
+      <result column="deliver_goods_time" property="deliverGoodsTime" />
+      <collection property="saleGoodsDetailBeanList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleGoodsDetailBean" javaType="java.util.List"
+                  select="com.exx.dzj.mapper.market.SaleInfoMapper.querySaleGoodsList" />
+  </resultMap>
+
+  <resultMap id="saleGoodsDetailBeanMap" type="com.exx.dzj.entity.market.SaleGoodsDetailBean">
+        <result property="stockCode" jdbcType="VARCHAR" column="stock_code" />
+        <result property="stockName" jdbcType="VARCHAR" column="stock_name" />
+        <result property="goodsNum" jdbcType="INTEGER" column="goods_num" />
+        <result property="unitPrice" jdbcType="VARCHAR" column="unit_price" />
+        <result property="meterUnit" jdbcType="VARCHAR" column="meter_unit" />
+        <result property="salesVolume" jdbcType="DECIMAL" column="sales_volume" />
+        <result property="remarks" jdbcType="VARCHAR" column="remarks" />
+  </resultMap>
+
+  <!-- 查询销售单打印 -->
+  <select id="printSalesTicket" resultMap="PrintSalesTicketResult" parameterType="java.lang.String">
+    SELECT
+        ts.sale_code,
+        ts.sale_date,
+        CONCAT_WS(' ', tu.salesman_code, tu.real_name) AS real_name,
+        ts.cust_code,
+        tc.cust_name,
+        IFNULL(
+            ts.cust_phone_num,
+            tw.phone_num
+        ) cust_phone_num,
+        IFNULL(tw.link_man, '无') AS link_man,
+        IFNULL(
+            ts.total_sum,
+            (
+                IFNULL(ts.discount_amount, 0.00) + IFNULL(ts.receivable_accoun, 0.00)
+            )
+        ) total_sum,
+        IFNULL(ts.discount_amount, 0.00) discount_amount,
+        IFNULL(ts.receivable_accoun, 0.00) receivable_accoun,
+        IFNULL(ts.received_amoun, 0.00) received_amoun,
+        ts.delivery_address,
+        ts.remarks,
+        tt.goods_num,
+        MIN(tl.deliver_goods_time) AS deliver_goods_time
+    FROM
+        tab_sale_info ts
+    INNER JOIN (
+        SELECT
+            tg.sale_code,
+            SUM(tg.goods_num) goods_num
+        FROM
+            tab_sale_goods_detail tg
+        GROUP BY
+            tg.sale_code
+    ) tt ON tt.sale_code = ts.sale_code
+    INNER JOIN tab_customer_supplier tc ON ts.cust_code = tc.cust_code
+    AND (
+        tc.cust_type = 1
+        OR tc.cust_type = 3
+    )
+    LEFT JOIN tab_sale_logistic_info tl ON tl.sale_code = ts.sale_code
+    LEFT JOIN tab_contact_way tw ON tc.cust_code = tw.cust_code
+    LEFT JOIN tab_user_info tu ON tu.user_code = ts.user_code
+    AND tu.salesman_code = ts.salesman_code
+    WHERE
+        ts.is_enable = 1
+    <if test="saleCode!=null and saleCode!=''">
+    AND ts.sale_code = #{saleCode,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <select id="querySaleGoodsList" resultMap="saleGoodsDetailBeanMap" parameterType="String">
+    SELECT
+        td.stock_code,
+        td.stock_name,
+        td.goods_num,
+        ti.meter_unit,
+        td.unit_price,
+        td.sales_volume,
+        td.remarks
+    FROM
+        tab_sale_goods_detail td
+    INNER JOIN tab_stock_info ti ON td.stock_code = ti.stock_code
+    WHERE
+        td.sale_code = #{saleCode}
+  </select>
+    
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tab_sale_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.market.SaleInfoExample">
     delete from tab_sale_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+
   <insert id="insert" parameterType="com.exx.dzj.entity.market.SaleInfo">
     insert into tab_sale_info (id, sale_code, user_code,
       salesman_code, cust_code, sale_project,
@@ -607,6 +708,7 @@
       sysdate()
     </trim>
   </insert>
+
   <select id="countByExample" parameterType="com.exx.dzj.entity.market.SaleInfoExample" resultType="java.lang.Long">
     select count(*) from tab_sale_info
     <if test="_parameter != null">
@@ -745,6 +847,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.market.SaleInfo">
     update tab_sale_info
     <set>

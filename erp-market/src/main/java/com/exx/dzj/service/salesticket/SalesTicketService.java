@@ -25,6 +25,8 @@ public interface SalesTicketService extends IService<SaleInfo> {
 
     SaleInfo querySalesTicketById(Integer id);
 
+    SaleInfo printSalesTicket(String saleCode);
+
     void updateSalesTicketById(SaleInfo saleInfo);
 
     void deleteSaleinfo(Integer id);
