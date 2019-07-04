@@ -371,6 +371,23 @@ public class SalesTicketFacade {
             }
         }
 
+        if (!CollectionUtils.isEmpty(receiptsDetailsList)){
+//            receiptsDetailsList = setReceiptsSaleCode(receiptsDetailsList, saleInfo.getSaleCode());
+//            saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+        } else {
+            String collectedAmounts = saleInfo.getCollectedAmounts();
+            BigDecimal sumCollectedAmount = saleInfo.getSumCollectedAmount();
+            boolean b = sumCollectedAmount.compareTo(BigDecimal.ZERO) > 0;
+            if (b){
+                SaleReceiptsDetails srd = new SaleReceiptsDetails();
+                srd.setCollectionAccount(collectedAmounts);
+                srd.setCollectedAmount(sumCollectedAmount);
+                srd.setSaleCode(saleInfo.getSaleCode());
+                receiptsDetailsList.add(srd);
+                saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+            }
+        }
+
         /*if(null != saleInfo && ConvertUtils.isNotEmpty(saleInfo.getPaymentStatus())
                 && (saleInfo.getPaymentStatus().equals("cs03")) || (saleInfo.getPaymentStatus().equals("cs02"))) {
             salesTicketService.syncSaleData(saleInfo);
