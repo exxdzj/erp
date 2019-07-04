@@ -369,12 +369,6 @@ public class SalesTicketFacade {
                 List<Integer> collect = saleReceiptsDetailsList.stream().map(o -> o.getId()).collect(Collectors.toList());
                 saleReceiptsDetailService.batchDeleteSalesReceiptsDeail(collect);
             }
-        }
-
-        if (!CollectionUtils.isEmpty(receiptsDetailsList)){
-//            receiptsDetailsList = setReceiptsSaleCode(receiptsDetailsList, saleInfo.getSaleCode());
-//            saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
-        } else {
             String collectedAmounts = saleInfo.getCollectedAmounts();
             BigDecimal sumCollectedAmount = saleInfo.getSumCollectedAmount();
             boolean b = sumCollectedAmount.compareTo(BigDecimal.ZERO) > 0;
@@ -387,7 +381,6 @@ public class SalesTicketFacade {
                 saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
             }
         }
-
         /*if(null != saleInfo && ConvertUtils.isNotEmpty(saleInfo.getPaymentStatus())
                 && (saleInfo.getPaymentStatus().equals("cs03")) || (saleInfo.getPaymentStatus().equals("cs02"))) {
             salesTicketService.syncSaleData(saleInfo);
