@@ -425,7 +425,7 @@
       FROM
       tab_sale_goods_detail tg
     <where>
-      <if test="saleCodes!=null and saleCodes!=''">
+      <if test="saleCodes!=null">
         <foreach collection="saleCodes" item="item" open="(" separator="OR" close=")">
           tg.sale_code = #{item,jdbcType=VARCHAR}
         </foreach>
@@ -446,7 +446,7 @@
       FROM
       tab_sale_receipts_details td
     <where>
-      <if test="saleCode!=null and saleCode!=''">
+      <if test="saleCodes!=null">
         <foreach collection="saleCodes" item="item" open="(" separator="OR" close=")">
           td.sale_code = #{item,jdbcType=VARCHAR}
         </foreach>
@@ -460,11 +460,13 @@
     LEFT JOIN tab_user_info tu ON tu.user_code = ts.user_code
     WHERE
       ts.is_enable = 1
-    <if test="saleCode!=null and saleCode!=''">
+    <if test="saleCodes!=null">
+      AND
       <foreach collection="saleCodes" item="item" open="(" separator="OR" close=")">
-        AND ts.sale_code = #{item,jdbcType=VARCHAR}
+        ts.sale_code = #{item,jdbcType=VARCHAR}
       </foreach>
     </if>
+    GROUP BY ts.sale_code
   </select>
 
   <select id="querySaleGoodsList" resultMap="saleGoodsDetailBeanMap" parameterType="String">
