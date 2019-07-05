@@ -26,7 +26,7 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
 
     SaleInfo selectByPrimaryKey(Integer id);
 
-    SaleInfo printSalesTicket(@Param("saleCode") String saleCode);
+    List<SaleInfo> printSalesTicket(@Param("saleCodes") List<String> saleCodes);
 
     int updateByExampleSelective(@Param("record") SaleInfo record, @Param("example") SaleInfoExample example);
 

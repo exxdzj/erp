@@ -392,7 +392,7 @@
   </resultMap>
 
   <!-- 查询销售单打印 -->
-  <select id="printSalesTicket" resultMap="PrintSalesTicketResult" parameterType="java.lang.String">
+  <select id="printSalesTicket" resultMap="PrintSalesTicketResult" parameterType="java.util.List">
     SELECT
       ts.sale_code,
       ts.sale_date,
@@ -425,8 +425,10 @@
       FROM
       tab_sale_goods_detail tg
     <where>
-      <if test="saleCode!=null and saleCode!=''">
-        tg.sale_code = #{saleCode,jdbcType=VARCHAR}
+      <if test="saleCodes!=null and saleCodes!=''">
+        <foreach collection="saleCodes" item="item" open="(" separator="OR" close=")">
+          tg.sale_code = #{item,jdbcType=VARCHAR}
+        </foreach>
       </if>
     </where>
     GROUP BY
@@ -445,7 +447,9 @@
       tab_sale_receipts_details td
     <where>
       <if test="saleCode!=null and saleCode!=''">
-        td.sale_code = #{saleCode,jdbcType=VARCHAR}
+        <foreach collection="saleCodes" item="item" open="(" separator="OR" close=")">
+          td.sale_code = #{item,jdbcType=VARCHAR}
+        </foreach>
       </if>
     </where>
     GROUP BY
@@ -457,7 +461,9 @@
     WHERE
       ts.is_enable = 1
     <if test="saleCode!=null and saleCode!=''">
-      AND ts.sale_code = #{saleCode,jdbcType=VARCHAR}
+      <foreach collection="saleCodes" item="item" open="(" separator="OR" close=")">
+        AND ts.sale_code = #{item,jdbcType=VARCHAR}
+      </foreach>
     </if>
   </select>
 

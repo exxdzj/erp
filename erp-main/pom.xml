@@ -117,6 +117,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -132,6 +133,7 @@
 			<artifactId>springfox-bean-validators</artifactId>
 			<version>${swagger.version}</version>
 		</dependency>
+		-->
         <dependency>
             <groupId>com.exx.dzj.log</groupId>
             <artifactId>erp-log</artifactId>

@@ -2,6 +2,7 @@ package com.exx.dzj.service.salesticket.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.exx.dzj.annotation.SaleLog;
 import com.exx.dzj.entity.market.*;
 import com.exx.dzj.mapper.market.SaleInfoMapper;
 import com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper;
@@ -37,6 +38,7 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
      * @return void
      */
     @Override
+    @SaleLog(operate = "新增销售收款记录")
     public void saveSaleReceiptsDetails(SaleReceiptsDetails saleReceiptsDetails) {
         saleReceiptsDetailsMapper.insertSelective(saleReceiptsDetails);
     }
@@ -49,6 +51,7 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
      * @return void
      */
     @Override
+    @SaleLog(operate = "新增销售单")
     public void saveSaleInfo(SaleInfo saleInfo) {
         saleInfoMapper.insertSelective(saleInfo);
     }
@@ -72,6 +75,7 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
      * @return
      */
     @Override
+    @SaleLog(operate = "查询销售单列表")
     public List<SaleInfo> getSalesTicketList(SaleInfoQuery query, QueryWrapper queryWrapper) {
         return saleInfoMapper.getSalesTicketList(query, queryWrapper);
     }
@@ -84,6 +88,7 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
      * @return com.exx.dzj.entity.market.SaleInfo
      */
     @Override
+    @SaleLog(operate = "查询销售单详情")
     public SaleInfo querySalesTicketById(Integer id) {
         return saleInfoMapper.selectByPrimaryKey(id);
     }
@@ -92,12 +97,12 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
      * @description 打印销售单
      * @author yangyun
      * @date 2019/1/10 0010
-     * @param saleCode
+     * @param saleCodes
      * @return com.exx.dzj.entity.market.SaleInfo
      */
     @Override
-    public SaleInfo printSalesTicket(String saleCode) {
-        return saleInfoMapper.printSalesTicket(saleCode);
+    public List<SaleInfo> printSalesTicket(List<String> saleCodes) {
+        return saleInfoMapper.printSalesTicket(saleCodes);
     }
 
     /**
@@ -108,16 +113,19 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
      * @return void
      */
     @Override
+    @SaleLog(operate = "更新销售单")
     public void updateSalesTicketById(SaleInfo saleInfo) {
         saleInfoMapper.updateByPrimaryKeySelective(saleInfo);
     }
 
     @Override
+    @SaleLog(operate = "删除销售单")
     public void deleteSaleinfo(Integer id) {
         saleInfoMapper.deleteByPrimaryKey(id);
     }
 
     @Override
+    @SaleLog(operate = "删除销售单物流信息")
     public void logisticsInfoDel(Integer id) {
         saleInfoMapper.logisticsInfoDel(id);
     }

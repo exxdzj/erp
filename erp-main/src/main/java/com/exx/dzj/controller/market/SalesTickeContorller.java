@@ -10,7 +10,9 @@ import com.exx.dzj.facade.market.SalesTicketFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.query.QueryGenerator;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.MathUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,6 +30,7 @@ import java.util.List;
  * 销售单
  */
 @RestController
+@Api(value = "销售单接口服务", description = "销售单接口服务")
 @RequestMapping("salesticket/")
 public class SalesTickeContorller {
 
@@ -41,6 +46,8 @@ public class SalesTickeContorller {
      * @param saleInfo
      * @return com.exx.dzj.result.Result
      */
+    @ApiOperation(nickname = "saveSalesTicket", value="新增销售单", notes="新增销售单", httpMethod = "POST")
+    @ApiImplicitParam(name = "saleInfo", value = "销售单数据", required = true, dataType = "SaleInfo", paramType = "body")
     @PostMapping("saveSalesTicket")
     public Result saveSalesTicket(HttpServletRequest request, HttpServletResponse response, @RequestBody SaleInfo saleInfo){
         Result result = Result.responseSuccess();
@@ -66,7 +73,7 @@ public class SalesTickeContorller {
     @GetMapping("querysalesticket")
     @DataPermission(pageComponent="sale/saleticket/saleTicketList")
     @ApiOperation(nickname = "querysalesticket", value="销售单列表", notes="销售单列表", httpMethod = "GET")
-    @ApiImplicitParam(name = "query", value = "查询条件和分页参数", required = true, dataType = "com.exx.dzj.entity.market.SaleInfoQuery")
+    @ApiImplicitParam(name = "query", value = "查询条件和分页参数", required = true, dataType = "com.exx.dzj.entity.market.SaleInfoQuery", paramType = "body")
     public Result querySalesTickets(HttpServletRequest request, HttpServletResponse response, SaleInfoQuery query){
         Result result = Result.responseSuccess();
         SaleInfo saleInfo = new SaleInfo();
@@ -91,6 +98,8 @@ public class SalesTickeContorller {
      * @param id
      * @return com.exx.dzj.result.Result
      */
+    @ApiOperation(nickname = "querysalesticket/{id}", value="查询销售单详情", notes="查询销售单详情", httpMethod = "GET")
+    @ApiImplicitParam(name = "id", value = "销售单ID", required = true, dataType = "Integer", paramType = "path")
     @GetMapping("querysalesticket/{id}")
     public Result querySalesTicket(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Integer id){
         Result result = Result.responseSuccess();
@@ -106,11 +115,42 @@ public class SalesTickeContorller {
      * @param saleCode
      * @return
      */
-    @GetMapping("printSalesTicket/{saleCode}")
+    /*@GetMapping("printSalesTicket/{saleCode}")
     public Result printSalesTicket(HttpServletRequest request, HttpServletResponse response, @PathVariable("saleCode") String saleCode){
         Result result = Result.responseSuccess();
         SaleInfo saleInfo = salesTicketFacade.printSalesTicket(saleCode);
         result.setData(saleInfo);
+        return result;
+    }*/
+
+    /**
+     * 打印销售单数据
+     * @param request
+     * @param response
+     * @param saleCodes
+     * @return
+     */
+    @ApiOperation(nickname = "printSalesTicket", value="打印销售单", notes="打印销售单", httpMethod = "GET")
+    @ApiImplicitParam(name = "saleCodes", value = "销售单code(多个以逗号分隔)", required = true, dataType = "String", paramType = "query")
+    @GetMapping("printSalesTicket")
+    public Result printSalesTicket(HttpServletRequest request, HttpServletResponse response,
+                                   @RequestParam(value = "saleCodes", required = true) String saleCodes) {
+        Result result = Result.responseSuccess();
+        if(ConvertUtils.isEmpty(saleCodes)) {
+            result.setCode(400);
+            result.setMsg("请选择要打印的销售单数据!");
+            return result;
+        }
+        List<String> list = new ArrayList<>();
+        if(saleCodes.contains(",")) {
+            String[] saleCodeArr = saleCodes.split(",");
+            if(null != saleCodeArr && saleCodeArr.length > 0) {
+                list = new ArrayList<>(Arrays.asList(saleCodeArr));
+            }
+        }else {
+            list.add(saleCodes);
+        }
+        result.setData(salesTicketFacade.printSalesTicket(list));
         return result;
     }
 
@@ -123,6 +163,8 @@ public class SalesTickeContorller {
      * @param saleInfo
      * @return com.exx.dzj.result.Result
      */
+    @ApiOperation(nickname = "saveSalesTicket", value="更新销售单", notes="更新销售单", httpMethod = "PUT")
+    @ApiImplicitParam(name = "saleInfo", value = "更新销售单", required = true, dataType = "com.exx.dzj.entity.market.SaleInfo", paramType = "body")
     @PutMapping("saveSalesTicket")
     public Result updateSaleTicket(HttpServletRequest request, HttpServletResponse response, @RequestBody SaleInfo saleInfo){
         Result result = Result.responseSuccess();

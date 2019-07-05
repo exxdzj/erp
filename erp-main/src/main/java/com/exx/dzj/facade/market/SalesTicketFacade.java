@@ -208,11 +208,11 @@ public class SalesTicketFacade {
 
     /**
      * 打印销售单数据
-     * @param saleCode
+     * @param saleCodes
      * @return
      */
-    public SaleInfo printSalesTicket(String saleCode) {
-        return salesTicketService.printSalesTicket(saleCode);
+    public List<SaleInfo> printSalesTicket(List<String> saleCodes) {
+        return salesTicketService.printSalesTicket(saleCodes);
     }
 
     private  List<SaleGoodsDetailBean> setGoodsSaleCode(List<SaleGoodsDetailBean> saleGoodsDetailBeans, String saleCode){
