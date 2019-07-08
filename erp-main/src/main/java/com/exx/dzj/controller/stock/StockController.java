@@ -45,6 +45,16 @@ public class StockController {
         return result;
     }
 
+    @GetMapping("queryStockWarningList")
+    public Result queryStockWarningList(HttpServletRequest request, HttpServletResponse response, String query) {
+        Result result = Result.responseSuccess();
+        StockQuery queryParam = JsonUtils.jsonToPojo(query, StockQuery.class);
+        int pageNum = queryParam != null ? queryParam.getPage() : CommonConstant.DEFAULT_PAGE_NUM;
+        int pageSize = queryParam != null ? queryParam.getLimit() : CommonConstant.DEFAULT_PAGE_SIZE;
+        result = stockFacade.queryStockWarningList(pageNum, pageSize, queryParam);
+        return result;
+    }
+
     /**
      * 获取存货信息
      * @param request

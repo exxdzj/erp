@@ -23,10 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author
@@ -61,6 +59,17 @@ public class StockServiceImpl implements StockService {
         Result result = Result.responseSuccess();
         PageHelper.startPage(pageNum, pageSize);
         List<StockModel> list = stockMapper.queryStockList(query);
+        ERPage<StockModel> page = new ERPage<>(list);
+        result.setData(page);
+        return result;
+    }
+
+    @Override
+    public Result queryStockWarningList(int pageNum, int pageSize, StockQuery query) {
+        Result result = Result.responseSuccess();
+        PageHelper.startPage(pageNum, pageSize);
+        List<StockModel> list = stockMapper.queryStockWarningList(query);
+
         ERPage<StockModel> page = new ERPage<>(list);
         result.setData(page);
         return result;

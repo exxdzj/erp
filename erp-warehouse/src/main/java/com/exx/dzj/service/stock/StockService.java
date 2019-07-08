@@ -20,6 +20,7 @@ public interface StockService {
      * @return
      */
     Result queryStockList(int pageNum, int pageSize, StockQuery query);
+    Result queryStockWarningList(int pageNum, int pageSize, StockQuery query);
 
     /**
      * 获取 存货信息

@@ -24,6 +24,7 @@ public interface StockInfoMapper {
      * @return
      */
     List<StockModel> queryStockList(StockQuery param);
+    List<StockModel> queryStockWarningList(StockQuery param);
 
     /**
      * 查询存货信息

@@ -36,7 +36,7 @@ public class StockFacade {
     @Autowired
     UserTokenFacade userTokenFacade;
 
-    /**
+    /**queryStockList
      * 查询 客户或供应商列表数据
      * @param pageNum
      * @param pageSize
@@ -45,6 +45,10 @@ public class StockFacade {
      */
     public Result queryStockList(int pageNum, int pageSize, StockQuery query) {
         return stockInfoService.queryStockList(pageNum, pageSize, query);
+    }
+
+    public Result queryStockWarningList(int pageNum, int pageSize, StockQuery query) {
+        return stockInfoService.queryStockWarningList(pageNum, pageSize, query);
     }
 
     /**
