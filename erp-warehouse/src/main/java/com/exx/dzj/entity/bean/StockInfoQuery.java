@@ -4,6 +4,8 @@ import com.exx.dzj.entity.stock.StockInfo;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.List;
+
 
 /**
  * @author yangyun
@@ -16,6 +18,6 @@ public class StockInfoQuery extends StockInfo {
 
     private String startDate;
     private String endDate;
-    private Integer businessType; // 业务类型 1 销货 2 退货
+    private List<Integer> businessType; // 业务类型 1 销货 2 退货
     private Integer gross; // 是否计算毛利 1 是 0否
 }

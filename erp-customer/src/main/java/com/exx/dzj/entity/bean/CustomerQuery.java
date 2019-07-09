@@ -17,7 +17,7 @@ public class CustomerQuery extends CustomerSupplierBean {
 
     private String startDate;
     private String endDate;
-    private Integer businessType;
+    private List<Integer> businessType;
     private Integer fromCustId;
     private Integer toCustId;
 }

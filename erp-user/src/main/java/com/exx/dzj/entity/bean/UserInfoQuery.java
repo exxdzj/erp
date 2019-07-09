@@ -17,7 +17,7 @@ public class UserInfoQuery extends UserInfo {
     private static final long serialVersionUID = -1249941446641828856L;
     private String startDate;
     private String endDate;
-    private Integer businessType; // 业务类型 1 销货 2 退货
+    private List<Integer> businessType; // 业务类型 1 销货 2 退货
     private String paymentStatu; // 收款状态
 //    private Integer gross; // 是否计算毛利 1 是 0否
 

@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
-
+/**
+ * @description 采购报表
+ * @author yangyun
+ * @date 2019/7/9 0009
+ */
 @RestController
 @RequestMapping("purchasereportforms")
 public class PurchaseReportFormsController {
@@ -20,6 +23,13 @@ public class PurchaseReportFormsController {
     @Autowired
     private PurchaseReportFacade purchaseReportFacade;
 
+    /**
+     * @description: 采购单金额明细
+     * @author yangyun
+     * @date 2019/7/9 0009
+     * @param query
+     * @return com.exx.dzj.result.Result
+     */
     @GetMapping("querypurchasefeepaydetail")
     public Result queryPurchaseFeePayDetail (PurchaseReportQuery query){
         Result result = Result.responseSuccess();

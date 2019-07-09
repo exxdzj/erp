@@ -83,10 +83,6 @@ public class SaleExportUtils {
      */
     public static ExcelWriter inventorySaleExport (ServletOutputStream outputStream, List<StockTypeReport> stockTypeReports, StockInfoQuery query, UserVo userVo) throws IOException {
         int count = 0;
-
-        String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
-
-
         ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
         if (CollectionUtils.isEmpty(stockTypeReports)){
             return writer;
@@ -108,7 +104,7 @@ public class SaleExportUtils {
         map.put(12,4000);
         map.put(13,4000);
 
-        String sheetName = ExportFileNameEnum.INVENTORY_SALE_NAME.getValue() +" (" + value + ")";
+        String sheetName = ExportFileNameEnum.INVENTORY_SALE_NAME.getValue();
         Sheet sheet = gainSheet(map, sheetName);
 
         Table title = new Table(1);
@@ -232,8 +228,6 @@ public class SaleExportUtils {
      */
     public static ExcelWriter salesManSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query, UserVo userVo){
         int count = 0;
-        String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
-
         ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
 
         Map<Integer, Integer> map = new HashMap<>();
@@ -252,7 +246,7 @@ public class SaleExportUtils {
         map.put(12,4000);
         map.put(13,4000);
 
-        String sheetName = ExportFileNameEnum.INVENTORY_SALE_NAME.getValue() +" (" + value + ")";
+        String sheetName = ExportFileNameEnum.INVENTORY_SALE_NAME.getValue();
         Sheet sheet = gainSheet(map, sheetName);
 
         Table title = new Table(1);
@@ -371,8 +365,6 @@ public class SaleExportUtils {
 
     public static ExcelWriter customerSaleExport (ServletOutputStream outputStream, Map<String, Object> mapData, CustomerQuery query, UserVo userVo){
         int count = 0;
-        String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
-
         ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
 
         Map<Integer, Integer> map = new HashMap<>();
@@ -388,7 +380,7 @@ public class SaleExportUtils {
         map.put(9,4000);
         map.put(10,4000);
 
-        String sheetName = ExportFileNameEnum.CUSTOMER_SALE_NAME.getValue() +" (" + value + ")";
+        String sheetName = ExportFileNameEnum.CUSTOMER_SALE_NAME.getValue();
         Sheet sheet = gainSheet(map, sheetName);
 
         Table title = new Table(1);
@@ -510,8 +502,6 @@ public class SaleExportUtils {
      */
     public static ExcelWriter SaleManDeductionExport (ServletOutputStream outputStream, Map<String, Object> mapData, UserInfoQuery query, UserVo userVo){
         int count = 0;
-        String value = ExportFileNameEnum.getExportFileNameEnum(query.getBusinessType()).getValue();
-
         ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
 
         Map<Integer, Integer> map = new HashMap<>();
@@ -527,7 +517,7 @@ public class SaleExportUtils {
         map.put(9,4000);
 
 
-        String sheetName = ExportFileNameEnum.SALEMAN_SALE_DEDUCTION.getValue() +" (" + value + ")";
+        String sheetName = ExportFileNameEnum.SALEMAN_SALE_DEDUCTION.getValue();
         Sheet sheet = gainSheet(map, sheetName);
 
         Table title = new Table(1);
