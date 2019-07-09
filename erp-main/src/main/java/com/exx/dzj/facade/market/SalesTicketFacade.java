@@ -230,7 +230,7 @@ public class SalesTicketFacade {
     }
 
     private SaleInfo setPaymentStatus (SaleInfo saleInfo){
-        if (StringUtils.isEmpty(saleInfo.getPaymentStatus())){
+        if (StringUtils.isEmpty(saleInfo.getPaymentStatus()) && saleInfo.getSumCollectedAmount() == null){
             saleInfo.setPaymentStatus("cs01");
         } else {
             if (saleInfo.getSumCollectedAmount().doubleValue() == 0){
