@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exx.dzj.mapper.purchase.PurchaseReportMapper">
+    <select id="queryPurchaseFeePayDetail" parameterType="com.exx.dzj.bean.PurchaseReportQuery" resultMap="purchaseFeePay">
+        SELECT
+            pinfo.purchase_date, pinfo.purchase_code, pinfo.user_code, uinfo.real_name,
+            pinfo.cust_code, csinfo.cust_name,
+            CASE
+              WHEN goods.discount_rate > 0 THEN goods.discount_rate/100
+            else 1
+              END discountRate,
+        IFNULL(goods.real_sell_price, 0) real_sell_price,
+        goods.stock_address,
+        sinfo.stock_code,
+        sinfo.stock_name,
+        IFNULL(goods.goods_num, 0) goods_num
+        FROM tab_purchase_info pinfo
+            LEFT JOIN tab_user_info uinfo ON pinfo.user_code = uinfo.user_code
+            LEFT JOIN tab_customer_supplier csinfo ON pinfo.cust_code = csinfo.cust_code AND (csinfo.cust_type = 2 OR csinfo.cust_type = 3)
+            LEFT JOIN tab_purchase_goods_detail goods ON pinfo.purchase_code = goods.purchase_code
+            LEFT JOIN tab_stock_info sinfo ON sinfo.stock_code = goods.stock_code
+        WHERE 1=1
+                <if test="startDate != null and startDate != ''">
+                    AND <![CDATA[pinfo.purchase_date >= DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s')]]>
+                </if>
+                <if test="endDate != null and endDate != ''">
+                    AND <![CDATA[pinfo.purchase_date <= DATE_FORMAT(#{endDate},'%Y-%m-%d 23:59:59')]]>
+                </if>
+                <if test="fromSupplierId != null and fromSupplierId != ''">
+                    AND <![CDATA[csinfo.id >= #{fromSupplierId}]]>
+                </if>
+                <if test="toSupplierId != null and toSupplierId != ''">
+                    AND <![CDATA[csinfo.id <= #{toSupplierId}]]>
+                </if>
+                ORDER BY pinfo.purchase_date DESC;
+    </select>
+
+    <resultMap id="purchaseFeePay" type="com.exx.dzj.entity.purchase.PurchaseInfoBaseReport">
+        <result column="purchase_date" property="purchaseDate"/>
+        <result column="purchase_code" property="purchaseCode"/>
+        <result column="user_code" property="userCode"/>
+        <result column="real_name" property="realName"/>
+        <result column="cust_code" property="custCode"/>
+        <result column="cust_name" property="custName"/>
+        <result column="stock_code" property="stockCode"/>
+        <result column="stock_name" property="stockName"/>
+        <result column="discountRate" property="discountRate"/>
+        <result column="real_sell_price" property="realSellPrice"/>
+        <result column="goods_num" property="goodsNum"/>
+        <result column="stock_address" property="stockAddress"/>
+    </resultMap>
+</mapper>

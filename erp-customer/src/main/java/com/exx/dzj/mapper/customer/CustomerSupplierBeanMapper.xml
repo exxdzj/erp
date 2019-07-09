@@ -653,7 +653,7 @@
   <select id="queryCustomerSelect" resultType="com.exx.dzj.entity.customer.CustomerSupplierBean">
     SELECT c.id AS id, c.cust_code AS custCode, c.cust_name AS custName FROM tab_customer_supplier c
     WHERE 1 = 1
-    AND (c.cust_type = 1 OR c.cust_type = 3)
+    AND (c.cust_type = #{type} OR c.cust_type = 3)
       <if test="custName != null and custName != ''">
         AND c.cust_name REGEXP #{custName}
       </if>

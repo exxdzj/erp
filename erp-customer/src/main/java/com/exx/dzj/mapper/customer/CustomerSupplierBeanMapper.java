@@ -77,5 +77,5 @@ public interface CustomerSupplierBeanMapper {
 
     List<InsuranceCustomer> queryIncreaseCutomerForMonth();
 
-    List<CustomerSupplierBean> queryCustomerSelect(@Param("custName") String custName);
+    List<CustomerSupplierBean> queryCustomerSelect(@Param("custName") String custName, @Param("type") Integer type);
 }

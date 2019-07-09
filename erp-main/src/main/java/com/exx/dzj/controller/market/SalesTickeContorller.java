@@ -342,7 +342,8 @@ public class SalesTickeContorller {
         int pageNum = MathUtil.toInt(request.getParameter("pageNum"), CommonConstant.DEFAULT_VALUE_ONE);
         int pageSize = MathUtil.toInt(request.getParameter("pageSize"), CommonConstant.DEFAULT_PAGE_SIZE);
         String custName = request.getParameter("custName");
-        ERPage<CustomerSupplierBean> page = salesTicketFacade.queryCustomerSelect(pageNum, pageSize, custName);
+        int type = Integer.parseInt(request.getParameter("type"));
+        ERPage<CustomerSupplierBean> page = salesTicketFacade.queryCustomerSelect(pageNum, pageSize, custName, type);
         result.setData(page);
         return result;
     }

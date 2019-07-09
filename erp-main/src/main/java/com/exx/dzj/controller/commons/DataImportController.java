@@ -89,7 +89,7 @@ public class DataImportController {
                 case 2: // 采购单
                     List<Object> purchaseList = ExcelUtil.readExcel(excelFile, new PurchaseModel(), CommonConstant.DEFAULT_VALUE_ONE);
 
-                    List<PurchaseInfo> purchaseInfoList = ProccessImportDataUtil.proccessPurchaseInfo(purchaseList, stringMap, customerSupplierBeanMap);
+                    List<PurchaseInfo> purchaseInfoList = ProccessImportDataUtil.proccessPurchaseInfo(purchaseList, userInfoMap, stringMap, customerSupplierBeanMap);
                     purchaseTicketFacade.importData(purchaseInfoList);
                     break;
                 case 3: // 存货

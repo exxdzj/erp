@@ -82,7 +82,7 @@ public class PurchaseTicketFacade {
 
             for (PurchaseGoodsDetailBean pdb : purchaseGoodsDetailBeans){
                 divide = hundred.subtract(pdb.getDiscountRate()).divide(hundred);
-                price = pdb.getUnitPrice().multiply(new BigDecimal(pdb.getGoodsNum()));
+                price = pdb.getRealSellPrice().multiply(new BigDecimal(pdb.getGoodsNum()));
 
                 receivableAccoun = receivableAccoun.add(price.multiply(divide));
 

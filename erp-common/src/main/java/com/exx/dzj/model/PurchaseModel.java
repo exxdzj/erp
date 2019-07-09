@@ -95,7 +95,7 @@ public class PurchaseModel extends BaseRowModel {
     private Double goodsNum;
 
     @ExcelProperty(value = "单价", index = 27)
-    private BigDecimal unitPrice;
+    private BigDecimal realSellPrice;
 
     @ExcelProperty(value = "折扣率%", index = 28)
     private BigDecimal discountRate;

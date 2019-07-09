@@ -1,6 +1,7 @@
 package com.exx.dzj.controller.commons.dataproccess;
 
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.controller.commons.DataImportUtil;
 import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
@@ -74,7 +75,7 @@ public class ProccessImportDataUtil {
         purchaseGoodsDetail.setStockAddressCode(s);
     }
 
-    public static List<PurchaseInfo> proccessPurchaseInfo(List<Object> purchaseList, Map<String, String> stringMap, Map<String, CustomerSupplierBean> customerSupplierBeanMap){
+    public static List<PurchaseInfo> proccessPurchaseInfo(List<Object> purchaseList, Map<String, UserInfo> userInfoMap, Map<String, String> stringMap, Map<String, CustomerSupplierBean> customerSupplierBeanMap){
         List<PurchaseInfo> list = new ArrayList<>();
         Map<String, PurchaseInfo> purchaseInfoMap = new ConcurrentHashMap<>();
         Map<BigDecimal, PurchaseReceiptsDetailsBean> purchaseReceiptsMap = new ConcurrentHashMap<>();
@@ -119,7 +120,7 @@ public class ProccessImportDataUtil {
                 purchaseInfo.setPurchaseDate(new Timestamp(purhcaseDate.getTime()));
             }
 
-            setPurchaseInfo(purchaseInfo, stringMap, customerSupplierBeanMap);
+            setPurchaseInfo(purchaseInfo, userInfoMap, stringMap, customerSupplierBeanMap);
 
             purchaseInfoMap.put(purhcaseCode, purchaseInfo);
 
@@ -144,7 +145,7 @@ public class ProccessImportDataUtil {
         return list;
     }
 
-    private static void setPurchaseInfo (PurchaseInfo purchaseInfo, Map<String, String> stringMap,Map<String, CustomerSupplierBean> customerSupplierBeanMap){
+    private static void setPurchaseInfo (PurchaseInfo purchaseInfo, Map<String, UserInfo> userInfoMap, Map<String, String> stringMap,Map<String, CustomerSupplierBean> customerSupplierBeanMap){
         String custCode = purchaseInfo.getCustCode();
         if (StringUtils.isNotEmpty(custCode)){
             CustomerSupplierBean supplierBean = customerSupplierBeanMap.get(custCode);
@@ -152,6 +153,26 @@ public class ProccessImportDataUtil {
             if (supplierBean != null){
 
                 purchaseInfo.setCustCode(supplierBean.getCustCode());
+            }
+        }
+
+        String userCode = purchaseInfo.getUserCode();
+        if (StringUtils.isNotEmpty(userCode)){
+            boolean flag = DataImportUtil.strIshasNum(userCode);
+            if (flag){
+                int index = 0;
+                String substring = "";
+                if (userCode.matches(".*" + REG + ".*")) {
+                    index = userCode.split(REG).length;
+                    if (index > 0){
+                        index = userCode.split(REG)[0].length();
+                        substring = userCode.substring(0, index);
+                        purchaseInfo.setUserCode(userInfoMap.get(substring)  == null ? substring : userInfoMap.get(substring).getUserCode());
+                        purchaseInfo.setSalesmanCode(substring);
+                    }
+                }
+            } else {
+                purchaseInfo.setSalesmanCode(purchaseInfo.getUserCode());
             }
         }
     }

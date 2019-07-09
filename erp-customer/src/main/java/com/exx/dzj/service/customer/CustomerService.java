@@ -81,5 +81,5 @@ public interface CustomerService {
 
     List<InsuranceCustomer> queryIncreaseCutomerForMonth ();
 
-    List<CustomerSupplierBean> queryCustomerSelect(String custName);
+    List<CustomerSupplierBean> queryCustomerSelect(String custName, Integer type);
 }

@@ -207,7 +207,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerSupplierBean> queryCustomerSelect(String custName) {
-        return csMapper.queryCustomerSelect(custName);
+    public List<CustomerSupplierBean> queryCustomerSelect(String custName, Integer type) {
+        return csMapper.queryCustomerSelect(custName, type);
     }
 }

@@ -592,9 +592,9 @@ public class SalesTicketFacade {
         return salesTicketService.querySubordinateCompanySelect();
     }
 
-    public ERPage<CustomerSupplierBean> queryCustomerSelect (int pageNum, int pageSize, String custName){
+    public ERPage<CustomerSupplierBean> queryCustomerSelect (int pageNum, int pageSize, String custName, Integer type){
         PageHelper.startPage(pageNum, pageSize);
-        List<CustomerSupplierBean> customerSupplierBeans = customerService.queryCustomerSelect(custName);
+        List<CustomerSupplierBean> customerSupplierBeans = customerService.queryCustomerSelect(custName, type);
         ERPage<CustomerSupplierBean> saleInfoPage = new ERPage<>(customerSupplierBeans);
         return saleInfoPage;
     }
