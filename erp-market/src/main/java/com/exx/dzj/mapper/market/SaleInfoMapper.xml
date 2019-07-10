@@ -385,6 +385,8 @@
     <result property="stockName" jdbcType="VARCHAR" column="stock_name" />
     <result property="goodsNum" jdbcType="INTEGER" column="goods_num" />
     <result property="unitPrice" jdbcType="VARCHAR" column="unit_price" />
+    <result property="realSellPrice" jdbcType="VARCHAR" column="real_sell_price" />
+    <result property="discountRate" jdbcType="VARCHAR" column="discount_rate" />
     <result property="meterUnit" jdbcType="VARCHAR" column="meter_unit" />
     <result property="salesVolume" jdbcType="DECIMAL" column="sales_volume" />
     <result property="discountAmount" jdbcType="DECIMAL" column="discount_amount" />
@@ -476,6 +478,8 @@
         td.goods_num,
         ti.meter_unit,
         td.unit_price,
+        IFNULL(td.real_sell_price, td.unit_price) real_sell_price,
+        (td.unit_price - IFNULL(td.real_sell_price, td.unit_price)) as discount_rate,
         td.sales_volume,
         td.discount_amount,
         td.remarks
