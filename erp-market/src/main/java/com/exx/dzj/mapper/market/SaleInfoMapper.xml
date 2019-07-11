@@ -1025,11 +1025,6 @@
       FROM tab_sale_info sinfo
 	  WHERE sinfo.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
 	        GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
-	/*SELECT SUM(receivable_accoun) AS receivableAccoun, subordinate_company_code AS subordinateCompanyCode,
-      subordinate_company_name AS subordinateCompanyName
-      FROM tab_sale_info sinfo
-	  WHERE sinfo.sale_date BETWEEN DATE_FORMAT('2019-06-01','%Y-%m-%d %H:%i:%s') AND DATE_FORMAT("2019-06-01",'%Y-%m-%d 23:59:59')
-	        GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC*/
   </select>
 
   <select id="querySumSalesOnMonth" resultType="com.exx.dzj.entity.market.SaleInfo">
@@ -1042,23 +1037,10 @@
   </select>
 
     <select id="queryAdditionalSumSalesOnDay" resultType="com.exx.dzj.entity.market.SaleInfo">
-    /*SELECT
-        SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
-        +
-        sum((SELECT
-                sum(CASE
-                        WHEN bb.real_sell_price > 0 THEN bb.goods_num * bb.real_sell_price
-                    ELSE 0
-                    END)
-              FROM tab_sale_goods_detail bb WHERE bb.sale_code = s.sale_code))
-    FROM tab_sale_info s
-    WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
-                      GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC*/
-
-
     SELECT
-        IFNULL(IFNULL(SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb')),0)
-        +
+        IFNULL(
+        /*IFNULL(SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb')),0)
+        +*/
         sum((SELECT
                 sum(price.standard_buy_price * bb.goods_num)
               FROM tab_sale_goods_detail bb
@@ -1071,23 +1053,10 @@
   </select>
 
     <select id="queryAdditionalSumSalesOnMonth" resultType="com.exx.dzj.entity.market.SaleInfo">
-    /*SELECT
-        SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb'))
-        +
-        sum((SELECT
-                sum(CASE
-                        WHEN bb.real_sell_price > 0 THEN bb.goods_num * bb.real_sell_price
-                    ELSE 0
-                    END)
-              FROM tab_sale_goods_detail bb WHERE bb.sale_code = s.sale_code))
-    FROM tab_sale_info s
-    WHERE s.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
-                      AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
-                      GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC*/
-
    SELECT
-        IFNULL(IFNULL(SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb')),0)
-        +
+        IFNULL(
+        /*IFNULL(SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb')),0)
+        +*/
         sum((SELECT
                 sum(bb.goods_num * price.standard_buy_price)
               FROM tab_sale_goods_detail bb
