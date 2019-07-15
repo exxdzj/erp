@@ -1,6 +1,8 @@
 package com.exx.dzj.controller.reportforms.export;
 
 import com.alibaba.excel.ExcelWriter;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.exx.dzj.annotation.DataPermission;
 import com.exx.dzj.bean.SaleDetailReportQuery;
 import com.exx.dzj.common.export.SaleExportUtils;
 import com.exx.dzj.constant.CommonConstant;
@@ -10,17 +12,19 @@ import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleInfoQuery;
 import com.exx.dzj.entity.market.SaleListInfo;
-import com.exx.dzj.entity.statistics.sales.SaleInfoReport;
 import com.exx.dzj.entity.statistics.sales.StockTypeReport;
 import com.exx.dzj.entity.user.UserVo;
-import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.reportforms.sale.SaleTicketReportFacade;
 import com.exx.dzj.facade.user.UserFacade;
+import com.exx.dzj.query.QueryGenerator;
 import com.exx.dzj.util.enums.ExportFileNameEnum;
 import com.exx.dzj.util.excel.ExcelUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -181,12 +185,12 @@ public class SaleExportController {
             int type = query.getType();
             switch (type){
                 case CommonConstant.DEFAULT_VALUE_ONE:
-                    list = saleTicketReportFacade.exportSaleList(query);
+                    list = saleTicketReportFacade.exportSaleList(query, null);
                     writer = SaleExportUtils.exportSaleList(outputStream, list, query.getFieldList());
 //                    writer = SaleExportUtils.exportSaleList2(outputStream, list);
                     break;
                 case CommonConstant.DEFAULT_VALUE_TWO:
-                    list = saleTicketReportFacade.querySalesListForIds(query);
+                    list = saleTicketReportFacade.querySalesListForIds(query, null);
 //                    writer = SaleExportUtils.exportSaleListTenet(outputStream, list, query.getFieldList());
                     SaleExportUtils.exportSaleListTenet2(outputStream, list);
                     break;
@@ -203,6 +207,7 @@ public class SaleExportController {
         }
     }
 
+    @DataPermission(pageComponent="sale/saleticket/saleTicketList")
     @GetMapping("exportSaleList2/{realName}")
     public void exportSaleList2 (HttpServletRequest request, HttpServletResponse response, @PathVariable("realName") String realName, SaleInfoQuery query){
         try {
@@ -212,16 +217,22 @@ public class SaleExportController {
             response.setContentType("application/x-excel");
             response.setHeader("Content-Disposition", "attachment;filename=" + new String(("Sale-" + code + ".xlsx").getBytes(), "ISO-8859-1"));
 
+            SaleInfo saleInfo = new SaleInfo();
+            saleInfo.setSaleReceiptsDetailsList(null);
+            saleInfo.setSaleGoodsDetailBeanList(null);
+            // 查询条件
+            QueryWrapper<SaleInfo> queryWrapper = QueryGenerator.initQueryWrapper(saleInfo, request.getParameterMap());
+
             ServletOutputStream outputStream = response.getOutputStream();
             ExcelWriter writer = null;
             int type = query.getType();
             switch (type){
                 case CommonConstant.DEFAULT_VALUE_ONE:
-                    list = saleTicketReportFacade.exportSaleList(query);
+                    list = saleTicketReportFacade.exportSaleList(query, queryWrapper);
                     writer = SaleExportUtils.exportSaleListTenet2(outputStream, list);
                     break;
                 case CommonConstant.DEFAULT_VALUE_TWO:
-                    list = saleTicketReportFacade.querySalesListForIds(query);
+                    list = saleTicketReportFacade.querySalesListForIds(query, queryWrapper);
                     writer = SaleExportUtils.exportSaleList2(outputStream, list);
                     break;
                 default:

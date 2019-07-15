@@ -1,5 +1,6 @@
 package com.exx.dzj.facade.reportforms.sale;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.bean.SaleDetailReportQuery;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.CustomerQuery;
@@ -507,9 +508,9 @@ public class SaleTicketReportFacade {
         return deptSaleReports;
     }
 
-    public List<SaleListInfo> querySalesListForIds(SaleInfoQuery query){
+    public List<SaleListInfo> querySalesListForIds(SaleInfoQuery query, QueryWrapper queryWrapper){
 
-        List<SaleListInfo> saleInfoList = salesTicketService.querySalesListForIds(query);
+        List<SaleListInfo> saleInfoList = salesTicketService.querySalesListForIds(query, queryWrapper);
 
 //        for(SaleInfo si : saleInfoList){
 //            SalesClassesEnum.getSalesClassesEnum(si.getIsReceipt()).
@@ -518,8 +519,8 @@ public class SaleTicketReportFacade {
         return saleInfoList;
     }
 
-    public List<SaleListInfo> exportSaleList (SaleInfoQuery query){
-        List<SaleListInfo> saleInfoList = salesTicketService.exportSaleList(query);
+    public List<SaleListInfo> exportSaleList (SaleInfoQuery query, QueryWrapper queryWrapper){
+        List<SaleListInfo> saleInfoList = salesTicketService.exportSaleList(query, queryWrapper);
         return saleInfoList;
     }
 

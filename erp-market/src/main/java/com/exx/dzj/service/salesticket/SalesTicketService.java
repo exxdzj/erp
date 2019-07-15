@@ -59,7 +59,7 @@ public interface SalesTicketService extends IService<SaleInfo> {
 
     void updateSalesmanSubordinateCompany(SaleInfo saleInfo);
 
-    List<SaleListInfo> querySalesListForIds(SaleInfoQuery query);
+    List<SaleListInfo> querySalesListForIds(SaleInfoQuery query, QueryWrapper queryWrapper);
 
-    List<SaleListInfo> exportSaleList (SaleInfoQuery query);
+    List<SaleListInfo> exportSaleList (SaleInfoQuery query, QueryWrapper queryWrapper);
 }
