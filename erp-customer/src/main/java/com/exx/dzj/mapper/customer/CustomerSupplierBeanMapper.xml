@@ -345,6 +345,7 @@
   <select id="queryCustomerSupplierList" resultType="com.exx.dzj.entity.customer.CustomerSupplierModel"
           parameterType="com.exx.dzj.entity.customer.CustomerSupplierQuery">
     SELECT
+        cs.cust_name `value`,
         cs.cust_code custCode,
         cs.cust_name custName,
         cs.user_code userCode,

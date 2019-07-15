@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 @ToString
 public class CustomerSupplierModel implements Serializable {
-
+    private String value;
     /** 编号 */
     private String custCode;
     private String userCode;
