@@ -49,9 +49,7 @@ public class HomePageFacade {
 
     private static final BigDecimal ZERO = new BigDecimal(0);
 
-    public Map<String, Object> queryTopData (){
-        Map<String, Object> topData = new HashMap<>();
-
+    private void getCustomerCount (Map<String, Object> topData){
         // 客户数量
         int customerCount = customerSupplierService.countCustomerSupplier(CommonConstant.DEFAULT_VALUE_ONE);
         topData.put("customerCount", customerCount);
@@ -59,17 +57,29 @@ public class HomePageFacade {
         //当日新增客户数
         int newlyCount = customerSupplierService.newlyIncreasedCutomerCount(CommonConstant.DEFAULT_VALUE_ONE);
         topData.put("newlyCount", newlyCount);
+    }
 
-        // 今日销售额
+    private void getCompanySaleVolumeOnDay (Map<String, Object> topData){
         BigDecimal sumSalesOnDay = new BigDecimal(0);
         List<SaleInfo> salesOnDayList = salesTicketService.querySumSalesOnDay();
         if (!CollectionUtils.isEmpty(salesOnDayList)){
             sumSalesOnDay = salesOnDayList.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add);
         }
+        // 今日总销售额
         topData.put("sumSalesOnDay", sumSalesOnDay);
 
+        // 各分公司今日销售额
         List<SaleInfo> companySalesOnDay = salesOnDayList.stream().filter(o -> StringUtils.isNotEmpty(o.getSubordinateCompanyCode())).collect(Collectors.toList());
         topData.put("companySalesOnDay", companySalesOnDay);
+    }
+
+    public Map<String, Object> queryTopData (){
+        Map<String, Object> topData = new HashMap<>();
+
+        // 客户总数和今日新增数
+        getCustomerCount(topData);
+
+        getCompanySaleVolumeOnDay(topData);
 
         // 当月分公司销售额
         List<SaleInfo> salesOnMonthList = salesTicketService.querySumSalesOnMonth();
@@ -77,9 +87,10 @@ public class HomePageFacade {
         if (!CollectionUtils.isEmpty(salesOnMonthList)){
             sumSalesOnMonth = salesOnMonthList.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add);
         }
+        // 当月销售额
         topData.put("sumSalesOnMonth", sumSalesOnMonth);
 
-        // 分公司销售额处理
+        // 各分公司当月销售额处理
         List<SaleInfo> collect = salesOnMonthList.stream().filter(o -> StringUtils.isNotEmpty(o.getSubordinateCompanyCode())).collect(Collectors.toList());
         topData.put("companySalesOnMonth", collect);
 
@@ -95,6 +106,7 @@ public class HomePageFacade {
 
         List<SaleInfo> companyProfitSaleListOnDay = new ArrayList<>();
 
+        List<SaleInfo> companySalesOnDay = (List<SaleInfo>)topData.get("companySalesOnDay");
         companySalesOnDay.stream().forEach(
                 o -> {
                     companyAddionalSalesOnDay.stream().forEach(
@@ -115,7 +127,8 @@ public class HomePageFacade {
         // 各分公司今日利润
         topData.put("companyProfitSaleListOnDay", companyProfitSaleListOnDay);
 
-        // 分公司今日总利润
+        BigDecimal sumSalesOnDay = (BigDecimal)topData.get("sumSalesOnDay");
+        // 各分公司今日总利润
         BigDecimal subtractDay = sumSalesOnDay.subtract(sumAdditionalSalesOnDay);
         topData.put("sumAdditionalSalesOnDay", subtractDay);
 
@@ -150,12 +163,13 @@ public class HomePageFacade {
                 }
         );
 
+        // 各分公司当月利润
         topData.put("companyProfitSaleListOnMonth", companyProfitSaleListOnMonth);
 
         // 公司总月利润
         BigDecimal subtractMonth = sumSalesOnMonth.subtract(sumAdditionalSalesOnMonth);
 
-
+        // 当月总利润
         topData.put("sumAdditionalSalesOnMonth", subtractMonth);
 
         // 各分公司年度销售额
