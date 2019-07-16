@@ -231,6 +231,7 @@ public class ProccessImportDataUtil {
                 saleInfo.setSaleDate(new Timestamp(saleDate.getTime()));
             }
             setSalesInfo(saleInfo, userInfoMap, stringMap, customerSupplierBeanMap);
+
             saleInfoMap.put(saleCode, saleInfo);
             sharePro = saleCode;
 
@@ -240,6 +241,7 @@ public class ProccessImportDataUtil {
             }
 
             BeanUtils.copyProperties(info, saleGoodsDetail);
+            saleGoodsDetail.setRealSellPrice(saleGoodsDetail.getUnitPrice());
             saleGoodsDetail.setRemarks(info.getGoodsRemark());
             if (StringUtils.isNotEmpty(info.getStockCode())){
                 setSaleGoodsDetail(saleGoodsDetail, stringMap);
