@@ -257,6 +257,11 @@ public class SalesTicketFacade {
 //        saleInfo = calculatePrice(saleInfo);
         Optional.ofNullable(saleInfo);
         setPaymentStatus(saleInfo);
+
+        if (saleInfo.getDiscountAmount() == null){
+            saleInfo.setDiscountAmount(new BigDecimal(0));
+        }
+
         salesTicketService.updateSalesTicketById(saleInfo);
 
         SaleInfo oldSaleInfo = querySalesTicketById(saleInfo.getId());
