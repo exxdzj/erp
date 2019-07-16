@@ -1,8 +1,6 @@
 package com.exx.dzj.controller.customer;
 
 import com.exx.dzj.constant.CommonConstant;
-import com.exx.dzj.entity.accountatt.AccountAttributeBean;
-import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
@@ -10,7 +8,6 @@ import com.exx.dzj.facade.customer.CustomerSupplierFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.JsonUtils;
-import com.exx.dzj.util.MathUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +109,20 @@ public class CustomerController {
         return result;
     }
 
+    @PostMapping("saveCustomerData/{custType}")
+    public Result saveCustomerData(HttpServletRequest request, HttpServletResponse response,
+                                       @RequestBody CustomerSupplierInfo info,
+                                       @PathVariable("custType") int custType){
+        Result result = Result.responseSuccess();
+        if(null != info && !StringUtils.isNotBlank(info.getCustName())){
+            result.setCode(400);
+            result.setMsg("名称不可为空,请填写!");
+            return result;
+        }
+        result = customerSupplierFacade.saveCustomerData(info, custType);
+        return result;
+    }
+
     /**
      * 删除 客户或供应商的数据
      * @param request
@@ -161,6 +172,13 @@ public class CustomerController {
         Result result = Result.responseSuccess();
         List<CustomerSupplierInfo> customers = customerSupplierFacade.queryCustomerPullDownInfo(type);
         result.setData(customers);
+        return result;
+    }
+
+    @GetMapping("queryCustomers/{type}")
+    public Result queryCustomers(@PathVariable("type") Integer type, String custName) {
+        Result result = Result.responseSuccess();
+        result.setData(customerSupplierFacade.queryCustomers(type, custName));
         return result;
     }
 

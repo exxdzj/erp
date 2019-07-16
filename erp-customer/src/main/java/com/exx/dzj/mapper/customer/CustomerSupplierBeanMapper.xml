@@ -394,6 +394,9 @@
     <if test="phoneNum != null and phoneNum != ''">
       AND cw.phone_num LIKE CONCAT("%", #{phoneNum}, "%")
     </if>
+    <if test="custCode != null and custCode != ''">
+      AND cs.cust_code = #{custCode}
+    </if>
   </select>
   <!-- ORDER BY cs.create_time DESC -->
 
@@ -570,12 +573,15 @@
 
 
   <!-- 客户下拉数据 -->
-  <select id="queryCustomerPullDownInfo" resultMap="pullDownMap" parameterType="java.lang.Integer">
+  <select id="queryCustomerPullDownInfo" resultMap="pullDownMap">
     SELECT
     cust_code ,
     cust_name
     FROM tab_customer_supplier
     WHERE cust_type IN (#{type},3)
+    <if test="custName!=null and custName!=''">
+      and cust_name like concat('%', #{custName}, '%')
+    </if>
   </select>
   <resultMap id="pullDownMap" type="com.exx.dzj.entity.customer.CustomerSupplierInfo">
     <result column="cust_code" property="custCode"/>

@@ -14,6 +14,8 @@ import java.io.Serializable;
 @ToString
 public class CustomerSupplierInfo extends CustomerSupplierBean implements Serializable {
 
+    private String dialogStatus;
+
     /**
      * 供应商类型(供应商，或即是供应商又是客户)
      */

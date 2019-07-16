@@ -58,7 +58,7 @@ public interface CustomerService {
      */
     List<CustomerSupplierInfo> getCustomerSupplierExcelList(CustomerSupplierQuery query);
 
-    List<CustomerSupplierInfo> queryCustomerPullDownInfo(Integer type);
+    List<CustomerSupplierInfo> queryCustomerPullDownInfo(Integer type, String custName);
 
     /**
      * 导入 excel 数据

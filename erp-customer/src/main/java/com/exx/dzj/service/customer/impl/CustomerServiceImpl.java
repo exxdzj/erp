@@ -136,8 +136,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerSupplierInfo> queryCustomerPullDownInfo(Integer type) {
-        return csMapper.queryCustomerPullDownInfo(type);
+    public List<CustomerSupplierInfo> queryCustomerPullDownInfo(Integer type, String custName) {
+        return csMapper.queryCustomerPullDownInfo(type, custName);
     }
 
     /**

@@ -57,7 +57,6 @@ public class SysPermissionServiceImpl implements SysPermissionService {
             JSONObject json = new JSONObject();
             json.put("menu", menuArray);
             json.put("auth", btnArray);
-
             return json;
         } catch (Exception ex) {
             LOGGER.error("异常方法:{}异常信息:{}", SysPermissionServiceImpl.class.getName()+".queryPermissionsByUser", ex.getMessage());

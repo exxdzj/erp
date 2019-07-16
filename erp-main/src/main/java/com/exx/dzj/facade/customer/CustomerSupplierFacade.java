@@ -28,9 +28,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -207,6 +209,84 @@ public class CustomerSupplierFacade {
     }
 
     /**
+     * 保存 客户或供应商基础信息数据
+     */
+    @Transactional(rollbackFor=ErpException.class)
+    public Result saveCustomerData(CustomerSupplierInfo bean,
+                                       int custType) throws ErpException{
+        Result result = Result.responseSuccess();
+        try{
+            String userCode = userTokenFacade.queryUserCodeForToken(null);
+            CustomerSupplierBean customerBean = new CustomerSupplierBean();
+            ContactWayBean contactWayBean = new ContactWayBean();
+            AccountAttributeBean accountBean = new AccountAttributeBean();
+
+            BeanUtils.copyProperties(bean, customerBean);
+            BeanUtils.copyProperties(bean, contactWayBean);
+            BeanUtils.copyProperties(bean, accountBean);
+            customerBean.setSource(custType);
+            if(StringUtils.isNotBlank(customerBean.getCustCode()) && StringUtils.isNotBlank(bean.getDialogStatus()) && bean.getDialogStatus().equals("update")){
+                customerBean.setCreateUser(userCode);
+                customerBean.setUpdateUser(userCode);
+                //修改
+                customerSupplierService.modifyCustomerSupplier(customerBean);
+
+                contactWayBean.setCustCode(null);
+                accountBean.setCustCode(null);
+                if(!EntityJudgeUtil.checkObjAllFieldsIsNull(contactWayBean)){
+                    contactWayBean.setCustCode(customerBean.getCustCode());
+                    contactWayBean.setCreateUser(userCode);
+                    contactWayBean.setUpdateUser(userCode);
+                    contactWayBean.setSource(custType);
+                    int count = contactwayService.modifyContactWay(contactWayBean);
+                    if(count == 0){
+                        contactwayService.saveContactWay(contactWayBean);
+                    }
+                }
+                if(!EntityJudgeUtil.checkObjAllFieldsIsNull(accountBean)){
+                    accountBean.setCustCode(customerBean.getCustCode());
+                    accountBean.setCreateUser(userCode);
+                    accountBean.setUpdateUser(userCode);
+                    accountBean.setSource(custType);
+                    int count = accountAttService.modifyAccountAttribute(accountBean);
+                    if(count == 0) {
+                        accountAttService.saveAccountAttribute(accountBean);
+                    }
+                }
+            }else{
+
+                String custCode = "";
+                if(!StringUtils.isNotBlank(customerBean.getCustCode())) {
+                    custCode = getCode(custType, bean.getPrefix());
+                    customerBean.setCustCode(custCode);
+                }
+                customerBean.setCreateUser(userCode);
+                customerBean.setUpdateUser(userCode);
+                //新增
+                customerSupplierService.saveCustomerSupplier(customerBean);
+                if(!EntityJudgeUtil.checkObjAllFieldsIsNull(contactWayBean)){
+                    contactWayBean.setCreateUser(userCode);
+                    contactWayBean.setUpdateUser(userCode);
+                    contactWayBean.setCustCode(custCode);
+                    contactWayBean.setSource(custType);
+                    contactwayService.saveContactWay(contactWayBean);
+                }
+                if(!EntityJudgeUtil.checkObjAllFieldsIsNull(accountBean)){
+                    accountBean.setCreateUser(userCode);
+                    accountBean.setUpdateUser(userCode);
+                    accountBean.setCustCode(custCode);
+                    accountBean.setSource(custType);
+                    accountAttService.saveAccountAttribute(accountBean);
+                }
+            }
+        }catch(Exception ex){
+            LOGGER.error("异常方法:{}异常信息:{}", CustomerSupplierFacade.class.getName()+".saveCustomerSupplier", ex.getMessage());
+            throw new ErpException(400, "保存数据失败!");
+        }
+        return result;
+    }
+
+    /**
      * 查询 导出 excel 数据
      *
      * @return
@@ -263,7 +343,22 @@ public class CustomerSupplierFacade {
     }
 
     public List<CustomerSupplierInfo> queryCustomerPullDownInfo(Integer type){
-        return customerSupplierService.queryCustomerPullDownInfo(type);
+        return customerSupplierService.queryCustomerPullDownInfo(type, null);
+    }
+
+    public List<Map<String, Object>> queryCustomers(Integer type, String custName){
+        List<CustomerSupplierInfo> list = customerSupplierService.queryCustomerPullDownInfo(type, custName);
+        if(CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for(CustomerSupplierInfo custInfo : list) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("value", custInfo.getCustName());
+            result.add(map);
+        }
+        return result;
     }
 
     /**
