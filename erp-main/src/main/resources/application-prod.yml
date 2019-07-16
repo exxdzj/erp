@@ -1,12 +1,12 @@
 spring:
     datasource:
         name: dzj
-        #url: jdbc:mysql://rm-wz9p73l18gj48fn3zo.mysql.rds.aliyuncs.com:3306/test-erp?useUnicode=true&amp;characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false&rewriteBatchedStatements=true
-        #username: dzj_user
-        #password: dzj88_exx
-        url: jdbc:mysql://192.168.5.131:3306/erp?useUnicode=true&amp;characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false&rewriteBatchedStatements=true
-        username: dzjerp
-        password: dzj_EXX88
+        url: jdbc:mysql://rm-wz9p73l18gj48fn3zo.mysql.rds.aliyuncs.com:3306/test-erp?useUnicode=true&amp;characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false&rewriteBatchedStatements=true
+        username: dzj_user
+        password: dzj88_exx
+#        url: jdbc:mysql://192.168.5.131:3306/erp?useUnicode=true&amp;characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false&rewriteBatchedStatements=true
+#        username: dzjerp
+#        password: dzj_EXX88
         # \u4F7F\u7528druid\u6570\u636E\u6E90
         driver-class-name: com.mysql.jdbc.Driver
         platform: mysql
@@ -45,4 +45,4 @@ aliyun:
   accessKeySecret: iw4Yp42IqB5wh461RITJJexpCaFhJw
   bucketName: exx-erp
   subdir: producet-images
-  active: prod
+  active: test
