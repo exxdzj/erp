@@ -209,6 +209,7 @@ public class ProccessImportDataUtil {
                 }
 
                 BeanUtils.copyProperties(info, saleGoodsDetail);
+                saleGoodsDetail.setRealSellPrice(saleGoodsDetail.getUnitPrice());
                 saleGoodsDetail.setRemarks(info.getGoodsRemark());
                 if (StringUtils.isNotEmpty(info.getStockCode())){
                     setSaleGoodsDetail(saleGoodsDetail, stringMap);
