@@ -10,6 +10,7 @@
     <result column="dept_describe" jdbcType="VARCHAR" property="deptDescribe" />
     <result column="seq" jdbcType="INTEGER" property="seq" />
     <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
+    <result column="is_compare" jdbcType="INTEGER" property="isCompare" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_user" jdbcType="VARCHAR" property="createUser" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -76,7 +77,7 @@
 
   <sql id="Base_Column_List">
     id, dept_code, dept_name, parent_code, org_code, dept_describe, seq, is_enable, create_time,
-    create_user, update_time, update_user
+    create_user, update_time, update_user, is_compare
   </sql>
 
   <select id="selectByExample" parameterType="com.exx.dzj.entity.dept.DeptInfoBeanExample" resultMap="BaseResultMap">
@@ -114,7 +115,7 @@
         parent_code,
       </if>
       <if test="orgCode != null and orgCode!=''">
-        orgCode,
+        org_code,
       </if>
       <if test="deptDescribe != null and deptDescribe!=''">
         dept_describe,

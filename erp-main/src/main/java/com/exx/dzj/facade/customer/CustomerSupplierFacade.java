@@ -28,6 +28,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -259,6 +260,8 @@ public class CustomerSupplierFacade {
                 if(!StringUtils.isNotBlank(customerBean.getCustCode())) {
                     custCode = getCode(custType, bean.getPrefix());
                     customerBean.setCustCode(custCode);
+
+                    bean.setCustCode(custCode);
                 }
                 customerBean.setCreateUser(userCode);
                 customerBean.setUpdateUser(userCode);
@@ -279,8 +282,11 @@ public class CustomerSupplierFacade {
                     accountAttService.saveAccountAttribute(accountBean);
                 }
             }
+            bean.setDialogStatus("update");
+            result.setData(bean);
         }catch(Exception ex){
             LOGGER.error("异常方法:{}异常信息:{}", CustomerSupplierFacade.class.getName()+".saveCustomerSupplier", ex.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             throw new ErpException(400, "保存数据失败!");
         }
         return result;

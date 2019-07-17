@@ -31,4 +31,8 @@
       FROM tab_bus_encoding_rule tb
       WHERE tb.is_enable = 1 and tb.bus_type = #{busType}
     </select>
+    
+    <update id="updateEncodeData" parameterType="com.exx.dzj.entity.encode.BusEncodeRuleInfo">
+        update tab_bus_encoding_rule set next_value = #{nextValue} where bus_type = #{busType} and prefix = #{prefix}
+    </update>
 </mapper>

@@ -1,10 +1,8 @@
 package com.exx.dzj.facade.sys;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.busencode.BusEncodeGenerater;
 import com.exx.dzj.entity.encode.BusEncodeRuleCacheData;
 import com.exx.dzj.entity.encode.BusEncodeRuleInfo;
-import com.exx.dzj.entity.encode.BusEncodingRule;
 import com.exx.dzj.service.encode.BusEncodeService;
 import com.exx.dzj.util.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,10 +80,14 @@ public class BusEncodeFacade {
                                 && info.getPrefix().equals(prefix)) {
                             busCode = BusEncodeGenerater.nextBusCode(info.getPrefix(), info.getNextValue(), info.getSerialNumLength(), info.getSerialNumFormat());
                             Integer nextBusCode = BusEncodeGenerater.nextCode(info.getNextValue(), info.getStep());
+                            //info.setNextValue(nextBusCode);
+                            //BusEncodingRule busEncodingRule = new BusEncodingRule();
+                            //busEncodingRule.setNextValue(nextBusCode);
+                            //busEncodeService.update(busEncodingRule, new QueryWrapper<BusEncodingRule>().eq("prefix", info.getPrefix()).eq("bus_type", busType));
+
                             info.setNextValue(nextBusCode);
-                            BusEncodingRule busEncodingRule = new BusEncodingRule();
-                            busEncodingRule.setNextValue(nextBusCode);
-                            busEncodeService.update(busEncodingRule, new QueryWrapper<BusEncodingRule>().eq("prefix", info.getPrefix()).eq("bus_type", busType));
+                            info.setBusType(busType);
+                            busEncodeService.updateEncodeData(info);
                             break;
                         }
                     }

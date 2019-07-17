@@ -2,6 +2,7 @@ package com.exx.dzj.service.encode;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exx.dzj.entity.encode.BusEncodeRuleCacheData;
+import com.exx.dzj.entity.encode.BusEncodeRuleInfo;
 import com.exx.dzj.entity.encode.BusEncodingRule;
 
 import java.util.List;
@@ -14,4 +15,6 @@ import java.util.List;
 public interface BusEncodeService extends IService<BusEncodingRule> {
 
     List<BusEncodeRuleCacheData> queryList();
+
+    void updateEncodeData(BusEncodeRuleInfo info);
 }

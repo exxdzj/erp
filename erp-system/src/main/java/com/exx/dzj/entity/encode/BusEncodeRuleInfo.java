@@ -31,4 +31,6 @@ public class BusEncodeRuleInfo implements Serializable {
     private Integer nextValue;
     // 格式
     private String serialNumFormat;
+
+    private String busType;
 }

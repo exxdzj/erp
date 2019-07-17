@@ -2,6 +2,7 @@ package com.exx.dzj.service.encode.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exx.dzj.entity.encode.BusEncodeRuleCacheData;
+import com.exx.dzj.entity.encode.BusEncodeRuleInfo;
 import com.exx.dzj.entity.encode.BusEncodingRule;
 import com.exx.dzj.mapper.encode.BusEncodeMapper;
 import com.exx.dzj.service.encode.BusEncodeService;
@@ -28,5 +29,14 @@ public class BusEncodeServiceImpl extends ServiceImpl<BusEncodeMapper, BusEncodi
     @Override
     public List<BusEncodeRuleCacheData> queryList() {
         return busEncodeMapper.queryList();
+    }
+
+    /**
+     * 修改  数据
+     * @param info
+     */
+    @Override
+    public void updateEncodeData(BusEncodeRuleInfo info) {
+        busEncodeMapper.updateEncodeData(info);
     }
 }

@@ -217,7 +217,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptInfoBeanMapper, DeptInfoBea
         // 定义旧编码字符串
         String oldOrgCode = "";
         // 定义部门类型
-        String orgType = "";
+        String orgType = "1";
 
         // 如果是最高级,则查询出同级的org_code, 调用工具类生成编码并返回
         if (StringUtil.isEmpty(parentCode)) {
@@ -244,11 +244,19 @@ public class DeptServiceImpl extends ServiceImpl<DeptInfoBeanMapper, DeptInfoBea
             // 查询出同级部门的集合
             List<DeptInfoBean> parentList = this.list(query);
             // 查询出父级部门
-            DeptInfoBean depart = this.getById(parentCode);
-            // 获取父级部门的Code
-            String orgCode = depart.getOrgCode();
-            // 根据父级部门类型算出当前部门的类型
-            orgType = String.valueOf(Integer.valueOf(depart.getIsCompare()) - 1);
+            DeptInfoBean depart = this.queryDeptInfo(parentCode);
+
+            String orgCode = "";
+
+            if(null != depart) {
+                // 获取父级部门的Code
+                orgCode = depart.getOrgCode();
+                // 根据父级部门类型算出当前部门的类型
+                if(null != depart.getIsCompare()) {
+                    orgType = String.valueOf(Integer.valueOf(depart.getIsCompare()) - 1);
+                }
+            }
+
             // 处理同级部门为null的情况
             if (parentList == null || parentList.size() == 0) {
                 // 直接生成当前的部门编码并返回

@@ -80,6 +80,9 @@ public class SerialNumberUtil {
             return getNextYouBianCode(localCode);
 
         }else{
+            if(ConvertUtils.isEmpty(parentCode)) {
+                parentCode = "";
+            }
             parentCode = parentCode + "A"+ getNextStrNum(0);
         }
         return parentCode;
