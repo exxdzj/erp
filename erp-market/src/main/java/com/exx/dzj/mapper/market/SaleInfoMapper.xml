@@ -201,18 +201,21 @@
       <if test="query.startTime != null and query.startTime != ''">
         AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{query.startTime},'%Y-%m-%d %H:%i:%s')]]>
       </if>
+      <if test="query.paymentStatusList != null and query.paymentStatusList.size() > 0">
+        AND  SINFO.payment_status IN
+        <foreach collection="query.paymentStatusList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+      </if>
+
       <if test="query.endTime != null and query.endTime != ''">
         AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{query.endTime},'%Y-%m-%d 23:59:59')]]>
       </if>
-
       <if test="query.saleCode != null and query.saleCode != ''">
         AND  SINFO.sale_code LIKE CONCAT('%', #{query.saleCode}, '%')
       </if>
       <if test="query.userCode != null and query.userCode != ''">
         AND  SINFO.user_code=#{query.userCode}
-      </if>
-      <if test="query.paymentStatus != null and query.paymentStatus != ''">
-        AND  SINFO.payment_status=#{query.paymentStatus}
       </if>
       <if test="query.subordinateCompanyCode != null and query.subordinateCompanyCode != ''">
         AND  SINFO.subordinate_company_code=#{query.subordinateCompanyCode}

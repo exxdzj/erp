@@ -20,4 +20,5 @@ public class SaleInfoQuery extends SaleInfo {
     private List<Integer> idList;
 
     private List<String> fieldList;
+    private List<String> paymentStatusList;
 }
