@@ -223,6 +223,9 @@
       <if test="query.custCode != null and query.custCode != ''">
         AND  SINFO.cust_code=#{query.custCode}
       </if>
+      <if test="query.custName != null and query.custName!=''">
+        AND CSUPPLIER.cust_name LIKE CONCAT('%', #{query.custName}, '%')
+      </if>
     </where>
     GROUP BY SINFO.sale_code
     ORDER BY SINFO.sale_date  DESC
