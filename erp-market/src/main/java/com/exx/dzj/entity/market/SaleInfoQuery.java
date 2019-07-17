@@ -21,4 +21,5 @@ public class SaleInfoQuery extends SaleInfo {
 
     private List<String> fieldList;
     private List<String> paymentStatusList;
+    private String stockName; // 商品名称
 }
