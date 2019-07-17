@@ -328,8 +328,11 @@
         <if test="toCustId and toCustId != ''">
             AND <![CDATA[cs.id <= #{toCustId}]]>
         </if>
-        <if test="paymentStatus != null and paymentStatus != ''">
-            AND sinfo.payment_status = #{paymentStatus}
+        <if test="paymentStatusList != null and paymentStatusList.size() > 0">
+            AND sinfo.payment_status IN
+            <foreach collection="paymentStatusList" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
         </if>
     </select>
 
