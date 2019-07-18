@@ -11,8 +11,6 @@ import java.util.Date;
 public class DictionaryInfo implements Serializable {
     private Integer id;
 
-    private String value;
-
     private String dictCode;
 
     private String dictName;
