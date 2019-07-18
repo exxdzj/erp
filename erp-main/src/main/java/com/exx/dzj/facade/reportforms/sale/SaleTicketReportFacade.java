@@ -74,6 +74,7 @@ public class SaleTicketReportFacade {
                                             sgr.setStockAddress(end.getStockAddress());
                                             sgr.setGoodsNum(end.getGoodsNum());
                                             sgr.setUnitPrice(end.getUnitPrice());
+                                            sgr.setCustName(end.getCustName());
                                             sgr.setStandardBuyPrice(end.getStandardBuyPrice());
                                             BigDecimal bigDecimal = new BigDecimal(end.getGoodsNum() == null ?0  : end.getGoodsNum());
                                             sgr.setSalesVolume(end.getUnitPrice().multiply(bigDecimal));
