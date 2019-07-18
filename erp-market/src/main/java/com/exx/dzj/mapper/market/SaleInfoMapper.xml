@@ -191,13 +191,15 @@
     SINFO.is_receipt AS isReceipt,
     SINFO.subordinate_company_name AS subordinateCompanyName,
     SINFO.remarks AS remarks,
-    GROUP_CONCAT(CONCAT(tsl.logistic_company_name, ':', tsl.freight_code) SEPARATOR ',') AS logistic
+    (SELECT GROUP_CONCAT(CONCAT(tsl.logistic_company_name, ':', tsl.freight_code) SEPARATOR ',') AS logistic
+    FROM tab_sale_logistic_info tsl WHERE tsl.sale_code = SINFO.sale_code) AS logistic
+/*    GROUP_CONCAT(CONCAT(tsl.logistic_company_name, ':', tsl.freight_code) SEPARATOR ',') AS logistic*/
     FROM tab_sale_info SINFO
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
     LEFT JOIN tab_sale_goods_detail goods ON SINFO.sale_code = goods.sale_code
     LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
-    LEFT JOIN tab_sale_logistic_info tsl ON tsl.sale_code = SINFO.sale_code
+/*    LEFT JOIN tab_sale_logistic_info tsl ON tsl.sale_code = SINFO.sale_code*/
     <where>
       ${ew.sqlSegment}
       <if test="query.startTime != null and query.startTime != ''">
