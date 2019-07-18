@@ -318,6 +318,21 @@
     </if>
     order by di.seq desc
   </select>
+
+  <select id="queryDictionaryList" resultType="com.exx.dzj.entity.dictionary.DictionaryInfo">
+    SELECT
+      di.value dictCode,
+      CONCAT(IFNULL(di.value, ''), IFNULL(di.dict_name, '')) dictName,
+      di.dict_name remarks
+    FROM
+    tab_dictionary_info di
+    WHERE
+    di.is_enable = 1
+    <if test="dataType != null and dataType !=''">
+      AND di.data_type = #{dataType}
+    </if>
+    order by di.seq desc
+  </select>
   
   <select id="queryDictName" resultType="java.lang.String">
     select

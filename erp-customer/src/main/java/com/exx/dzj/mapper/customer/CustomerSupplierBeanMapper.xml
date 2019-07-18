@@ -323,16 +323,16 @@
       <if test="identity != null">
         identity = #{identity,jdbcType=INTEGER},
       </if>
-      <if test="rankCode != null and rankCode!=''">
+      <if test="rankCode != null">
         rank_code = #{rankCode,jdbcType=VARCHAR},
       </if>
-      <if test="rankName != null and rankName!=''">
+      <if test="rankName != null">
         rank_name = #{rankName,jdbcType=VARCHAR},
       </if>
-      <if test="companyCode != null and companyCode!=''">
+      <if test="companyCode != null">
         company_code = #{companyCode,jdbcType=VARCHAR},
       </if>
-      <if test="companyName != null and companyName!=''">
+      <if test="companyName != null">
         company_name = #{companyName,jdbcType=VARCHAR},
       </if>
       <if test="shipCode != null and shipCode!=''">
@@ -431,13 +431,17 @@
     <result column="custCode" property="custCode"/>
     <result column="custName" property="custName"/>
     <result column="custType" property="custType"/>
+    <result column="custTypeName" property="custTypeName"/>
     <result column="custLevel" property="custLevel"/>
     <result column="levelName" property="levelName"/>
     <result column="salesmanCode" property="salesmanCode"/>
+    <result column="realName" property="realName"/>
     <result column="userCode" property="userCode"/>
     <result column="identity" property="identity"/>
     <result column="rankCode" property="rankCode"/>
     <result column="rankName" property="rankName"/>
+    <result column="companyCode" property="companyCode"/>
+    <result column="companyName" property="companyName"/>
     <result column="regionCode" property="regionCode"/>
     <result column="regionName" property="regionName"/>
     <result column="shipCode" property="shipCode"/>
@@ -472,15 +476,20 @@
       cs.cust_code custCode,
       cs.cust_name custName,
       cs.cust_type custType,
+      <if test="custType == '1'.toString()">'客户' AS custTypeName,</if>
+      <if test="custType == '2'.toString()">'供应商' AS custTypeName,</if>
       cs.cust_level custLevel,
       cs.level_name levelName,
       cs.salesman_code salesmanCode,
+      concat(IFNULL(ui.salesman_code,''), IFNULL(ui.real_name,'')) realName,
       cs.user_code userCode,
       cs.identity,
       cs.rank_code rankCode,
       cs.rank_name rankName,
+      cs.company_code companyCode,
+      cs.company_name companyName,
       cs.region_code regionCode,
-      cs.region_name regionName,
+      concat(IFNULL(cs.region_code,''), IFNULL(cs.region_name,'')) regionName,
       cs.ship_code shipCode,
       cs.ship_address shipAddress,
       cs.remarks,
@@ -496,7 +505,6 @@
       cw.delivery_address_two deliveryAddressTwo,
       cw.zip_code zipCode,
       ta.payment_method paymentMethod,
-      di.dict_name paymentMethodName,
       ta.discount_rate discountRate,
       ta.account_period accountPeriod,
       ta.line_credit lineCredit,
@@ -506,9 +514,9 @@
       ta.open_account openAccount
     FROM
         tab_customer_supplier cs
-    LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code
-    LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code
-    LEFT JOIN tab_dictionary_info di ON di.dict_code = ta.payment_method AND di.data_type = 'receivables_payment_method'
+    LEFT JOIN tab_user_info ui ON cs.user_code = ui.user_code
+    LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code AND cs.source = cw.source
+    LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code AND cs.source = ta.source
     WHERE
         1 = 1
   </sql>
@@ -526,6 +534,8 @@
     cs.identity,
     cs.rank_code rankCode,
     cs.rank_name rankName,
+    cs.company_code companyCode,
+    cs.company_name companyName,
     cs.region_code regionCode,
     cs.region_name regionName,
     cs.ship_code shipCode,
@@ -572,14 +582,26 @@
     <if test="custName != null and custName != ''">
       AND cs.cust_name LIKE CONCAT('%',#{custName},'%')
     </if>
-    <if test="linkMan != null and linkMan != ''">
-      AND cw.link_man LIKE CONCAT('%',#{linkMan},'%')
-    </if>
     <if test="custType != null and custType != '' and custType == '1'.toString()">
-      AND cs.cust_type in (1, 3)
+      AND  ( cs.cust_type = 1 OR cs.cust_type = 3)
     </if>
     <if test="custType != null and custType != '' and custType == '2'.toString()">
-      AND cs.cust_type in (2, 3)
+      AND  ( cs.cust_type = 2 OR cs.cust_type = 3)
+    </if>
+    <if test="custLevel != null and custLevel != ''">
+      AND cs.cust_level = #{custLevel}
+    </if>
+    <if test="phoneNum != null and phoneNum != ''">
+      AND cw.phone_num LIKE CONCAT("%", #{phoneNum}, "%")
+    </if>
+    <if test="custCode != null and custCode != ''">
+      AND cs.cust_code = #{custCode}
+    </if>
+    <if test="regionCode != null and regionCode!=''">
+      AND cs.region_code = #{regionCode}
+    </if>
+    <if test="userCode != null and userCode!=''">
+      AND cs.user_code = #{userCode}
     </if>
   </select>
 

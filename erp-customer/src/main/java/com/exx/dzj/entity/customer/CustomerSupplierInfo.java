@@ -22,6 +22,8 @@ public class CustomerSupplierInfo extends CustomerSupplierBean implements Serial
     private String custTypeName;
     private String prefix;
 
+    private  String realName;
+
     /**
      * 联系信息
      */
