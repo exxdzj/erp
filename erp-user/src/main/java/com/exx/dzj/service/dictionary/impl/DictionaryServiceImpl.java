@@ -3,6 +3,7 @@ package com.exx.dzj.service.dictionary.impl;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.mapper.dictionary.DictionaryInfoMapper;
 import com.exx.dzj.service.dictionary.DictionaryService;
+import com.exx.dzj.util.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class DictionaryServiceImpl implements DictionaryService {
      */
     @Override
     public List<DictionaryInfo> queryDictionary(String dataType) {
+        if(!ConvertUtils.isEmpty(dataType) && dataType.equals("erp_region")) {
+            return dictionaryMapper.queryDictionaryList(dataType);
+        }
         return dictionaryMapper.queryDictionary(dataType);
     }
 

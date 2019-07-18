@@ -38,6 +38,13 @@ public interface DictionaryInfoMapper {
      */
     List<DictionaryInfo> queryDictionary(@Param("dataType") String dataType);
 
+    /**
+     * 查询 字典表数据
+     * @param dataType
+     * @return
+     */
+    List<DictionaryInfo> queryDictionaryList(@Param("dataType") String dataType);
+
     String queryDictName(@Param("dictCode") String dictCode, @Param("dataType") String dataType);
 
     List<Map<String, String>> queryDictionaryCodeAndName();

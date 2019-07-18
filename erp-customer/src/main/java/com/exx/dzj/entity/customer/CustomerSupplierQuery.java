@@ -28,5 +28,6 @@ public class CustomerSupplierQuery implements Serializable {
     private String phoneNum;
     private String custCode;
     private String regionCode;
+    private String regionName;
     private String userCode;
 }
