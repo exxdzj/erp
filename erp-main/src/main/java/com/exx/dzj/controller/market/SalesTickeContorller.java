@@ -347,4 +347,22 @@ public class SalesTickeContorller {
         result.setData(page);
         return result;
     }
+
+    /**
+     * @description: 签收状态修改
+     * @author yangyun
+     * @date 2019/7/18 0018
+     * @param saleCode
+     * @param isReceipt
+     * @return com.exx.dzj.result.Result
+     */
+    @PutMapping("updatreceiptstatus/{saleCode}/{isReceipt}")
+    public Result updatReceiptStatus (@PathVariable("saleCode") String saleCode, @PathVariable("isReceipt") Integer isReceipt){
+        Result result = Result.responseSuccess();
+        int res = salesTicketFacade.updatReceiptStatus(saleCode, isReceipt);
+        if (res == CommonConstant.DEFAULT_VALUE_ZERO){
+            result.setCode(CommonConstant.FAIL_CODE);
+        }
+        return result;
+    }
 }

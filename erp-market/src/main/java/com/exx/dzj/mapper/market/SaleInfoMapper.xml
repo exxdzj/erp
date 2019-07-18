@@ -178,6 +178,7 @@
     SINFO.discount_amount,
     SINFO.receivable_accoun,
     SINFO.cust_phone_num,
+    SINFO.deliver_remark,
     SINFO.due_date,
     SINFO.payment_status AS paymentStatus,
     SINFO.invoice_code AS invoiceCode,
@@ -194,7 +195,7 @@
     FROM tab_sale_info SINFO
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
-    /*LEFT JOIN tab_sale_goods_detail goods ON SINFO.sale_code = goods.sale_code*/
+    LEFT JOIN tab_sale_goods_detail goods ON SINFO.sale_code = goods.sale_code
     LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
     LEFT JOIN tab_sale_logistic_info tsl ON tsl.sale_code = SINFO.sale_code
     <where>
@@ -261,6 +262,7 @@
     <result column="sale_date" property="saleDate"/>
     <result column="cust_phone_num" property="custPhoneNum"/>
     <result column="sale_code" property="saleCode"/>
+    <result column="deliver_remark" property="deliverRemark"/>
     <result column="logistic" property="logistic"/>
     <!-- 查询关联收款记录 -->
     <!--<collection property="saleReceiptsDetailsList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleReceiptsDetails" javaType="java.util.List"-->
@@ -286,6 +288,7 @@
       SINFO.id,
       SINFO.sale_code,
       SINFO.user_code ,
+      SINFO.deliver_remark ,
       SINFO.salesman_code ,
       IFNULL(SINFO.cust_code, '') AS custCode,
       SINFO.payment_term ,
@@ -335,6 +338,7 @@
   <resultMap id="saleTicketMap" type="com.exx.dzj.entity.market.SaleInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="sale_code" property="saleCode" />
+    <result column="deliver_remark" property="deliverRemark" />
     <result column="cust_phone_num" property="custPhoneNum" />
     <result column="user_code" property="userCode" />
     <result column="salesman_code" jdbcType="VARCHAR" property="salesmanCode" />
@@ -644,6 +648,9 @@
       <if test="custPhoneNum != null and custPhoneNum != ''">
         cust_phone_num,
       </if>
+      <if test="deliverRemark != null and deliverRemark != ''">
+        deliver_remark,
+      </if>
       create_time
     </trim>
     <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
@@ -748,6 +755,9 @@
       </if>
       <if test="custPhoneNum != null and custPhoneNum != ''">
         #{custPhoneNum},
+      </if>
+      <if test="deliverRemark != null and deliverRemark != ''">
+        #{deliverRemark},
       </if>
       sysdate()
     </trim>
@@ -900,6 +910,9 @@
       </if>
       <if test="custPhoneNum != null and custPhoneNum != ''">
         cust_phone_num = #{custPhoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="deliverRemark != null and deliverRemark != ''">
+        deliver_remark = #{deliverRemark,jdbcType=VARCHAR},
       </if>
       <if test="userCode != null">
         user_code = #{userCode,jdbcType=VARCHAR},
@@ -1390,4 +1403,10 @@
     <collection property="logisticsLsit" column="saleCode" ofType="com.exx.dzj.entity.market.LogisticsInfo"
                 javaType="java.util.List" select="logisticsInfoList"></collection>
    </resultMap>
+
+  <update id="updatReceiptStatus">
+    UPDATE tab_sale_info SET
+      is_receipt = #{isReceipt}
+    WHERE sale_code = #{saleCode}
+  </update>
 </mapper>

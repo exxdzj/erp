@@ -17,7 +17,8 @@ import java.util.List;
  * @create 2019-01-08-10:56
  */
 @Component
-public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo> implements SalesTicketService {
+public class
+SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo> implements SalesTicketService {
 
     @Autowired
     private SaleInfoMapper saleInfoMapper;
@@ -202,5 +203,10 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     @Override
     public List<SaleListInfo> exportSaleList(SaleInfoQuery query, QueryWrapper queryWrapper) {
         return saleInfoMapper.exportSaleList(query);
+    }
+
+    @Override
+    public int updatReceiptStatus(String saleCode, Integer isReceipt) {
+        return saleInfoMapper.updatReceiptStatus(saleCode, isReceipt);
     }
 }

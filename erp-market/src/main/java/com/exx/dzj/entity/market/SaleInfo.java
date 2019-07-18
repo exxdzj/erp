@@ -65,6 +65,8 @@ public class SaleInfo extends BaseModule {
 
     private String deliveryAddress;
 
+    private String deliverRemark;
+
     private String invoiceCode;
 
     private String billType;

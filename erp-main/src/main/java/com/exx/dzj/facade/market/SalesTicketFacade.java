@@ -639,4 +639,9 @@ public class SalesTicketFacade {
         return saleInfoPage;
     }
 
+    public int updatReceiptStatus (String saleCode, Integer isReceipt){
+
+        return salesTicketService.updatReceiptStatus(saleCode, isReceipt);
+    }
+
 }
