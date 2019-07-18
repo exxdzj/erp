@@ -194,6 +194,7 @@
     FROM tab_sale_info SINFO
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
+    LEFT JOIN tab_sale_goods_detail goods ON SINFO.sale_code = goods.sale_code
     LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
     LEFT JOIN tab_sale_logistic_info tsl ON tsl.sale_code = SINFO.sale_code
     <where>
@@ -201,24 +202,36 @@
       <if test="query.startTime != null and query.startTime != ''">
         AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{query.startTime},'%Y-%m-%d %H:%i:%s')]]>
       </if>
+      <if test="query.paymentStatusList != null and query.paymentStatusList.size() > 0">
+        AND  SINFO.payment_status IN
+        <foreach collection="query.paymentStatusList" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+      </if>
+
       <if test="query.endTime != null and query.endTime != ''">
         AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{query.endTime},'%Y-%m-%d 23:59:59')]]>
       </if>
-
       <if test="query.saleCode != null and query.saleCode != ''">
         AND  SINFO.sale_code LIKE CONCAT('%', #{query.saleCode}, '%')
       </if>
       <if test="query.userCode != null and query.userCode != ''">
         AND  SINFO.user_code=#{query.userCode}
       </if>
-      <if test="query.paymentStatus != null and query.paymentStatus != ''">
-        AND  SINFO.payment_status=#{query.paymentStatus}
-      </if>
       <if test="query.subordinateCompanyCode != null and query.subordinateCompanyCode != ''">
         AND  SINFO.subordinate_company_code=#{query.subordinateCompanyCode}
       </if>
       <if test="query.custCode != null and query.custCode != ''">
         AND  SINFO.cust_code=#{query.custCode}
+      </if>
+      <if test="query.custName != null and query.custName!=''">
+        AND CSUPPLIER.cust_name LIKE CONCAT('%', #{query.custName}, '%')
+      </if>
+      <if test="query.stockName != null and query.stockName != ''">
+        AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')
+      </if>
+      <if test="query.custPhoneNum != null and query.custPhoneNum != ''">
+        AND SINFO.cust_phone_num LIKE CONCAT('%', #{query.custPhoneNum}, '%')
       </if>
     </where>
     GROUP BY SINFO.sale_code

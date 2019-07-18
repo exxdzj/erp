@@ -15,6 +15,7 @@ import java.util.Date;
 @ToString
 @TableName("tab_customer_supplier")
 public class CustomerSupplierBean implements Serializable {
+    private String value;
     private Integer id;
 
     //客户编号
