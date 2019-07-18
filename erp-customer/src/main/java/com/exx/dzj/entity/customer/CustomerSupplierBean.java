@@ -80,4 +80,8 @@ public class CustomerSupplierBean implements Serializable {
     private Integer isEnable;
 
     private String phoneNum;
+
+    private String companyCode;
+
+    private String companyName;
 }

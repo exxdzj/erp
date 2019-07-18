@@ -142,6 +142,12 @@
       <if test="rankName != null and rankName!=''">
         rank_name,
       </if>
+      <if test="companyCode != null and companyCode!=''">
+        company_code,
+      </if>
+      <if test="companyName != null and companyName!=''">
+        company_name,
+      </if>
       <if test="regionCode != null and regionCode!=''">
         region_code,
       </if>
@@ -202,6 +208,12 @@
       </if>
       <if test="rankName != null and rankName!=''">
         #{rankName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCode != null and companyCode!=''">
+        #{companyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null and companyName!=''">
+        #{companyName,jdbcType=VARCHAR},
       </if>
       <if test="regionCode != null and regionCode !=''">
         #{regionCode,jdbcType=VARCHAR},
@@ -317,6 +329,12 @@
       <if test="rankName != null and rankName!=''">
         rank_name = #{rankName,jdbcType=VARCHAR},
       </if>
+      <if test="companyCode != null and companyCode!=''">
+        company_code = #{companyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null and companyName!=''">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
       <if test="shipCode != null and shipCode!=''">
         ship_code = #{shipCode,jdbcType=VARCHAR},
       </if>
@@ -368,8 +386,7 @@
     END dataStatus
     FROM
         tab_customer_supplier cs
-    LEFT JOIN tab_user_info ui ON cs.salesman_code = ui.salesman_code
-    AND cs.user_code = ui.user_code
+    LEFT JOIN tab_user_info ui ON cs.user_code = ui.user_code
     LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code AND cs.source = cw.source
     LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code AND cs.source = ta.source
     WHERE
@@ -396,6 +413,15 @@
     </if>
     <if test="custCode != null and custCode != ''">
       AND cs.cust_code = #{custCode}
+    </if>
+    <if test="regionCode != null and regionCode!=''">
+      AND cs.region_code = #{regionCode}
+    </if>
+    <if test="regionName != null and regionName!=''">
+      AND cs.region_name LIKE CONCAT("%", #{regionName}, "%")
+    </if>
+    <if test="userCode != null and userCode!=''">
+      AND cs.user_code = #{userCode}
     </if>
   </select>
   <!-- ORDER BY cs.create_time DESC -->
