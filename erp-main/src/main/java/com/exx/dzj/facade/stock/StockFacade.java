@@ -174,8 +174,8 @@ public class StockFacade {
         stockInfoService.batchInventoryDataProccess(map);
     }
 
-    public List<DictionaryInfo> queryMultipleStocks (String stockCode){
-        List<StockNumPrice> list = stockInfoService.queryMultipleStocks(stockCode);
+    public List<DictionaryInfo> queryMultipleStocks (List<String> stockCodes){
+        List<StockNumPrice> list = stockInfoService.queryMultipleStocks(stockCodes);
 
         List<DictionaryInfo> data = new ArrayList<>();
 
@@ -190,8 +190,8 @@ public class StockFacade {
         return data;
     }
 
-    public StockNumPrice queryStockNumPirckList (StockNumPrice stockNumPrice) {
-        return stockInfoService.queryStockNumPirckList(stockNumPrice);
+    public StockNumPrice queryStockNumPirck (StockNumPrice stockNumPrice) {
+        return stockInfoService.queryStockNumPirck(stockNumPrice);
     }
 
     public Result checkStockCode(String stockCode) {

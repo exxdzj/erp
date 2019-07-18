@@ -64,7 +64,9 @@ public interface StockInfoMapper {
 
     void insertStockNumPriceForPurchaseAudit(StockNumPrice stockNumPrice);
 
-    List<StockNumPrice> queryMultipleStocks(@Param("stockCode") String stockCode);
+    List<StockNumPrice> queryMultipleStocks(List<String> stockCodes);
 
-    StockNumPrice queryStockNumPirckList(StockNumPrice stockNumPrice);
+    StockNumPrice queryStockNumPirck(StockNumPrice stockNumPrice);
+
+    List<StockNumPrice> queryStockNumPirckList(StockNumPrice stockNumPrice);
 }

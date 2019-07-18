@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -145,13 +146,14 @@ public class StockController {
      * @description 新增销售单查询多仓库
      * @author yangyun
      * @date 2019/5/31 0031
-     * @param stockCode
+     * @param stockCodeList
      * @return com.exx.dzj.result.Result
      */
-    @GetMapping("querymultiplestocks/{stockCode}")
-    public Result queryMultipleStocks (@PathVariable("stockCode") String stockCode){
+    @GetMapping("querymultiplestocks/{stockCodeList}")
+    public Result queryMultipleStocks (@PathVariable("stockCodeList") String stockCodeList){
         Result result = Result.responseSuccess();
-        List<DictionaryInfo> data = stockFacade.queryMultipleStocks(stockCode);
+        List<String> stockCodes = Arrays.asList(stockCodeList.split("&"));
+        List<DictionaryInfo> data = stockFacade.queryMultipleStocks(stockCodes);
         result.setData(data);
         return result;
     }
@@ -159,7 +161,7 @@ public class StockController {
     @GetMapping("querystocknumpircklist")
     public Result queryStockNumPirckList ( StockNumPrice stockNumPrice){
         Result result = Result.responseSuccess();
-        StockNumPrice snp = stockFacade.queryStockNumPirckList(stockNumPrice);
+        StockNumPrice snp = stockFacade.queryStockNumPirck(stockNumPrice);
         result.setData(snp);
         return result;
     }

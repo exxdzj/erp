@@ -557,7 +557,7 @@
   <update id="updateStockGoodsInventory" parameterType="com.exx.dzj.entity.stock.StockBean">
     UPDATE tab_stock_num_price
       SET min_inventory = IFNULL(min_inventory, 0) + #{minInventory}
-      WHERE stock_code = #{stockCode}
+      WHERE stock_code = #{stockCode} AND stock_address_code = #{stockAddressCode}
   </update>
 
   <insert id="insertStockNumPrice" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
@@ -600,6 +600,48 @@
     AND ti.stock_code = #{stockCode}
   </select>
 
+  <select id="queryStockNumPirckList" parameterType="com.exx.dzj.entity.stock.StockNumPrice"
+          resultType="com.exx.dzj.entity.stock.StockNumPrice">
+    SELECT
+    stock_code  stockCode,
+    standard_buy_price standardBuyPrice,
+    standard_sell_price standardSellPrice,
+    max_purchase_price maxPurchasePrice,
+    min_sell_price minSellPrice,
+    min_inventory minInventory,
+    stock_address stockAddress,
+    stock_address_code stockAddressCode
+    FROM
+    tab_stock_num_price
+    WHERE
+    1 = 1
+    <if test="stockCodeList != null and stockCodeList.size() > 0">
+      AND stock_code IN
+      <foreach collection="stockCodeList" separator="," open="(" close=")" item="item">
+          #{item}
+      </foreach>
+    </if>
+  </select>
+
+  <select id="queryStockNumPirck" parameterType="com.exx.dzj.entity.stock.StockNumPrice"
+          resultType="com.exx.dzj.entity.stock.StockNumPrice">
+    SELECT
+    stock_code  stockCode,
+    standard_buy_price standardBuyPrice,
+    standard_sell_price standardSellPrice,
+    max_purchase_price maxPurchasePrice,
+    min_sell_price minSellPrice,
+    min_inventory minInventory,
+    stock_address stockAddress,
+    stock_address_code stockAddressCode
+    FROM
+    tab_stock_num_price
+    WHERE
+    1 = 1
+    AND stock_code = #{stockCode}
+    AND stock_address_code = #{stockAddressCode}
+  </select>
+
   <insert id="insertStockNumPriceForPurchaseAudit" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
     INSERT INTO tab_stock_num_price
       (stock_code, standard_buy_price, standard_sell_price, max_purchase_price, min_sell_price, min_inventory, stock_address, stock_address_code, is_default, create_user, create_time)
@@ -608,32 +650,18 @@
   </insert>
 
   <select id="queryMultipleStocks" resultMap="multipleStockMap">
-    SELECT stock_address, stock_address_code FROM tab_stock_num_price WHERE stock_code = #{stockCode}
+    SELECT stock_address, stock_address_code FROM tab_stock_num_price WHERE
+    stock_code IN
+    <foreach collection="list" item="item" close=")" open="(" separator=",">
+      #{item}
+    </foreach>
+    GROUP BY  stock_address_code
   </select>
-  
+
   <resultMap id="multipleStockMap" type="com.exx.dzj.entity.stock.StockNumPrice">
     <result column="stock_address" property="stockAddress"/>
     <result column="stock_address_code" property="stockAddressCode"/>
   </resultMap>
-
-  <select id="queryStockNumPirckList" parameterType="com.exx.dzj.entity.stock.StockNumPrice"
-          resultType="com.exx.dzj.entity.stock.StockNumPrice">
-    SELECT
-        stock_code  stockCode,
-        standard_buy_price standardBuyPrice,
-        standard_sell_price standardSellPrice,
-        max_purchase_price maxPurchasePrice,
-        min_sell_price minSellPrice,
-        min_inventory minInventory,
-        stock_address stockAddress,
-        stock_address_code stockAddressCode
-    FROM
-        tab_stock_num_price
-    WHERE
-        1 = 1
-    AND stock_code = #{stockCode}
-    AND stock_address_code = #{stockAddressCode}
-  </select>
 
   <!--<select id="queryStockInfoForSale" resultType="com.exx.dzj.entity.stock.StockBean">-->
     <!--SELECT-->

@@ -39,7 +39,7 @@ public interface SaleGoodsDetailBeanMapper {
 
     SaleGoodsDetailBean querySaleGoodsDetail(SaleGoodsDetailBean bean);
 
-    List<SaleGoodsDetailBean> queryGoodsForStock(LogisticsInfo logisticsInfo);
+    List<SaleGoodsDetailBean> queryGoodsForStock(@Param(value = "saleCode") String saleCode, @Param("list") List<String> list);
 
     void batchUpdateSalesGoodsSubtractStatus(List<Integer> ids);
 }

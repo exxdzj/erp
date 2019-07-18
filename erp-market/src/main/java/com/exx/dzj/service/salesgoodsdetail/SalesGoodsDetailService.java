@@ -21,7 +21,7 @@ public interface SalesGoodsDetailService {
 
     SaleGoodsDetailBean querySaleGoodsDetail(SaleGoodsDetailBean bean);
 
-    List<SaleGoodsDetailBean> queryGoodsForStock(LogisticsInfo logisticsInfo);
+    List<SaleGoodsDetailBean> queryGoodsForStock(String saleCode, List<String> stockCodeList);
 
     void batchUpdateSalesGoodsSubtractStatus(List<Integer> ids);
 }

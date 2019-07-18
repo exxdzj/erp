@@ -29,6 +29,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
@@ -478,8 +479,26 @@ public class SalesTicketFacade {
             addLogisticsInfoAndUpdateStockInventory(logisticsInfo);
 //            saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
         } else {
+            updateLogisticsGoodsInfo(logisticsInfo);
             saleReceiptsDetailService.updateLogisticsInfo(logisticsInfo);
         }
+    }
+
+    private void updateLogisticsGoodsInfo (LogisticsInfo logisticsInfo){
+        List<String> stockCodeList = Arrays.asList(logisticsInfo.getStockCode().split("&"));
+        List<SaleGoodsDetailBean> saleGoods = salesGoodsDetailService.queryGoodsForStock(logisticsInfo.getSaleCode(), stockCodeList);
+        if (!CollectionUtils.isEmpty(saleGoods)) {
+            StringBuilder stockName = new StringBuilder("");
+            for (int i = 0; i < saleGoods.size(); i++) {
+                stockName.append(saleGoods.get(i).getStockName());
+                if (i != saleGoods.size() - 1) {
+                    stockName.append("; ");
+                }
+            }
+
+            logisticsInfo.setStockName(stockName.toString());
+        }
+
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -489,56 +508,72 @@ public class SalesTicketFacade {
 
             // 查询对应仓库商品信息
             StockNumPrice snp = new StockNumPrice();
-            snp.setStockCode(logisticsInfo.getStockCode());
-            snp.setStockAddressCode(logisticsInfo.getStockAddressCode());
 
-            StockNumPrice stockNumPrice = stockInfoService.queryStockNumPirckList(snp);
+            // 商品编号信息
+            List<String> stockCodeList = Arrays.asList(logisticsInfo.getStockCode().split("&"));
+            snp.setStockCodeList(stockCodeList);
+//            snp.setStockAddressCode(logisticsInfo.getStockAddressCode());
 
-            saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
+            List<StockNumPrice> stockNumPriceList = stockInfoService.queryStockNumPirckList(snp);
+
 
             // 根据 销售单编号和商品编号,获取销售单卖出商品数量, 并对库存做修改
             // 查询销售单销售商品数量
-            List<SaleGoodsDetailBean> saleGoods = salesGoodsDetailService.queryGoodsForStock(logisticsInfo);
+            List<SaleGoodsDetailBean> saleGoods = salesGoodsDetailService.queryGoodsForStock(logisticsInfo.getSaleCode(), stockCodeList);
 
-            Double sum = 0.0;
+
             if (!CollectionUtils.isEmpty(saleGoods)){
-                boolean flag = true;
+                StringBuilder stockName = new StringBuilder("");
+                for (int i = 0; i < saleGoods.size(); i++){
+                    stockName.append(saleGoods.get(i).getStockName());
+                    if (i != saleGoods.size() - 1){
+                        stockName.append("; ");
+                    }
+                }
+
+                logisticsInfo.setStockName(stockName.toString());
+
+                saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
+
+                // 未减库存
+                List<SaleGoodsDetailBean> noSubtract = new ArrayList<>();
+                int isSubtractInventory = 1;
                 for (SaleGoodsDetailBean sgdb : saleGoods){
-                    Integer isSubtractInventory = sgdb.getIsSubtractInventory();
-                    if (CommonConstant.INTEGER_VALUE_ONE.equals(isSubtractInventory)){
-                        flag = false;
-                        break;
+                    isSubtractInventory = sgdb.getIsSubtractInventory();
+                    if (CommonConstant.DEFAULT_VALUE_ZERO == isSubtractInventory){
+                        noSubtract.add(sgdb);
                     }
                 }
 
                 // 还没减过库存
-                if (flag){
-                    sum = saleGoods.stream().mapToDouble(SaleGoodsDetailBean::getGoodsNum).sum();
-
+                if (!CollectionUtils.isEmpty(noSubtract)){
                     // 修改减库存状态为已减
-                    List<Integer> collect = saleGoods.stream().map(o -> o.getId()).collect(Collectors.toList());
+                    List<Integer> collect = noSubtract.stream().map(o -> o.getId()).collect(Collectors.toList());
                     salesGoodsDetailService.batchUpdateSalesGoodsSubtractStatus(collect);
+
+                    // 根据 存货编号获取商品信息, 减库存
+                    if (stockNumPriceList != null && stockNumPriceList.size() > 0) {
+
+                        String userCode = userTokenFacade.queryUserCodeForToken(null);
+                        for (StockNumPrice snps : stockNumPriceList){
+                            for (SaleGoodsDetailBean sgd : noSubtract){
+                                if (StringUtils.equals(snps.getStockCode(), sgd.getStockCode())){
+                                    // 减少库存
+                                    StockBean stockInfo = new StockBean();
+                                    stockInfo.setStockAddressCode(sgd.getStockAddressCode());
+                                    stockInfo.setStockCode(sgd.getStockCode());
+                                    stockInfo.setMinInventory(-sgd.getGoodsNum().intValue());
+                                    stockInfoService.updateStockGoodsInventory(stockInfo);
+                                    stockInfo.setUpdateUser(userCode);
+                                    stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);
+                                    stockInfoService.updateStockInfoSourceModel(stockInfo);
+                                }
+                            }
+                        }
+                    }
                 }
 
             }
-//            SaleGoodsDetailBean bean = new SaleGoodsDetailBean();
-//            bean.setStockCode(logisticsInfo.getStockCode());
-//            bean.setSaleCode(logisticsInfo.getSaleCode());
-//            SaleGoodsDetailBean saleGoodsDetailBean = salesGoodsDetailService.querySaleGoodsDetail(bean);
-
-            // 根据 存货编号获取商品信息
-        if (stockNumPrice != null) {
-            String userCode = userTokenFacade.queryUserCodeForToken(null);
-            // 减少库存
-            StockBean stockInfo = new StockBean();
-            stockInfo.setStockAddressCode(stockNumPrice.getStockAddressCode());
-            stockInfo.setStockCode(stockNumPrice.getStockCode());
-            stockInfo.setMinInventory(-sum.intValue());
-            stockInfoService.updateStockGoodsInventory(stockInfo);
-            stockInfo.setUpdateUser(userCode);
-//            stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);
-//            stockInfoService.updateStockInfoSourceModel(stockInfo);
-        }
         } catch (Exception e){
             throw e;
         }

@@ -266,12 +266,17 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<StockNumPrice> queryMultipleStocks(String stockCode) {
-        return stockMapper.queryMultipleStocks(stockCode);
+    public List<StockNumPrice> queryMultipleStocks(List<String> stockCodes) {
+        return stockMapper.queryMultipleStocks(stockCodes);
     }
 
     @Override
-    public StockNumPrice queryStockNumPirckList(StockNumPrice stockNumPrice) {
+    public StockNumPrice queryStockNumPirck(StockNumPrice stockNumPrice) {
+        return stockMapper.queryStockNumPirck(stockNumPrice);
+    }
+
+    @Override
+    public List<StockNumPrice> queryStockNumPirckList(StockNumPrice stockNumPrice) {
         return stockMapper.queryStockNumPirckList(stockNumPrice);
     }
 
