@@ -518,6 +518,7 @@
       ti.meter_unit meterUnit,
       ti.pictures,
       ti.bar_code barCode,
+      ti.is_shelves isShelves,
       ti.is_comm_sale isCommSale,
       sn.standard_buy_price standardBuyPrice,
       sn.standard_sell_price standardSellPrice,
