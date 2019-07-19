@@ -1406,9 +1406,17 @@
                 javaType="java.util.List" select="logisticsInfoList"></collection>
    </resultMap>
 
-  <update id="updatReceiptStatus">
-    UPDATE tab_sale_info SET
-      is_receipt = #{isReceipt}
+  <update id="updatReceiptStatus" parameterType="com.exx.dzj.entity.market.SaleInfo">
+    UPDATE tab_sale_info
+      <set>
+        <if test="isReceipt != null">
+          is_receipt = #{isReceipt},
+        </if>
+        <if test="deliverRemark != null and deliverRemark != ''">
+          deliver_remark =#{deliverRemark},
+        </if>
+        update_time = SYSDATE()
+      </set>
     WHERE sale_code = #{saleCode}
   </update>
 </mapper>

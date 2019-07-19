@@ -68,5 +68,5 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
 
     List<SaleListInfo> exportSaleList(SaleInfoQuery query);
 
-    int updatReceiptStatus(@Param("saleCode") String saleCode, @Param("isReceipt") Integer isReceipt);
+    int updatReceiptStatus(SaleInfo saleInfo);
 }

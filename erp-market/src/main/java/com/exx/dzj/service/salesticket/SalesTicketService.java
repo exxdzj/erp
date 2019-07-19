@@ -63,5 +63,5 @@ public interface SalesTicketService extends IService<SaleInfo> {
 
     List<SaleListInfo> exportSaleList (SaleInfoQuery query, QueryWrapper queryWrapper);
 
-    int updatReceiptStatus (String saleCode, Integer isReceipt);
+    int updatReceiptStatus (SaleInfo saleInfo);
 }
