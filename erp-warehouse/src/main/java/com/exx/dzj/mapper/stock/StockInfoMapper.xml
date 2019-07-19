@@ -158,6 +158,15 @@
       <if test="isCommSale != null">
         is_comm_sale,
       </if>
+      <if test="companyCode != null">
+        company_code,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
       create_time,
       <if test="createUser != null and createUser!=''">
         create_user,
@@ -212,6 +221,15 @@
       </if>
       <if test="isCommSale != null">
         #{isCommSale,jdbcType=INTEGER},
+      </if>
+      <if test="companyCode != null">
+        #{companyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
       </if>
       SYSDATE(),
       <if test="createUser != null and createUser!=''">
@@ -315,6 +333,15 @@
       </if>
       <if test="isCommSale != null">
         is_comm_sale = #{isCommSale,jdbcType=INTEGER},
+      </if>
+      <if test="companyCode != null">
+        company_code = #{companyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks},
       </if>
       update_time = SYSDATE(),
       <if test="updateUser != null and updateUser!=''">
@@ -496,7 +523,10 @@
       sn.standard_sell_price standardSellPrice,
       sn.max_purchase_price maxPurchasePrice,
       sn.min_sell_price minSellPrice,
-      sn.min_inventory minInventory
+      sn.min_inventory minInventory,
+      ti.company_code companyCode,
+      ti.company_name companyName,
+      ti.remarks remarks
     FROM
         tab_stock_info ti
     LEFT JOIN tab_stock_num_price sn ON ti.stock_code = sn.stock_code and sn.is_default = 1

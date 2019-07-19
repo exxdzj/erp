@@ -55,4 +55,10 @@ public class StockInfo extends BaseModule {
 
     private String stockAddress;
     private String stockAddressCode;
+
+    private String companyCode;
+
+    private String companyName;
+
+    private String remarks;
 }

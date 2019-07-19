@@ -64,8 +64,11 @@ public class StockFacade {
          * 存货信息
          */
         StockBean stockBean = stockInfoService.queryStockInfo(stockCode);
-        if(null != stockBean && StringUtils.isNotBlank(stockBean.getPictures())){
-            stockBean.setImages(stockBean.getPictures().split(","));
+        if(null != stockBean){
+            stockBean.setDialogStatus("update");
+            if(StringUtils.isNotBlank(stockBean.getPictures())){
+                stockBean.setImages(stockBean.getPictures().split(","));
+            }
         }
 
         result.setData(stockBean);

@@ -13,6 +13,7 @@ import com.exx.dzj.result.Result;
 import com.exx.dzj.service.stock.StockService;
 import com.exx.dzj.unique.DefaultIdGenerator;
 import com.exx.dzj.unique.IdGenerator;
+import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.EntityJudgeUtil;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -107,7 +108,7 @@ public class StockServiceImpl implements StockService {
                 stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_THREE);
             }
 
-            if(stockInfo.getId() != null){
+            if(stockInfo.getId() != null || (!ConvertUtils.isEmpty(bean.getDialogStatus()) && bean.getDialogStatus().equals("update"))){
                 stockMapper.updateByPrimaryKeySelective(stockInfo);
 
                 stockNumPrice.setStockCode(null);
@@ -118,13 +119,15 @@ public class StockServiceImpl implements StockService {
                         priceMapper.insertSelective(stockNumPrice);
                     }
                 }
-            }else{
+            } else {
                 /*IdGenerator idGenerator = new DefaultIdGenerator();
                 String stockCode = "STOCKCODE"+idGenerator.next();
 
                 stockInfo.setStockCode(stockCode);*/
-                //待上架状态
-                stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_THREE);
+                if(null == stockInfo.getIsShelves()) {
+                    //待上架状态
+                    stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_THREE);
+                }
                 stockMapper.insertSelective(stockInfo);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(stockNumPrice)){
                     stockNumPrice.setStockCode(stockInfo.getStockCode());

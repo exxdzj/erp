@@ -30,4 +30,6 @@ public class StockBean extends StockInfo implements Serializable {
     private String stockAddressCode;
     /**默认存货地点*/
     private String stockAddress;
+
+    private String dialogStatus;
 }
