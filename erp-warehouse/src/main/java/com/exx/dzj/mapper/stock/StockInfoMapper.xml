@@ -631,7 +631,7 @@
     standard_sell_price standardSellPrice,
     max_purchase_price maxPurchasePrice,
     min_sell_price minSellPrice,
-    min_inventory minInventory,
+    IFNULL(min_inventory, 0) minInventory,
     stock_address stockAddress,
     stock_address_code stockAddressCode
     FROM
