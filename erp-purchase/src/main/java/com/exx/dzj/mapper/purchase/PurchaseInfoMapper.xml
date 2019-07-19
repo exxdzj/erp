@@ -110,7 +110,7 @@
       PINFO.total_sum AS totalSum,
       PINFO.discount_amount AS discountAmount,
       PINFO.receivable_accoun AS receivableAccoun,
-      DATE_FORMAT(PINFO.due_date, '%Y-%m-%d') AS purchaseDate, AS dueDate,
+      DATE_FORMAT(PINFO.due_date, '%Y-%m-%d')  AS dueDate,
       PINFO.payment_status AS paymentStatus,
       PINFO.invoice_code AS invoiceCode,
       UINFO.real_name AS purchaseName,
