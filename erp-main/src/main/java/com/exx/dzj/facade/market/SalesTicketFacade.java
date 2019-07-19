@@ -234,10 +234,10 @@ public class SalesTicketFacade {
         if (StringUtils.isEmpty(saleInfo.getPaymentStatus()) && saleInfo.getSumCollectedAmount() == null){
             saleInfo.setPaymentStatus("cs01");
         } else {
-            if (saleInfo.getSumCollectedAmount().doubleValue() == 0){
-                saleInfo.setPaymentStatus("cs01");
-            } else if (saleInfo.getSumCollectedAmount().doubleValue() == saleInfo.getReceivableAccoun().doubleValue()){
+            if (saleInfo.getSumCollectedAmount().doubleValue() == saleInfo.getReceivableAccoun().doubleValue()){
                 saleInfo.setPaymentStatus("cs03");
+            } else if (saleInfo.getSumCollectedAmount().doubleValue() == 0){
+                saleInfo.setPaymentStatus("cs01");
             } else {
                 saleInfo.setPaymentStatus("cs02");
             }
