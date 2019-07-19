@@ -14,7 +14,7 @@
         sinfo.sale_code, DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d') sale_date,
         cs.cust_code, cs.cust_name
       FROM tab_sale_info sinfo
-        LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code
+        LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code AND sgd.stock_code NOT REGEXP '^cb'
         LEFT JOIN tab_stock_info stinfo ON stinfo.stock_code = sgd.stock_code
         LEFT JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
         LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code
@@ -85,22 +85,26 @@
 
     <select id="querySalesDeductionBySaleman" parameterType="com.exx.dzj.entity.bean.UserInfoQuery" resultType="com.exx.dzj.entity.statistics.sales.SaleDeductionReport">
         SELECT
-        ui.user_code AS userCode,
-        SUM(IFNULL(si.receivable_accoun,0)) AS sumSaleVolume,  /*销售额, 总金额-优惠金额*/
-        SUM(IFNULL(sg.goods_num,0)) AS sumGoodsNum, /*数量*/
-        SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.unit_price,0)) AS sumSaleCost,  /*成本*/
-        SUM(IFNULL(si.receivable_accoun,0) - IFNULL(sg.goods_num,0) * IFNULL(sg.unit_price,0)) AS sumGrossMargin, /*毛利*/
-        CONVERT(SUM(IFNULL(si.receivable_accoun,0) - IFNULL(sg.goods_num,0) * IFNULL(sg.unit_price,0)) / SUM(IFNULL(si.receivable_accoun,0)),DECIMAL(10, 4)) * 100 AS grossRate,
-        SUM(IFNULL(sg1.goods_num,0)) AS sumCost, /*额外支出费用*/
-        SUM(IFNULL(si.receivable_accoun,0)) - SUM(IFNULL(sg1.goods_num,0)) AS pureProfit,
-        ui.commission_rate AS commissionRate, /*佣金率*/
-        IFNULL(IFNULL(ui.commission_rate,0) * SUM(IFNULL(si.receivable_accoun,0)), 0) / 100 AS commission, /*佣金*/
-        ui.real_name AS realName
+            ui.user_code AS userCode,
+            SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0),0)) AS sumSaleVolume,  /*销售额, 总金额-优惠金额*/
+            SUM(IFNULL(sg.goods_num,0)) AS sumGoodsNum, /*数量*/
+            SUM(IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) AS sumSaleCost,  /*成本*/
+            SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) AS sumGrossMargin, /*毛利*/
+            CONVERT(
+            SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0))
+            / SUM(IFNULL(si.receivable_accoun,0)),DECIMAL(10, 4)) * 100 AS grossRate,
+            SUM(IFNULL(sg1.goods_num,0) * IFNULL(sprice1.min_sell_price,0)) AS sumCost, /*额外支出费用*/
+            SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) - SUM(IFNULL(sg1.goods_num,0)) AS pureProfit,
+            ui.commission_rate AS commissionRate, /*佣金率*/
+            IFNULL(IFNULL(ui.commission_rate,0) * SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0),0)), 0) / 100 AS commission, /*佣金*/
+            ui.real_name AS realName
         FROM
-        tab_sale_info si
+            tab_sale_info si
         LEFT JOIN tab_user_info ui ON ui.user_code = si.user_code
-        LEFT JOIN tab_sale_goods_detail sg ON si.sale_code = sg.sale_code
+        LEFT JOIN tab_sale_goods_detail sg ON si.sale_code = sg.sale_code and sg.stock_code NOT REGEXP '^cb'
+        LEFT JOIN tab_stock_num_price sprice ON sprice.stock_code = sg.stock_code
         LEFT JOIN tab_sale_goods_detail sg1 ON si.sale_code = sg1.sale_code AND sg1.stock_code REGEXP '^cb'
+        LEFT JOIN tab_stock_num_price sprice1 ON sg1.stock_code = sprice1.stock_code
         LEFT JOIN tab_sale_receipts_details sr ON si.sale_code = sr.sale_code
         WHERE 1 =1
         <if test="userCodeList != null">
