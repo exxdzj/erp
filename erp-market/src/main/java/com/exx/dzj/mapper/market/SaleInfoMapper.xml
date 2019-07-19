@@ -171,6 +171,7 @@
     SINFO.id,
     SINFO.sale_code,
     DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') sale_date,
+    DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') sale_date_str,
     CSUPPLIER.cust_name,
     SINFO.currency,
     SINFO.exchange_rate,
@@ -262,6 +263,7 @@
     <result column="currency" property="currency"/>
     <result column="cust_name" property="custName"/>
     <result column="sale_date" property="saleDate"/>
+    <result column="sale_date_str" property="saleDateStr"/>
     <result column="cust_phone_num" property="custPhoneNum"/>
     <result column="sale_code" property="saleCode"/>
     <result column="deliver_remark" property="deliverRemark"/>

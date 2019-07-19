@@ -49,6 +49,8 @@ public class SaleInfo extends BaseModule {
     @ApiModelProperty(value = "日期", name = "saleDate", required = true, example = "2019-07-01")
     private Timestamp saleDate;
 
+    private String saleDateStr;
+
     @ApiModelProperty(value = "单据类型(1:销售单,2:退款单)", name = "saleTicketType", example = "1")
     private Integer saleTicketType;
 
