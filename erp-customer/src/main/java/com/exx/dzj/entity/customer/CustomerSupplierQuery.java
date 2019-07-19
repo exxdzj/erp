@@ -30,4 +30,5 @@ public class CustomerSupplierQuery implements Serializable {
     private String regionCode;
     private String regionName;
     private String userCode;
+    private String birthdayDate;
 }

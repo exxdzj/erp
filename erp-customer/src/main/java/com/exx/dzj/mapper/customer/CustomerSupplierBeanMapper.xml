@@ -423,6 +423,9 @@
     <if test="userCode != null and userCode!=''">
       AND cs.user_code = #{userCode}
     </if>
+    <if test="birthdayDate != null and birthdayDate!=''">
+      AND DATE_FORMAT(cs.birthday, '%m-%d') = #{birthdayDate}
+    </if>
   </select>
   <!-- ORDER BY cs.create_time DESC -->
 
@@ -602,6 +605,9 @@
     </if>
     <if test="userCode != null and userCode!=''">
       AND cs.user_code = #{userCode}
+    </if>
+    <if test="birthdayDate != null and birthdayDate!=''">
+      AND DATE_FORMAT(cs.birthday, '%m-%d') = #{birthdayDate}
     </if>
   </select>
 
