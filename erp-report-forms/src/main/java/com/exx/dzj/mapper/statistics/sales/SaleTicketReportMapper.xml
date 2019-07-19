@@ -11,7 +11,7 @@
         END unitPrice,
         snp.standard_buy_price, uinfo.real_name,
         sgd.goods_num, snp.stock_address,
-        sinfo.sale_code, sinfo.sale_date,
+        sinfo.sale_code, DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d'),
         cs.cust_code, cs.cust_name
       FROM tab_sale_info sinfo
         LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code
@@ -51,7 +51,7 @@
     <!-- 销售单-依销售 -->
     <select id="statisticsSaleBySalesMan" parameterType="com.exx.dzj.entity.bean.UserInfoQuery" resultMap="userReportMap">
       SELECT
-            sinfo.sale_code, sinfo.sale_date,sinfo.salesman_code,
+            sinfo.sale_code, DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d'),sinfo.salesman_code,
             IFNULL((SELECT SUM(srd.collected_amount) FROM tab_sale_receipts_details srd WHERE srd.sale_code = sinfo.sale_code), 0) AS collected_amount,
             cs.cust_code, cs.cust_name,
             uinfo.user_code, uinfo.real_name, uinfo.commission_rate,
@@ -86,21 +86,21 @@
     <select id="querySalesDeductionBySaleman" parameterType="com.exx.dzj.entity.bean.UserInfoQuery" resultType="com.exx.dzj.entity.statistics.sales.SaleDeductionReport">
         SELECT
         ui.user_code AS userCode,
-        SUM(si.receivable_accoun) AS sumSaleVolume,  /*销售额, 总金额-优惠金额*/
-        SUM(sg.goods_num) AS sumGoodsNum, /*数量*/
-        SUM(sg.goods_num * sg.unit_price) AS sumSaleCost,  /*成本*/
-        SUM(si.receivable_accoun - sg.goods_num * sg.unit_price) AS sumGrossMargin, /*毛利*/
-        CONVERT(SUM(si.receivable_accoun - sg.goods_num * sg.unit_price) / SUM(si.receivable_accoun),DECIMAL(10, 4)) * 100 AS grossRate,
-        SUM(sg1.goods_num) AS sumCost, /*额外支出费用*/
-        SUM(si.receivable_accoun) - SUM(sg1.goods_num) AS pureProfit,
+        SUM(IFNULL(si.receivable_accoun,0)) AS sumSaleVolume,  /*销售额, 总金额-优惠金额*/
+        SUM(IFNULL(sg.goods_num,0)) AS sumGoodsNum, /*数量*/
+        SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.unit_price,0)) AS sumSaleCost,  /*成本*/
+        SUM(IFNULL(si.receivable_accoun,0) - IFNULL(sg.goods_num,0) * IFNULL(sg.unit_price,0)) AS sumGrossMargin, /*毛利*/
+        CONVERT(SUM(IFNULL(si.receivable_accoun,0) - IFNULL(sg.goods_num,0) * IFNULL(sg.unit_price,0)) / SUM(IFNULL(si.receivable_accoun,0)),DECIMAL(10, 4)) * 100 AS grossRate,
+        SUM(IFNULL(sg1.goods_num,0)) AS sumCost, /*额外支出费用*/
+        SUM(IFNULL(si.receivable_accoun,0)) - SUM(IFNULL(sg1.goods_num,0)) AS pureProfit,
         ui.commission_rate AS commissionRate, /*佣金率*/
-        IFNULL(ui.commission_rate * SUM(si.receivable_accoun), 0) / 100 AS commission, /*佣金*/
+        IFNULL(IFNULL(ui.commission_rate,0) * SUM(IFNULL(si.receivable_accoun,0)), 0) / 100 AS commission, /*佣金*/
         ui.real_name AS realName
         FROM
         tab_sale_info si
         LEFT JOIN tab_user_info ui ON ui.user_code = si.user_code
-        inner JOIN tab_sale_goods_detail sg ON si.sale_code = sg.sale_code
-        inner JOIN tab_sale_goods_detail sg1 ON si.sale_code = sg1.sale_code AND sg1.stock_code REGEXP '^cb'
+        LEFT JOIN tab_sale_goods_detail sg ON si.sale_code = sg.sale_code
+        LEFT JOIN tab_sale_goods_detail sg1 ON si.sale_code = sg1.sale_code AND sg1.stock_code REGEXP '^cb'
         LEFT JOIN tab_sale_receipts_details sr ON si.sale_code = sr.sale_code
         WHERE 1 =1
         <if test="userCodeList != null">
@@ -109,7 +109,12 @@
                 #{item}
             </foreach>
         </if>
-        AND si.sale_date BETWEEN #{startDate} AND #{endDate}
+        <if test="startDate != null and startDate != ''">
+            AND <![CDATA[si.sale_date >= DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND <![CDATA[si.sale_date <= DATE_FORMAT(#{endDate},'%Y-%m-%d 23:59:59')]]>
+        </if>
         <if test="paymentStatu == '1'" >
             AND si.payment_status = 'cs03'
         </if>
@@ -145,7 +150,7 @@
     <select id="querySalesTicketByCust"  parameterType="com.exx.dzj.entity.bean.CustomerQuery" resultMap="customerReportMap">
         SELECT
             sinfo.sale_code,
-            sinfo.sale_date,
+            DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d'),
             cs.cust_code,
             cs.cust_name,
             sgd.goods_num,
@@ -293,7 +298,7 @@
     <select id="querySaleDetailList" resultMap="saleDetailMap" parameterType="com.exx.dzj.bean.SaleDetailReportQuery">
         SELECT
             sinfo.sale_code,
-            sinfo.sale_date,
+            DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d'),
             sinfo.salesman_code,
             sinfo.exchange_rate,
             uinfo.real_name,

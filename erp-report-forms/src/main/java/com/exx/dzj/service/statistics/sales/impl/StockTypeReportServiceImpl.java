@@ -37,12 +37,12 @@ public class StockTypeReportServiceImpl implements SaleTicketReportService {
         return stockTypeReportMapper.statisticsSaleBySalesMan(query);
     }
 
-    @Cacheable(value = "querysalesticketbycust", keyGenerator = "myKeyGenerator")
+//    @Cacheable(value = "querysalesticketbycust", keyGenerator = "myKeyGenerator")
     @Override
     public List<CustomerBaseReport> querySalesTicketByCust(CustomerQuery query) {
         return stockTypeReportMapper.querySalesTicketByCust(query);
     }
-    @Cacheable(value = "querysalesdeductionbysaleman", keyGenerator = "myKeyGenerator")
+//    @Cacheable(value = "querysalesdeductionbysaleman", keyGenerator = "myKeyGenerator")
     @Override
     public List<SaleDeductionReport> querySalesDeductionBySaleman(UserInfoQuery query) {
         return stockTypeReportMapper.querySalesDeductionBySaleman(query);

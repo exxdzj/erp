@@ -170,7 +170,7 @@
     SELECT
     SINFO.id,
     SINFO.sale_code,
-    SINFO.sale_date,
+    DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d'),
     CSUPPLIER.cust_name,
     SINFO.currency,
     SINFO.exchange_rate,
@@ -179,7 +179,7 @@
     SINFO.receivable_accoun,
     SINFO.cust_phone_num,
     SINFO.deliver_remark,
-    SINFO.due_date,
+    DATE_FORMAT(SINFO.due_date, '%Y-%m-%d'),,
     SINFO.payment_status AS paymentStatus,
     SINFO.invoice_code AS invoiceCode,
     DICTIONPRO.dict_name AS saleProject,
