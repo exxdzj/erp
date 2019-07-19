@@ -170,7 +170,7 @@
     SELECT
     SINFO.id,
     SINFO.sale_code,
-    SINFO.sale_date,
+    DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') sale_date,
     CSUPPLIER.cust_name,
     SINFO.currency,
     SINFO.exchange_rate,
@@ -179,7 +179,7 @@
     SINFO.receivable_accoun,
     SINFO.cust_phone_num,
     SINFO.deliver_remark,
-    SINFO.due_date,
+    DATE_FORMAT(SINFO.due_date, '%Y-%m-%d') due_date,
     SINFO.payment_status AS paymentStatus,
     SINFO.invoice_code AS invoiceCode,
     DICTIONPRO.dict_name AS saleProject,
@@ -1406,9 +1406,17 @@
                 javaType="java.util.List" select="logisticsInfoList"></collection>
    </resultMap>
 
-  <update id="updatReceiptStatus">
-    UPDATE tab_sale_info SET
-      is_receipt = #{isReceipt}
+  <update id="updatReceiptStatus" parameterType="com.exx.dzj.entity.market.SaleInfo">
+    UPDATE tab_sale_info
+      <set>
+        <if test="isReceipt != null">
+          is_receipt = #{isReceipt},
+        </if>
+        <if test="deliverRemark != null and deliverRemark != ''">
+          deliver_remark =#{deliverRemark},
+        </if>
+        update_time = SYSDATE()
+      </set>
     WHERE sale_code = #{saleCode}
   </update>
 </mapper>

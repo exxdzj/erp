@@ -206,7 +206,7 @@ SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo> implements 
     }
 
     @Override
-    public int updatReceiptStatus(String saleCode, Integer isReceipt) {
-        return saleInfoMapper.updatReceiptStatus(saleCode, isReceipt);
+    public int updatReceiptStatus(SaleInfo saleInfo) {
+        return saleInfoMapper.updatReceiptStatus(saleInfo);
     }
 }

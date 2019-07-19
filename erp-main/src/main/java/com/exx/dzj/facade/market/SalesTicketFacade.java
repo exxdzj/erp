@@ -639,9 +639,9 @@ public class SalesTicketFacade {
         return saleInfoPage;
     }
 
-    public int updatReceiptStatus (String saleCode, Integer isReceipt){
+    public int updatReceiptStatus (SaleInfo saleInfo){
 
-        return salesTicketService.updatReceiptStatus(saleCode, isReceipt);
+        return salesTicketService.updatReceiptStatus(saleInfo);
     }
 
 }

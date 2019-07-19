@@ -349,17 +349,16 @@ public class SalesTickeContorller {
     }
 
     /**
-     * @description: 签收状态修改
+     * @description: 销售单列表单元格数据修改
      * @author yangyun
      * @date 2019/7/18 0018
-     * @param saleCode
-     * @param isReceipt
+     * @param saleInfo
      * @return com.exx.dzj.result.Result
      */
-    @PutMapping("updatreceiptstatus/{saleCode}/{isReceipt}")
-    public Result updatReceiptStatus (@PathVariable("saleCode") String saleCode, @PathVariable("isReceipt") Integer isReceipt){
+    @PutMapping("updatlistcellinfo")
+    public Result updatListCellInfo (SaleInfo saleInfo){
         Result result = Result.responseSuccess();
-        int res = salesTicketFacade.updatReceiptStatus(saleCode, isReceipt);
+        int res = salesTicketFacade.updatReceiptStatus(saleInfo);
         if (res == CommonConstant.DEFAULT_VALUE_ZERO){
             result.setCode(CommonConstant.FAIL_CODE);
         }

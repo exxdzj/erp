@@ -306,6 +306,7 @@
   <!-- 查询  字典表数据 -->
   <select id="queryDictionary" resultType="com.exx.dzj.entity.dictionary.DictionaryInfo">
     SELECT
+        di.dict_name `value`,
         di.dict_code dictCode,
         di.dict_name dictName
     FROM
