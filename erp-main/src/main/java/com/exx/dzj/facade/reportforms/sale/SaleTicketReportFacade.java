@@ -77,7 +77,7 @@ public class SaleTicketReportFacade {
                                             sgr.setCustName(end.getCustName());
                                             sgr.setStandardBuyPrice(end.getStandardBuyPrice());
                                             BigDecimal bigDecimal = new BigDecimal(end.getGoodsNum() == null ?0  : end.getGoodsNum());
-                                            sgr.setSalesVolume(end.getUnitPrice().multiply(bigDecimal));
+                                            sgr.setSalesVolume(end.getUnitPrice().multiply(bigDecimal).subtract(end.getDiscountAmount()));
                                             sgr.setCost(end.getStandardBuyPrice().multiply(bigDecimal));
                                             sgr.setRealName(end.getRealName());
                                             sgr.setGrossMargin(sgr.getSalesVolume().subtract(sgr.getCost()));
@@ -195,7 +195,8 @@ public class SaleTicketReportFacade {
                                 sir.setSaleDate(baseReports.get(0).getSaleDate());
                                 sir.setCustCode(baseReports.get(0).getCustCode());
                                 sir.setCustName(baseReports.get(0).getCustName());
-                                sir.setCollectedAmountTotal(baseReports.get(0).getCollectedAmount());
+                                BigDecimal reduce = baseReports.stream().map(SalesmanBaseReport::getDiscountAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+                                sir.setCollectedAmountTotal(baseReports.get(0).getCollectedAmount().subtract(reduce));
                                 baseReports.stream().forEach(
                                         goods -> {
                                             SaleGoodsReport sgr = new SaleGoodsReport();
@@ -204,7 +205,7 @@ public class SaleTicketReportFacade {
                                             sgr.setGoodsNum(goods.getGoodsNum());
                                             sgr.setUnitPrice(goods.getUnitPrice());
                                             BigDecimal salesVolume = goods.getUnitPrice().multiply(new BigDecimal(goods.getGoodsNum()));
-                                            sgr.setSalesVolume(salesVolume);
+                                            sgr.setSalesVolume(salesVolume.subtract(goods.getDiscountAmount()));
                                             sgr.setStandardBuyPrice(goods.getStandardBuyPrice());
                                             BigDecimal cost = goods.getStandardBuyPrice().multiply(new BigDecimal(goods.getGoodsNum()));
                                             sgr.setCost(cost);
@@ -345,7 +346,7 @@ public class SaleTicketReportFacade {
                                             sgr.setGoodsNum(goods.getGoodsNum());
                                             sgr.setUnitPrice(goods.getUnitPrice());
                                             BigDecimal salesVolume = goods.getUnitPrice().multiply(new BigDecimal(goods.getGoodsNum()));
-                                            sgr.setSalesVolume(salesVolume);
+                                            sgr.setSalesVolume(salesVolume.subtract(goods.getDiscountAmount()));
                                             sgr.setStandardBuyPrice(goods.getStandardBuyPrice());
                                             BigDecimal cost = goods.getStandardBuyPrice().multiply(new BigDecimal(goods.getGoodsNum()));
                                             sgr.setCost(cost);
@@ -574,7 +575,7 @@ public class SaleTicketReportFacade {
 
                                 BigDecimal multiply = goods.getUnitPrice().multiply(new BigDecimal(goods.getGoodsNum() * goods.getExchangeRate()));
 
-                                sgr.setSalesVolume(multiply);
+                                sgr.setSalesVolume(multiply.subtract(goods.getDiscountAmount()));
                             }
                     );
 

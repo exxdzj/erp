@@ -11,13 +11,13 @@
         END unitPrice,
         snp.standard_buy_price, uinfo.real_name,
         sgd.goods_num, snp.stock_address,
-        sinfo.sale_code, DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d') sale_date,
+        sinfo.sale_code, DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d') sale_date,IFNULL(sinfo.discount_amount,0) discount_amount,
         cs.cust_code, cs.cust_name
       FROM tab_sale_info sinfo
         LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code AND sgd.stock_code NOT REGEXP '^cb'
         LEFT JOIN tab_stock_info stinfo ON stinfo.stock_code = sgd.stock_code
         LEFT JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
-        LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code
+        LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code AND cs.cust_type IN (1, 3)
         INNER JOIN tab_dictionary_info dinfo ON dinfo.dict_code = stinfo.stock_class AND dinfo.data_type = 'inventory_type'
         INNER JOIN tab_stock_num_price snp ON sgd.stock_code = snp.stock_code
       WHERE 1 =1
@@ -35,6 +35,7 @@
     <resultMap id="stockTypeMap" type="com.exx.dzj.entity.statistics.sales.StockBaseReport">
         <result column="stock_code" property="stockCode"/>
         <result column="stock_name" property="stockName"/>
+        <result column="discount_amount" property="discountAmount"/>
         <result column="dict_name" property="stockClassName"/>
         <result column="unitPrice" property="unitPrice"/>
         <result column="standard_buy_price" property="standardBuyPrice"/>
@@ -54,7 +55,7 @@
             sinfo.sale_code, DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d') sale_date,sinfo.salesman_code,
             IFNULL((SELECT SUM(srd.collected_amount) FROM tab_sale_receipts_details srd WHERE srd.sale_code = sinfo.sale_code), 0) AS collected_amount,
             cs.cust_code, cs.cust_name,
-            uinfo.user_code, uinfo.real_name, uinfo.commission_rate,
+            uinfo.user_code, uinfo.real_name, uinfo.commission_rate,IFNULL(sinfo.discount_amount,0) discount_amount,
             sgd.goods_num, CASE
                     WHEN sgd.real_sell_price > 0 THEN sgd.real_sell_price
                 ELSE
@@ -86,7 +87,7 @@
     <select id="querySalesDeductionBySaleman" parameterType="com.exx.dzj.entity.bean.UserInfoQuery" resultType="com.exx.dzj.entity.statistics.sales.SaleDeductionReport">
         SELECT
             ui.user_code AS userCode,
-            SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0),0)) AS sumSaleVolume,  /*销售额, 总金额-优惠金额*/
+            SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(si.discount_amount,0),0) ) AS sumSaleVolume,  /*销售额, 总金额-优惠金额*/
             SUM(IFNULL(sg.goods_num,0)) AS sumGoodsNum, /*数量*/
             SUM(IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) AS sumSaleCost,  /*成本*/
             SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) AS sumGrossMargin, /*毛利*/
@@ -137,6 +138,7 @@
     <resultMap id="userReportMap" type="com.exx.dzj.entity.statistics.sales.SalesmanBaseReport">
         <result column="sale_code" property="saleCode"/>
         <result column="sale_date" property="saleDate"/>
+        <result column="discount_amount" property="discountAmount"/>
         <result column="collected_amount" property="collectedAmount"/>
         <result column="cust_code" property="custCode"/>
         <result column="salesman_code" property="salesmanCode"/>
@@ -157,6 +159,8 @@
             DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d') sale_date,
             cs.cust_code,
             cs.cust_name,
+            IFNULL(sinfo.discount_amount,0) discount_amount,
+            IFNULL(sinfo.discount_amount,0) discount_amount,
             sgd.goods_num,
             CASE
                 WHEN sgd.real_sell_price > 0 THEN
@@ -192,6 +196,7 @@
     <resultMap id="customerReportMap" type="com.exx.dzj.entity.statistics.sales.CustomerBaseReport">
         <result column="sale_code" property="saleCode"/>
         <result column="sale_date" property="saleDate"/>
+        <result column="discount_amount" property="discountAmount"/>
         <result column="cust_code" property="custCode"/>
         <result column="cust_name" property="custName"/>
         <result column="goods_num" property="goodsNum"/>
@@ -290,7 +295,7 @@
     <select id="queryStasticsSalesForMonth" resultMap="salesMapForMomth">
         SELECT DAY(sale_date) AS `day`, SUM(receivable_accoun)  AS sum_receivable_accoun
         FROM tab_sale_info
-        WHERE MONTH(sale_date) = MONTH(sysdate())
+        WHERE MONTH(sale_date) = MONTH(sysdate()) AND YEAR(sale_date) = YEAR(sysdate())
         GROUP BY DAY(sale_date);
     </select>
     
@@ -305,6 +310,7 @@
             DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d') sale_date,
             sinfo.salesman_code,
             sinfo.exchange_rate,
+            IFNULL(sinfo.discount_amount,0) discount_amount,
             uinfo.real_name,
             cs.cust_code,
             cs.cust_name,
@@ -349,6 +355,7 @@
         <result column="sale_code" property="saleCode"/>
         <result column="exchange_rate" property="exchangeRate"/>
         <result column="sale_date" property="saleDate"/>
+        <result column="discount_amount" property="discountAmount"/>
         <result column="salesman_code" property="salesmanCode"/>
         <result column="real_name" property="realName"/>
         <result column="cust_code" property="custCode"/>

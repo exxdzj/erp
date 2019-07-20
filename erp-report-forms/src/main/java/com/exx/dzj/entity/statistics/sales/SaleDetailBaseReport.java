@@ -23,6 +23,7 @@ public class SaleDetailBaseReport implements Serializable {
     private String custName;
     private Double goodsNum;
     private BigDecimal unitPrice;
+    private BigDecimal discountAmount;
     private String stockAddress;
     private String stockCode;
     private String stockName;

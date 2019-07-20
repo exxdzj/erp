@@ -22,6 +22,7 @@ public class SaleBaseReport implements Serializable {
     private String custName;
     private BigDecimal unitPrice;
     private BigDecimal standardBuyPrice;
+    private BigDecimal discountAmount;
     private Double goodsNum;
     private String realName;
 }
