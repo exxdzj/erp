@@ -20,6 +20,7 @@ import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.stock.StockService;
 import com.exx.dzj.service.sys.DeptService;
 import com.exx.dzj.service.user.UserService;
+import com.exx.dzj.util.DateUtil;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -447,24 +450,53 @@ public class SalesTicketFacade {
 
     @Transactional
     public void importData (List<SaleInfo> saleInfos){
-        List<SaleInfo> importFailData = new ArrayList<>();
+        List<String> importFailData = new ArrayList<>();
+        String filename = "";
         for (SaleInfo s : saleInfos){
             try {
+                filename = DateUtil.convertDateToString(s.getSaleDate(), "yyyy-MM");
                 // 获取部门信息
                 List<DeptInfoBean> deptInfos = deptService.queryDeptList();
 
-                // 查询销售员部门编码
-                String deptCode = salesmanService.querySalesmanDeptCode(s.getSalesmanCode());
-
                 saveSalesTicket2(s);
+                // 查询销售员部门编码
+                List<String> strings = salesmanService.querySalesmanDeptCode2(s.getSalesmanCode());
+                if (strings != null && strings.size() > 0){
 
-                setSubordinateCompany(s, deptInfos, deptCode);
+                    String deptCode = strings.get(0);
+                    setSubordinateCompany(s, deptInfos, deptCode);
+                }
+
+
 
             } catch (Exception e){
                 e.printStackTrace();
-                importFailData.add(s);
+                importFailData.add(s.getSaleCode() + "\t" + e.getMessage());
             }
         }
+
+
+//        StringBuilder data = new StringBuilder("");
+//        importFailData.stream().forEach(
+//                o ->{
+//                    data.append(o).append("&");
+//
+//                    System.out.println(o);
+//                }
+//        );
+//        try {
+//            writeString(data.toString(), filename);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    private void writeString (String str, String filename) throws Exception{
+        FileWriter fw = new FileWriter("e://"+filename+".txt");
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.append(str);
+        bw.close();
+        fw.close();
     }
 
     public void addLogisticsInfo (LogisticsInfo logisticsInfo){

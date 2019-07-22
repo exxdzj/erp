@@ -216,7 +216,7 @@ public class UserFacade {
         return salesmanService.queryUserInfo(userInfo);
     }
 
-    @Cacheable(value = "selectionUserInfo", keyGenerator = "myKeyGenerator")
+//    @Cacheable(value = "selectionUserInfo", keyGenerator = "myKeyGenerator")
     public List<SelectionSaleInfo> selectionUserInfo (){
         List<UserModel> userModels = salesmanService.selectionUserInfo();
         List<SelectionSaleInfo> list = new ArrayList<>();

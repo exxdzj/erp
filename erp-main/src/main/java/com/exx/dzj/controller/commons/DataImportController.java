@@ -82,7 +82,8 @@ public class DataImportController {
                 case 1:// 销售单
                     List<Object> saleList = ExcelUtil.readExcel(excelFile, new SaleModel(), CommonConstant.DEFAULT_VALUE_ONE);
 
-                    List<SaleInfo> saleInfoList = ProccessImportDataUtil.proccessSaleInfo(saleList, userInfoMap, stringMap, customerSupplierBeanMap);
+//                    List<SaleInfo> saleInfoList = ProccessImportDataUtil.proccessSaleInfo(saleList, userInfoMap, stringMap, customerSupplierBeanMap);
+                    List<SaleInfo> saleInfoList = ProccessImportDataUtil.proccessSaleInfo2(saleList, userInfoMap, stringMap, customerSupplierBeanMap);
 
                     salesTicketFacade.importData(saleInfoList);
                     break;

@@ -281,6 +281,110 @@ public class ProccessImportDataUtil {
     }
 
     /**
+     * @description: 商品和收款信息不去重
+     * @author yangyun
+     * @date 2019/7/21 0021
+     * @param data
+     * @param userInfoMap
+     * @param stringMap
+     * @param customerSupplierBeanMap
+     * @return java.util.List<com.exx.dzj.entity.market.SaleInfo>
+     */
+    public static List<SaleInfo> proccessSaleInfo2 (List<Object> data, Map<String, UserInfo> userInfoMap, Map<String, String> stringMap, Map<String, CustomerSupplierBean> customerSupplierBeanMap){
+        List<SaleInfo> list = new ArrayList<>();
+        Map<String, SaleInfo> saleInfoMap = new ConcurrentHashMap<>();
+//        Map<BigDecimal, SaleReceiptsDetails> saleReceiptsMap = new ConcurrentHashMap<>();
+//        Map<String, SaleGoodsDetailBean> saleGoodsMap = new ConcurrentHashMap<>();
+
+        List<SaleReceiptsDetails> receiptList = new ArrayList<>();
+        List<SaleGoodsDetailBean> goodsList = new ArrayList<>();
+
+        SaleModel info = null;
+        String sharePro ="";
+        Date saleDate = null;
+        for (Object o : data) {
+            info = (SaleModel)o;
+
+            SaleInfo saleInfo = new SaleInfo();
+            SaleReceiptsDetails saleReceiptsDetails = new SaleReceiptsDetails();
+            SaleGoodsDetailBean saleGoodsDetail = new SaleGoodsDetailBean();
+
+            String saleCode = info.getSaleCode();
+
+            if (saleInfoMap.containsKey(saleCode)){
+                BeanUtils.copyProperties(info, saleReceiptsDetails);
+                if (info.getCollectedAmount().compareTo(BigDecimal.ZERO) > CommonConstant.DEFAULT_VALUE_ZERO){
+//                    receiptList.add(saleReceiptsDetails);
+                    // 保存收款信息
+                    receiptList.add(saleReceiptsDetails);
+                }
+
+                BeanUtils.copyProperties(info, saleGoodsDetail);
+                saleGoodsDetail.setRealSellPrice(saleGoodsDetail.getUnitPrice());
+                saleGoodsDetail.setRemarks(info.getGoodsRemark());
+                if (StringUtils.isNotEmpty(info.getStockCode())){
+                    setSaleGoodsDetail(saleGoodsDetail, stringMap);
+//                    goodsList.add(saleGoodsDetail);
+                    //保存商品信息
+                    goodsList.add(saleGoodsDetail);
+                }
+
+                continue;
+            } else {
+
+//                setSaleInfo2(saleInfoMap, saleReceiptsMap, saleGoodsMap, sharePro);
+                // 说明还没有对应销售单, 销售单第一次
+                setSaleInfo2(saleInfoMap, receiptList, goodsList, sharePro);
+
+            }
+
+            BeanUtils.copyProperties(info, saleInfo);
+
+
+            saleInfo.setIsReceipt(2);
+            saleDate = info.getSaleDate();
+            if (saleDate != null){
+                saleInfo.setSaleDate(new Timestamp(saleDate.getTime()));
+            }
+            setSalesInfo(saleInfo, userInfoMap, stringMap, customerSupplierBeanMap);
+
+            saleInfoMap.put(saleCode, saleInfo);
+            sharePro = saleCode;
+
+            BeanUtils.copyProperties(info, saleReceiptsDetails);
+            if (info.getCollectedAmount().compareTo(BigDecimal.ZERO) > CommonConstant.DEFAULT_VALUE_ZERO){
+                receiptList.add(saleReceiptsDetails);
+            }
+
+            BeanUtils.copyProperties(info, saleGoodsDetail);
+            saleGoodsDetail.setRealSellPrice(saleGoodsDetail.getUnitPrice());
+            saleGoodsDetail.setRemarks(info.getGoodsRemark());
+            if (StringUtils.isNotEmpty(info.getStockCode())){
+                setSaleGoodsDetail(saleGoodsDetail, stringMap);
+                goodsList.add(saleGoodsDetail);
+            }
+        }
+
+        setSaleInfo2(saleInfoMap, receiptList, goodsList, sharePro);
+        list.addAll(saleInfoMap.values());
+
+        return list;
+    }
+    private static void setSaleInfo2(Map<String, SaleInfo> saleInfoMap, List<SaleReceiptsDetails> receiptList, List<SaleGoodsDetailBean> goodsList, String sharePro){
+        if (!receiptList.isEmpty()){
+            SaleInfo s = saleInfoMap.get(sharePro);
+            s.getSaleReceiptsDetailsList().addAll(receiptList);
+            receiptList.clear();
+        }
+
+        if(!goodsList.isEmpty()){
+            SaleInfo s = saleInfoMap.get(sharePro);
+            s.getSaleGoodsDetailBeanList().addAll(goodsList);
+            goodsList.clear();
+        }
+    }
+
+    /**
      * @description 设置商品地址信息
      * @author yangyun
      * @date 2019/3/25 0025
