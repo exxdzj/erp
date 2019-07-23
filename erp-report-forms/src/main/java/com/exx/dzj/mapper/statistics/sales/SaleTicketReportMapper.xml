@@ -106,7 +106,7 @@
         LEFT JOIN tab_stock_num_price sprice ON sprice.stock_code = sg.stock_code
         LEFT JOIN tab_sale_goods_detail sg1 ON si.sale_code = sg1.sale_code AND sg1.stock_code REGEXP '^cb'
         LEFT JOIN tab_stock_num_price sprice1 ON sg1.stock_code = sprice1.stock_code
-        LEFT JOIN tab_sale_receipts_details sr ON si.sale_code = sr.sale_code
+        /*LEFT JOIN tab_sale_receipts_details sr ON si.sale_code = sr.sale_code*/
         WHERE 1 =1
         <if test="userCodeList != null">
             AND si.user_code IN
