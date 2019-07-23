@@ -65,7 +65,7 @@ public class SaleModel extends BaseRowModel {
     private BigDecimal collectedAmount;
 
     @ExcelProperty(value = "现金银行账户", index = 16)
-    private String noKnow;
+    private String collectionAccount;
 
     @ExcelProperty(value = "收款方式", index = 17)
     private String paymentTerm;
