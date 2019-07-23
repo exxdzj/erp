@@ -42,4 +42,6 @@ public interface UserInfoMapper extends BaseMapper<UserInfo> {
     String querySalesmanDeptCode(@Param("salesmanCode") String salesmanCode);
 
     public List<String> querySalesmanDeptCode2(String salesmanCode);
+
+    List<UserInfo> querySalemanIdentityInfo(@Param("identity") String identity);
 }

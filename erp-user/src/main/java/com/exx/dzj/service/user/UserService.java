@@ -94,4 +94,13 @@ public interface UserService extends IService<UserInfo> {
 
     String querySalesmanDeptCode(String salesmanCode);
     List<String> querySalesmanDeptCode2(String salesmanCode);
+
+    /**
+     * @description: 查询用户身份标识(主要是用于统计: 1:销售 2:采购 3:财务  4:客服  5:普通)'
+     * @author yangyun
+     * @date 2019/7/23 0023
+     * @param identity
+     * @return java.util.List<com.exx.dzj.entity.user.UserInfo>
+     */
+    List<UserInfo> querySalemanIdentityInfo (String identity);
 }

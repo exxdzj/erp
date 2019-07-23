@@ -10,9 +10,11 @@ import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.market.SaleInfoQuery;
 import com.exx.dzj.entity.market.SaleListInfo;
 import com.exx.dzj.entity.statistics.sales.*;
+import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.enummodel.SaleListFieldEnum;
 import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
+import com.exx.dzj.service.user.UserService;
 import com.exx.dzj.util.MathUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class SaleTicketReportFacade {
 
     @Autowired
     private SalesTicketService salesTicketService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * @description 销售单依库存统计
@@ -437,6 +442,12 @@ public class SaleTicketReportFacade {
         }
     }
 
+
+    private List<UserInfo> querySalemanIdentityInfo (){
+        List<UserInfo> userInfoList = userService.querySalemanIdentityInfo("1");
+        return userInfoList;
+    }
+
     /**
      * @description 销售员提成统计
      * @author yangyun
@@ -445,19 +456,59 @@ public class SaleTicketReportFacade {
      * @return java.util.Map<java.lang.String,java.lang.Object>
      */
     public Map<String, Object> statisticSalesDeductionBySaleman (UserInfoQuery query) {
+        List<UserInfo> userInfos = querySalemanIdentityInfo();
         List<SaleDeductionReport> saleDeductionReports = stockTypeReportService.querySalesDeductionBySaleman(query);
-        List<SaleDeductionReport> collect = saleDeductionReports.stream().filter(o -> !StringUtils.isEmpty(o.getUserCode())).collect(Collectors.toList());
-        double sumGoodsNum = collect.stream().mapToDouble(SaleDeductionReport::getSumGoodsNum).sum();
-        BigDecimal sumSaleVolume = collect.stream().map(SaleDeductionReport::getSumSaleVolume).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumSaleCost = collect.stream().map(SaleDeductionReport::getSumSaleCost).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumGrossMargin = collect.stream().map(SaleDeductionReport::getSumGrossMargin).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumGrossRate = MathUtil.keepTwoBigdecimal(sumGrossMargin, sumSaleVolume, CommonConstant.DEFAULT_VALUE_FOUR);//毛利率总计
-        BigDecimal sumCost = collect.stream().map(SaleDeductionReport::getSumCost).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumPureProfit = collect.stream().map(SaleDeductionReport::getPureProfit).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumCommission = collect.stream().map(SaleDeductionReport::getCommission).reduce(BigDecimal.ZERO, BigDecimal::add);
+        Map<String, List<SaleDeductionReport>> collect = saleDeductionReports.stream().filter(o -> !StringUtils.isEmpty(o.getUserCode())).collect(Collectors.groupingBy(SaleDeductionReport::getUserCode));
+//        Iterator<SaleDeductionReport> iterator = collect.iterator();
 
+        SaleDeductionReport report = null;
+        List<SaleDeductionReport> data = new ArrayList<>();
+        List<SaleDeductionReport> dataEmpty = new ArrayList<>();
+        SaleDeductionReport next =null;
+        for (UserInfo uinfo : userInfos){
+            List<SaleDeductionReport> saleDeductionReports1 = collect.get(uinfo.getUserCode());
+            report = new SaleDeductionReport();
+            report.setUserCode(uinfo.getUserCode());
+            report.setSalesmanCode(uinfo.getSalesmanCode());
+            report.setRealName(uinfo.getRealName());
+            if (saleDeductionReports1 != null){
+                next = saleDeductionReports1.get(0);
+                report.setSumGoodsNum(next.getSumGoodsNum());
+                report.setSumSaleVolume(next.getSumSaleVolume());
+                report.setSumSaleCost(next.getSumSaleCost());
+                report.setSumGrossMargin(next.getSumGrossMargin());
+                report.setGrossRate(next.getGrossRate());
+                report.setSumCost(next.getSumCost());
+                report.setPureProfit(next.getPureProfit());
+                report.setCommission(next.getCommission());
+                report.setCommissionRate(next.getCommissionRate());
+                data.add(report);
+            } else {
+                report.setSumGoodsNum(0);
+                report.setSumSaleVolume(BigDecimal.ZERO);
+                report.setSumSaleCost(BigDecimal.ZERO);
+                report.setSumGrossMargin(BigDecimal.ZERO);
+                report.setGrossRate(BigDecimal.ZERO);
+                report.setSumCost(BigDecimal.ZERO);
+                report.setPureProfit(BigDecimal.ZERO);
+                report.setCommission(BigDecimal.ZERO);
+                report.setCommissionRate(BigDecimal.ZERO);
+                dataEmpty.add(report);
+            }
+
+        }
+
+        double sumGoodsNum = data.stream().mapToDouble(SaleDeductionReport::getSumGoodsNum).sum();
+        BigDecimal sumSaleVolume = data.stream().map(SaleDeductionReport::getSumSaleVolume).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumSaleCost = data.stream().map(SaleDeductionReport::getSumSaleCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumGrossMargin = data.stream().map(SaleDeductionReport::getSumGrossMargin).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumGrossRate = MathUtil.keepTwoBigdecimal(sumGrossMargin, sumSaleVolume, CommonConstant.DEFAULT_VALUE_FOUR);//毛利率总计
+        BigDecimal sumCost = data.stream().map(SaleDeductionReport::getSumCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumPureProfit = data.stream().map(SaleDeductionReport::getPureProfit).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumCommission = data.stream().map(SaleDeductionReport::getCommission).reduce(BigDecimal.ZERO, BigDecimal::add);
         Map<String, Object> map = new HashMap<>();
-        map.put("saleDeductionReports", collect);
+        data.addAll(dataEmpty);
+        map.put("saleDeductionReports", data);
         map.put("sumGoodsNum", sumGoodsNum);
         map.put("sumSaleVolume", sumSaleVolume);
         map.put("sumSaleCost", sumSaleCost);

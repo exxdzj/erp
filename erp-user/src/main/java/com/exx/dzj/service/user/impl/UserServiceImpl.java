@@ -258,5 +258,10 @@ public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> imple
         return userMapper.querySalesmanDeptCode2(salesmanCode);
     }
 
+    @Override
+    public List<UserInfo> querySalemanIdentityInfo(String identity) {
+        return userMapper.querySalemanIdentityInfo(identity);
+    }
+
 
 }

@@ -17,6 +17,7 @@ public class SaleDeductionReport implements Serializable {
     private static final long serialVersionUID = -7489255878436211632L;
 
     private String userCode; // 销售员编码
+    private String salesmanCode; // 销售员编码
     private String realName; // 名称
     private double sumGoodsNum; // 商品数量
     private BigDecimal sumSaleVolume; // 销售额

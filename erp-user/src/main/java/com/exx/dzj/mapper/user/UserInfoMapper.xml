@@ -533,4 +533,14 @@
   <select id="querySalesmanDeptCode2" resultType="string">
     SELECT dept_code FROM tab_user_info where salesman_code = #{salesmanCode}
   </select>
+
+  <select id="querySalemanIdentityInfo" resultType="com.exx.dzj.entity.user.UserInfo">
+    SELECT
+        user_code AS userCode,
+        real_name AS realName,
+        salesman_code AS salesmanCode
+    FROM tab_user_info uinfo
+    WHERE uinfo.identity = #{identity}
+    ORDER BY uinfo.salesman_code
+  </select>
 </mapper>
