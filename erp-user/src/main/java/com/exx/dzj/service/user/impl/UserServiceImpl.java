@@ -66,7 +66,7 @@ public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> imple
 
             DeptInfoBean deptBean = deptService.queryDeptInfo(bean.getDeptCode());
             if(null != deptBean) {
-                bean.setOrgCode(bean.getDeptCode());
+                bean.setOrgCode(bean.getOrgCode());
             }
 
             if(null != bean && StringUtils.isBlank(bean.getUserCode())){
