@@ -1421,4 +1421,11 @@
       </set>
     WHERE sale_code = #{saleCode}
   </update>
+
+  <update id="updateReceivableAccoun">
+    UPDATE tab_sale_info
+      set receivable_accoun = #{receivableAccoun}
+    WHERE sale_code = #{saleCode}
+  </update>
+
 </mapper>

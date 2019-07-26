@@ -42,4 +42,6 @@ public interface SaleGoodsDetailBeanMapper {
     List<SaleGoodsDetailBean> queryGoodsForStock(@Param(value = "saleCode") String saleCode, @Param("list") List<String> list);
 
     void batchUpdateSalesGoodsSubtractStatus(List<Integer> ids);
+
+    void insertGoodsInfo(SaleGoodsDetailBean bean);
 }

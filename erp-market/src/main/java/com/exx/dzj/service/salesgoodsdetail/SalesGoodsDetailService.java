@@ -24,4 +24,6 @@ public interface SalesGoodsDetailService {
     List<SaleGoodsDetailBean> queryGoodsForStock(String saleCode, List<String> stockCodeList);
 
     void batchUpdateSalesGoodsSubtractStatus(List<Integer> ids);
+
+    void insertGoodsInfo (SaleGoodsDetailBean bean);
 }

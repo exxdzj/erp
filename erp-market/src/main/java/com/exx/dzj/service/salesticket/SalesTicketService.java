@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exx.dzj.entity.market.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -64,4 +65,6 @@ public interface SalesTicketService extends IService<SaleInfo> {
     List<SaleListInfo> exportSaleList (SaleInfoQuery query, QueryWrapper queryWrapper);
 
     int updatReceiptStatus (SaleInfo saleInfo);
+
+    void updateReceivableAccoun (String saleCode, BigDecimal receivableAccoun);
 }

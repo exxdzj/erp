@@ -626,7 +626,8 @@ public class SaleTicketReportFacade {
 
                                 BigDecimal multiply = goods.getUnitPrice().multiply(new BigDecimal(goods.getGoodsNum() * goods.getExchangeRate()));
 
-                                sgr.setSalesVolume(multiply.subtract(goods.getDiscountAmount()));
+//                                sgr.setSalesVolume(multiply.subtract(goods.getDiscountAmount()));
+                                sgr.setSalesVolume(multiply);
                             }
                     );
 

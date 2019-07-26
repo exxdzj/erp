@@ -11,6 +11,7 @@ import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.facade.market.task.AsyncSaleTask;
 import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
+import com.exx.dzj.model.SaleReceiptModel;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.customer.CustomerService;
 import com.exx.dzj.service.dictionary.DictionaryService;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -76,6 +78,48 @@ public class SalesTicketFacade {
     @Autowired
     private CustomerService customerService;
 
+    @Transactional
+    public void saveSalesTicket3(SaleInfo saleInfo){
+        Optional.of(saleInfo);
+        List<SaleGoodsDetailBean> goodsDetailBeanList = saleInfo.getSaleGoodsDetailBeanList();
+        List<SaleReceiptsDetails> receiptsDetailsList = saleInfo.getSaleReceiptsDetailsList();
+        saleInfo.setSaleTicketType(CommonConstant.DEFAULT_VALUE_ONE);
+        saleInfo.setIsEnable(CommonConstant.DEFAULT_VALUE_ONE);
+
+
+//        if(!CollectionUtils.isEmpty(goodsDetailBeanList)){
+//            goodsDetailBeanList = setGoodsSaleCode(goodsDetailBeanList, saleInfo.getSaleCode());
+//
+//            // 该部分代码用于金蝶导入金额计算, 优惠后金额
+//            BigDecimal receivableAccoun = new BigDecimal(0);
+//            BigDecimal hundred = new BigDecimal(100);
+//            BigDecimal divide = new BigDecimal(0);
+//            BigDecimal price = new BigDecimal(0);
+//
+//            for (SaleGoodsDetailBean gg : goodsDetailBeanList){
+//                // 折扣额后
+//                divide = hundred.subtract(gg.getDiscountRate()).divide(hundred);
+//
+//                price = gg.getUnitPrice().multiply(new BigDecimal(gg.getGoodsNum()));
+//
+//                receivableAccoun = receivableAccoun.add(price.multiply(divide));
+//            }
+//            saleInfo.setReceivableAccoun(receivableAccoun.setScale(2, BigDecimal.ROUND_HALF_UP));
+//            // 该部分代码用于金蝶导入金额计算, 优惠后金额
+//
+//            salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList);
+//        }
+//        if (!CollectionUtils.isEmpty(receiptsDetailsList)){
+//            receiptsDetailsList = setReceiptsSaleCode(receiptsDetailsList, saleInfo.getSaleCode());
+//            saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+//        }
+        if (StringUtils.isNotEmpty(saleInfo.getInvoiceCode()) && saleInfo.getInvoiceCode().contains("签收")){
+
+            saleInfo.setIsReceipt(1);
+        }
+
+        salesTicketService.saveSaleInfo(saleInfo);
+    }
 
     @Transactional
     public void saveSalesTicket2(SaleInfo saleInfo){
@@ -458,7 +502,7 @@ public class SalesTicketFacade {
                 // 获取部门信息
                 List<DeptInfoBean> deptInfos = deptService.queryDeptList();
 
-                saveSalesTicket2(s);
+                saveSalesTicket3(s);
                 // 查询销售员部门编码
                 List<String> strings = salesmanService.querySalesmanDeptCode2(s.getSalesmanCode());
                 if (strings != null && strings.size() > 0){
@@ -476,19 +520,19 @@ public class SalesTicketFacade {
         }
 
 
-//        StringBuilder data = new StringBuilder("");
-//        importFailData.stream().forEach(
-//                o ->{
-//                    data.append(o).append("&");
-//
-//                    System.out.println(o);
-//                }
-//        );
-//        try {
-//            writeString(data.toString(), filename);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        StringBuilder data = new StringBuilder("");
+        importFailData.stream().forEach(
+                o ->{
+                    data.append(o).append("&");
+
+                    System.out.println(o);
+                }
+        );
+        try {
+            writeString(data.toString(), filename);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void writeString (String str, String filename) throws Exception{
@@ -676,4 +720,114 @@ public class SalesTicketFacade {
         return salesTicketService.updatReceiptStatus(saleInfo);
     }
 
+    public void insertImportGoodsData (List<SaleGoodsDetailBean> list, String dateStr){
+//        salesGoodsDetailService.batchInsertSalesGoodsDetail(list);
+
+        double sum = list.stream().mapToDouble(SaleGoodsDetailBean::getGoodsNum).sum();
+        System.out.println("sum \t" + sum);
+        StringBuilder data = new StringBuilder("");
+        StringBuilder failData = new StringBuilder("");
+
+        String fileName = "e://sale-goods-insert/" + dateStr + ".txt";
+        for (SaleGoodsDetailBean o : list){
+            int count = salesTicketService.querySaleBySaleCode(o.getSaleCode());
+            if (count > CommonConstant.DEFAULT_VALUE_ZERO){
+                try {
+                    salesGoodsDetailService.insertGoodsInfo(o);
+                } catch (Exception e){
+                    failData.append(o.getSaleCode() + e.getMessage() + "&");
+                }
+            } else {
+                data.append(o.getSaleCode() + "&");
+            }
+        }
+
+        if (StringUtils.isNotBlank(failData.toString())){
+            writeString2(failData.toString(), fileName);
+        }
+
+        if (StringUtils.isNotBlank(data.toString())){
+            fileName = "e://no-have-saleticket/" + dateStr + ".txt";
+            writeString2(data.toString(), fileName);
+        }
+
+
+    }
+
+    private void writeString2 (String str, String filename) {
+        try {
+            File file = new File(filename);
+            if (!file.exists()){
+                file.createNewFile();
+            }
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.append(str);
+            bw.close();
+            fw.close();
+        } catch (Exception e){
+
+        }
+    }
+
+
+    public void exportReceiptData(List<Object> objList){
+
+        SaleReceiptModel model = null;
+        SaleReceiptsDetails receipt = null;
+        SaleInfo saleInfo = null;
+        // 记录
+        StringBuilder nonReceipt = new StringBuilder("");
+
+//        String fileName = "e://";
+        String dateStr = null;
+        StringBuilder exeptData = new StringBuilder("");
+        for (Object obj : objList){
+            model = (SaleReceiptModel)obj;
+            if (StringUtils.isEmpty(model.getSaleCode()) && model.getSaleDate() == null){
+                continue;
+            }
+            if (StringUtils.isBlank(dateStr)){
+
+                dateStr = DateUtil.convertDateToString(model.getSaleDate(), "yyyy-MM");
+            }
+
+            // 查询是否存在对应销售单
+            int count = salesTicketService.querySaleBySaleCode(model.getSaleCode());
+            if (count > CommonConstant.DEFAULT_VALUE_ZERO){
+                try {
+                    // 收款信息
+                    receipt = new SaleReceiptsDetails();
+                    receipt.setSaleCode(model.getSaleCode());
+                    receipt.setCollectedAmount(model.getCollectedAmount());
+                    // 插入收款信息
+                    saleReceiptsDetailService.insertImportReceiptData(receipt);
+
+                    // 修改销售单优惠后金额
+//                    saleInfo = new SaleInfo();
+//                    saleInfo.setSaleCode(model.getSaleCode());
+//                    saleInfo.setReceivableAccoun(model.getReceivableAccoun());
+
+                    salesTicketService.updateReceivableAccoun(model.getSaleCode(), model.getReceivableAccoun());
+                } catch (Exception e) {
+                    // 记录插入错误的数据
+                    exeptData.append(model.getSaleCode()).append(e.getMessage()).append("&");
+                }
+                continue;
+            }
+            // 记录没有销售单的收款信息的销售单编码
+            nonReceipt.append(model.getSaleCode() + "&");
+        }
+
+        // 将没有对应销售单收款信息的销售单编码写入本地, 以便导入后查看
+        if (StringUtils.isNotBlank(nonReceipt.toString())){
+            String fileName = "non-receipt-salecode/" + dateStr + ".txt";
+            writeString2(nonReceipt.toString(), fileName);
+        }
+
+        if (StringUtils.isNotBlank(exeptData.toString())){
+            String fileName = "exec-receipt-salecode/" + dateStr + ".txt";
+            writeString2(exeptData.toString(), fileName);
+        }
+    }
 }

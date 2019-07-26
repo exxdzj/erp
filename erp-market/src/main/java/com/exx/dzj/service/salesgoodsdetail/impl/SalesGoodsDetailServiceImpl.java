@@ -50,5 +50,10 @@ public class SalesGoodsDetailServiceImpl implements SalesGoodsDetailService {
         saleGoodsDetailBeanMapper.batchUpdateSalesGoodsSubtractStatus(ids);
     }
 
+    @Override
+    public void insertGoodsInfo(SaleGoodsDetailBean bean) {
+        saleGoodsDetailBeanMapper.insertGoodsInfo(bean);
+    }
+
 
 }

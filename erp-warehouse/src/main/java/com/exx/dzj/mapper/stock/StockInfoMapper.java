@@ -69,4 +69,6 @@ public interface StockInfoMapper {
     StockNumPrice queryStockNumPirck(StockNumPrice stockNumPrice);
 
     List<StockNumPrice> queryStockNumPirckList(StockNumPrice stockNumPrice);
+
+    List<StockInfo> queryStockGoodsInfoForImportData();
 }

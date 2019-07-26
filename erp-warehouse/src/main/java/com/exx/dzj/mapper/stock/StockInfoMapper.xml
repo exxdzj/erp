@@ -711,4 +711,8 @@
     <!--AND stock_code = #{stockCode}-->
     <!--AND stock_address_code = #{stockAddressCode}-->
   <!--</select>-->
+
+  <select id="queryStockGoodsInfoForImportData" resultType="com.exx.dzj.entity.stock.StockInfo">
+    select stock_code, stock_name from tab_stock_info
+  </select>
 </mapper>
