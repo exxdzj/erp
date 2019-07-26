@@ -85,7 +85,9 @@ public class ProccessImportDataUtil {
 
         for (Object o : purchaseList){
             info = (PurchaseModel)o;
-
+            if (StringUtils.isEmpty(info.getPurchaseCode())){
+                continue;
+            }
             PurchaseInfo purchaseInfo = new PurchaseInfo();
             PurchaseReceiptsDetailsBean purchaseReceiptsDetails = new PurchaseReceiptsDetailsBean();
             PurchaseGoodsDetailBean purchaseGoodsDetail = new PurchaseGoodsDetailBean();
@@ -523,6 +525,9 @@ public class ProccessImportDataUtil {
         CustomerModel cm = null;
         for (Object o : data){
             cm = (CustomerModel)o;
+            if (StringUtils.isEmpty(cm.getCustCode())){
+                continue;
+            }
             CustomerSupplierBean customerSupplier = new CustomerSupplierBean();
             AccountAttributeBean accountAttribute = new AccountAttributeBean();
             ContactWayBean contactWay = new ContactWayBean();
