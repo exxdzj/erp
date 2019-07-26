@@ -173,7 +173,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    @Cacheable(value = "{customersupplierlist}", keyGenerator = "myKeyGenerator")
     public List<CustomerSupplierBean> queryCustomerSupplierBeanList () {
         return csMapper.queryCustomerSupplierBeanList();
     }

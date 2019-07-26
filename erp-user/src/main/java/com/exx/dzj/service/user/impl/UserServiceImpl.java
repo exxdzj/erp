@@ -46,7 +46,6 @@ public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> imple
      * 查询 业务员列表
      * @return
      */
-    @Cacheable(value = {"userInfo"}, keyGenerator = "myKeyGenerator")
     @Override
     public List<UserInfo> querySalesman() {
         return userMapper.querySalesman();
