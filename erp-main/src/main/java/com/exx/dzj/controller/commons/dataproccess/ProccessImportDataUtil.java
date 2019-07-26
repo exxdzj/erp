@@ -19,7 +19,6 @@ import com.exx.dzj.enummodel.PayStatusEnum;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.model.*;
 import com.exx.dzj.util.enums.EnumsUtils;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -452,6 +451,18 @@ public class ProccessImportDataUtil {
                     case "E行销西安成本中心":
                         saleInfo.setUserCode("CB7");
                         saleInfo.setSalesmanCode("CB7");
+                        break;
+                    case "西安申甲":
+                        saleInfo.setUserCode("2005");
+                        saleInfo.setSalesmanCode("6001");
+                        break;
+                    case "5001APP杨总":
+                        saleInfo.setUserCode("5002");
+                        saleInfo.setSalesmanCode("5001");
+                        break;
+                    case "5002APP胡四云":
+                        saleInfo.setUserCode("5003");
+                        saleInfo.setSalesmanCode("5002");
                         break;
                     default:
                         int index = -1;
