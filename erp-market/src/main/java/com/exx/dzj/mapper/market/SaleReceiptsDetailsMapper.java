@@ -47,4 +47,6 @@ public interface SaleReceiptsDetailsMapper {
     List<LogisticsInfo> getLogisticsInfo(@Param("saleCode") String saleCode);
 
     List<SaleGoodsSelected> getSaleGoodsSelected(@Param("saleCode") String saleCode);
+
+    void insertImportReceiptData(SaleReceiptsDetails bean);
 }

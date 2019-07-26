@@ -60,4 +60,9 @@ public class SaleReceiptsDetailServiceImpl implements SaleReceiptsDetailService 
     public List<SaleGoodsSelected> getSaleGoodsSelected(String saleCode) {
         return saleReceiptsDetailsMapper.getSaleGoodsSelected(saleCode);
     }
+
+    @Override
+    public void insertImportReceiptData(SaleReceiptsDetails bean) {
+        saleReceiptsDetailsMapper.insertImportReceiptData(bean);
+    }
 }

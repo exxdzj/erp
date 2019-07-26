@@ -6,6 +6,7 @@ import com.exx.dzj.entity.market.*;
 import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.formula.functions.T;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
@@ -69,4 +70,6 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
     List<SaleListInfo> exportSaleList(SaleInfoQuery query);
 
     int updatReceiptStatus(SaleInfo saleInfo);
+
+    void updateReceivableAccoun(@Param("saleCode") String saleCode, @Param("receivableAccoun") BigDecimal receivableAccoun);
 }

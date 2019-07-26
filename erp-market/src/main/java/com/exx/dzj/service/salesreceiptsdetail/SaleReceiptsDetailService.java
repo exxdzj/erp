@@ -36,4 +36,6 @@ public interface SaleReceiptsDetailService {
     List<LogisticsInfo> getLogisticsInfo (String saleCode);
 
     List<SaleGoodsSelected> getSaleGoodsSelected (String saleCode);
+
+    void insertImportReceiptData(SaleReceiptsDetails bean);
 }

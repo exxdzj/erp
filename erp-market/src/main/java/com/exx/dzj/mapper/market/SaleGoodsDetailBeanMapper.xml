@@ -551,4 +551,22 @@
         #{item}
       </foreach>
   </update>
+
+  <insert id="insertGoodsInfo" parameterType="com.exx.dzj.entity.market.SaleGoodsDetailBean">
+    INSERT INTO tab_sale_goods_detail
+    (sale_code, stock_code,stock_name, stock_address_code, stock_address,
+    goods_num, unit_price, real_sell_price,price_type,
+    discount_rate, discount_amount, sales_volume,
+    remarks, create_time, create_user,
+    update_time, update_user)
+    VALUES
+
+    (#{saleCode,jdbcType=VARCHAR}, #{stockCode,jdbcType=VARCHAR},
+    #{stockName,jdbcType=VARCHAR}, #{stockAddressCode,jdbcType=VARCHAR}, #{stockAddress,jdbcType=VARCHAR},
+    #{goodsNum,jdbcType=INTEGER}, #{unitPrice,jdbcType=DECIMAL}, #{realSellPrice},#{priceType,jdbcType=VARCHAR},
+    #{discountRate,jdbcType=DECIMAL}, #{discountAmount,jdbcType=DECIMAL}, #{salesVolume,jdbcType=DECIMAL},
+    #{remarks,jdbcType=VARCHAR}, SYSDATE(), #{createUser,jdbcType=VARCHAR},
+    SYSDATE(), #{updateUser,jdbcType=VARCHAR})
+  </insert>
+
 </mapper>

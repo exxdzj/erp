@@ -6,8 +6,10 @@ import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.dept.DeptInfoBean;
+import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
+import com.exx.dzj.entity.stock.StockInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.facade.customer.CustomerSupplierFacade;
 import com.exx.dzj.facade.dictionary.DictionaryFacade;
@@ -15,22 +17,24 @@ import com.exx.dzj.facade.market.SalesTicketFacade;
 import com.exx.dzj.facade.purchase.PurchaseTicketFacade;
 import com.exx.dzj.facade.stock.StockFacade;
 import com.exx.dzj.facade.user.UserFacade;
-import com.exx.dzj.model.CustomerModel;
-import com.exx.dzj.model.PurchaseModel;
-import com.exx.dzj.model.SaleModel;
-import com.exx.dzj.model.StockModel;
+import com.exx.dzj.model.*;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.sys.DeptService;
+import com.exx.dzj.util.DateUtil;
 import com.exx.dzj.util.excel.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author yangyun
@@ -71,7 +75,10 @@ public class DataImportController {
             // 客户供应商信息信息
             Map<String, CustomerSupplierBean> customerSupplierBeanMap = customerSupplierFacade.queryCustomerSupplierBeanList();
 
-             switch (type){
+//            Map<String, StockInfo> stockInfoMap = stockFacade.queryStockGoodsInfoForImportData();
+            List<StockInfo> stockInfos = stockFacade.queryStockGoodsInfoForImportData();
+
+            switch (type){
                 case 0:// 客户信息
                     List<Object> customerList = ExcelUtil.readExcel(excelFile, new CustomerModel(), CommonConstant.DEFAULT_VALUE_ONE);
                     // 查询客户等级
@@ -82,8 +89,8 @@ public class DataImportController {
                 case 1:// 销售单
                     List<Object> saleList = ExcelUtil.readExcel(excelFile, new SaleModel(), CommonConstant.DEFAULT_VALUE_ONE);
 
-//                    List<SaleInfo> saleInfoList = ProccessImportDataUtil.proccessSaleInfo(saleList, userInfoMap, stringMap, customerSupplierBeanMap);
-                    List<SaleInfo> saleInfoList = ProccessImportDataUtil.proccessSaleInfo2(saleList, userInfoMap, stringMap, customerSupplierBeanMap);
+                    List<SaleInfo> saleInfoList = ProccessImportDataUtil.proccessSaleInfo(saleList, userInfoMap, stringMap, customerSupplierBeanMap);
+//                    List<SaleInfo> saleInfoList = ProccessImportDataUtil.proccessSaleInfo2(saleList, userInfoMap, stringMap, customerSupplierBeanMap);
 
                     salesTicketFacade.importData(saleInfoList);
                     break;
@@ -99,7 +106,21 @@ public class DataImportController {
 
                     stockFacade.batchInventoryDataProccess(listMap);
                     break;
-                case 4:
+                case 4: //销售关联商品导入
+                    List<Object> objects = ExcelUtil.readExcel(excelFile, new SaleGoodsModel(), CommonConstant.DEFAULT_VALUE_ONE);
+                    SaleGoodsModel o = (SaleGoodsModel)objects.get(0);
+                    List<SaleGoodsDetailBean> saleGoodsBeans = ProccessImportDataUtil.processSaleGoodsImportData(objects, stringMap, stockInfos);
+                    Map<String, List<SaleGoodsDetailBean>> collect = saleGoodsBeans.stream().collect(Collectors.groupingBy(SaleGoodsDetailBean::getSaleCode));
+                    salesTicketFacade.insertImportGoodsData(saleGoodsBeans, DateUtil.convertDateToString(o.getSaleDate(), "yyyy-MM"));
+                    break;
+                case 5: //销售关联收款金额导入
+                    List<Object> receipts = ExcelUtil.readExcel(excelFile, new SaleReceiptModel(), CommonConstant.DEFAULT_VALUE_ONE);
+
+                    if (CollectionUtils.isEmpty(receipts)){
+                        break;
+                    }
+                    salesTicketFacade.exportReceiptData(receipts);
+
                     break;
             }
 

@@ -10,6 +10,7 @@ import com.exx.dzj.service.salesticket.SalesTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -17,8 +18,7 @@ import java.util.List;
  * @create 2019-01-08-10:56
  */
 @Component
-public class
-SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo> implements SalesTicketService {
+public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo> implements SalesTicketService {
 
     @Autowired
     private SaleInfoMapper saleInfoMapper;
@@ -208,5 +208,10 @@ SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo> implements 
     @Override
     public int updatReceiptStatus(SaleInfo saleInfo) {
         return saleInfoMapper.updatReceiptStatus(saleInfo);
+    }
+
+    @Override
+    public void updateReceivableAccoun(String saleCode, BigDecimal receivableAccoun) {
+        saleInfoMapper.updateReceivableAccoun(saleCode, receivableAccoun);
     }
 }

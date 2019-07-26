@@ -209,4 +209,20 @@ public class StockFacade {
         }
         return result;
     }
+
+    public List<StockInfo> queryStockGoodsInfoForImportData (){
+        List<StockInfo> list = stockInfoService.queryStockGoodsInfoForImportData();
+        Map<String, StockInfo> map = new HashMap<>();
+        if (list == null || list.size() <= 0){
+//            return map;
+        }
+
+//        list.stream().forEach(
+//                o -> {
+//                    map.put(o.getStockCode() + o.getStockName(), o);
+//                }
+//        );
+
+        return list;
+    }
 }

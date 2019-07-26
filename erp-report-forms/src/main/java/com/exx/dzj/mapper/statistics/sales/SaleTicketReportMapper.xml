@@ -325,10 +325,9 @@
             sgd.stock_name
         FROM
           tab_sale_info sinfo
-        LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code
         LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code
-        LEFT JOIN tab_user_info uinfo ON sinfo.salesman_code = uinfo.salesman_code
-        INNER JOIN tab_stock_num_price snp ON sgd.stock_code = snp.stock_code
+        LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code AND (cs.cust_type = 1 OR cs.cust_type = 3)
+        LEFT JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
         WHERE
           1 = 1
         <if test="startDate != null and startDate != ''">

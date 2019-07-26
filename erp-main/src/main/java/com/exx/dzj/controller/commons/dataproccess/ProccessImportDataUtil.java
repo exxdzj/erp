@@ -17,11 +17,9 @@ import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.enummodel.PayStatusEnum;
 import com.exx.dzj.facade.user.UserFacade;
-import com.exx.dzj.model.CustomerModel;
-import com.exx.dzj.model.PurchaseModel;
-import com.exx.dzj.model.SaleModel;
-import com.exx.dzj.model.StockModel;
+import com.exx.dzj.model.*;
 import com.exx.dzj.util.enums.EnumsUtils;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,12 +193,16 @@ public class ProccessImportDataUtil {
         Date saleDate = null;
         for (Object o : data) {
             info = (SaleModel)o;
+            String saleCode = info.getSaleCode();
+
+            if (StringUtils.isEmpty(saleCode)){
+                continue;
+            }
 
             SaleInfo saleInfo = new SaleInfo();
             SaleReceiptsDetails saleReceiptsDetails = new SaleReceiptsDetails();
             SaleGoodsDetailBean saleGoodsDetail = new SaleGoodsDetailBean();
 
-            String saleCode = info.getSaleCode();
 
             if (saleInfoMap.containsKey(saleCode)){
                 BeanUtils.copyProperties(info, saleReceiptsDetails);
@@ -304,12 +306,15 @@ public class ProccessImportDataUtil {
         Date saleDate = null;
         for (Object o : data) {
             info = (SaleModel)o;
+            String saleCode = info.getSaleCode();
+            if (StringUtils.isEmpty(saleCode)){
+                continue;
+            }
 
             SaleInfo saleInfo = new SaleInfo();
             SaleReceiptsDetails saleReceiptsDetails = new SaleReceiptsDetails();
             SaleGoodsDetailBean saleGoodsDetail = new SaleGoodsDetailBean();
 
-            String saleCode = info.getSaleCode();
 
             if (saleInfoMap.containsKey(saleCode)){
                 BeanUtils.copyProperties(info, saleReceiptsDetails);
@@ -634,6 +639,9 @@ public class ProccessImportDataUtil {
         StockModel model = null;
         for (Object o : stockList) {
             model = (StockModel) o;
+            if (StringUtils.isEmpty(model.getStockCode())){
+                continue;
+            }
             StockInfo stockInfo = new StockInfo();
             StockNumPrice stockNumPrice = new StockNumPrice();
 
@@ -730,4 +738,88 @@ public class ProccessImportDataUtil {
             stockNumPrice.setMaxPurchasePrice(stockNumPrice.getStandardSellPrice());
         }
     }
+
+
+    public static List<SaleGoodsDetailBean> processSaleGoodsImportData (List<Object> data, Map<String, String> stringMap, List<StockInfo> stockInfos){
+        List<SaleGoodsDetailBean> goodsList = new ArrayList<>();
+
+        if (data == null || data.size() <= 0){
+            return goodsList;
+        }
+
+        SaleGoodsDetailBean goods = null;
+        SaleGoodsModel model = null;
+        String saleCode = null;// 当前销售单 code
+        String next = null; // 遍历到下一行, 此时 saleCode 为 null, 需要记录
+        for (Object obj : data){
+            model = (SaleGoodsModel)obj;
+
+            if (StringUtils.isEmpty(model.getStockCode())){
+                continue;
+            }
+
+            saleCode = model.getSaleCode();
+
+            goods = new SaleGoodsDetailBean();
+            if (StringUtils.isNotEmpty(saleCode)){
+                BeanUtils.copyProperties(model, goods);
+                next = saleCode;
+            } else {
+                BeanUtils.copyProperties(model, goods);
+                goods.setSaleCode(next);
+            }
+
+            goods.setRealSellPrice(goods.getUnitPrice());
+
+            // set warehouse code and name
+            String stockAddressCode = stringMap.get(model.getStockAddress());
+            goods.setStockAddressCode(stockAddressCode);
+
+            // resolver stockCode
+            String oldData = goods.getStockCode().replace(" ", "");
+//            StockInfo stockInfo = stockInfoMap.get(oldData);
+            StockInfo stockInfo = getObj(stockInfos, oldData);
+            if (stockInfo != null){
+                goods.setStockCode(stockInfo.getStockCode());
+                goods.setStockName(stockInfo.getStockName());
+            } else {
+                goods.setStockCode(null);
+                goods.setStockName(null);
+            }
+
+            goodsList.add(goods);
+        }
+        return goodsList;
+    }
+
+    private static StockInfo getObj (List<StockInfo> stockInfos, String key){
+        for (StockInfo s : stockInfos){
+            if (key.startsWith(s.getStockCode())) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+//    public static List<SaleReceiptsDetails> processSaleReceiptImportData (List<Object> list){
+//        List<SaleReceiptsDetails> data = new ArrayList<>();
+//
+//        if (list == null || list.size() <= 0){
+//            return data;
+//        }
+//
+//        SaleReceiptModel model = null;
+//        SaleReceiptsDetails receipt = null;
+//        for (Object o : list){
+//            model = (SaleReceiptModel)o;
+//
+//            if (StringUtils.isEmpty(model.getSaleCode())){
+//                continue;
+//            }
+//
+//            BeanUtils.copyProperties(model, receipt);
+//        }
+//
+//        return data;
+//    }
 }

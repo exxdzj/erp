@@ -445,4 +445,15 @@
     <result property="stockName" column="stock_name"/>
     <result property="stockCode" column="stock_code"/>
   </resultMap>
+
+  <insert id="insertImportReceiptData" parameterType="com.exx.dzj.entity.market.SaleReceiptsDetails">
+    INSERT INTO tab_sale_receipts_details
+    (sale_code, collection_account,
+    collected_amount, payment_method, ref_no,
+    create_time, create_user)
+    VALUES
+    (#{saleCode,jdbcType=VARCHAR}, #{collectionAccount,jdbcType=VARCHAR},
+    #{collectedAmount,jdbcType=DECIMAL}, #{paymentMethod,jdbcType=VARCHAR}, #{refNo,jdbcType=VARCHAR},
+    SYSDATE(), #{createUser,jdbcType=VARCHAR})
+  </insert>
 </mapper>

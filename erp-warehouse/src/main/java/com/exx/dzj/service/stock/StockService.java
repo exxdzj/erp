@@ -80,4 +80,13 @@ public interface StockService {
     StockNumPrice queryStockNumPirck (StockNumPrice stockNumPrice);
 
     List<StockNumPrice> queryStockNumPirckList (StockNumPrice stockNumPrice);
+
+    /**
+     * @description: 查询商品信息, 用于数据导入
+     * @author yangyun
+     * @date 2019/7/24 0024
+     * @param
+     * @return java.util.List<com.exx.dzj.entity.stock.StockInfo>
+     */
+    List<StockInfo> queryStockGoodsInfoForImportData();
 }

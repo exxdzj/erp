@@ -283,4 +283,9 @@ public class StockServiceImpl implements StockService {
         return stockMapper.queryStockNumPirckList(stockNumPrice);
     }
 
+    @Override
+    public List<StockInfo> queryStockGoodsInfoForImportData() {
+        return stockMapper.queryStockGoodsInfoForImportData();
+    }
+
 }
