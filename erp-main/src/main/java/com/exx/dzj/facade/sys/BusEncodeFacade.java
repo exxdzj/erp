@@ -96,4 +96,12 @@ public class BusEncodeFacade {
         }
         return busCode;
     }
+
+    /**
+     * 定时修改编码初始值
+     * @param info
+     */
+    public void scheduleUpdateEncode(BusEncodeRuleInfo info) {
+        busEncodeService.scheduleUpdateEncode(info);
+    }
 }

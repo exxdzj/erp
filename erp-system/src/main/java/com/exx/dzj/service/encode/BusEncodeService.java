@@ -17,4 +17,6 @@ public interface BusEncodeService extends IService<BusEncodingRule> {
     List<BusEncodeRuleCacheData> queryList();
 
     void updateEncodeData(BusEncodeRuleInfo info);
+
+    void scheduleUpdateEncode(BusEncodeRuleInfo info);
 }

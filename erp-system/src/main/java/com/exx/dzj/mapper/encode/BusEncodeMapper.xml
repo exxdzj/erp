@@ -35,4 +35,8 @@
     <update id="updateEncodeData" parameterType="com.exx.dzj.entity.encode.BusEncodeRuleInfo">
         update tab_bus_encoding_rule set next_value = #{nextValue} where bus_type = #{busType} and prefix = #{prefix}
     </update>
+
+    <update id="scheduleUpdateEncode" parameterType="com.exx.dzj.entity.encode.BusEncodeRuleInfo">
+        update tab_bus_encoding_rule set next_value = initial_value where bus_type = #{busType} and prefix = #{prefix}
+    </update>
 </mapper>

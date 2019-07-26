@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan("com.exx.dzj")
 @MapperScan("com.exx.dzj.mapper") // mapper 包扫描
 @EnableCaching //开启基于注解的缓存
+@EnableScheduling   //开启任务调度
 public class ErpMainApplication {
 
     public static void main(String[] args) {

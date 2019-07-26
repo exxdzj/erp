@@ -20,4 +20,6 @@ public interface BusEncodeMapper extends BaseMapper<BusEncodingRule> {
     List<BusEncodeRuleInfo> queryBusEncodeRule(@Param("busType") String busType);
 
     int updateEncodeData(BusEncodeRuleInfo info);
+
+    int scheduleUpdateEncode(BusEncodeRuleInfo info);
 }
