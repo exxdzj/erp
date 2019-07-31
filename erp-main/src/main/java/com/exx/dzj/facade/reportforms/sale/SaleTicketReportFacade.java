@@ -442,7 +442,6 @@ public class SaleTicketReportFacade {
         }
     }
 
-
     private List<UserInfo> querySalemanIdentityInfo (){
         List<UserInfo> userInfoList = userService.querySalemanIdentityInfo("1");
         return userInfoList;
@@ -458,47 +457,71 @@ public class SaleTicketReportFacade {
     public Map<String, Object> statisticSalesDeductionBySaleman (UserInfoQuery query) {
         List<UserInfo> userInfos = querySalemanIdentityInfo();
         List<SaleDeductionReport> saleDeductionReports = stockTypeReportService.querySalesDeductionBySaleman(query);
-        Map<String, List<SaleDeductionReport>> collect = saleDeductionReports.stream().filter(o -> !StringUtils.isEmpty(o.getUserCode())).collect(Collectors.groupingBy(SaleDeductionReport::getUserCode));
-//        Iterator<SaleDeductionReport> iterator = collect.iterator();
+//        Map<String, List<SaleDeductionReport>> collect = saleDeductionReports.stream()
+//                                            .filter(o -> !StringUtils.isEmpty(o.getUserCode()))
+//                                            .collect(Collectors.groupingBy(SaleDeductionReport::getUserCode));
+//
+//        SaleDeductionReport report = null;
+//        List<SaleDeductionReport> data = new ArrayList<>();
+//        List<SaleDeductionReport> dataEmpty = new ArrayList<>();
+//        SaleDeductionReport next =null;
+//        for (UserInfo uinfo : userInfos){
+//            List<SaleDeductionReport> saleDeductionReports1 = collect.get(uinfo.getUserCode());
+//            report = new SaleDeductionReport();
+//            report.setUserCode(uinfo.getUserCode());
+//            report.setSalesmanCode(uinfo.getSalesmanCode());
+//            report.setRealName(uinfo.getRealName());
+//            if (saleDeductionReports1 != null){
+//                next = saleDeductionReports1.get(0);
+//                report.setSumGoodsNum(next.getSumGoodsNum());
+//                report.setSumSaleVolume(next.getSumSaleVolume());
+//                report.setSumSaleCost(next.getSumSaleCost());
+//                report.setSumGrossMargin(next.getSumGrossMargin());
+//                report.setGrossRate(next.getGrossRate());
+//                report.setSumCost(next.getSumCost());
+////                report.setPureProfit(next.getPureProfit());
+//                BigDecimal commissionRate = next.getCommissionRate();
+//                commissionRate = (commissionRate == null ? BigDecimal.ZERO : commissionRate).divide(BigDecimal.valueOf(100));
+//                report.setPureProfit(next.getSumGrossMargin().subtract(next.getSumCost()));
+//                report.setCommission(commissionRate.multiply(next.getSumSaleVolume()));
+//                report.setCommissionRate(next.getCommissionRate());
+//                data.add(report);
+//            } else {
+//                report.setSumGoodsNum(0);
+//                report.setSumSaleVolume(BigDecimal.ZERO);
+//                report.setSumSaleCost(BigDecimal.ZERO);
+//                report.setSumGrossMargin(BigDecimal.ZERO);
+//                report.setGrossRate(BigDecimal.ZERO);
+//                report.setSumCost(BigDecimal.ZERO);
+//                report.setPureProfit(BigDecimal.ZERO);
+//                report.setCommission(BigDecimal.ZERO);
+//                report.setCommissionRate(BigDecimal.ZERO);
+//                dataEmpty.add(report);
+
+//            }
+//
+//        }
 
         SaleDeductionReport report = null;
         List<SaleDeductionReport> data = new ArrayList<>();
-        List<SaleDeductionReport> dataEmpty = new ArrayList<>();
-        SaleDeductionReport next =null;
-        for (UserInfo uinfo : userInfos){
-            List<SaleDeductionReport> saleDeductionReports1 = collect.get(uinfo.getUserCode());
+        for (SaleDeductionReport next : saleDeductionReports){
             report = new SaleDeductionReport();
-            report.setUserCode(uinfo.getUserCode());
-            report.setSalesmanCode(uinfo.getSalesmanCode());
-            report.setRealName(uinfo.getRealName());
-            if (saleDeductionReports1 != null){
-                next = saleDeductionReports1.get(0);
-                report.setSumGoodsNum(next.getSumGoodsNum());
-                report.setSumSaleVolume(next.getSumSaleVolume());
-                report.setSumSaleCost(next.getSumSaleCost());
-                report.setSumGrossMargin(next.getSumGrossMargin());
-                report.setGrossRate(next.getGrossRate());
-                report.setSumCost(next.getSumCost());
-//                report.setPureProfit(next.getPureProfit());
-                BigDecimal commissionRate = next.getCommissionRate();
-                commissionRate = (commissionRate == null ? BigDecimal.ZERO : commissionRate).divide(BigDecimal.valueOf(100));
-                report.setPureProfit(next.getSumGrossMargin().subtract(next.getSumCost()));
-                report.setCommission(commissionRate.multiply(next.getSumSaleVolume()));
-                report.setCommissionRate(next.getCommissionRate());
-                data.add(report);
-            } else {
-                report.setSumGoodsNum(0);
-                report.setSumSaleVolume(BigDecimal.ZERO);
-                report.setSumSaleCost(BigDecimal.ZERO);
-                report.setSumGrossMargin(BigDecimal.ZERO);
-                report.setGrossRate(BigDecimal.ZERO);
-                report.setSumCost(BigDecimal.ZERO);
-                report.setPureProfit(BigDecimal.ZERO);
-                report.setCommission(BigDecimal.ZERO);
-                report.setCommissionRate(BigDecimal.ZERO);
-                dataEmpty.add(report);
-            }
+            report.setUserCode(next.getUserCode());
+            report.setSalesmanCode(next.getSalesmanCode());
+            report.setRealName(next.getRealName());
 
+            report.setSumGoodsNum(next.getSumGoodsNum());
+            report.setSumSaleVolume(next.getSumSaleVolume());
+            report.setSumSaleCost(next.getSumSaleCost());
+            report.setSumGrossMargin(next.getSumGrossMargin());
+            report.setGrossRate(next.getGrossRate());
+            report.setSumCost(next.getSumCost());
+            BigDecimal commissionRate = next.getCommissionRate();
+            commissionRate = (commissionRate == null ? BigDecimal.ZERO : commissionRate).divide(BigDecimal.valueOf(100));
+            report.setPureProfit(next.getSumGrossMargin().subtract(next.getSumCost()));
+            report.setCommission(commissionRate.multiply(next.getSumSaleVolume()));
+            report.setCommissionRate(next.getCommissionRate());
+            data.add(report);
         }
 
         double sumGoodsNum = data.stream().mapToDouble(SaleDeductionReport::getSumGoodsNum).sum();
@@ -510,7 +533,7 @@ public class SaleTicketReportFacade {
         BigDecimal sumPureProfit = data.stream().map(SaleDeductionReport::getPureProfit).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal sumCommission = data.stream().map(SaleDeductionReport::getCommission).reduce(BigDecimal.ZERO, BigDecimal::add);
         Map<String, Object> map = new HashMap<>();
-        data.addAll(dataEmpty);
+//        data.addAll(dataEmpty);
         map.put("saleDeductionReports", data);
         map.put("sumGoodsNum", sumGoodsNum);
         map.put("sumSaleVolume", sumSaleVolume);
