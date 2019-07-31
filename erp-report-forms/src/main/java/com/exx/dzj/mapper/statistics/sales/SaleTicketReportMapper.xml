@@ -86,27 +86,23 @@
 
     <select id="querySalesDeductionBySaleman" parameterType="com.exx.dzj.entity.bean.UserInfoQuery" resultType="com.exx.dzj.entity.statistics.sales.SaleDeductionReport">
         SELECT
-            ui.user_code AS userCode,
-            SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(si.discount_amount,0),0) ) AS sumSaleVolume,  /*销售额, 总金额-优惠金额*/
-            SUM(IFNULL(sg.goods_num,0)) AS sumGoodsNum, /*数量*/
-            SUM(IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) AS sumSaleCost,  /*成本*/
-            SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) AS sumGrossMargin, /*毛利*/
-            CONVERT(
-            SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0))
-            / SUM(IFNULL(si.receivable_accoun,0)),DECIMAL(10, 4)) * 100 AS grossRate,
-            SUM(IFNULL(sg1.goods_num,0) * IFNULL(sprice1.min_sell_price,0)) AS sumCost, /*额外支出费用*/
-            SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) - SUM(IFNULL(sg1.goods_num,0)) AS pureProfit,
-            ui.commission_rate AS commissionRate, /*佣金率*/
-            IFNULL(IFNULL(ui.commission_rate,0) * SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0),0)), 0) / 100 AS commission, /*佣金*/
-            ui.real_name AS realName
+        ui.real_name AS realName,
+        SUM(IFNULL(sg.goods_num,0)) AS sumGoodsNum, /*数量*/
+        SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) ,0)) AS sumSaleVolume,  /*销售额, 总金额*/
+        SUM(IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) AS sumSaleCost,  /*成本*/
+        SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) ,0)) - SUM(IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) AS sumGrossMargin, /*毛利*/
+        CONVERT(
+        SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0))
+        / SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0)),DECIMAL(10, 4)) * 100 AS grossRate,/*毛利率*/
+        (<![CDATA[SELECT SUM(sii.discount_amount) FROM tab_sale_info sii WHERE sii.sale_date >= DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s')
+        AND sii.sale_date <= DATE_FORMAT(#{endDate}, '%Y-%m-%d 23:59:59') and sii.user_code = si.user_code]]> ) sumCost, /*费用也就是优惠金额*/
+        IFNULL(ui.commission_rate, 0) AS commissionRate,
+        ui.user_code AS userCode
         FROM
             tab_sale_info si
         LEFT JOIN tab_user_info ui ON ui.user_code = si.user_code
-        LEFT JOIN tab_sale_goods_detail sg ON si.sale_code = sg.sale_code and sg.stock_code NOT REGEXP '^cb'
+        LEFT JOIN tab_sale_goods_detail sg ON si.sale_code = sg.sale_code
         LEFT JOIN tab_stock_num_price sprice ON sprice.stock_code = sg.stock_code
-        LEFT JOIN tab_sale_goods_detail sg1 ON si.sale_code = sg1.sale_code AND sg1.stock_code REGEXP '^cb'
-        LEFT JOIN tab_stock_num_price sprice1 ON sg1.stock_code = sprice1.stock_code
-        /*LEFT JOIN tab_sale_receipts_details sr ON si.sale_code = sr.sale_code*/
         WHERE 1 =1
         <if test="userCodeList != null">
             AND si.user_code IN
