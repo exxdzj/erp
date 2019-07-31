@@ -86,7 +86,7 @@
 
     <select id="querySalesDeductionBySaleman" parameterType="com.exx.dzj.entity.bean.UserInfoQuery" resultType="com.exx.dzj.entity.statistics.sales.SaleDeductionReport">
         SELECT
-        si.salesman_code AS salesmanCode,
+        IFNULL(si.salesman_code, '') AS salesmanCode,
         IFNULL(ui.real_name, '') AS realName,
         SUM(IFNULL(sg.goods_num,0)) AS sumGoodsNum, /*数量*/
         SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) ,0)) AS sumSaleVolume,  /*销售额, 总金额*/

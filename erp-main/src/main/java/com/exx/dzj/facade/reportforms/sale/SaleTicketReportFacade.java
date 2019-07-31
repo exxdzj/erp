@@ -513,12 +513,14 @@ public class SaleTicketReportFacade {
             report.setSumGoodsNum(next.getSumGoodsNum());
             report.setSumSaleVolume(next.getSumSaleVolume());
             report.setSumSaleCost(next.getSumSaleCost());
-            report.setSumGrossMargin(next.getSumGrossMargin());
             report.setGrossRate(next.getGrossRate());
-            report.setSumCost(next.getSumCost());
             BigDecimal commissionRate = next.getCommissionRate();
             commissionRate = (commissionRate == null ? BigDecimal.ZERO : commissionRate).divide(BigDecimal.valueOf(100));
-            report.setPureProfit(next.getSumGrossMargin().subtract(next.getSumCost()));
+            BigDecimal sumCost = next.getSumCost() == null ? BigDecimal.ZERO : next.getSumCost();
+            report.setSumCost(sumCost);
+            BigDecimal sumGrossMargin = next.getSumGrossMargin() == null ? BigDecimal.ZERO : next.getSumGrossMargin();
+            report.setSumGrossMargin(sumGrossMargin);
+            report.setPureProfit(sumGrossMargin.subtract(sumCost));
             report.setCommission(commissionRate.multiply(next.getSumSaleVolume()));
             report.setCommissionRate(next.getCommissionRate());
             data.add(report);
