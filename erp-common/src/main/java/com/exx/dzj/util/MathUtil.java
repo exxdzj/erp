@@ -646,7 +646,7 @@ public class MathUtil {
      * @return java.math.BigDecimal
      */
     public static BigDecimal keepTwoBigdecimal (BigDecimal divisor, BigDecimal dividend, int scale){
-        boolean flag = CommonConstant.BIGDECIMAL_ZERO_STR.equals(dividend.toString()) || BIG_DECIMAL_ZERO.equals(dividend);
+        boolean flag = CommonConstant.BIGDECIMAL_ZERO_STR.equals(dividend.toString()) || BIG_DECIMAL_ZERO.equals(dividend) || (dividend.intValue() == CommonConstant.DEFAULT_VALUE_ZERO);
 
         return flag ? divisor : divisor.divide(dividend, scale, BigDecimal.ROUND_HALF_UP).multiply(BIG_DECIMAL_HUNDRED);
     }
