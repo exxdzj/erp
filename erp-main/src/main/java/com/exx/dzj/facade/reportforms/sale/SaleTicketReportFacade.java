@@ -81,7 +81,7 @@ public class SaleTicketReportFacade {
                                             sgr.setUnitPrice(end.getUnitPrice());
                                             sgr.setCustName(end.getCustName());
                                             sgr.setStandardBuyPrice(end.getStandardBuyPrice());
-                                            BigDecimal bigDecimal = new BigDecimal(end.getGoodsNum() == null ?0  : end.getGoodsNum());
+                                            BigDecimal bigDecimal = new BigDecimal(end.getGoodsNum() == null ? 0 : end.getGoodsNum());
                                             sgr.setSalesVolume(end.getUnitPrice().multiply(bigDecimal).subtract(end.getDiscountAmount()));
                                             sgr.setCost(end.getStandardBuyPrice().multiply(bigDecimal));
                                             sgr.setRealName(end.getRealName());
@@ -482,7 +482,7 @@ public class SaleTicketReportFacade {
 //                report.setPureProfit(next.getPureProfit());
                 BigDecimal commissionRate = next.getCommissionRate();
                 commissionRate = (commissionRate == null ? BigDecimal.ZERO : commissionRate).divide(BigDecimal.valueOf(100));
-                report.setPureProfit(next.getSumSaleVolume().subtract(next.getSumCost()));
+                report.setPureProfit(next.getSumGrossMargin().subtract(next.getSumCost()));
                 report.setCommission(commissionRate.multiply(next.getSumSaleVolume()));
                 report.setCommissionRate(next.getCommissionRate());
                 data.add(report);
