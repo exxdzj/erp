@@ -322,8 +322,8 @@
     FROM
         tab_user_info ui
     WHERE
-        ui.is_quit = 1
-        and salesman_code IS NOT NULL and length(salesman_code) > 0
+        /*ui.is_quit = 1 and */
+        salesman_code IS NOT NULL and length(salesman_code) > 0
     ]]>
   </select>
 

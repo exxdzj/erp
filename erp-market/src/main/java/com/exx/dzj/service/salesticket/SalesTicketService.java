@@ -67,4 +67,5 @@ public interface SalesTicketService extends IService<SaleInfo> {
     int updatReceiptStatus (SaleInfo saleInfo);
 
     void updateReceivableAccoun (String saleCode, BigDecimal receivableAccoun);
+    void batchInsertLogistics (List<LogisticsInfo> list);
 }

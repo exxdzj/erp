@@ -1428,4 +1428,16 @@
     WHERE sale_code = #{saleCode}
   </update>
 
+  <insert id="batchInsertLogistics">
+    INSERT INTO tab_sale_logistic_info
+      (sale_code, logistic_company_code,
+      logistic_company_name, selector_phone_num,
+       remark)
+    VALUES
+    <foreach collection="list" item="item" separator=",">
+      (#{item.saleCode}, #{item.logisticsCompanyCode}, #{item.logisticsCompamyName},
+      #{item.selectorPhoneNum},  #{item.remark})
+    </foreach>
+  </insert>
+
 </mapper>

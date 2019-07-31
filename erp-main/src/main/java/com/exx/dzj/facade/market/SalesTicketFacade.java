@@ -660,7 +660,7 @@ public class SalesTicketFacade {
         List<LogisticsInfo> logisticsInfo = saleReceiptsDetailService.getLogisticsInfo(saleCode);
         List<LogisticsInfo> list = new ArrayList<>();
         for(LogisticsInfo li : logisticsInfo){
-            if (CommonConstant.DEFAULT_VALUE_ZERO == Integer.parseInt(li.getChargeMethod())){
+            if (li.getChargeMethod() != null && CommonConstant.DEFAULT_VALUE_ZERO == Integer.parseInt(li.getChargeMethod())){
                 li.setChargeMethod("");
                 list.add(li);
             } else {
@@ -723,8 +723,6 @@ public class SalesTicketFacade {
     public void insertImportGoodsData (List<SaleGoodsDetailBean> list, String dateStr){
 //        salesGoodsDetailService.batchInsertSalesGoodsDetail(list);
 
-        double sum = list.stream().mapToDouble(SaleGoodsDetailBean::getGoodsNum).sum();
-        System.out.println("sum \t" + sum);
         StringBuilder data = new StringBuilder("");
         StringBuilder failData = new StringBuilder("");
 
@@ -829,5 +827,9 @@ public class SalesTicketFacade {
             String fileName = "exec-receipt-salecode/" + dateStr + ".txt";
             writeString2(exeptData.toString(), fileName);
         }
+    }
+
+    public void batchInsertLogistics (List<LogisticsInfo> list){
+        salesTicketService.batchInsertLogistics(list);
     }
 }

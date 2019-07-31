@@ -72,4 +72,6 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
     int updatReceiptStatus(SaleInfo saleInfo);
 
     void updateReceivableAccoun(@Param("saleCode") String saleCode, @Param("receivableAccoun") BigDecimal receivableAccoun);
+
+    void batchInsertLogistics(List<LogisticsInfo> list);
 }

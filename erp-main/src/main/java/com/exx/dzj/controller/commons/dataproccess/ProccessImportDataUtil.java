@@ -6,6 +6,7 @@ import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.dept.DeptInfoBean;
+import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
@@ -22,6 +23,7 @@ import com.exx.dzj.util.enums.EnumsUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -838,4 +840,27 @@ public class ProccessImportDataUtil {
 //
 //        return data;
 //    }
+
+    public static List<LogisticsInfo> processSaleLogisticImportData (List<Object> list){
+        List<LogisticsInfo> data = new ArrayList<>();
+
+        if (CollectionUtils.isEmpty(list)){
+            return data;
+        }
+
+        SaleLogisticsModel model = null;
+        LogisticsInfo info = null;
+        for (Object o : list){
+            model = (SaleLogisticsModel)o;
+            if (StringUtils.isEmpty(model.getRemark())){
+                continue;
+            }
+
+            info =  new LogisticsInfo();
+            BeanUtils.copyProperties(model, info);
+            data.add(info);
+        }
+
+        return data;
+    }
 }

@@ -214,4 +214,9 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     public void updateReceivableAccoun(String saleCode, BigDecimal receivableAccoun) {
         saleInfoMapper.updateReceivableAccoun(saleCode, receivableAccoun);
     }
+
+    @Override
+    public void batchInsertLogistics(List<LogisticsInfo> list) {
+        saleInfoMapper.batchInsertLogistics(list);
+    }
 }

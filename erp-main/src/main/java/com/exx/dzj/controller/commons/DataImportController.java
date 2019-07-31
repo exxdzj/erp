@@ -2,10 +2,8 @@ package com.exx.dzj.controller.commons;
 
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.controller.commons.dataproccess.ProccessImportDataUtil;
-import com.exx.dzj.entity.accountatt.AccountAttributeBean;
-import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
-import com.exx.dzj.entity.dept.DeptInfoBean;
+import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
@@ -19,22 +17,16 @@ import com.exx.dzj.facade.stock.StockFacade;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.model.*;
 import com.exx.dzj.result.Result;
-import com.exx.dzj.service.sys.DeptService;
+import com.exx.dzj.service.salesreceiptsdetail.SaleReceiptsDetailService;
 import com.exx.dzj.util.DateUtil;
 import com.exx.dzj.util.excel.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author yangyun
@@ -110,7 +102,6 @@ public class DataImportController {
                     List<Object> objects = ExcelUtil.readExcel(excelFile, new SaleGoodsModel(), CommonConstant.DEFAULT_VALUE_ONE);
                     SaleGoodsModel o = (SaleGoodsModel)objects.get(0);
                     List<SaleGoodsDetailBean> saleGoodsBeans = ProccessImportDataUtil.processSaleGoodsImportData(objects, stringMap, stockInfos);
-                    Map<String, List<SaleGoodsDetailBean>> collect = saleGoodsBeans.stream().collect(Collectors.groupingBy(SaleGoodsDetailBean::getSaleCode));
                     salesTicketFacade.insertImportGoodsData(saleGoodsBeans, DateUtil.convertDateToString(o.getSaleDate(), "yyyy-MM"));
                     break;
                 case 5: //销售关联收款金额导入
@@ -121,6 +112,13 @@ public class DataImportController {
                     }
                     salesTicketFacade.exportReceiptData(receipts);
 
+                    break;
+                case 6: //销售关联物流信息
+                    List<Object> logistics = ExcelUtil.readExcel(excelFile, new SaleLogisticsModel(), CommonConstant.DEFAULT_VALUE_ONE);
+
+                    List<LogisticsInfo> logisticsInfos = ProccessImportDataUtil.processSaleLogisticImportData(logistics);
+
+                    salesTicketFacade.batchInsertLogistics(logisticsInfos);
                     break;
             }
 
