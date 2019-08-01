@@ -772,7 +772,7 @@ public class ProccessImportDataUtil {
         for (Object obj : data){
             model = (SaleGoodsModel)obj;
 
-            if (StringUtils.isEmpty(model.getStockCode())){
+            if (StringUtils.isEmpty(model.getStockCode()) && StringUtils.isEmpty(model.getStockAddress())){
                 continue;
             }
 
@@ -793,13 +793,20 @@ public class ProccessImportDataUtil {
             String stockAddressCode = stringMap.get(model.getStockAddress());
             goods.setStockAddressCode(stockAddressCode);
 
-            // resolver stockCode
-            String oldData = goods.getStockCode().replace(" ", "");
-//            StockInfo stockInfo = stockInfoMap.get(oldData);
-            StockInfo stockInfo = getObj(stockInfos, oldData);
-            if (stockInfo != null){
-                goods.setStockCode(stockInfo.getStockCode());
-                goods.setStockName(stockInfo.getStockName());
+            if(StringUtils.isNotBlank(goods.getStockCode())) {
+                // resolver stockCode
+                String oldData = goods.getStockCode().replace(" ", "");
+                // 以空格截取存货编码
+                String stockCodeTemp = goods.getStockCode().substring(0, goods.getStockCode().indexOf(" "));
+                // StockInfo stockInfo = stockInfoMap.get(oldData);
+                StockInfo stockInfo = getObj(stockInfos, oldData, stockCodeTemp);
+                if (stockInfo != null){
+                    goods.setStockCode(stockInfo.getStockCode());
+                    goods.setStockName(stockInfo.getStockName());
+                } else {
+                    goods.setStockCode(null);
+                    goods.setStockName(null);
+                }
             } else {
                 goods.setStockCode(null);
                 goods.setStockName(null);
@@ -810,8 +817,16 @@ public class ProccessImportDataUtil {
         return goodsList;
     }
 
-    private static StockInfo getObj (List<StockInfo> stockInfos, String key){
+    private static StockInfo getObj (List<StockInfo> stockInfos, String key, String stockCodeTemp){
         for (StockInfo s : stockInfos){
+            // 首先根据截取的存货编码判断
+            if(stockCodeTemp.equals(s.getStockCode())) {
+                return s;
+            }
+        }
+
+        for (StockInfo s : stockInfos){
+            // 上面没有获取到，则根据存货编码前缀判断
             if (key.startsWith(s.getStockCode())) {
                 return s;
             }
