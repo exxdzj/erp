@@ -239,7 +239,7 @@
       </if>
     </where>
     GROUP BY SINFO.sale_code
-    ORDER BY SINFO.sale_date  DESC
+    ORDER BY SINFO.sale_date,SINFO.sale_code
   </select>
 
   <resultMap id="saleListMap" type="com.exx.dzj.entity.market.SaleInfo">
