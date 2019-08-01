@@ -248,8 +248,8 @@ public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> imple
     }
 
     @Override
-    public String querySalesmanDeptCode(String salesmanCode) {
-        return userMapper.querySalesmanDeptCode(salesmanCode);
+    public String querySalesmanDeptCode(String userCode) {
+        return userMapper.querySalesmanDeptCode(userCode);
     }
 
     @Override

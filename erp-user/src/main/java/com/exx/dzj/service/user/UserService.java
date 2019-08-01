@@ -92,7 +92,7 @@ public interface UserService extends IService<UserInfo> {
 
     List<UserInfo> querySalesmanList(Integer type);
 
-    String querySalesmanDeptCode(String salesmanCode);
+    String querySalesmanDeptCode(String userCode);
     List<String> querySalesmanDeptCode2(String salesmanCode);
 
     /**

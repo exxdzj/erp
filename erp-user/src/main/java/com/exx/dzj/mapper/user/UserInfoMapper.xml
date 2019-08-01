@@ -527,7 +527,7 @@
   </select>
 
   <select id="querySalesmanDeptCode" resultType="string">
-    SELECT dept_code FROM tab_user_info where salesman_code = #{salesmanCode}
+    SELECT dept_code FROM tab_user_info where user_code = #{userCode}
   </select>
 
   <select id="querySalesmanDeptCode2" resultType="string">

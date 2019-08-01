@@ -185,7 +185,7 @@ public class SalesTicketFacade {
         List<DeptInfoBean> deptInfos = deptService.queryDeptList();
 
         // 查询销售员部门编码
-        String deptCode = salesmanService.querySalesmanDeptCode(saleInfo.getSalesmanCode());
+        String deptCode = salesmanService.querySalesmanDeptCode(saleInfo.getUserCode());
 
 
         salesTicketService.saveSaleInfo(saleInfo);
