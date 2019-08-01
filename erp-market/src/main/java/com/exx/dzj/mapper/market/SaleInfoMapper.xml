@@ -1115,7 +1115,7 @@
       u.real_name,SUM(goods.goods_num * goods.real_sell_price) AS receivable_accoun
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.salesman_code = u.salesman_code
-    INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
+    INNER JOIN tab_sale_goods_detail goods ON s.sale_code = goods.sale_code
     WHERE
     s.sale_date
     <if test="type == 'day'">
