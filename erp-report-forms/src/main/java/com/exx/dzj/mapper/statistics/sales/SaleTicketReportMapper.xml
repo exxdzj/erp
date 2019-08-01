@@ -279,8 +279,9 @@
 
     <select id="queryStasticsSalesForYear" resultMap="salesMapForYear">
         SELECT
-          YEAR(sale_date) AS `year`,MONTH(sale_date) AS `month`, SUM(receivable_accoun) AS sum_receivable_accoun
-        FROM tab_sale_info
+          YEAR(sale_date) AS `year`,MONTH(sale_date) AS `month`, SUM(goods.goods_num * goods.real_sell_price) AS sum_receivable_accoun
+        FROM tab_sale_info sinfo
+          INNER JOIN	tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
             GROUP BY YEAR (sale_date), MONTH (sale_date)
             ORDER BY YEAR(sale_date);
     </select>

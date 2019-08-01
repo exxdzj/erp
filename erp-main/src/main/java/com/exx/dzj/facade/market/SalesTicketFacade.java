@@ -675,7 +675,20 @@ public class SalesTicketFacade {
         List<SaleGoodsSelected> saleGoodsSelected = saleReceiptsDetailService.getSaleGoodsSelected(saleCode);
         List<SaleGoodsSelected> saleGoodsSelecteds = new ArrayList<>();
         if (!CollectionUtils.isEmpty(saleGoodsSelected)){
-            saleGoodsSelecteds = saleGoodsSelected.stream().filter(o -> !o.getStockCode().toUpperCase().contains("CB")).collect(Collectors.toList());
+//            saleGoodsSelecteds = saleGoodsSelected.stream().filter(o -> !StringUtils.startsWith(o.getStockCode(), "cb") ).collect(Collectors.toList());
+            for (SaleGoodsSelected o : saleGoodsSelected){
+                if (o == null){
+                    continue;
+                }
+                if (StringUtils.isEmpty(o.getStockCode())){
+                    saleGoodsSelecteds.add(o);
+                    continue;
+                }
+                if (!StringUtils.contains(o.getStockCode().toUpperCase(), "CB")){
+                    saleGoodsSelecteds.add(o);
+                    continue;
+                }
+            }
         }
         return saleGoodsSelecteds;
     }

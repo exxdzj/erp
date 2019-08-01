@@ -192,8 +192,8 @@
     SINFO.is_receipt AS isReceipt,
     SINFO.subordinate_company_name AS subordinateCompanyName,
     SINFO.remarks AS remarks,
-    (SELECT GROUP_CONCAT(CONCAT(tsl.logistic_company_name, ':', tsl.freight_code) SEPARATOR ',') AS logistic
-    FROM tab_sale_logistic_info tsl WHERE tsl.sale_code = SINFO.sale_code) AS logistic
+    IFNULL((SELECT GROUP_CONCAT(CONCAT(tsl.logistic_company_name, ':', tsl.freight_code) SEPARATOR ',') AS logistic
+    FROM tab_sale_logistic_info tsl WHERE tsl.sale_code = SINFO.sale_code), '无') AS logistic
 /*    GROUP_CONCAT(CONCAT(tsl.logistic_company_name, ':', tsl.freight_code) SEPARATOR ',') AS logistic*/
     FROM tab_sale_info SINFO
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
@@ -912,10 +912,10 @@
       <if test="saleCode != null">
         sale_code = #{saleCode,jdbcType=VARCHAR},
       </if>
-      <if test="custPhoneNum != null and custPhoneNum != ''">
+      <if test="custPhoneNum != null">
         cust_phone_num = #{custPhoneNum,jdbcType=VARCHAR},
       </if>
-      <if test="deliverRemark != null and deliverRemark != ''">
+      <if test="deliverRemark != null">
         deliver_remark = #{deliverRemark,jdbcType=VARCHAR},
       </if>
       <if test="userCode != null">
@@ -1058,9 +1058,10 @@
   </select>
 
   <select id="querySumSalesOnMonth" resultType="com.exx.dzj.entity.market.SaleInfo">
-    SELECT SUM(receivable_accoun) AS receivableAccoun, subordinate_company_code AS subordinateCompanyCode,
+    SELECT SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun, subordinate_company_code AS subordinateCompanyCode,
       subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info sinfo
+      INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
 	  WHERE sinfo.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
                             AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
                             GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
@@ -1074,7 +1075,7 @@
         sum((SELECT
                 sum(price.standard_buy_price * bb.goods_num)
               FROM tab_sale_goods_detail bb
-							LEFT JOIN tab_stock_num_price price ON bb.stock_code = price.stock_code
+							LEFT JOIN tab_stock_num_price price ON bb.stock_code = price.stock_code and bb.stock_code REGEXP '^cb'
 								WHERE bb.sale_code = s.sale_code)), 0) AS receivableAccoun
 				, subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info s
@@ -1085,13 +1086,11 @@
     <select id="queryAdditionalSumSalesOnMonth" resultType="com.exx.dzj.entity.market.SaleInfo">
    SELECT
         IFNULL(
-        /*IFNULL(SUM((SELECT SUM(aa.goods_num) FROM tab_sale_goods_detail aa WHERE aa.sale_code = s.sale_code AND aa.stock_code REGEXP '^cb')),0)
-        +*/
         sum((SELECT
                 sum(bb.goods_num * price.standard_buy_price)
               FROM tab_sale_goods_detail bb
 							LEFT JOIN tab_stock_num_price price ON bb.stock_code = price.stock_code
-								WHERE bb.sale_code = s.sale_code)), 0) AS receivableAccoun,
+								WHERE bb.sale_code = s.sale_code)), 0) + IFNULL(s.discount_amount,0) AS receivableAccoun,
 				subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info s
     WHERE s.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
@@ -1103,18 +1102,20 @@
     /*SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
 	  WHERE sinfo.sale_date BETWEEN DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY) AND concat(YEAR(now()),'-12-31')*/
 
-    SELECT SUM(receivable_accoun) AS receivableAccoun,
+    SELECT SUM(goods.goods_num * goods.real_sell_price) AS receivableAccoun,
 	  subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
 	FROM tab_sale_info sinfo
+	  INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
 	  WHERE sinfo.sale_date BETWEEN DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY) AND concat(YEAR(now()),'-12-31')
             GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
   <select id="querySalesTop" resultMap="salesTopMap">
     SELECT
-      u.real_name,SUM(s.receivable_accoun) AS receivable_accoun
+      u.real_name,SUM(goods.goods_num * goods.real_sell_price) AS receivable_accoun
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.salesman_code = u.salesman_code
+    INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
     WHERE
     s.sale_date
     <if test="type == 'day'">
@@ -1414,7 +1415,7 @@
         <if test="isReceipt != null">
           is_receipt = #{isReceipt},
         </if>
-        <if test="deliverRemark != null and deliverRemark != ''">
+        <if test="deliverRemark != null">
           deliver_remark =#{deliverRemark},
         </if>
         update_time = SYSDATE()
