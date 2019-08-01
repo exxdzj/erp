@@ -1,6 +1,8 @@
 package com.exx.dzj.service.encode.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.exx.dzj.annotation.SysLog;
+import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.encode.BusEncodeRuleCacheData;
 import com.exx.dzj.entity.encode.BusEncodeRuleInfo;
 import com.exx.dzj.entity.encode.BusEncodingRule;
@@ -51,6 +53,7 @@ public class BusEncodeServiceImpl extends ServiceImpl<BusEncodeMapper, BusEncodi
      * @param info
      */
     @Override
+    @SysLog(operate = "定时任务修改编码", logType = LogType.LOG_TYPE_CRON_JOB)
     public void scheduleUpdateEncode(BusEncodeRuleInfo info) {
         try {
             busEncodeMapper.scheduleUpdateEncode(info);

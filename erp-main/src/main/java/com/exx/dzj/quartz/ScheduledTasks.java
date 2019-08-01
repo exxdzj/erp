@@ -38,7 +38,7 @@ public class ScheduledTasks {
      0 10 3 ? * 1    每周星期天，3点10分 执行，注：1 表示星期天
      0 10 3 ? * 1#3  每个月的第 三 个星期，星期天执行，# 号只能出现在星期的位置
      */
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 1 0 * * ?")
     public void executeByTenSecond() {
         BusEncodeRuleInfo info1 = new BusEncodeRuleInfo();
         info1.setBusType("sale_ticket");
