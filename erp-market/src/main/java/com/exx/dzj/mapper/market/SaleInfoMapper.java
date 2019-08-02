@@ -65,9 +65,9 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
 
     void updateSalesmanSubordinateCompany(SaleInfo saleInfo);
 
-    List<SaleListInfo> querySalesListForIds(SaleInfoQuery query);
+    List<SaleListInfo> querySalesListForIds(@Param("query")SaleInfoQuery query, @Param("ew") Wrapper<T> queryWrapper);
 
-    List<SaleListInfo> exportSaleList(SaleInfoQuery query);
+    List<SaleListInfo> exportSaleList(@Param("query")SaleInfoQuery query, @Param("ew") Wrapper<T> queryWrapper);
 
     int updatReceiptStatus(SaleInfo saleInfo);
 
