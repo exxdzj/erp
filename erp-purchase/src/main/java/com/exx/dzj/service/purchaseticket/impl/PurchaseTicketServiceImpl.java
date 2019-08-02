@@ -3,6 +3,7 @@ package com.exx.dzj.service.purchaseticket.impl;
 import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfoExample;
+import com.exx.dzj.entity.purchase.PurchaseQuery;
 import com.exx.dzj.mapper.purchase.PurchaseInfoMapper;
 import com.exx.dzj.service.purchaseticket.PurchaseTicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ public class PurchaseTicketServiceImpl implements PurchaseTicketService {
     }
 
     @Override
-    public List<PurchaseInfo> queryPurchaseTickets(PurchaseInfo purchaseInfo) {
-        return purchaseInfoMapper.queryPurchaseTickets(purchaseInfo);
+    public List<PurchaseInfo> queryPurchaseTickets(PurchaseQuery query) {
+        return purchaseInfoMapper.queryPurchaseTickets(query);
     }
 
     @Override

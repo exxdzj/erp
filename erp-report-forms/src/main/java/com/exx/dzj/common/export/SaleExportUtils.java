@@ -29,7 +29,6 @@ import org.springframework.util.CollectionUtils;
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -908,23 +907,8 @@ public class SaleExportUtils {
 
         for (SaleListInfo sli : list){
             model = new SaleListModel();
-            model.setSaleCode(sli.getSaleCode());
-            model.setSaleDate(sli.getSaleDate());
-            model.setPaymentStatus(PayStatusEnum.getPayStatusEnumByKey(sli.getPaymentStatus()).getValue());
-            model.setCustName(sli.getCustName());
-            model.setCustPhoneNum(sli.getCustPhoneNum());
-            model.setCurrency(sli.getCurrency());
-            model.setExchangeRate(formateBigdecimal(sli.getExchangeRate()));
-            model.setSalesmanName(sli.getSalesmanName());
-            model.setSaleProject(sli.getSaleProject());
-            model.setDeliveryAddress(sli.getDeliveryAddress());
-            model.setSaleRemark(sli.getSaleRemark());
-            model.setIsReceipt(SalesClassesEnum.getSalesClassesEnum(sli.getIsReceipt()).getValue());
-            model.setSubordinateCompanyName(sli.getSubordinateCompanyName());
-            model.setDiscountAmount(formateBigdecimal(sli.getDiscountAmount()));
-            model.setAccountPeriod(formateBigdecimal(sli.getAccountPeriod()));
-            model.setCollectionUserName(sli.getCollectionUserName());
-            model.setDueDate(sli.getDueDate());
+            setBasicModel(model, sli);
+
             model.setSalesSumVolume(formateBigdecimal(sli.getReceivableAccoun()));
             model.setCollectionTerms(sli.getCollectionTerms());
             content.add(model);
@@ -939,6 +923,7 @@ public class SaleExportUtils {
             froNum = goodsSize >= receiptSize ? goodsSize : receiptSize;
 
             if (froNum > CommonConstant.DEFAULT_VALUE_ONE){ // 说明商品详情和收款详情中至少有一个记录数多余 1 条
+                SaleListModel model1 = null;
                 for (int i = 0; i < froNum; i++){
                     if (goodsSize > i){
                         goodsDetailBean = saleGoodsDetailBeanList.get(i);
@@ -953,7 +938,9 @@ public class SaleExportUtils {
                     if (i == 0){
                         setModelValue(model, receiptsDetails, goodsDetailBean);
                     } else {
-                        SaleListModel model1 = new SaleListModel();
+                        model1 = new SaleListModel();
+                        setBasicModel(model1, sli);
+
                         setModelValue(model1, receiptsDetails, goodsDetailBean);
                         content.add(model1);
                     }
@@ -999,6 +986,26 @@ public class SaleExportUtils {
             model.setSalesVolume(formateBigdecimal(goodsDetailBean.getSalesVolume()));
             model.setGoodsRemark(goodsDetailBean.getRemarks());
         }
+    }
+
+    private static void setBasicModel (SaleListModel model1, SaleListInfo sli){
+        model1.setSaleCode(sli.getSaleCode());
+        model1.setSaleDate(sli.getSaleDate());
+        model1.setPaymentStatus(PayStatusEnum.getPayStatusEnumByKey(sli.getPaymentStatus()).getValue());
+        model1.setCustName(sli.getCustName());
+        model1.setCustPhoneNum(sli.getCustPhoneNum());
+        model1.setCurrency(sli.getCurrency());
+        model1.setExchangeRate(formateBigdecimal(sli.getExchangeRate()));
+        model1.setSalesmanName(sli.getSalesmanName());
+        model1.setSaleProject(sli.getSaleProject());
+        model1.setDeliveryAddress(sli.getDeliveryAddress());
+        model1.setSaleRemark(sli.getSaleRemark());
+        model1.setIsReceipt(SalesClassesEnum.getSalesClassesEnum(sli.getIsReceipt()).getValue());
+        model1.setSubordinateCompanyName(sli.getSubordinateCompanyName());
+        model1.setDiscountAmount(formateBigdecimal(sli.getDiscountAmount()));
+        model1.setAccountPeriod(formateBigdecimal(sli.getAccountPeriod()));
+        model1.setCollectionUserName(sli.getCollectionUserName());
+        model1.setDueDate(sli.getDueDate());
     }
 
     public static ExcelWriter exportSaleDetail (ServletOutputStream outputStream, Map<String, Object> map, String realName, SaleDetailReportQuery query){

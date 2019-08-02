@@ -3,6 +3,7 @@ package com.exx.dzj.mapper.purchase;
 import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfoExample;
+import com.exx.dzj.entity.purchase.PurchaseQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ public interface PurchaseInfoMapper {
 
     int insertSelective(PurchaseInfo record);
 
-    List<PurchaseInfo> queryPurchaseTickets(PurchaseInfo purchaseInfo);
+    List<PurchaseInfo> queryPurchaseTickets(PurchaseQuery query);
 
     PurchaseInfo selectByPrimaryKey(Integer id);
 

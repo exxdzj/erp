@@ -122,6 +122,12 @@
     LEFT JOIN tab_customer_supplier SUPPLIER ON SUPPLIER.cust_type IN (2,3) AND SUPPLIER.cust_code=PINFO.cust_code
     LEFT JOIN tab_user_info UINFO ON UINFO.salesman_code=PINFO.salesman_code
     WHERE 1=1
+    <if test="startTime != null and startTime != ''">
+      AND  <![CDATA[PINFO.purchase_date >= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')]]>
+    </if>
+    <if test="endTime != null and endTime != ''">
+      AND  <![CDATA[PINFO.purchase_date <= DATE_FORMAT(#{endTime},'%Y-%m-%d 23:59:59')]]>
+    </if>
     <if test="purchaseCode != null and purchaseCode != ''">
       AND  PINFO.purchase_code LIKE CONCAT(#{purchaseCode}, '%')
     </if>
@@ -132,7 +138,7 @@
       AND PINFO.flow_state = #{flowState}
     </if>
     /*AND PINFO.is_enable = 1*/
-    ORDER BY PINFO.create_time DESC
+    ORDER BY PINFO.purchase_date, PINFO.purchase_code
   </select>
 
   <!-- 采购单详情 -->

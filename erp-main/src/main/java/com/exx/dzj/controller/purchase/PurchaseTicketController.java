@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONException;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
+import com.exx.dzj.entity.purchase.PurchaseQuery;
 import com.exx.dzj.entity.purchase.PurchaseReceiptsDetailsBean;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.purchase.PurchaseTicketFacade;
@@ -63,15 +64,15 @@ public class PurchaseTicketController {
      * @date 2019/1/14 0014
      * @param request
      * @param response
-     * @param purchaseInfo
+     * @param query
      * @return com.exx.dzj.result.Result
      */
     @GetMapping("querypurchaseticket")
-    public Result queryPurchaseTickets(HttpServletRequest request, HttpServletResponse response, PurchaseInfo purchaseInfo){
+    public Result queryPurchaseTickets(HttpServletRequest request, HttpServletResponse response, PurchaseQuery query){
         Result result = Result.responseSuccess();
         int pageNum = MathUtil.toInt(request.getParameter("pageNum"), CommonConstant.DEFAULT_VALUE_ZERO);
         int pageSize = MathUtil.toInt(request.getParameter("pageSize"), CommonConstant.DEFAULT_PAGE_SIZE);
-        ERPage<PurchaseInfo> purchaseInfoERPage = purchaseTicketFacade.queryPurchaseTickets(pageNum, pageSize, purchaseInfo);
+        ERPage<PurchaseInfo> purchaseInfoERPage = purchaseTicketFacade.queryPurchaseTickets(pageNum, pageSize, query);
         result.setData(purchaseInfoERPage);
         return result;
     }

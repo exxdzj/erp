@@ -216,12 +216,12 @@ public class PurchaseTicketFacade {
      * @date 2019/1/12 0012
      * @param pageNum
      * @param pageSize
-     * @param purchaseInfo
+     * @param query
      * @return com.exx.dzj.page.ERPage<com.exx.dzj.entity.purchase.PurchaseInfo>
      */
-    public ERPage<PurchaseInfo> queryPurchaseTickets(int pageNum, int pageSize, PurchaseInfo purchaseInfo){
+    public ERPage<PurchaseInfo> queryPurchaseTickets(int pageNum, int pageSize, PurchaseQuery query){
         PageHelper.startPage(pageNum, pageSize);
-        List<PurchaseInfo> purchaseInfoList = purchaseTicketService.queryPurchaseTickets(purchaseInfo);
+        List<PurchaseInfo> purchaseInfoList = purchaseTicketService.queryPurchaseTickets(query);
         ERPage<PurchaseInfo> purchasePage = new ERPage<>(purchaseInfoList);
         return purchasePage;
     }

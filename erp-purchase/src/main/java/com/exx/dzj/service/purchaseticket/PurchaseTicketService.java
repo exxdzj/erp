@@ -3,6 +3,7 @@ package com.exx.dzj.service.purchaseticket;
 import com.exx.dzj.entity.purchase.PurchaseHistoryInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfo;
 import com.exx.dzj.entity.purchase.PurchaseInfoExample;
+import com.exx.dzj.entity.purchase.PurchaseQuery;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface PurchaseTicketService {
 
     void savePurchaseTicket(PurchaseInfo purchaseInfo);
 
-    List<PurchaseInfo> queryPurchaseTickets(PurchaseInfo purchaseInfo);
+    List<PurchaseInfo> queryPurchaseTickets(PurchaseQuery query);
 
     PurchaseInfo queryPurchaseTicketDetail(Integer id);
 
