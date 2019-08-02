@@ -52,7 +52,8 @@ public class SalesTickeContorller {
     public Result saveSalesTicket(HttpServletRequest request, HttpServletResponse response, @RequestBody SaleInfo saleInfo){
         Result result = Result.responseSuccess();
         try {
-            salesTicketFacade.saveSalesTicket(saleInfo);
+            String saleCode = salesTicketFacade.saveSalesTicket(saleInfo);
+            result.setData(saleCode);
         } catch (ErpException e){
             e.printStackTrace();
             result.setCode(Result.FAIL_CODE);

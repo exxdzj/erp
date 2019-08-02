@@ -173,7 +173,7 @@ public class SalesTicketFacade {
      */
     @Transactional
     @SaleLog(operate = "更新销售单")
-    public void saveSalesTicket(SaleInfo saleInfo){
+    public String saveSalesTicket(SaleInfo saleInfo){
         Optional.of(saleInfo);
         List<SaleGoodsDetailBean> goodsDetailBeanList = saleInfo.getSaleGoodsDetailBeanList();
         List<SaleReceiptsDetails> receiptsDetailsList = saleInfo.getSaleReceiptsDetailsList();
@@ -187,7 +187,9 @@ public class SalesTicketFacade {
         // 查询销售员部门编码
         String deptCode = salesmanService.querySalesmanDeptCode(saleInfo.getUserCode());
 
-
+        // 销售单编码
+        String saleCode = getCode();
+        saleInfo.setSaleCode(saleCode);
         salesTicketService.saveSaleInfo(saleInfo);
         setSubordinateCompany(saleInfo, deptInfos, deptCode);
 
@@ -211,6 +213,7 @@ public class SalesTicketFacade {
                 saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
             }
         }
+        return saleCode;
     }
 
     @Autowired
