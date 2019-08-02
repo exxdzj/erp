@@ -980,7 +980,7 @@ public class SaleExportUtils {
             model.setStockName(goodsDetailBean.getStockName());
             model.setStockAddress(goodsDetailBean.getStockAddress());
             model.setGoodsNum(formateBigdecimal(goodsDetailBean.getGoodsNum()));
-            model.setUnitPrice(formateBigdecimal(goodsDetailBean.getUnitPrice()));
+            model.setUnitPrice(formateBigdecimal(goodsDetailBean.getRealSellPrice()));
             model.setDiscountRate(formateBigdecimal(goodsDetailBean.getDiscountRate()) + "%");
             model.setGoodsDiscountAmount(formateBigdecimal(goodsDetailBean.getDiscountAmount()));
             model.setSalesVolume(formateBigdecimal(goodsDetailBean.getSalesVolume()));
