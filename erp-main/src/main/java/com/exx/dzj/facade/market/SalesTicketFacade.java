@@ -687,7 +687,7 @@ public class SalesTicketFacade {
                     saleGoodsSelecteds.add(o);
                     continue;
                 }
-                if (!StringUtils.contains(o.getStockCode().toUpperCase(), "CB")){
+                if (!StringUtils.startsWith(o.getStockCode().toUpperCase(), "CB")){
                     saleGoodsSelecteds.add(o);
                     continue;
                 }
