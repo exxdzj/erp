@@ -1266,7 +1266,49 @@
       <if test="ew!=null">
         ${ew.sqlSegment}
       </if>
+
       <if test="query.startTime != null and query.startTime != ''">
+        AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{query.startTime},'%Y-%m-%d %H:%i:%s')]]>
+      </if>
+      <if test="query.paymentStatusList != null and query.paymentStatusList.size() > 0">
+        AND  SINFO.payment_status IN
+        <foreach collection="query.paymentStatusList" item="item" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+      </if>
+
+      <if test="query.endTime != null and query.endTime != ''">
+        AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{query.endTime},'%Y-%m-%d 23:59:59')]]>
+      </if>
+      <if test="query.saleCode != null and query.saleCode != ''">
+        AND  SINFO.sale_code LIKE CONCAT('%', #{query.saleCode}, '%')
+      </if>
+      <if test="query.userCode != null and query.userCode != ''">
+        AND  SINFO.user_code=#{query.userCode}
+      </if>
+      <if test="query.subordinateCompanyCode != null and query.subordinateCompanyCode != ''">
+        AND  SINFO.subordinate_company_code=#{query.subordinateCompanyCode}
+      </if>
+      <if test="query.custCode != null and query.custCode != ''">
+        AND  SINFO.cust_code=#{query.custCode}
+      </if>
+      <if test="query.custName != null and query.custName!=''">
+        AND CSUPPLIER.cust_name LIKE CONCAT('%', #{query.custName}, '%')
+      </if>
+      <if test="query.stockName != null and query.stockName != ''">
+        AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')
+      </if>
+      <if test="query.custPhoneNum != null and query.custPhoneNum != ''">
+        AND SINFO.cust_phone_num LIKE CONCAT('%', #{query.custPhoneNum}, '%')
+      </if>
+
+
+
+
+
+
+
+      <!--<if test="query.startTime != null and query.startTime != ''">
         AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{query.startTime},'%Y-%m-%d %H:%i:%s')]]>
       </if>
       <if test="query.endTime != null and query.endTime != ''">
@@ -1301,7 +1343,7 @@
         <foreach collection="query.idList" item="id" separator="," open="(" close=")" index="index">
           #{id}
         </foreach>
-      </if>
+      </if>-->
       ORDER BY SINFO.sale_date  DESC
     </select>
 
@@ -1367,7 +1409,49 @@
       <if test="ew!=null">
         ${ew.sqlSegment}
       </if>
+
       <if test="query.startTime != null and query.startTime != ''">
+        AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{query.startTime},'%Y-%m-%d %H:%i:%s')]]>
+      </if>
+      <if test="query.paymentStatusList != null and query.paymentStatusList.size() > 0">
+        AND  SINFO.payment_status IN
+        <foreach collection="query.paymentStatusList" item="item" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+      </if>
+
+      <if test="query.endTime != null and query.endTime != ''">
+        AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{query.endTime},'%Y-%m-%d 23:59:59')]]>
+      </if>
+      <if test="query.saleCode != null and query.saleCode != ''">
+        AND  SINFO.sale_code LIKE CONCAT('%', #{query.saleCode}, '%')
+      </if>
+      <if test="query.userCode != null and query.userCode != ''">
+        AND  SINFO.user_code=#{query.userCode}
+      </if>
+      <if test="query.subordinateCompanyCode != null and query.subordinateCompanyCode != ''">
+        AND  SINFO.subordinate_company_code=#{query.subordinateCompanyCode}
+      </if>
+      <if test="query.custCode != null and query.custCode != ''">
+        AND  SINFO.cust_code=#{query.custCode}
+      </if>
+      <if test="query.custName != null and query.custName!=''">
+        AND CSUPPLIER.cust_name LIKE CONCAT('%', #{query.custName}, '%')
+      </if>
+      <if test="query.stockName != null and query.stockName != ''">
+        AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')
+      </if>
+      <if test="query.custPhoneNum != null and query.custPhoneNum != ''">
+        AND SINFO.cust_phone_num LIKE CONCAT('%', #{query.custPhoneNum}, '%')
+      </if>
+
+
+
+
+
+
+
+      <!--<if test="query.startTime != null and query.startTime != ''">
         AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{query.startTime},'%Y-%m-%d %H:%i:%s')]]>
       </if>
       <if test="query.endTime != null and query.endTime != ''">
@@ -1402,7 +1486,7 @@
         <foreach collection="query.idList" item="id" separator="," open="(" close=")" index="index">
           #{id}
         </foreach>
-      </if>
+      </if>-->
     </where>
     ORDER BY SINFO.sale_date  DESC
   </select>

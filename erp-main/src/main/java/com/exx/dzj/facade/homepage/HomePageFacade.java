@@ -335,6 +335,7 @@ public class HomePageFacade {
     public List<SaleInfo> querySalesTop(String data){
         List<SaleInfo> list = salesTicketService.querySalesTop(data);
 
+//        Comparator<SaleInfo> com =
         return list;
     }
     public List<SaleInfo> salesUncollectedTop(){
