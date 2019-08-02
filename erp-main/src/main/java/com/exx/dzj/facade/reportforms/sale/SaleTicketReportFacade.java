@@ -455,7 +455,6 @@ public class SaleTicketReportFacade {
      * @return java.util.Map<java.lang.String,java.lang.Object>
      */
     public Map<String, Object> statisticSalesDeductionBySaleman (UserInfoQuery query) {
-        List<UserInfo> userInfos = querySalemanIdentityInfo();
         List<SaleDeductionReport> saleDeductionReports = stockTypeReportService.querySalesDeductionBySaleman(query);
 //        Map<String, List<SaleDeductionReport>> collect = saleDeductionReports.stream()
 //                                            .filter(o -> !StringUtils.isEmpty(o.getUserCode()))

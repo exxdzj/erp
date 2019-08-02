@@ -1050,9 +1050,10 @@
   </delete>
 
   <select id="querySumSalesOnDay" resultType="com.exx.dzj.entity.market.SaleInfo">
-    SELECT SUM(receivable_accoun) AS receivableAccoun, subordinate_company_code AS subordinateCompanyCode,
+    SELECT SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun, subordinate_company_code AS subordinateCompanyCode,
       subordinate_company_name AS subordinateCompanyName
       FROM tab_sale_info sinfo
+      INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
 	  WHERE sinfo.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
 	        GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
@@ -1075,7 +1076,7 @@
         sum((SELECT
                 sum(price.standard_buy_price * bb.goods_num)
               FROM tab_sale_goods_detail bb
-							LEFT JOIN tab_stock_num_price price ON bb.stock_code = price.stock_code and bb.stock_code REGEXP '^cb'
+							LEFT JOIN tab_stock_num_price price ON bb.stock_code = price.stock_code
 								WHERE bb.sale_code = s.sale_code)), 0) AS receivableAccoun
 				, subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info s
