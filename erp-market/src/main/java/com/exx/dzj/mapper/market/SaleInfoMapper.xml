@@ -1103,7 +1103,7 @@
     /*SELECT SUM(receivable_accoun) FROM tab_sale_info sinfo
 	  WHERE sinfo.sale_date BETWEEN DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY) AND concat(YEAR(now()),'-12-31')*/
 
-    SELECT SUM(goods.goods_num * goods.real_sell_price) AS receivableAccoun,
+    SELECT SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,
 	  subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
 	FROM tab_sale_info sinfo
 	  INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
