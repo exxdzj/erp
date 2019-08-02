@@ -383,7 +383,8 @@
     '使用中'
     ELSE
     '关闭'
-    END dataStatus
+    END dataStatus,
+    IFNULL(cs.company_name, '无') companyName
     FROM
         tab_customer_supplier cs
     LEFT JOIN tab_user_info ui ON cs.user_code = ui.user_code
@@ -399,11 +400,9 @@
     </if>
     <if test="custType != null and custType != '' and custType == '1'.toString()">
       AND  ( cs.cust_type = 1 OR cs.cust_type = 3)
-      <!--AND cs.source = #{custType}-->
     </if>
     <if test="custType != null and custType != '' and custType == '2'.toString()">
       AND  ( cs.cust_type = 2 OR cs.cust_type = 3)
-      <!--AND cs.source = #{custType}-->
     </if>
     <if test="custLevel != null and custLevel != ''">
       AND cs.cust_level = #{custLevel}

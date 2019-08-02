@@ -172,6 +172,7 @@ public class SaleExportController {
      * @return void
      */
     @GetMapping("exportSaleList/{realName}")
+    @DataPermission(pageComponent="sale/saleticket/saleTicketList")
     public void exportSaleList (HttpServletRequest request, HttpServletResponse response, @PathVariable("realName") String realName, SaleInfoQuery query){
         try {
             String code = ExcelUtil.getCode();
@@ -182,15 +183,22 @@ public class SaleExportController {
 
             ServletOutputStream outputStream = response.getOutputStream();
             XSSFWorkbook writer = null;
+
+            SaleInfo saleInfo = new SaleInfo();
+            saleInfo.setSaleReceiptsDetailsList(null);
+            saleInfo.setSaleGoodsDetailBeanList(null);
+            // 查询条件
+            QueryWrapper<SaleInfo> queryWrapper = QueryGenerator.initQueryWrapper(saleInfo, request.getParameterMap());
+
             int type = query.getType();
             switch (type){
                 case CommonConstant.DEFAULT_VALUE_ONE:
-                    list = saleTicketReportFacade.exportSaleList(query, null);
+                    list = saleTicketReportFacade.exportSaleList(query, queryWrapper);
                     writer = SaleExportUtils.exportSaleList(outputStream, list, query.getFieldList());
 //                    writer = SaleExportUtils.exportSaleList2(outputStream, list);
                     break;
                 case CommonConstant.DEFAULT_VALUE_TWO:
-                    list = saleTicketReportFacade.querySalesListForIds(query, null);
+                    list = saleTicketReportFacade.querySalesListForIds(query, queryWrapper);
 //                    writer = SaleExportUtils.exportSaleListTenet(outputStream, list, query.getFieldList());
                     SaleExportUtils.exportSaleListTenet2(outputStream, list);
                     break;

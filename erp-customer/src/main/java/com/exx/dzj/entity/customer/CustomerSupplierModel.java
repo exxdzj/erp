@@ -57,4 +57,6 @@ public class CustomerSupplierModel implements Serializable {
 
     private String phoneNum;
     private String deliveryAddressOne;
+
+    private String companyName;
 }
