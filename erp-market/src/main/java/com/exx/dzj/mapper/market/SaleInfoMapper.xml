@@ -1150,7 +1150,7 @@
     <!--LIMIT 10-->
 
     SELECT u.salesman_code,u.real_name,
-    (SUM(s.receivable_accoun) - (SELECT SUM(collected_amount) FROM tab_sale_receipts_details p WHERE p.sale_code = s.sale_code)) AS receivable_accoun
+    IFNULL((SUM(s.receivable_accoun) - (SELECT SUM(collected_amount) FROM tab_sale_receipts_details p WHERE p.sale_code = s.sale_code)), 0) AS receivable_accoun
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.salesman_code = u.salesman_code
     /*WHERE DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')*/
@@ -1158,7 +1158,7 @@
     AND s.salesman_code = u.user_code
     GROUP BY s.salesman_code,u.real_name
     ORDER BY receivable_accoun DESC
-    LIMIT 10
+    LIMIT 30
   </select>
 
   <resultMap id="salesUncollectedTopMap" type="com.exx.dzj.entity.market.SaleInfo">
@@ -1167,14 +1167,14 @@
   </resultMap>
 
   <select id="querySalesTicketTop" resultMap="saleTicketTopMap">
-    SELECT u.real_name,s.salesman_code, COUNT(s.salesman_code) AS countTicket
+    SELECT u.real_name,s.salesman_code, IFNULL(COUNT(s.salesman_code), 0) AS countTicket
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.salesman_code = u.salesman_code
         WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
 									 AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
 				GROUP BY s.salesman_code
 				ORDER BY countTicket DESC
-				LIMIT 10
+				LIMIT 30
   </select>
   
   <resultMap id="saleTicketTopMap" type="com.exx.dzj.entity.market.SaleInfo">

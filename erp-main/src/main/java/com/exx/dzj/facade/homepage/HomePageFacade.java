@@ -358,7 +358,7 @@ public class HomePageFacade {
 
 //        Iterator<SaleInfo> iterator = list.iterator();
 //        while (iterator.hasNext()){
-//            if (iterator.next().getCountTicket() ){
+//            if (iterator.next().getCountTicket() <= CommonConstant.DEFAULT_VALUE_ZERO){
 //
 //            }
 //        }
