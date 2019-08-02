@@ -95,8 +95,15 @@
         CONVERT(
         SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0))
         / SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0)),DECIMAL(10, 4)) * 100 AS grossRate,/*毛利率*/
-        (<![CDATA[SELECT SUM(sii.discount_amount) FROM tab_sale_info sii WHERE sii.sale_date >= DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s')
-        AND sii.sale_date <= DATE_FORMAT(#{endDate}, '%Y-%m-%d 23:59:59') and sii.user_code = si.user_code]]> ) sumCost, /*费用也就是优惠金额*/
+        (SELECT SUM(sii.discount_amount) FROM tab_sale_info sii WHERE 1=1
+
+        <if test="startDate != null and startDate != ''">
+            AND <![CDATA[ sii.sale_date >= DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND <![CDATA[ sii.sale_date <= DATE_FORMAT(#{endDate}, '%Y-%m-%d 23:59:59') ]]>
+        </if>
+        AND sii.user_code = si.user_code ) sumCost, /*费用也就是优惠金额*/
         IFNULL(ui.commission_rate, 0) AS commissionRate,
         IFNULL(ui.user_code, '') AS userCode
         FROM

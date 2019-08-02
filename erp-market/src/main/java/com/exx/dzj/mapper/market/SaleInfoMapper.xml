@@ -1077,7 +1077,7 @@
                 sum(price.standard_buy_price * bb.goods_num)
               FROM tab_sale_goods_detail bb
 							LEFT JOIN tab_stock_num_price price ON bb.stock_code = price.stock_code
-								WHERE bb.sale_code = s.sale_code)), 0) AS receivableAccoun
+								WHERE bb.sale_code = s.sale_code)), 0) + IFNULL(sum(s.discount_amount),0) AS receivableAccoun
 				, subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info s
     WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
@@ -1091,7 +1091,7 @@
                 sum(bb.goods_num * price.standard_buy_price)
               FROM tab_sale_goods_detail bb
 							LEFT JOIN tab_stock_num_price price ON bb.stock_code = price.stock_code
-								WHERE bb.sale_code = s.sale_code)), 0) + IFNULL(s.discount_amount,0) AS receivableAccoun,
+								WHERE bb.sale_code = s.sale_code)), 0) + IFNULL(sum(s.discount_amount),0) AS receivableAccoun,
 				subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info s
     WHERE s.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
