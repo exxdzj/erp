@@ -340,12 +340,12 @@ public class HomePageFacade {
     }
     public List<SaleInfo> salesUncollectedTop(){
         List<SaleInfo> list = salesTicketService.salesUncollectedTop();
-        Iterator<SaleInfo> iterator = list.iterator();
-        while (iterator.hasNext()){
-            if (iterator.next().getReceivableAccoun().compareTo(ZERO) <= CommonConstant.DEFAULT_VALUE_ZERO){
-                iterator.remove();
-            }
-        }
+//        Iterator<SaleInfo> iterator = list.iterator();
+//        while (iterator.hasNext()){
+//            if (iterator.next().getReceivableAccoun().compareTo(ZERO) <= CommonConstant.DEFAULT_VALUE_ZERO){
+//                iterator.remove();
+//            }
+//        }
         return list;
     }
 

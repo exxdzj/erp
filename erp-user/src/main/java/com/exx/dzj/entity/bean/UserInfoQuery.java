@@ -18,7 +18,7 @@ public class UserInfoQuery extends UserInfo {
     private String startDate;
     private String endDate;
     private List<Integer> businessType; // 业务类型 1 销货 2 退货
-    private Integer paymentStatu; // 收款状态
+    private List<String> paymentStatu; // 收款状态
 //    private Integer gross; // 是否计算毛利 1 是 0否
 
     private List<String> userCodeList;

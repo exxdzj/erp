@@ -124,15 +124,13 @@
         <if test="endDate != null and endDate != ''">
             AND <![CDATA[si.sale_date <= DATE_FORMAT(#{endDate},'%Y-%m-%d 23:59:59')]]>
         </if>
-        <if test="paymentStatu == 1" >
-            AND si.payment_status = 'cs03'
+        <if test="paymentStatu != null" >
+            AND si.payment_status IN
+            <foreach collection="paymentStatu" separator="," open="(" close=")" item="item">
+                #{item}
+            </foreach>
         </if>
-        <if test="paymentStatu == 2" >
-            AND si.payment_status = 'cs01'
-        </if>
-        <if test="paymentStatu == 3" >
-            AND si.payment_status = 'cs02'
-        </if>
+
         <if test="businessType != null">
             AND si.sale_ticket_type IN
             <foreach collection="businessType" separator="," open="(" close=")" item="item">

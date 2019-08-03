@@ -37,52 +37,58 @@ public class SaleListTenetModel extends BaseRowModel {
     @ExcelProperty(value = "总金额", index = 7)
     private String receivableAccoun;
 
-    @ExcelProperty(value = "状态", index = 8)
+    @ExcelProperty(value = "已收款金额", index = 8)
+    private String sumCollectedAmount;
+
+    @ExcelProperty(value = "未收款金额", index = 9)
+    private String unCollectedAmount;
+
+    @ExcelProperty(value = "状态", index = 10)
     private String paymentStatus;
 
-    @ExcelProperty(value = "是否签收", index = 9)
+    @ExcelProperty(value = "是否签收", index = 11)
     private String isReceipt;
 
-    @ExcelProperty(value = "销售员", index = 10)
+    @ExcelProperty(value = "销售员", index = 12)
     private String salesmanName;
 
-    @ExcelProperty(value = "制单人", index = 11)
+    @ExcelProperty(value = "制单人", index = 13)
     private String collectionUserName;
 
-    @ExcelProperty(value = "备注", index = 12)
+    @ExcelProperty(value = "备注", index = 14)
     private String saleRemark;
 
-    @ExcelProperty(value = "送货地址", index = 13)
+    @ExcelProperty(value = "送货地址", index = 15)
     private String deliveryAddress;
 
-    @ExcelProperty(value = "物流名称", index = 14)
+    @ExcelProperty(value = "物流名称", index = 16)
     private String logisticsCompamyName;
-    @ExcelProperty(value = "快递单号", index = 15)
+    @ExcelProperty(value = "快递单号", index = 17)
     private String freihtCode;
-    @ExcelProperty(value = "发货时间", index = 16)
+    @ExcelProperty(value = "发货时间", index = 18)
     private String deliverGoodsTime;
-    @ExcelProperty(value = "查询电话", index = 17)
+    @ExcelProperty(value = "查询电话", index = 19)
     private String selectorPhoneNum;
-    @ExcelProperty(value = "物流备注", index = 18)
+    @ExcelProperty(value = "物流备注", index = 20)
     private String remark;
 
 
 
-    @ExcelProperty(value = "项目", index = 19)
+    @ExcelProperty(value = "项目", index = 21)
     private String saleProject;
 
-    @ExcelProperty(value = "优惠", index = 20)
+    @ExcelProperty(value = "优惠", index = 22)
     private String discountAmount;
 
-    @ExcelProperty(value = "收款条件", index = 21)
+    @ExcelProperty(value = "收款条件", index = 23)
     private String collectionTerms;
 
-    @ExcelProperty(value = "账期", index = 22)
+    @ExcelProperty(value = "账期", index = 24)
     private String accountPeriod;
 
-    @ExcelProperty(value = "已收款", index = 23)
-    private String sumCollectedAmount;
+//    @ExcelProperty(value = "已收款", index = 25)
+//    private String sumCollectedAmount;
 
-    @ExcelProperty(value = "所属分公司", index = 24)
+    @ExcelProperty(value = "所属分公司", index = 25)
     private String subordinateCompanyName;
 }

@@ -785,6 +785,8 @@ public class SaleExportUtils {
             model.setIsReceipt(formateBigdecimal(SalesClassesEnum.getSalesClassesEnum(info.getIsReceipt()).getValue()));
             model.setSalesmanName(info.getSalesmanName());
             model.setCollectionUserName(info.getCollectionUserName());
+            model.setSumCollectedAmount(formateBigdecimal(info.getSumCollectedAmount()));
+            model.setUnCollectedAmount(formateBigdecimal(info.getReceivableAccoun().subtract(info.getSumCollectedAmount())));
             model.setSaleRemark(info.getSaleRemark());
             model.setDeliveryAddress(info.getDeliveryAddress());
 

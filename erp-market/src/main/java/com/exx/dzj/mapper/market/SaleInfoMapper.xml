@@ -1130,7 +1130,7 @@
     AND u.real_name IS NOT NULL
     GROUP BY s.salesman_code,u.real_name
     ORDER BY SUM(s.receivable_accoun) DESC
-    LIMIT 10
+/*    LIMIT 30*/
   </select>
   
   <resultMap id="salesTopMap" type="com.exx.dzj.entity.market.SaleInfo">
@@ -1158,7 +1158,7 @@
     AND s.salesman_code = u.user_code
     GROUP BY s.salesman_code,u.real_name
     ORDER BY receivable_accoun DESC
-    LIMIT 30
+/*    LIMIT 30*/
   </select>
 
   <resultMap id="salesUncollectedTopMap" type="com.exx.dzj.entity.market.SaleInfo">
@@ -1174,7 +1174,7 @@
 									 AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
 				GROUP BY s.salesman_code
 				ORDER BY countTicket DESC
-				LIMIT 30
+				/*LIMIT 30*/
   </select>
   
   <resultMap id="saleTicketTopMap" type="com.exx.dzj.entity.market.SaleInfo">
@@ -1242,11 +1242,6 @@
     DICTIONPRO.dict_name AS saleProject,
     SINFO.delivery_address AS deliveryAddress,
     SINFO.remarks AS saleRemark,
-    /* CASE
-    WHEN SINFO.is_receipt = 0 THEN '未签收'
-    WHEN SINFO.is_receipt = 1 THEN '已签收'
-    WHEN SINFO.is_receipt = 2 THEN '其他'
-    END isReceipt,*/
     SINFO.subordinate_company_name AS subordinateCompanyName,
     SINFO.discount_amount AS discountAmount,
     SINFO.collection_terms AS collectionTerms,
@@ -1258,8 +1253,6 @@
     SINFO.is_receipt AS isReceipt
     FROM tab_sale_info SINFO
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
-    /*      LEFT JOIN tab_sale_goods_detail sgoods ON SINFO.sale_code = sgoods.sale_code
-    LEFT JOIN tab_sale_receipts_details srd ON SINFO.sale_code = srd.sale_code*/
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
     LEFT JOIN tab_user_info UINFO ON SINFO.salesman_code = UINFO.salesman_code
     WHERE 1=1
@@ -1295,55 +1288,13 @@
       <if test="query.custName != null and query.custName!=''">
         AND CSUPPLIER.cust_name LIKE CONCAT('%', #{query.custName}, '%')
       </if>
-      <if test="query.stockName != null and query.stockName != ''">
-        AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')
-      </if>
+
       <if test="query.custPhoneNum != null and query.custPhoneNum != ''">
         AND SINFO.cust_phone_num LIKE CONCAT('%', #{query.custPhoneNum}, '%')
       </if>
-
-
-
-
-
-
-
-      <!--<if test="query.startTime != null and query.startTime != ''">
-        AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{query.startTime},'%Y-%m-%d %H:%i:%s')]]>
+      <if test="query.stockName != null and query.stockName != ''">
+        HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
       </if>
-      <if test="query.endTime != null and query.endTime != ''">
-        AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{query.endTime},'%Y-%m-%d 23:59:59')]]>
-      </if>
-      <if test="query.paymentStatusList != null and query.paymentStatusList.size() > 0">
-        AND  SINFO.payment_status IN
-        <foreach collection="query.paymentStatusList" item="item" open="(" close=")" separator=",">
-          #{item}
-        </foreach>
-      </if>
-      <if test="query.userCode != null and query.userCode != ''">
-        AND  SINFO.user_code=#{query.userCode}
-      </if>
-      <if test="query.saleCode != null and query.saleCode != ''">
-        AND  SINFO.sale_code LIKE CONCAT(#{query.saleCode}, '%')
-      </if>
-      <if test="query.salesmanCode != null and query.salesmanCode != ''">
-        AND  SINFO.salesman_code=#{query.salesmanCode}
-      </if>
-      <if test="query.paymentStatus != null and query.paymentStatus != ''">
-        AND  SINFO.payment_status=#{query.paymentStatus}
-      </if>
-      <if test="query.subordinateCompanyCode != null and query.subordinateCompanyCode != ''">
-        AND  SINFO.subordinate_company_code=#{query.subordinateCompanyCode}
-      </if>
-      <if test="query.custCode != null and query.custCode != ''">
-        AND  SINFO.cust_code=#{custCode}
-      </if>
-      <if test="query.idList.size() > 0">
-        AND SINFO.id IN
-        <foreach collection="query.idList" item="id" separator="," open="(" close=")" index="index">
-          #{id}
-        </foreach>
-      </if>-->
       ORDER BY SINFO.sale_date  DESC
     </select>
 
@@ -1398,7 +1349,7 @@
       SINFO.discount_amount AS discountAmount,
       SINFO.collection_terms AS collectionTerms,
       SINFO.account_period AS accountPeriod,
-      (SELECT SUM(collected_amount) FROM tab_sale_receipts_details srd WHERE SINFO.sale_code = srd.sale_code) AS sumCollectedAmount,
+      IFNULL((SELECT SUM(collected_amount) FROM tab_sale_receipts_details srd WHERE SINFO.sale_code = srd.sale_code), 0) AS sumCollectedAmount,
       SINFO.subordinate_company_name AS subordinateCompanyName,
       SINFO.sale_source AS saleSource
     FROM tab_sale_info SINFO
@@ -1438,56 +1389,13 @@
       <if test="query.custName != null and query.custName!=''">
         AND CSUPPLIER.cust_name LIKE CONCAT('%', #{query.custName}, '%')
       </if>
-      <if test="query.stockName != null and query.stockName != ''">
-        AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')
-      </if>
       <if test="query.custPhoneNum != null and query.custPhoneNum != ''">
         AND SINFO.cust_phone_num LIKE CONCAT('%', #{query.custPhoneNum}, '%')
       </if>
-
-
-
-
-
-
-
-      <!--<if test="query.startTime != null and query.startTime != ''">
-        AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{query.startTime},'%Y-%m-%d %H:%i:%s')]]>
-      </if>
-      <if test="query.endTime != null and query.endTime != ''">
-        AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{query.endTime},'%Y-%m-%d 23:59:59')]]>
-      </if>
-      <if test="query.paymentStatusList != null and query.paymentStatusList.size() > 0">
-        AND  SINFO.payment_status IN
-        <foreach collection="query.paymentStatusList" item="item" open="(" close=")" separator=",">
-          #{item}
-        </foreach>
-      </if>
-      <if test="query.userCode != null and query.userCode != ''">
-        AND  SINFO.user_code=#{query.userCode}
-      </if>
-      <if test="query.saleCode != null and query.saleCode != ''">
-        AND  SINFO.sale_code LIKE CONCAT(#{query.saleCode}, '%')
-      </if>
-      <if test="query.salesmanCode != null and query.salesmanCode != ''">
-        AND  SINFO.salesman_code=#{query.salesmanCode}
-      </if>
-      <if test="query.paymentStatus != null and query.paymentStatus != ''">
-        AND  SINFO.payment_status=#{query.paymentStatus}
-      </if>
-      <if test="query.subordinateCompanyCode != null and query.subordinateCompanyCode != ''">
-        AND  SINFO.subordinate_company_code=#{query.subordinateCompanyCode}
-      </if>
-      <if test="query.custCode != null and query.custCode != ''">
-        AND  SINFO.cust_code=#{query.custCode}
-      </if>
-      <if test="query.idList.size() > 0">
-        AND SINFO.id IN
-        <foreach collection="query.idList" item="id" separator="," open="(" close=")" index="index">
-          #{id}
-        </foreach>
-      </if>-->
     </where>
+    <if test="query.stockName != null and query.stockName != ''">
+      HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
+    </if>
     ORDER BY SINFO.sale_date  DESC
   </select>
 
