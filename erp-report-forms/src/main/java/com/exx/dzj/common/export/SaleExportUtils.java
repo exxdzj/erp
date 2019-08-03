@@ -526,11 +526,11 @@ public class SaleExportUtils {
 
         List<SaleDeductionModel> data1 = new ArrayList<>();
         SaleDeductionModel item = new SaleDeductionModel();
-        item.setSaleMan("日期: 由" + query.getStartDate());
-        item.setSaleGoodsNum("至" + query.getEndDate());
-        item.setGrossMargin("打印日期: ");
-        item.setGrossRate(DateUtil.getDate(new Date()));
-        data1.add(item);
+//        item.setSaleMan("日期: 由" + query.getStartDate());
+//        item.setSaleGoodsNum("至" + query.getEndDate());
+//        item.setGrossMargin("打印日期: ");
+//        item.setGrossRate(DateUtil.getDate(new Date()));
+//        data1.add(item);
         writer.write(data1, sheet);
 
         List<SaleDeductionReport> saleDeductionReports = (List<SaleDeductionReport>)mapData.get("saleDeductionReports");
@@ -542,37 +542,37 @@ public class SaleExportUtils {
         for (SaleDeductionReport sdr : saleDeductionReports){
             sdm = new SaleDeductionModel();
             sdm.setSaleMan(sdr.getUserCode() + sdr.getRealName());
-            sdm.setSaleGoodsNum(sdr.getSumGoodsNum() + "");
-            sdm.setSaleVolume(sdr.getSumSaleVolume().toString());
-            sdm.setSaleCost(sdr.getSumSaleCost().toString());
-            sdm.setGrossMargin(sdr.getSumGrossMargin().toString());
-            sdm.setGrossRate(sdr.getGrossRate().toString());
-            sdm.setFee(sdr.getSumCost().toString());
-            sdm.setPureProfit(sdr.getPureProfit().toString());
+            sdm.setSaleGoodsNum(sdr.getSumGoodsNum());
+            sdm.setSaleVolume(sdr.getSumSaleVolume().doubleValue());
+            sdm.setSaleCost(sdr.getSumSaleCost().doubleValue());
+            sdm.setGrossMargin(sdr.getSumGrossMargin().doubleValue());
+            sdm.setGrossRate(sdr.getGrossRate().doubleValue());
+            sdm.setFee(sdr.getSumCost().doubleValue());
+            sdm.setPureProfit(sdr.getPureProfit().doubleValue());
             sdm.setCommissionRate((sdr.getCommissionRate() == null ? 0 : sdr.getCommissionRate()) + "%");
-            sdm.setCommission(sdr.getCommission().toString());
+            sdm.setCommission(sdr.getCommission().doubleValue());
             content.add(sdm);
         }
 
         sdm = new SaleDeductionModel();
         sdm.setSaleMan("合计: ");
-        sdm.setSaleGoodsNum(mapData.get("sumGoodsNum").toString());
-        sdm.setSaleVolume(mapData.get("sumSaleVolume").toString());
-        sdm.setSaleCost(mapData.get("sumSaleCost").toString());
-        sdm.setGrossMargin(mapData.get("sumGrossMargin").toString());
-        sdm.setFee(mapData.get("sumCost").toString());
-        sdm.setPureProfit(mapData.get("sumPureProfit").toString());
-        sdm.setCommission(mapData.get("sumCommission").toString());
+        sdm.setSaleGoodsNum((Double) mapData.get("sumGoodsNum"));
+        sdm.setSaleVolume(((BigDecimal)mapData.get("sumSaleVolume")).doubleValue());
+        sdm.setSaleCost(((BigDecimal)mapData.get("sumSaleCost")).doubleValue());
+        sdm.setGrossMargin(((BigDecimal)mapData.get("sumGrossMargin")).doubleValue());
+        sdm.setFee(((BigDecimal)mapData.get("sumCost")).doubleValue());
+        sdm.setPureProfit(((BigDecimal)mapData.get("sumPureProfit")).doubleValue());
+        sdm.setCommission(((BigDecimal)mapData.get("sumCommission")).doubleValue());
 
         content.add(sdm);
         writer.write(content, sheet);
 
         List<SaleDeductionModel> dataEnd = new ArrayList<>();
         SaleDeductionModel itemEnd = new SaleDeductionModel();
-        dataEnd.add(itemEnd);
+//        dataEnd.add(itemEnd);
         writer.write(dataEnd, sheet);
         itemEnd.setSaleMan("公司名称: 正诚文化");
-        itemEnd.setSaleVolume("操作员: " + userVo.getRealName());
+//        itemEnd.setSaleVolume("操作员: " + userVo.getRealName());
         writer.write(dataEnd, sheet);
 
         return writer;

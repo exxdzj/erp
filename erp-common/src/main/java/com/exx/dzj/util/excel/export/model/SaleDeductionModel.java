@@ -15,29 +15,29 @@ public class SaleDeductionModel extends BaseRowModel {
     private String saleMan;
 
     @ExcelProperty(value = {"销售提成汇总分析报表", "销售提成汇总分析报表", "销售数量"}, index = 1)
-    private String saleGoodsNum;
+    private Double saleGoodsNum;
 
     @ExcelProperty(value = {"销售提成汇总分析报表", "销售提成汇总分析报表", "销售收入"}, index = 2)
-    private String saleVolume;
+    private Double saleVolume;
 
     @ExcelProperty(value = {"销售提成汇总分析报表", "销售提成汇总分析报表", "销售成本"}, index = 3)
-    private String saleCost;
+    private Double saleCost;
 
     @ExcelProperty(value = {"销售提成汇总分析报表", "销售提成汇总分析报表", "毛利"}, index = 4)
-    private String grossMargin;
+    private Double grossMargin;
 
-    @ExcelProperty(value = {"销售提成汇总分析报表", "销售提成汇总分析报表", "毛利率"}, index = 5)
-    private String grossRate;
+    @ExcelProperty(value = {"销售提成汇总分析报表", "销售提成汇总分析报表", "毛利率(%)"}, index = 5)
+    private Double grossRate;
 
     @ExcelProperty(value = {"销售提成汇总分析报表", "销售提成汇总分析报表", "费用"}, index = 6)
-    private String fee;
+    private Double fee;
 
     @ExcelProperty(value = {"销售提成汇总分析报表", "销售提成汇总分析报表", "纯利"}, index = 7)
-    private String pureProfit;
+    private Double pureProfit;
 
     @ExcelProperty(value = {"销售提成汇总分析报表", "销售提成汇总分析报表", "佣金率"}, index = 8)
     private String commissionRate;
 
     @ExcelProperty(value = {"销售提成汇总分析报表", "销售提成汇总分析报表", "佣金"}, index = 9)
-    private String commission;
+    private Double commission;
 }
