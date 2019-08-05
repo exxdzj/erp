@@ -457,49 +457,11 @@ public class SaleTicketReportFacade {
      */
     public Map<String, Object> statisticSalesDeductionBySaleman (UserInfoQuery query) {
         List<SaleDeductionReport> saleDeductionReports = stockTypeReportService.querySalesDeductionBySaleman(query);
-//        Map<String, List<SaleDeductionReport>> collect = saleDeductionReports.stream()
-//                                            .filter(o -> !StringUtils.isEmpty(o.getUserCode()))
-//                                            .collect(Collectors.groupingBy(SaleDeductionReport::getUserCode));
-//
-//        SaleDeductionReport report = null;
-//        List<SaleDeductionReport> data = new ArrayList<>();
-//        List<SaleDeductionReport> dataEmpty = new ArrayList<>();
-//        SaleDeductionReport next =null;
-//        for (UserInfo uinfo : userInfos){
-//            List<SaleDeductionReport> saleDeductionReports1 = collect.get(uinfo.getUserCode());
-//            report = new SaleDeductionReport();
-//            report.setUserCode(uinfo.getUserCode());
-//            report.setSalesmanCode(uinfo.getSalesmanCode());
-//            report.setRealName(uinfo.getRealName());
-//            if (saleDeductionReports1 != null){
-//                next = saleDeductionReports1.get(0);
-//                report.setSumGoodsNum(next.getSumGoodsNum());
-//                report.setSumSaleVolume(next.getSumSaleVolume());
-//                report.setSumSaleCost(next.getSumSaleCost());
-//                report.setSumGrossMargin(next.getSumGrossMargin());
-//                report.setGrossRate(next.getGrossRate());
-//                report.setSumCost(next.getSumCost());
-////                report.setPureProfit(next.getPureProfit());
-//                BigDecimal commissionRate = next.getCommissionRate();
-//                commissionRate = (commissionRate == null ? BigDecimal.ZERO : commissionRate).divide(BigDecimal.valueOf(100));
-//                report.setPureProfit(next.getSumGrossMargin().subtract(next.getSumCost()));
-//                report.setCommission(commissionRate.multiply(next.getSumSaleVolume()));
-//                report.setCommissionRate(next.getCommissionRate());
-//                data.add(report);
-//            } else {
-//                report.setSumGoodsNum(0);
-//                report.setSumSaleVolume(BigDecimal.ZERO);
-//                report.setSumSaleCost(BigDecimal.ZERO);
-//                report.setSumGrossMargin(BigDecimal.ZERO);
-//                report.setGrossRate(BigDecimal.ZERO);
-//                report.setSumCost(BigDecimal.ZERO);
-//                report.setPureProfit(BigDecimal.ZERO);
-//                report.setCommission(BigDecimal.ZERO);
-//                report.setCommissionRate(BigDecimal.ZERO);
-//                dataEmpty.add(report);
 
-//            }
-//
+        // 查询部分收款
+//        List<SaleDeductionReport> partiallySaleDeductionReports = null;
+//        if (StringUtils.equals(String.valueOf(CommonConstant.DEFAULT_VALUE_TWO), query.getPaymentStatu())){
+//            partiallySaleDeductionReports = stockTypeReportService.queryPartiallySalesDeductionBySaleman(query);
 //        }
 
         SaleDeductionReport report = null;

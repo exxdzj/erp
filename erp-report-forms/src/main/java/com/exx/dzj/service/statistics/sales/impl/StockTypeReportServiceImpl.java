@@ -47,6 +47,10 @@ public class StockTypeReportServiceImpl implements SaleTicketReportService {
     public List<SaleDeductionReport> querySalesDeductionBySaleman(UserInfoQuery query) {
         return stockTypeReportMapper.querySalesDeductionBySaleman(query);
     }
+    @Override
+    public List<SaleDeductionReport> queryPartiallySalesDeductionBySaleman(UserInfoQuery query) {
+        return stockTypeReportMapper.queryPartiallySalesDeductionBySaleman(query);
+    }
 
     @Override
     public List<DeptSaleReport> selectionDeptInfo(String parentCode) {

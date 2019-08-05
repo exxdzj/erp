@@ -23,6 +23,7 @@ public interface SaleTicketReportService {
     List<CustomerBaseReport> querySalesTicketByCust (CustomerQuery query);
 
     List<SaleDeductionReport> querySalesDeductionBySaleman (UserInfoQuery query);
+    List<SaleDeductionReport> queryPartiallySalesDeductionBySaleman (UserInfoQuery query);
 
     List<DeptSaleReport> selectionDeptInfo (String parentCode);
 

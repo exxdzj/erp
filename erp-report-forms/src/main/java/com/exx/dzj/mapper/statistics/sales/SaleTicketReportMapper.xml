@@ -126,13 +126,48 @@
         <if test="endDate != null and endDate != ''">
             AND <![CDATA[si.sale_date <= DATE_FORMAT(#{endDate},'%Y-%m-%d 23:59:59')]]>
         </if>
-        <if test="paymentStatu != null" >
-            AND si.payment_status IN
-            <foreach collection="paymentStatu" separator="," open="(" close=")" item="item">
+        <if test="businessType != null">
+            AND si.sale_ticket_type IN
+            <foreach collection="businessType" separator="," open="(" close=")" item="item">
                 #{item}
             </foreach>
         </if>
+        GROUP BY si.user_code
+        ORDER BY si.salesman_code
+    </select>
 
+    <select id="queryPartiallySalesDeductionBySaleman" parameterType="com.exx.dzj.entity.bean.UserInfoQuery" resultType="com.exx.dzj.entity.statistics.sales.SaleDeductionReport">
+        SELECT
+        SUM(IFNULL(rd.collected_amount,0)) AS sumSaleVolume,  /*销售额, 总金额*/
+        (SELECT SUM(sii.discount_amount) FROM tab_sale_info sii WHERE 1=1
+        <if test="startDate != null and startDate != ''">
+            AND <![CDATA[ sii.sale_date >= DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND <![CDATA[ sii.sale_date <= DATE_FORMAT(#{endDate}, '%Y-%m-%d 23:59:59') ]]>
+        </if>
+        AND sii.user_code = si.user_code ) sumCost, /*费用也就是优惠金额*/
+        IFNULL(ui.user_code, '') AS userCode
+        FROM
+            tab_sale_info si
+        LEFT JOIN tab_user_info ui ON ui.user_code = si.user_code
+        LEFT JOIN tab_sale_receipts_details rd ON si.sale_code = rd.sale_code
+        WHERE 1 =1
+        <if test="userCodeList != null">
+            AND si.user_code IN
+            <foreach collection="userCodeList" separator="," open="(" close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="startDate != null and startDate != ''">
+            AND <![CDATA[si.sale_date >= DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND <![CDATA[si.sale_date <= DATE_FORMAT(#{endDate},'%Y-%m-%d 23:59:59')]]>
+        </if>
+        <if test="paymentStatu == '2'">
+            si.payment_status IN ('cs03', 'cs02')
+        </if>
         <if test="businessType != null">
             AND si.sale_ticket_type IN
             <foreach collection="businessType" separator="," open="(" close=")" item="item">
