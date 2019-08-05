@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 public class SaleBaseReport implements Serializable {
 
     private static final long serialVersionUID = 3961916382012422515L;
+    private Integer id;
     private String stockCode;
     private String stockName;
     private String saleCode;

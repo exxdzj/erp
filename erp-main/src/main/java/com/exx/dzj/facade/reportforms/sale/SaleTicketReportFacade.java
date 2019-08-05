@@ -200,6 +200,7 @@ public class SaleTicketReportFacade {
                                 sir.setSaleDate(baseReports.get(0).getSaleDate());
                                 sir.setCustCode(baseReports.get(0).getCustCode());
                                 sir.setCustName(baseReports.get(0).getCustName());
+                                sir.setId(baseReports.get(0).getId());
                                 BigDecimal reduce = baseReports.stream().map(SalesmanBaseReport::getDiscountAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                                 sir.setCollectedAmountTotal(baseReports.get(0).getCollectedAmount().subtract(reduce));
                                 baseReports.stream().forEach(
