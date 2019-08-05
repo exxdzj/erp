@@ -1,5 +1,7 @@
 package com.exx.dzj.entity.customer;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
@@ -16,6 +18,8 @@ import java.util.Date;
 @TableName("tab_customer_supplier")
 public class CustomerSupplierBean implements Serializable {
     private String value;
+
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
 
     //客户编号
@@ -25,10 +29,10 @@ public class CustomerSupplierBean implements Serializable {
     private String custName;
 
     //身份类型(1-客户  2-供应商  3-既是客户又是供应商 )
-    private int custType;
+    private Integer custType;
 
     //客户身份(0-非保险  1-保险)
-    private int identity;
+    private Integer identity;
 
     //客户职级(保险家等<类别>)
     private String custLevel;
@@ -58,7 +62,7 @@ public class CustomerSupplierBean implements Serializable {
     private String shipCode;
 
     //来源
-    private int source;
+    private Integer source;
 
     //发货地址
     private String shipAddress;

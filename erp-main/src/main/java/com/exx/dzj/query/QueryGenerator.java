@@ -68,10 +68,9 @@ public class QueryGenerator {
 	public static <T> QueryWrapper<T> initQueryWrapper(T searchObj, Map<String, String[]> parameterMap){
 		long start = System.currentTimeMillis();
 		QueryWrapper<T> queryWrapper = new QueryWrapper<>(searchObj);
-		System.out.println("最初的查询条件："+queryWrapper.getSqlSegment());
 		installMplus(queryWrapper, searchObj, parameterMap);
 		log.debug("---查询条件构造器初始化完成,耗时:"+(System.currentTimeMillis()-start)+"毫秒----");
-		System.out.println("构造的查询条件："+queryWrapper.getSqlSegment());
+		log.debug("构造的查询条件：{}", queryWrapper.getSqlSegment());
 		return queryWrapper;
 	}
 	

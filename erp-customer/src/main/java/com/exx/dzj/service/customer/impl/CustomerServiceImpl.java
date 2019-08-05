@@ -2,6 +2,8 @@ package com.exx.dzj.service.customer.impl;
 
 //import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.metadata.Sheet;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exx.dzj.annotation.SysLog;
 import com.exx.dzj.constant.LogLevel;
 import com.exx.dzj.constant.LogType;
@@ -31,7 +33,7 @@ import java.util.List;
  * @Description 客户或供应商 service
  */
 @Service("customerSupplierService")
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerServiceImpl extends ServiceImpl<CustomerSupplierBeanMapper, CustomerSupplierBean> implements CustomerService {
 
     Class clazz;
     private final static Logger LOGGER = LoggerFactory.getLogger(CustomerServiceImpl.class);
@@ -53,10 +55,10 @@ public class CustomerServiceImpl implements CustomerService {
      * @return
      */
     @Override
-    public Result queryCustomerSupplierList(int pageNum, int pageSize, CustomerSupplierQuery queryParam) {
+    public Result queryCustomerSupplierList(int pageNum, int pageSize, CustomerSupplierQuery queryParam, QueryWrapper queryWrapper) {
         Result result = Result.responseSuccess();
         PageHelper.startPage(pageNum, pageSize);
-        List<CustomerSupplierModel> list = csMapper.queryCustomerSupplierList(queryParam);
+        List<CustomerSupplierModel> list = csMapper.queryCustomerSupplierList(queryParam, queryWrapper);
         ERPage<CustomerSupplierModel> pages = new ERPage<>(list);
         result.setData(pages);
         return result;

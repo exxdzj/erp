@@ -1,5 +1,6 @@
 package com.exx.dzj.facade.customer;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
@@ -69,8 +70,9 @@ public class CustomerSupplierFacade {
      * @param pageSize
      * @return
      */
-    public Result queryCustomerSupplierList(int pageNum, int pageSize, CustomerSupplierQuery queryParam) {
-        return customerSupplierService.queryCustomerSupplierList(pageNum, pageSize, queryParam);
+    public Result queryCustomerSupplierList(int pageNum, int pageSize, CustomerSupplierQuery queryParam,
+                                            QueryWrapper queryWrapper) {
+        return customerSupplierService.queryCustomerSupplierList(pageNum, pageSize, queryParam, queryWrapper);
     }
 
     /**

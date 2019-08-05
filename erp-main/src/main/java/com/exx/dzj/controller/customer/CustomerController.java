@@ -1,11 +1,14 @@
 package com.exx.dzj.controller.customer;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.exx.dzj.annotation.DataPermission;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.facade.customer.CustomerSupplierFacade;
 import com.exx.dzj.page.ERPage;
+import com.exx.dzj.query.QueryGenerator;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +43,7 @@ public class CustomerController {
      * @return
      */
     @GetMapping("queryCustomerSupplierList/{custType}")
+    @DataPermission(pageComponent="market/customer/customerList")
     public Result queryCustomerSupplierList(HttpServletRequest request, HttpServletResponse response,
                                             String query, @PathVariable("custType") int custType){
         Result result = Result.responseSuccess();
@@ -50,7 +54,11 @@ public class CustomerController {
             queryParam = new CustomerSupplierQuery();
         }
         queryParam.setCustType(custType);
-        result = customerSupplierFacade.queryCustomerSupplierList(pageNum, pageSize, queryParam);
+
+        CustomerSupplierBean customerSupplierBean = new CustomerSupplierBean();
+        QueryWrapper<CustomerSupplierBean> queryWrapper = QueryGenerator.initQueryWrapper(customerSupplierBean, request.getParameterMap());
+
+        result = customerSupplierFacade.queryCustomerSupplierList(pageNum, pageSize, queryParam, queryWrapper);
         return result;
     }
 

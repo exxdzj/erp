@@ -24,6 +24,7 @@ public class CustomerSupplierQuery implements Serializable {
 
     private int custType;
 
+    private int isEnable = 1;
     private String custLevel;
     private String phoneNum;
     private String custCode;
@@ -31,4 +32,6 @@ public class CustomerSupplierQuery implements Serializable {
     private String regionName;
     private String userCode;
     private String birthdayDate;
+    private String companyCode;
+    private String rankCode;
 }

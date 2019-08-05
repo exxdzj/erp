@@ -1,5 +1,7 @@
 package com.exx.dzj.service.customer;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.exx.dzj.entity.customer.*;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
@@ -12,7 +14,7 @@ import java.util.List;
  * @Date 2019/1/5 0005 16:29
  * @Description 客户或供应商 service
  */
-public interface CustomerService {
+public interface CustomerService extends IService<CustomerSupplierBean> {
 
     /**
      * 编辑是否有效
@@ -25,7 +27,7 @@ public interface CustomerService {
      * 查询 客户或供应商列表数据
      * @return
      */
-    Result queryCustomerSupplierList(int pageNum, int pageSize, CustomerSupplierQuery queryParam);
+    Result queryCustomerSupplierList(int pageNum, int pageSize, CustomerSupplierQuery queryParam, QueryWrapper queryWrapper);
 
     /**
      * 查询 客户或供应商详细信息数据

@@ -1,11 +1,14 @@
 package com.exx.dzj.mapper.customer;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exx.dzj.entity.customer.*;
 import org.apache.ibatis.annotations.Param;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.util.List;
 
-public interface CustomerSupplierBeanMapper {
+public interface CustomerSupplierBeanMapper extends BaseMapper<CustomerSupplierBean> {
 
     /**
      * 保存
@@ -38,7 +41,7 @@ public interface CustomerSupplierBeanMapper {
      * @param queryParam
      * @return
      */
-    List<CustomerSupplierModel> queryCustomerSupplierList(CustomerSupplierQuery queryParam);
+    List<CustomerSupplierModel> queryCustomerSupplierList(@Param("queryParam") CustomerSupplierQuery queryParam, @Param("ew")Wrapper<T> wrapper);
 
     /**
      * 查询 客户或供应商的详细信息

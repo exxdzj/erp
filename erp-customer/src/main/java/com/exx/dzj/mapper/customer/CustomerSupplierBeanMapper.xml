@@ -360,8 +360,7 @@
 
   <!-- *****************************************手写 sql  start ******************************************* -->
   <!-- 查询 客户或供应商列表数据 -->
-  <select id="queryCustomerSupplierList" resultType="com.exx.dzj.entity.customer.CustomerSupplierModel"
-          parameterType="com.exx.dzj.entity.customer.CustomerSupplierQuery">
+  <select id="queryCustomerSupplierList" resultType="com.exx.dzj.entity.customer.CustomerSupplierModel">
     SELECT
         cs.cust_name `value`,
         cs.cust_code custCode,
@@ -390,41 +389,53 @@
     LEFT JOIN tab_user_info ui ON cs.user_code = ui.user_code
     LEFT JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code AND cs.source = cw.source
     LEFT JOIN tab_account_attribute ta ON cs.cust_code = ta.cust_code AND cs.source = ta.source
-    WHERE
-      cs.is_enable = 1
-    <if test="custName != null and custName != ''">
-      AND cs.cust_name LIKE CONCAT('%',#{custName},'%')
-    </if>
-    <if test="linkMan != null and linkMan != ''">
-      AND cw.link_man LIKE CONCAT('%',#{linkMan},'%')
-    </if>
-    <if test="custType != null and custType != '' and custType == '1'.toString()">
-      AND  ( cs.cust_type = 1 OR cs.cust_type = 3)
-    </if>
-    <if test="custType != null and custType != '' and custType == '2'.toString()">
-      AND  ( cs.cust_type = 2 OR cs.cust_type = 3)
-    </if>
-    <if test="custLevel != null and custLevel != ''">
-      AND cs.cust_level = #{custLevel}
-    </if>
-    <if test="phoneNum != null and phoneNum != ''">
-      AND cw.phone_num LIKE CONCAT("%", #{phoneNum}, "%")
-    </if>
-    <if test="custCode != null and custCode != ''">
-      AND cs.cust_code = #{custCode}
-    </if>
-    <if test="regionCode != null and regionCode!=''">
-      AND cs.region_code = #{regionCode}
-    </if>
-    <if test="regionName != null and regionName!=''">
-      AND cs.region_name LIKE CONCAT("%", #{regionName}, "%")
-    </if>
-    <if test="userCode != null and userCode!=''">
-      AND cs.user_code = #{userCode}
-    </if>
-    <if test="birthdayDate != null and birthdayDate!=''">
-      AND DATE_FORMAT(cs.birthday, '%m-%d') = #{birthdayDate}
-    </if>
+    <where>
+      <if test="ew != null">
+        ${ew.sqlSegment}
+      </if>
+      <if test="queryParam.isEnable != null">
+        AND cs.is_enable = #{queryParam.isEnable}
+      </if>
+      <if test="queryParam.custName != null and queryParam.custName != ''">
+        AND cs.cust_name LIKE CONCAT('%',#{queryParam.custName},'%')
+      </if>
+      <if test="queryParam.linkMan != null and queryParam.linkMan != ''">
+        AND cw.link_man LIKE CONCAT('%',#{queryParam.linkMan},'%')
+      </if>
+      <if test="queryParam.custType != null and queryParam.custType != '' and queryParam.custType == '1'.toString()">
+        AND  ( cs.cust_type = 1 OR cs.cust_type = 3)
+      </if>
+      <if test="queryParam.custType != null and queryParam.custType != '' and queryParam.custType == '2'.toString()">
+        AND  ( cs.cust_type = 2 OR cs.cust_type = 3)
+      </if>
+      <if test="queryParam.custLevel != null and queryParam.custLevel != ''">
+        AND cs.cust_level = #{queryParam.custLevel}
+      </if>
+      <if test="queryParam.phoneNum != null and queryParam.phoneNum != ''">
+        AND cw.phone_num LIKE CONCAT("%", #{queryParam.phoneNum}, "%")
+      </if>
+      <if test="queryParam.custCode != null and queryParam.custCode != ''">
+        AND cs.cust_code = #{queryParam.custCode}
+      </if>
+      <if test="queryParam.regionCode != null and queryParam.regionCode!=''">
+        AND cs.region_code = #{queryParam.regionCode}
+      </if>
+      <if test="queryParam.regionName != null and queryParam.regionName!=''">
+        AND cs.region_name LIKE CONCAT("%", #{queryParam.regionName}, "%")
+      </if>
+      <if test="queryParam.userCode != null and queryParam.userCode!=''">
+        AND cs.user_code = #{queryParam.userCode}
+      </if>
+      <if test="queryParam.birthdayDate != null and queryParam.birthdayDate!=''">
+        AND DATE_FORMAT(cs.birthday, '%m-%d') = #{queryParam.birthdayDate}
+      </if>
+      <if test="queryParam.companyCode != null and queryParam.companyCode!=''">
+        AND cs.company_code = #{queryParam.companyCode}
+      </if>
+      <if test="queryParam.rankCode != null and queryParam.rankCode!=''">
+        AND cs.rank_code = #{queryParam.rankCode}
+      </if>
+    </where>
   </select>
   <!-- ORDER BY cs.create_time DESC -->
 

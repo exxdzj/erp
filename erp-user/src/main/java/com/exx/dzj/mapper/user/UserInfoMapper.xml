@@ -232,6 +232,9 @@
       <if test="record.deptCode != null">
         dept_code = #{record.deptCode,jdbcType=VARCHAR},
       </if>
+      <if test="record.orgCode != null">
+        org_code = #{record.orgCode,jdbcType=VARCHAR},
+      </if>
       <if test="record.salesmanCode != null">
         salesman_code = #{record.salesmanCode,jdbcType=VARCHAR},
       </if>
@@ -278,7 +281,7 @@
         dept_code = #{deptCode,jdbcType=VARCHAR},
       </if>
       <if test="orgCode != null and orgCode!=''">
-        dept_code = #{orgCode,jdbcType=VARCHAR},
+        org_code = #{orgCode,jdbcType=VARCHAR},
       </if>
       <if test="salesmanCode != null and salesmanCode!=''">
         salesman_code = #{salesmanCode,jdbcType=VARCHAR},
