@@ -96,8 +96,8 @@
         SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) ,0)) - SUM(IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) AS sumGrossMargin, /*毛利*/
         CONVERT(
         SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0))
-        / SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0)),DECIMAL(10, 4)) * 100 AS grossRate,/*毛利率*/
-        (SELECT SUM(sii.discount_amount) FROM tab_sale_info sii WHERE 1=1
+        / SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0)),DECIMAL(10, 5)) * 100 AS grossRate,/*毛利率*/
+        (SELECT SUM(IFNULL(sii.discount_amount,0)) FROM tab_sale_info sii WHERE 1=1
 
         <if test="startDate != null and startDate != ''">
             AND <![CDATA[ sii.sale_date >= DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s')]]>
@@ -139,7 +139,7 @@
     <select id="queryPartiallySalesDeductionBySaleman" parameterType="com.exx.dzj.entity.bean.UserInfoQuery" resultType="com.exx.dzj.entity.statistics.sales.SaleDeductionReport">
         SELECT
         SUM(IFNULL(rd.collected_amount,0)) AS sumSaleVolume,  /*销售额, 总金额*/
-        (SELECT SUM(sii.discount_amount) FROM tab_sale_info sii WHERE 1=1
+        (SELECT SUM(IFNULL(sii.discount_amount,0)) FROM tab_sale_info sii WHERE 1=1
         <if test="startDate != null and startDate != ''">
             AND <![CDATA[ sii.sale_date >= DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s')]]>
         </if>
@@ -147,6 +147,7 @@
             AND <![CDATA[ sii.sale_date <= DATE_FORMAT(#{endDate}, '%Y-%m-%d 23:59:59') ]]>
         </if>
         AND sii.user_code = si.user_code ) sumCost, /*费用也就是优惠金额*/
+        IFNULL(ui.commission_rate, 0) AS commissionRate, /* 佣金率 */
         IFNULL(ui.user_code, '') AS userCode
         FROM
             tab_sale_info si
@@ -166,7 +167,7 @@
             AND <![CDATA[si.sale_date <= DATE_FORMAT(#{endDate},'%Y-%m-%d 23:59:59')]]>
         </if>
         <if test="paymentStatu == '2'">
-            si.payment_status IN ('cs03', 'cs02')
+           AND si.payment_status IN ('cs03', 'cs02')
         </if>
         <if test="businessType != null">
             AND si.sale_ticket_type IN

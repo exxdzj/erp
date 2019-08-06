@@ -700,8 +700,8 @@
   </select>
   
   <select id="queryStatisticsCustomer" resultMap="insuranceCustomerMap">
-    SELECT rank_code, rank_name, COUNT(rank_code) AS `count` FROM tab_customer_supplier where
-    cust_type in (1, 3) AND `identity` = 1 GROUP BY rank_code
+    SELECT IFNULL(rank_code, '') AS rank_code, rank_name, COUNT(rank_code) AS `count` FROM tab_customer_supplier where
+    cust_type in (1, 3) AND `identity` = 1 AND rank_code IS NOT NULL GROUP BY rank_code
   </select>
   <resultMap id="insuranceCustomerMap" type="com.exx.dzj.entity.customer.InsuranceCustomer">
     <result column="rank_code" property="rankCode"/>
