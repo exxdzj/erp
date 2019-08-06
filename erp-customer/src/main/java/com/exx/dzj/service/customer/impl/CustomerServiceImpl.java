@@ -1,14 +1,14 @@
 package com.exx.dzj.service.customer.impl;
 
 //import com.alibaba.excel.EasyExcelFactory;
-import com.alibaba.excel.metadata.Sheet;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exx.dzj.annotation.SysLog;
+import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.constant.LogLevel;
 import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.customer.*;
-import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.listen.ExcelListener;
 import com.exx.dzj.mapper.customer.CustomerSupplierBeanMapper;
 import com.exx.dzj.page.ERPage;
@@ -18,14 +18,11 @@ import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author
@@ -210,5 +207,81 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerSupplierBeanMapper,
     @Override
     public List<CustomerSupplierBean> queryCustomerSelect(String custName, Integer type) {
         return csMapper.queryCustomerSelect(custName, type);
+    }
+
+    @Override
+    @SysLog(operate = "批量修改客户信息", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
+    public Result batchUpdateCustomer(CustomerBatchBean bean) {
+        Result result = Result.responseSuccess();
+        try {
+            CustomerSupplierBean csbean = new CustomerSupplierBean();
+            QueryWrapper<CustomerSupplierBean> queryWrapper = new QueryWrapper();
+            if(null != bean.getRegion() && bean.getRegion().equals(CommonConstant.DEFAULT_VALUE_ONE)) {
+                queryWrapper.in("cust_code", bean.getCustCodes());
+            }
+            if(null != bean.getRegion() && bean.getRegion().equals(CommonConstant.DEFAULT_VALUE_TWO)) {
+                queryWrapper.notIn("cust_code", bean.getCustCodes());
+            }
+
+            String updateItem = bean.getUpdateItem();
+            /*Map<String, Object> params= new HashMap<>();
+            params.put("custCodes", bean.getCustCodes());
+            params.put("region", bean.getRegion());*/
+            switch (updateItem) {
+                case "CUST_LEVEL":
+                    /*params.put("custLevel", bean.getCustLevel());
+                    params.put("levelName", bean.getLevelName());*/
+                    csbean.setCustLevel(bean.getCustLevel());
+                    csbean.setLevelName(bean.getLevelName());
+                    break;
+                case "REGION_CODE":
+                    /*params.put("regionCode", bean.getRegionCode());
+                    params.put("regionName", bean.getRegionName());*/
+                    csbean.setRegionCode(bean.getRegionCode());
+                    csbean.setRegionName(bean.getRegionName());
+                    break;
+                case "USER_CODE":
+                    /*params.put("salesmanCode", bean.getSalesmanCode());
+                    params.put("userCode", bean.getUserCode());*/
+                    csbean.setSalesmanCode(bean.getSalesmanCode());
+                    csbean.setUserCode(bean.getUserCode());
+                    break;
+                case "SHIP_CODE":
+                    /*params.put("shipCode", bean.getShipCode());
+                    params.put("shipAddress", bean.getShipAddress());*/
+                    csbean.setShipCode(bean.getShipCode());
+                    csbean.setShipAddress(bean.getShipAddress());
+                    break;
+                case "RANK_CODE":
+                    /*params.put("rankCode", bean.getRankCode());
+                    params.put("rankName", bean.getRankName());*/
+                    csbean.setRankCode(bean.getRankCode());
+                    csbean.setRankName(bean.getRankName());
+                    break;
+                case "COMPANY_CODE":
+                    /*params.put("companyCode", bean.getCompanyCode());
+                    params.put("companyName", bean.getCompanyName());*/
+                    csbean.setCompanyCode(bean.getCompanyCode());
+                    csbean.setCompanyName(bean.getCompanyName());
+                    break;
+                default :
+                    //params.clear();
+                    csbean = null;
+                    break;
+            }
+
+            /*if(params.size() > 0) {
+                // 手写 SQL
+            }*/
+
+            if(null != csbean) {
+                this.update(csbean, queryWrapper);
+            }
+        } catch(Exception ex) {
+            LOGGER.error("异常方法:{}异常信息:{}", CustomerServiceImpl.class.getName()+".batchUpdateCustomer", ex.getMessage());
+            result.setCode(400);
+            result.setMsg("批量修改客户数据失败!");
+        }
+        return result;
     }
 }

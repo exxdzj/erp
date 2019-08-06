@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
-import com.exx.dzj.entity.customer.CustomerSupplierBean;
-import com.exx.dzj.entity.customer.CustomerSupplierBeanExample;
-import com.exx.dzj.entity.customer.CustomerSupplierInfo;
-import com.exx.dzj.entity.customer.CustomerSupplierQuery;
+import com.exx.dzj.entity.customer.*;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.excepte.ErpException;
@@ -415,5 +412,14 @@ public class CustomerSupplierFacade {
         ERPage<CustomerSupplierBean> customerSupplierBeanERPage = customerSupplierService.selectionCustomer(query);
 
         return customerSupplierBeanERPage;
+    }
+
+    /**
+     * 批量修改客户信息
+     * @param bean
+     * @return
+     */
+    public Result batchUpdateCustomer(CustomerBatchBean bean) {
+        return customerSupplierService.batchUpdateCustomer(bean);
     }
 }
