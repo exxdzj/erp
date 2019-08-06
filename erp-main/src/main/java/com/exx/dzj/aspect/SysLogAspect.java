@@ -104,11 +104,9 @@ public class SysLogAspect {
 
             //请求的参数
             Object[] args = point.getArgs();
-            try{
+            if(null != args && args.length > 0) {
                 String params = JSONObject.toJSONString(args);
                 logBean.setParams(params);
-            }catch (Exception e){
-                log.error("执行方法:{},异常信息:{}", SysLogAspect.class.getName()+".saveLog", e.getMessage());
             }
 
             //获取request

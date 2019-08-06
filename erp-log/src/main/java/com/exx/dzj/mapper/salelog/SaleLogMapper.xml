@@ -148,7 +148,7 @@
         #{userName,jdbcType=VARCHAR},
       </if>
       <if test="method != null">
-        method,
+        #{method,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
