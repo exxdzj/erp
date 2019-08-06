@@ -459,33 +459,104 @@ public class SaleTicketReportFacade {
         List<SaleDeductionReport> saleDeductionReports = stockTypeReportService.querySalesDeductionBySaleman(query);
 
         // 查询部分收款
-//        List<SaleDeductionReport> partiallySaleDeductionReports = null;
-//        if (StringUtils.equals(String.valueOf(CommonConstant.DEFAULT_VALUE_TWO), query.getPaymentStatu())){
-//            partiallySaleDeductionReports = stockTypeReportService.queryPartiallySalesDeductionBySaleman(query);
-//        }
+        List<SaleDeductionReport> partiallySaleDeductionReports = null;
+        Map<String, List<SaleDeductionReport>> collect = null;
+        if (StringUtils.equals(String.valueOf(CommonConstant.DEFAULT_VALUE_TWO), query.getPaymentStatu())){
+            partiallySaleDeductionReports = stockTypeReportService.queryPartiallySalesDeductionBySaleman(query);
+            collect = partiallySaleDeductionReports.stream().collect(Collectors.groupingBy(SaleDeductionReport::getUserCode));
+        }
 
         SaleDeductionReport report = null;
         List<SaleDeductionReport> data = new ArrayList<>();
-        for (SaleDeductionReport next : saleDeductionReports){
-            report = new SaleDeductionReport();
-            report.setUserCode(next.getUserCode());
-            report.setSalesmanCode(next.getSalesmanCode());
-            report.setRealName(next.getRealName());
+        if (collect == null){
+            for (SaleDeductionReport next : saleDeductionReports){
+                report = new SaleDeductionReport();
+                report.setUserCode(next.getUserCode());
+                report.setSalesmanCode(next.getSalesmanCode());
+                report.setRealName(next.getRealName());
 
-            report.setSumGoodsNum(next.getSumGoodsNum());
-            report.setSumSaleVolume(next.getSumSaleVolume());
-            report.setSumSaleCost(next.getSumSaleCost());
-            report.setGrossRate(next.getGrossRate());
-            BigDecimal commissionRate = next.getCommissionRate();
-            commissionRate = (commissionRate == null ? BigDecimal.ZERO : commissionRate).divide(BigDecimal.valueOf(100));
-            BigDecimal sumCost = next.getSumCost() == null ? BigDecimal.ZERO : next.getSumCost();
-            report.setSumCost(sumCost);
-            BigDecimal sumGrossMargin = next.getSumGrossMargin() == null ? BigDecimal.ZERO : next.getSumGrossMargin();
-            report.setSumGrossMargin(sumGrossMargin);
-            report.setPureProfit(sumGrossMargin.subtract(sumCost));
-            report.setCommission(commissionRate.multiply(next.getSumSaleVolume()));
-            report.setCommissionRate(next.getCommissionRate());
-            data.add(report);
+                report.setSumGoodsNum(next.getSumGoodsNum());
+                report.setSumSaleVolume(next.getSumSaleVolume());
+                report.setSumSaleCost(next.getSumSaleCost());
+                report.setGrossRate(next.getGrossRate());
+                BigDecimal commissionRate = next.getCommissionRate();
+                commissionRate = (commissionRate == null ? BigDecimal.ZERO : commissionRate).divide(BigDecimal.valueOf(100));
+                BigDecimal sumCost = next.getSumCost() == null ? BigDecimal.ZERO : next.getSumCost();
+                report.setSumCost(sumCost);
+                BigDecimal sumGrossMargin = next.getSumGrossMargin() == null ? BigDecimal.ZERO : next.getSumGrossMargin();
+                report.setSumGrossMargin(sumGrossMargin);
+                report.setPureProfit(sumGrossMargin.subtract(sumCost));
+                report.setCommission(commissionRate.multiply(next.getSumSaleVolume()));
+                report.setCommissionRate(next.getCommissionRate());
+                data.add(report);
+            }
+        } else { // 部分收款信息
+            List<SaleDeductionReport> partailly = null;
+            BigDecimal grossRate = null;
+            BigDecimal sumSaleVolume = null;
+            BigDecimal grossMargin = null;
+            for (SaleDeductionReport next : saleDeductionReports){
+                report = new SaleDeductionReport();
+                partailly = collect.get(next.getUserCode());
+                data.add(report);
+
+                // 不管全部还是部分, 这部分信息不变
+                report.setSumGoodsNum(next.getSumGoodsNum());
+                report.setUserCode(next.getUserCode());
+                report.setSalesmanCode(next.getSalesmanCode());
+                report.setRealName(next.getRealName());
+
+                //
+                if (CollectionUtils.isEmpty(partailly)){
+                    report.setSumSaleVolume(BigDecimal.ZERO);
+                    report.setSumSaleCost(BigDecimal.ZERO);
+                    report.setGrossRate(BigDecimal.ZERO);
+                    report.setSumCost(BigDecimal.ZERO);
+                    report.setSumGrossMargin(BigDecimal.ZERO);
+                    report.setPureProfit(BigDecimal.ZERO);
+                    report.setCommission(BigDecimal.ZERO);
+                    report.setCommissionRate(BigDecimal.ZERO);
+                    continue;
+                } else {
+                    // 销售收入
+                    sumSaleVolume = partailly.get(0).getSumSaleVolume();
+                    report.setSumSaleVolume(sumSaleVolume);
+
+                    // 计算获取毛利率
+                    grossRate = sumSaleVolume.intValue() == CommonConstant.DEFAULT_VALUE_ZERO ? BigDecimal.ZERO : next.getGrossRate();
+                    report.setGrossRate(grossRate);
+
+                    // 额外费用
+                    report.setSumCost(partailly.get(0).getSumCost());
+
+                    // 毛利润
+                    grossMargin = sumSaleVolume.multiply(grossRate).divide(BigDecimal.valueOf(100));
+                    report.setSumGrossMargin(grossMargin.divide(BigDecimal.valueOf(CommonConstant.DEFAULT_VALUE_ONE), CommonConstant.DEFAULT_VALUE_TWO, BigDecimal.ROUND_HALF_UP));
+
+                    // 销售成本
+                    report.setSumSaleCost(sumSaleVolume.subtract(grossMargin).divide(BigDecimal.valueOf(CommonConstant.DEFAULT_VALUE_ONE), CommonConstant.DEFAULT_VALUE_TWO, BigDecimal.ROUND_HALF_UP));
+
+                    // 纯利润
+                    report.setPureProfit(grossMargin.subtract(partailly.get(0).getSumCost()).divide(BigDecimal.valueOf(CommonConstant.DEFAULT_VALUE_ONE), CommonConstant.DEFAULT_VALUE_TWO, BigDecimal.ROUND_HALF_UP));
+
+                    // 佣金率
+                    report.setCommissionRate(partailly.get(0).getCommissionRate());
+
+                    // 佣金
+                    report.setCommission(partailly.get(0).getCommissionRate().multiply(report.getPureProfit().divide(BigDecimal.valueOf(100))));
+
+                }
+
+//                report.setSumSaleCost(next.getSumSaleCost());
+//                BigDecimal commissionRate = next.getCommissionRate();
+//                commissionRate = (commissionRate == null ? BigDecimal.ZERO : commissionRate).divide(BigDecimal.valueOf(100));
+//                BigDecimal sumCost = next.getSumCost() == null ? BigDecimal.ZERO : next.getSumCost();
+//                report.setSumCost(sumCost);
+//                BigDecimal sumGrossMargin = next.getSumGrossMargin() == null ? BigDecimal.ZERO : next.getSumGrossMargin();
+//                report.setSumGrossMargin(sumGrossMargin);
+//
+//                report.setCommission(commissionRate.multiply(next.getSumSaleVolume()));
+            }
         }
 
         double sumGoodsNum = data.stream().mapToDouble(SaleDeductionReport::getSumGoodsNum).sum();

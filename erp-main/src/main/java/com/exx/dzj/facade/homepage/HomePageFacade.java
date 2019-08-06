@@ -270,9 +270,6 @@ public class HomePageFacade {
     public List<InsuranceCustomer> queryStatisticsCustomer (){
         List<InsuranceCustomer> insuranceCustomers = customerSupplierService.queryStatisticsCustomer();
 
-
-//        Map<String, List<InsuranceCustomer>> collect = insuranceCustomers.stream().collect(Collectors.groupingBy(InsuranceCustomer::getRankName));
-
         Map<String, List<InsuranceCustomer>> collect2 = insuranceCustomers.stream().collect(Collectors.groupingBy(InsuranceCustomer::getRankCode));
 
         List<InsuranceCustomer> dataList = new ArrayList<>();
@@ -284,12 +281,10 @@ public class HomePageFacade {
 
         dataList.add(ic);
 
-//        for (){
-//
-//        }
-
-
         InsuranceCustomerLevelEnum[] values = InsuranceCustomerLevelEnum.values();
+
+//        Arrays.stream(values).collect(Collectors.groupingBy(InsuranceCustomerLevelEnum::getCode));
+
         String[] strs = new String[values.length];
         String code = null;
         String name = null;
@@ -311,17 +306,6 @@ public class HomePageFacade {
                 insuranceCustomer.setRankCode(code);
                 dataList.add(insuranceCustomer);
             }
-
-//            List<InsuranceCustomer> insuranceCustomers1 = collect.get(name);
-//            if (insuranceCustomers1 == null){
-//                ic = new InsuranceCustomer();
-//                ic.setCount(CommonConstant.DEFAULT_VALUE_ZERO);
-//                ic.setRankName(name);
-//                ic.setRankCode(values[i].getCode());
-//                dataList.add(ic);
-//            } else {
-//                dataList.add(insuranceCustomers1.get(0));
-//            }
         }
 
         return dataList;
