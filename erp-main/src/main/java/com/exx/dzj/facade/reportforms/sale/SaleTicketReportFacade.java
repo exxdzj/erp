@@ -179,6 +179,7 @@ public class SaleTicketReportFacade {
         }
         Map<String,Map<String, List<SalesmanBaseReport>>> collect = salesmanBaseList.stream().collect(Collectors.groupingBy(SalesmanBaseReport::getUserCode, Collectors.groupingBy(SalesmanBaseReport::getSaleCode)));
 
+        Comparator<SaleInfoReport> com = (a, b) -> a.getSaleDate().compareTo(b.getSaleDate());
 
         collect.keySet().stream().forEach(
                 first -> {
@@ -225,6 +226,8 @@ public class SaleTicketReportFacade {
                                             }
                                         }
                                 );
+
+                                uir.setSaleInfoList(uir.getSaleInfoList().stream().sorted(com).collect(Collectors.toList()));
                             }
                     );
                 }
