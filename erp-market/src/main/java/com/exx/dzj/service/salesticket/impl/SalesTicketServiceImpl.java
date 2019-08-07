@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yangyun
@@ -154,6 +155,11 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     @Override
     public List<SaleInfo> querySumSalesOnYear() {
         return saleInfoMapper.querySumSalesOnYear();
+    }
+
+    @Override
+    public Map<String, Object> queryYearGrowth() {
+        return saleInfoMapper.queryYearGrowth();
     }
 
     @Override

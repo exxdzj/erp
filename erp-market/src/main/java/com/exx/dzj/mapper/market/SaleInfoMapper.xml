@@ -1111,6 +1111,38 @@
             GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
+  <!-- 同比增长 -->
+  <select id="queryYearGrowth" resultType="map">
+    <![CDATA[
+    SELECT
+      tt.thisYaerTotalAmount,
+      dd.lastYaerTotalAmount,
+      ROUND(((tt.thisYaerTotalAmount - dd.lastYaerTotalAmount) / dd.lastYaerTotalAmount) * 100, 2) yearToYearGrowth
+    FROM
+    (
+      SELECT
+        SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS thisYaerTotalAmount
+      FROM
+        tab_sale_info ts
+      INNER JOIN tab_sale_goods_detail goods ON ts.sale_code = goods.sale_code
+      WHERE
+        YEAR (ts.sale_date) = YEAR (NOW())
+        AND DATE_FORMAT(ts.sale_date, '%m-%d') <= DATE_FORMAT(NOW(), '%m-%d')
+    ) tt,
+    (
+      SELECT
+        SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS lastYaerTotalAmount
+      FROM
+        tab_sale_info ts
+      INNER JOIN tab_sale_goods_detail goods ON ts.sale_code = goods.sale_code
+      WHERE
+        YEAR (ts.sale_date) = YEAR (
+        date_sub(NOW(), INTERVAL 1 YEAR)
+      )
+      AND DATE_FORMAT(ts.sale_date, '%m-%d') <= DATE_FORMAT(NOW(), '%m-%d')
+    ) dd]]>
+  </select>
+
   <select id="querySalesTop" resultMap="salesTopMap">
     SELECT
       u.real_name,SUM(goods.goods_num * goods.real_sell_price) AS receivable_accoun

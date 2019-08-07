@@ -6,6 +6,7 @@ import com.exx.dzj.entity.market.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yangyun
@@ -43,6 +44,8 @@ public interface SalesTicketService extends IService<SaleInfo> {
     List<SaleInfo> queryAdditionalSumSalesOnMonth();
 
     List<SaleInfo> querySumSalesOnYear();
+
+    Map<String, Object> queryYearGrowth();
 
     List<SaleInfo> querySalesTop(String data);
 

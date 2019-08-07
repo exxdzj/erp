@@ -8,6 +8,7 @@ import org.apache.poi.ss.formula.functions.T;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
     long countByExample(SaleInfoExample example);
@@ -49,6 +50,8 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
 
     List<SaleInfo> querySumSalesOnYear();
 
+    Map<String, Object> queryYearGrowth();
+
     List<SaleInfo> querySalesTop(@Param("type") String type);
 
     List<SaleInfo> salesUncollectedTop();
@@ -74,4 +77,6 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
     void updateReceivableAccoun(@Param("saleCode") String saleCode, @Param("receivableAccoun") BigDecimal receivableAccoun);
 
     void batchInsertLogistics(List<LogisticsInfo> list);
+
+
 }
