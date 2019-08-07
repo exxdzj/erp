@@ -1,10 +1,8 @@
-package com.exx.dzj.controller.reportforms.purchase;
+package com.exx.dzj.controller.reportforms.list.purchase;
 
 import com.exx.dzj.bean.PurchaseReportQuery;
-import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.facade.reportforms.purchase.PurchaseReportFacade;
 import com.exx.dzj.result.Result;
-import com.exx.dzj.util.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

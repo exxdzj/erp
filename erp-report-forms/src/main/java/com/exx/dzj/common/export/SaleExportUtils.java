@@ -956,6 +956,8 @@ public class SaleExportUtils {
                     receiptsDetails = saleReceiptsDetailsList.get(0);
                 }
                 setModelValue(model, receiptsDetails, goodsDetailBean);
+                receiptsDetails = null;
+                goodsDetailBean = null;
             }
         }
 
