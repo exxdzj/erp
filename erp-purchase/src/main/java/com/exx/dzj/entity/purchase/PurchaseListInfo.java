@@ -30,10 +30,12 @@ public class PurchaseListInfo implements Serializable {
     private String purchaseOrderCode; // 采购订单号
     private String invoiceCode; // 发票编号
     private String purchaseRemark; // 采购单备注
+    private Double purchaseSumVolume; // 采购总额
+//    private Double
     private Double discountAmount; // 优惠
     private String collectionTerms; // 付款条件
     private Integer accountPeriod;// 账期
-    private String createUser; // 付款人
+    private String createUser; // 付款人, 创建人
     /*****采购单信息*****/
 
     /****收款信息******/
@@ -42,5 +44,13 @@ public class PurchaseListInfo implements Serializable {
     private String paymentMethod; // 付款方式
     /****收款信息******/
 
-
+    /****商品信息******/
+    private String stockCode; // 存货编号
+    private String stockName; // 存货名称
+    private String stockAddress;// 存货地点
+    private Double goodsNum; // 数量
+    private Double realSellPrice; // 实际采购单价
+    private Double purchaseVolume; // 采购额
+    private String goodsRemark; // 商品备注
+    /****商品信息******/
 }
