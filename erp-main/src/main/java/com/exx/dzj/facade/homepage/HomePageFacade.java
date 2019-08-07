@@ -322,11 +322,9 @@ public class HomePageFacade {
     }
 
     public List<SaleInfo> querySalesTop(String data){
-        List<SaleInfo> list = salesTicketService.querySalesTop(data);
-
-//        Comparator<SaleInfo> com =
-        return list;
+        return salesTicketService.querySalesTop(data);
     }
+
     public List<SaleInfo> salesUncollectedTop(){
         List<SaleInfo> list = salesTicketService.salesUncollectedTop();
 //        Iterator<SaleInfo> iterator = list.iterator();
