@@ -3,6 +3,7 @@ package com.exx.dzj.controller.customer;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.annotation.DataPermission;
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.customer.CustomerBatchBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
@@ -15,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -223,6 +225,23 @@ public class CustomerController {
         Result result = Result.responseSuccess();
         ERPage<CustomerSupplierBean> customerSupplierBeanERPage = customerSupplierFacade.selectionCustomer(query);
         result.setData(customerSupplierBeanERPage);
+        return result;
+    }
+
+    /**
+     * 批量修改客户数据
+     * @param bean
+     * @return
+     */
+    @PostMapping("batchUpdateCustomer")
+    public Result batchUpdateCustomer(@RequestBody CustomerBatchBean bean) {
+        Result result = Result.responseSuccess();
+        if(null == bean || CollectionUtils.isEmpty(bean.getCustCodes())) {
+            result.setCode(400);
+            result.setMsg("修改的数据不可为空!");
+            return result;
+        }
+        result = customerSupplierFacade.batchUpdateCustomer(bean);
         return result;
     }
 }

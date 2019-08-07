@@ -84,4 +84,11 @@ public interface CustomerService extends IService<CustomerSupplierBean> {
     List<InsuranceCustomer> queryIncreaseCutomerForMonth ();
 
     List<CustomerSupplierBean> queryCustomerSelect(String custName, Integer type);
+
+    /**
+     * 批量修改客户信息
+     * @param bean
+     * @return
+     */
+    Result batchUpdateCustomer(CustomerBatchBean bean);
 }

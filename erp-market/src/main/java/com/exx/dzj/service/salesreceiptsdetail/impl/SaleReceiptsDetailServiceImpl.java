@@ -1,5 +1,6 @@
 package com.exx.dzj.service.salesreceiptsdetail.impl;
 
+import com.exx.dzj.annotation.SaleLog;
 import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsSelected;
 import com.exx.dzj.entity.market.SaleReceiptsDetails;
@@ -42,11 +43,13 @@ public class SaleReceiptsDetailServiceImpl implements SaleReceiptsDetailService 
     }
 
     @Override
+    @SaleLog(operate="保存物流信息")
     public void addLogisticsInfo(LogisticsInfo logisticsInfo) {
         saleReceiptsDetailsMapper.addLogisticsInfo(logisticsInfo);
     }
 
     @Override
+    @SaleLog(operate="修改物流信息")
     public void updateLogisticsInfo(LogisticsInfo logisticsInfo) {
         saleReceiptsDetailsMapper.updateLogisticsInfo(logisticsInfo);
     }

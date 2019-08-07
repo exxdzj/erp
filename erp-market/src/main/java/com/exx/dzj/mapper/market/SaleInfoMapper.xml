@@ -433,7 +433,7 @@
       IFNULL(tw.link_man, '无') AS link_man,
       IFNULL(ts.total_sum, IFNULL(ts.receivable_accoun, 0.00)) total_sum,
       IFNULL(ts.discount_amount, 0.00) discount_amount,
-      IFNULL(ts.receivable_accoun, 0.00) receivable_accoun,
+      (IFNULL(ts.receivable_accoun, 0.00) - IFNULL(tr.received_amoun, 0.00)) receivable_accoun,
       IFNULL(tr.received_amoun, 0.00) received_amoun,
       ts.delivery_address,
       ts.remarks,
