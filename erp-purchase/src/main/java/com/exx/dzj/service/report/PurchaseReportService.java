@@ -2,6 +2,8 @@ package com.exx.dzj.service.report;
 
 import com.exx.dzj.bean.PurchaseReportQuery;
 import com.exx.dzj.entity.purchase.PurchaseInfoBaseReport;
+import com.exx.dzj.entity.purchase.PurchaseListInfo;
+import com.exx.dzj.entity.purchase.PurchaseQuery;
 
 import java.util.List;
 
@@ -12,4 +14,6 @@ import java.util.List;
 public interface PurchaseReportService {
 
     List<PurchaseInfoBaseReport> queryPurchaseFeePayDetail(PurchaseReportQuery query);
+
+    List<PurchaseListInfo> queryPurchaseListInfoDetail (PurchaseQuery query);
 }

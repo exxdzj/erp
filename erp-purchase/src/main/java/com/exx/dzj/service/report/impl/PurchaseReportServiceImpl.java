@@ -2,6 +2,8 @@ package com.exx.dzj.service.report.impl;
 
 import com.exx.dzj.bean.PurchaseReportQuery;
 import com.exx.dzj.entity.purchase.PurchaseInfoBaseReport;
+import com.exx.dzj.entity.purchase.PurchaseListInfo;
+import com.exx.dzj.entity.purchase.PurchaseQuery;
 import com.exx.dzj.mapper.purchase.PurchaseReportMapper;
 import com.exx.dzj.service.report.PurchaseReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,5 +20,10 @@ public class PurchaseReportServiceImpl implements PurchaseReportService {
     @Override
     public List<PurchaseInfoBaseReport> queryPurchaseFeePayDetail(PurchaseReportQuery query) {
         return purchaseReportMapper.queryPurchaseFeePayDetail(query);
+    }
+
+    @Override
+    public List<PurchaseListInfo> queryPurchaseListInfoDetail(PurchaseQuery query) {
+        return purchaseReportMapper.queryPurchaseListInfoDetail(query);
     }
 }

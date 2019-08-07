@@ -49,4 +49,53 @@
         <result column="goods_num" property="goodsNum"/>
         <result column="stock_address" property="stockAddress"/>
     </resultMap>
+
+
+    <select id="queryPurchaseListInfoDetail" parameterType="com.exx.dzj.entity.purchase.PurchaseQuery" resultType="com.exx.dzj.entity.purchase.PurchaseListInfo">
+        SELECT
+            pinfo.purchase_date AS purchaseDate,
+            pinfo.purchase_code AS purchaseCode,
+            pinfo.payment_status AS paymentStatus,
+            cs.cust_code AS purchaseDate,
+            cs.cust_name AS custName,
+            /*pinfo.cust_phone_num AS custPhoneNum,*/
+            pinfo.currency AS currency,
+            pinfo.exchange_rate AS exchangeRate,
+            pinfo.delivery_address AS deliveryAddress,
+            uinfo.real_name AS salesmanName,
+            pinfo.purchase_project AS purchaseProject,
+            pinfo.purchase_order_code AS purchaseOrderCode,
+            pinfo.invoice_code AS invoiceCode,
+            pinfo.remarks AS purchaseRemark,
+            pinfo.receivable_accoun AS purchaseSumVolume,
+            pinfo.discount_amount AS discountAmount,
+            pinfo.collection_terms AS collectionTerms,
+            pinfo.account_period AS accountPeriod,
+            CASE
+                WHEN pinfo.flow_state = 1 THEN '财务审批'
+                WHEN pinfo.flow_state = 2 THEN '仓库审批'
+                ELSE '完成'
+                END flowStatus,
+            pinfo.create_user AS createUser
+        FROM tab_purchase_info pinfo
+        LEFT JOIN tab_user_info uinfo ON pinfo.user_code = uinfo.user_code
+        LEFT JOIN tab_customer_supplier cs ON cs.cust_code = pinfo.cust_code AND cs.cust_type IN  (2, 3)
+        WHERE 1 = 1
+        <if test="startTime != null and startTime != ''">
+            AND <![CDATA[pinfo.purchase_date >= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND <![CDATA[pinfo.purchase_date <= DATE_FORMAT(#{endTime},'%Y-%m-%d 23:59:59')]]>
+        </if>
+        <if test="purchaseCode != null and purchaseCode != ''">
+            AND  pinfo.purchase_code LIKE CONCAT(#{purchaseCode}, '%')
+        </if>
+        <if test="salesmanCode != null and salesmanCode != ''">
+            AND  pinfo.salesman_code=#{salesmanCode}
+        </if>
+        <if test="flowState != '' and flowState > 0">
+            AND pinfo.flow_state = #{flowState}
+        </if>
+        ORDER BY pinfo.purchase_date, pinfo.purchase_code
+    </select>
 </mapper>

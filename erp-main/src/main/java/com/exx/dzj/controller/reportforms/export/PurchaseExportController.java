@@ -5,6 +5,7 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.purchase.PurchaseExportFieldReport;
 import com.exx.dzj.entity.purchase.PurchaseListInfo;
 import com.exx.dzj.entity.purchase.PurchaseQuery;
+import com.exx.dzj.facade.purchase.PurchaseTicketFacade;
 import com.exx.dzj.facade.reportforms.purchase.PurchaseReportFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.excel.ExcelUtil;
@@ -31,6 +32,9 @@ public class PurchaseExportController {
     @Autowired
     private PurchaseReportFacade purchaseReportFacade;
 
+    @Autowired
+    private PurchaseTicketFacade purchaseTicketFacade;
+
     /**
      * @description: 销售单明细导出字段信息
      * @author yangyun
@@ -55,7 +59,6 @@ public class PurchaseExportController {
             response.setHeader("Content-Disposition", "attachment;filename=" + new String(("Sale-" + code + ".xlsx").getBytes(), "ISO-8859-1"));
 
             ServletOutputStream outputStream = response.getOutputStream();
-            XSSFWorkbook writer = null;
             int type = query.getType();
             switch(type) {
                 // 列表原样式
@@ -63,13 +66,12 @@ public class PurchaseExportController {
                     break;
                 // 采购单详细
                 case CommonConstant.DEFAULT_VALUE_TWO:
+                    list = purchaseReportFacade.queryPurchaseListInfoDetail(query);
                     PurchaseExportUtils.exportPurchaseListInfoDetail(outputStream, list, query.getFieldList());
                     break;
             }
         } catch (Exception e){
-
-        } finally {
-
+            e.printStackTrace();
         }
     }
 

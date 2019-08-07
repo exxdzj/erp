@@ -2,10 +2,7 @@ package com.exx.dzj.facade.reportforms.purchase;
 
 import com.exx.dzj.bean.PurchaseReportQuery;
 import com.exx.dzj.constant.CommonConstant;
-import com.exx.dzj.entity.purchase.PurchaseExportFieldReport;
-import com.exx.dzj.entity.purchase.PurchaseGoodsReport;
-import com.exx.dzj.entity.purchase.PurchaseInfoBaseReport;
-import com.exx.dzj.entity.purchase.PurchaseInfoReport;
+import com.exx.dzj.entity.purchase.*;
 import com.exx.dzj.enummodel.PurchaseListFieldEnum;
 import com.exx.dzj.service.report.PurchaseReportService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -80,6 +77,11 @@ public class PurchaseReportFacade {
         map.put("purchaseVolumeSum", purchaseVolumeSum);
         map.put("listData", coll);
         return map;
+    }
+
+    public List<PurchaseListInfo> queryPurchaseListInfoDetail (PurchaseQuery query){
+        List<PurchaseListInfo> list = purchaseReportService.queryPurchaseListInfoDetail(query);
+        return list;
     }
 
     public List<PurchaseExportFieldReport> queryPurchaseExportField (){

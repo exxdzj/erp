@@ -71,15 +71,18 @@ public class PurchaseExportUtils {
                     fileName = f.getName();
                     purchaseListFieldEnums = collect.get(fileName);
                     if (purchaseListFieldEnums != null) {
+                        count++;
                         // 创建单元格
                         cell = row.createCell(count);
                         getMethodName = "get" + fileName.substring(0, 1).toUpperCase() + fileName.substring(1);
+                        method = c.getMethod(getMethodName, new Class[]{});
                         value = method.invoke(next, new Object[]{});
-                        cell.setCellValue(value.toString());
-                        count++;
+                        value = value == null ? "" :value;
+                        cell.setCellValue(String.valueOf(value));
                     }
                 }
             }
+            workbook.write(outputStream);
         } catch (Exception e){
             e.printStackTrace();
             return workbook;

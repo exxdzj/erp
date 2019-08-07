@@ -2,6 +2,8 @@ package com.exx.dzj.mapper.purchase;
 
 import com.exx.dzj.bean.PurchaseReportQuery;
 import com.exx.dzj.entity.purchase.PurchaseInfoBaseReport;
+import com.exx.dzj.entity.purchase.PurchaseListInfo;
+import com.exx.dzj.entity.purchase.PurchaseQuery;
 
 import java.util.List;
 
@@ -12,4 +14,6 @@ import java.util.List;
 public interface PurchaseReportMapper {
 
     List<PurchaseInfoBaseReport> queryPurchaseFeePayDetail(PurchaseReportQuery query);
+
+    List<PurchaseListInfo> queryPurchaseListInfoDetail(PurchaseQuery query);
 }
