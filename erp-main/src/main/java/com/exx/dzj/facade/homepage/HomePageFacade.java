@@ -2,7 +2,6 @@ package com.exx.dzj.facade.homepage;
 
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.customer.InsuranceCustomer;
-import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.SaleGoodsTop;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.statistics.sales.HomePageReport;
@@ -14,7 +13,6 @@ import com.exx.dzj.service.purchaseticket.PurchaseTicketService;
 import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
 import com.exx.dzj.service.stock.StockService;
-import com.exx.dzj.service.sys.DeptService;
 import com.exx.dzj.util.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,6 +185,13 @@ public class HomePageFacade {
         // 年度销售额
         topData.put("sumSalesOnYear", sumSalesOnYear);
 
+        Map<String, Object> map = salesTicketService.queryYearGrowth();
+        topData.put("yearToYearGrowth", "0.00%");
+        if(map.size() > 0 && null != map.get("yearToYearGrowth")) {
+            // 同比增长率
+            topData.put("yearToYearGrowth", map.get("yearToYearGrowth"));
+        }
+
         // 采购总金额
         BigDecimal sumPurchaseSalesOnYear = purchaseTicketService.sumPurchaseSalesOnYear();
 //        topData.put("sumPurchaseSalesOnYear", sumPurchaseSalesOnYear);
@@ -317,11 +322,9 @@ public class HomePageFacade {
     }
 
     public List<SaleInfo> querySalesTop(String data){
-        List<SaleInfo> list = salesTicketService.querySalesTop(data);
-
-//        Comparator<SaleInfo> com =
-        return list;
+        return salesTicketService.querySalesTop(data);
     }
+
     public List<SaleInfo> salesUncollectedTop(){
         List<SaleInfo> list = salesTicketService.salesUncollectedTop();
 //        Iterator<SaleInfo> iterator = list.iterator();

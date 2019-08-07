@@ -111,7 +111,7 @@ public class HomePageController {
      * @return com.exx.dzj.result.Result
      */
     @ApiOperation(nickname = "querySalesTop/{data}", value="每日销售额排名", notes="每日销售额排名", httpMethod = "GET")
-    @ApiImplicitParam(name = "data", value = "日或月", allowableValues="day, month", required = true, dataType = "String", paramType = "path")
+    @ApiImplicitParam(name = "data", value = "日或月", allowableValues="day, month, year", required = true, dataType = "String", paramType = "path")
     @GetMapping("querySalesTop/{data}")
     public Result querySalesTop (@PathVariable("data") String data){
         Result result = Result.responseSuccess();
