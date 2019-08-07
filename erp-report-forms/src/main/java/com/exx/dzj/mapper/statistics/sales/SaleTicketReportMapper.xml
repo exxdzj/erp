@@ -341,7 +341,12 @@
     </resultMap>
 
     <select id="queryStasticsSalesForMonth" resultMap="salesMapForMomth">
-        SELECT t.sale_date,sum(td.goods_num * td.real_sell_price)
+        /*SELECT DAY(sale_date) AS `day`, SUM(receivable_accoun)  AS sum_receivable_accoun
+        FROM tab_sale_info
+        WHERE MONTH(sale_date) = MONTH(sysdate()) AND YEAR(sale_date) = YEAR(sysdate())
+        GROUP BY DAY(sale_date)*/
+
+        SELECT DAY(t.sale_date) AS `day`,sum(td.goods_num * td.real_sell_price) AS sum_receivable_accoun
         from tab_sale_info t,tab_sale_goods_detail td
         WHERE MONTH(t.sale_date) = MONTH(sysdate())
         AND YEAR(t.sale_date) = YEAR(sysdate())
