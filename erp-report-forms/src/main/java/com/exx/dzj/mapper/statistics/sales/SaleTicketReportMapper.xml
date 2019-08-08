@@ -30,6 +30,9 @@
         <if test="stockClass != null and stockClass != ''">
             AND stinfo.stock_class = #{stockClass}
         </if>
+        <if test="stockName != null and stockName != ''">
+            AND sgd.stock_name LIKE CONCAT('%' , #{stockName}, '%')
+        </if>
     </select>
 
     <resultMap id="stockTypeMap" type="com.exx.dzj.entity.statistics.sales.StockBaseReport">

@@ -20,4 +20,5 @@ public class StockInfoQuery extends StockInfo {
     private String endDate;
     private List<Integer> businessType; // 业务类型 1 销货 2 退货
     private Integer gross; // 是否计算毛利 1 是 0否
+    private String stockName; // 商品名称
 }
