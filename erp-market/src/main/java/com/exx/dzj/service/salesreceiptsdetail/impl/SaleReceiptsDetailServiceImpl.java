@@ -23,16 +23,19 @@ public class SaleReceiptsDetailServiceImpl implements SaleReceiptsDetailService 
     private SaleReceiptsDetailsMapper saleReceiptsDetailsMapper;
 
     @Override
+    @SaleLog(operate="批量写入收款信息")
     public void batchInsertSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails) {
         saleReceiptsDetailsMapper.batchInsertSalesReceiptsDeail(saleReceiptsDetails);
     }
 
     @Override
+    @SaleLog(operate="批量修改收款信息")
     public void batchUpdateSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails) {
         saleReceiptsDetailsMapper.batchUpdateSalesReceiptsDeail(saleReceiptsDetails);
     }
 
     @Override
+    @SaleLog(operate="批量删除收款信息")
     public void batchDeleteSalesReceiptsDeail(List<Integer> srdIds) {
         saleReceiptsDetailsMapper.batchDeleteSalesReceiptsDeail(srdIds);
     }

@@ -1,5 +1,6 @@
 package com.exx.dzj.service.salesgoodsdetail.impl;
 
+import com.exx.dzj.annotation.SaleLog;
 import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.mapper.market.SaleGoodsDetailBeanMapper;
@@ -20,16 +21,19 @@ public class SalesGoodsDetailServiceImpl implements SalesGoodsDetailService {
     private SaleGoodsDetailBeanMapper saleGoodsDetailBeanMapper;
 
     @Override
+    @SaleLog(operate = "批量保存销售单商品数据")
     public void batchInsertSalesGoodsDetail(List<SaleGoodsDetailBean> goodsDetailBeanList) {
         saleGoodsDetailBeanMapper.batchInsertSalesGoodsDetail(goodsDetailBeanList);
     }
 
     @Override
+    @SaleLog(operate = "批量修改销售单商品数据")
     public void batchUpdateSalesGoodsDetail(List<SaleGoodsDetailBean> goodsDetailBeanList) {
         saleGoodsDetailBeanMapper.batchUpdateSalesGoodsDetail(goodsDetailBeanList);
     }
 
     @Override
+    @SaleLog(operate = "批量删除销售单商品数据")
     public void batchDeleteSalesGoodsDetail(List<Integer> sgbIds) {
         saleGoodsDetailBeanMapper.batchDeleteSalesGoodsDetail(sgbIds);
     }
@@ -51,6 +55,7 @@ public class SalesGoodsDetailServiceImpl implements SalesGoodsDetailService {
     }
 
     @Override
+    @SaleLog(operate = "保存销售单商品数据")
     public void insertGoodsInfo(SaleGoodsDetailBean bean) {
         saleGoodsDetailBeanMapper.insertGoodsInfo(bean);
     }

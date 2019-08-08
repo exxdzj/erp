@@ -197,6 +197,7 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     }
 
     @Override
+    @SaleLog(operate = "根据销售单所属业务员修改公司")
     public void updateSalesmanSubordinateCompany(SaleInfo saleInfo) {
         saleInfoMapper.updateSalesmanSubordinateCompany(saleInfo);
     }
@@ -212,11 +213,13 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     }
 
     @Override
+    @SaleLog(operate = "修改发货备注或者发货状态")
     public int updatReceiptStatus(SaleInfo saleInfo) {
         return saleInfoMapper.updatReceiptStatus(saleInfo);
     }
 
     @Override
+    @SaleLog(operate = "修改应收金额")
     public void updateReceivableAccoun(String saleCode, BigDecimal receivableAccoun) {
         saleInfoMapper.updateReceivableAccoun(saleCode, receivableAccoun);
     }
