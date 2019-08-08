@@ -62,6 +62,21 @@ public class DateTimeUtil {
         return dateTime.toString(STANDARD_FORMAT);
     }
 
+    /**
+     * 将日期时间格式化
+     * @param date
+     * @param formatStr
+     * @return
+     */
+    public static Date dateFormat(Date date, String formatStr) {
+        if(date == null) {
+            date = new Date();
+        }
+        DateTime dateTime = new DateTime(date);
+        String dateStr = dateTime.toString(formatStr);
+        return strToDate(dateStr, formatStr);
+    }
+
     public static void main(String[] args) {
         System.out.println(dateToStr(new Date(), "yyMMdd"));
     }

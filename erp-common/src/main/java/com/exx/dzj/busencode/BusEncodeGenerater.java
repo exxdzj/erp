@@ -81,6 +81,19 @@ public class BusEncodeGenerater {
         return seq;
     }
 
+    public static String nextBusCode(String prefix, Integer code, Integer serialNumLength, String serialNumFormat, Date date) {
+        String format = "";
+        if(ConvertUtils.isNotEmpty(serialNumFormat)) {
+            format = DateTimeUtil.dateToStr(date, serialNumFormat);
+        }
+        String seq = seq = lpad(code, serialNumLength);
+        if(ConvertUtils.isEmpty(prefix)) {
+            prefix = "";
+        }
+        seq = prefix + format + seq;
+        return seq;
+    }
+
     private static String lpad(int number, int length) {
         String f = "%0" + length + "d";
         return String.format(f, number);

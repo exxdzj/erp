@@ -1,8 +1,10 @@
 package com.exx.dzj.facade.sys;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.busencode.BusEncodeGenerater;
 import com.exx.dzj.entity.encode.BusEncodeRuleCacheData;
 import com.exx.dzj.entity.encode.BusEncodeRuleInfo;
+import com.exx.dzj.entity.encode.BusEncodingRule;
 import com.exx.dzj.service.encode.BusEncodeService;
 import com.exx.dzj.util.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,6 +26,9 @@ public class BusEncodeFacade {
 
     @Autowired
     private BusEncodeService busEncodeService;
+
+    @Autowired
+    private SaleEncodeFacade saleEncodeFacade;
 
     /**
      * 获取 业务数据编码规则
@@ -80,10 +86,6 @@ public class BusEncodeFacade {
                                 && info.getPrefix().equals(prefix)) {
                             busCode = BusEncodeGenerater.nextBusCode(info.getPrefix(), info.getNextValue(), info.getSerialNumLength(), info.getSerialNumFormat());
                             Integer nextBusCode = BusEncodeGenerater.nextCode(info.getNextValue(), info.getStep());
-                            //info.setNextValue(nextBusCode);
-                            //BusEncodingRule busEncodingRule = new BusEncodingRule();
-                            //busEncodingRule.setNextValue(nextBusCode);
-                            //busEncodeService.update(busEncodingRule, new QueryWrapper<BusEncodingRule>().eq("prefix", info.getPrefix()).eq("bus_type", busType));
 
                             info.setNextValue(nextBusCode);
                             info.setBusType(busType);
@@ -95,6 +97,22 @@ public class BusEncodeFacade {
             }
         }
         return busCode;
+    }
+
+    /**
+     * 生成销售单编码
+     * @param busType
+     * @param prefix
+     * @param saleDate
+     * @return
+     */
+    public String nextBusCode(String busType, String prefix, Date saleDate) {
+        synchronized(BusEncodeFacade.class) {
+            Integer nextValue = saleEncodeFacade.nextBusCode(saleDate);
+            BusEncodingRule info = busEncodeService.getOne(new QueryWrapper<BusEncodingRule>().eq("prefix", prefix).eq("bus_type", busType));
+            String busCode = BusEncodeGenerater.nextBusCode(prefix, nextValue, info.getSerialNumLength(), info.getSerialNumFormat(), saleDate);
+            return busCode;
+        }
     }
 
     /**

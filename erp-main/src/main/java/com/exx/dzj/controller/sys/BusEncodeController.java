@@ -1,11 +1,14 @@
 package com.exx.dzj.controller.sys;
 
+import com.exx.dzj.facade.market.SalesTicketFacade;
 import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 /**
  * @Author
@@ -19,6 +22,9 @@ public class BusEncodeController {
     @Autowired
     private BusEncodeFacade busEncodeFacade;
 
+    @Autowired
+    private SalesTicketFacade salesTicketFacade;
+
     /**
      * 获取 业务编码前缀
      * @param busType
@@ -29,5 +35,10 @@ public class BusEncodeController {
         Result result = Result.responseSuccess();
         result.setData(busEncodeFacade.queryBusEncode(busType));
         return result;
+    }
+
+    @GetMapping("getEncode")
+    public String getEncode() {
+        return salesTicketFacade.getCode(new Date());
     }
 }

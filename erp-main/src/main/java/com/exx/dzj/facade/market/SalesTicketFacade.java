@@ -33,10 +33,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -188,7 +185,8 @@ public class SalesTicketFacade {
         String deptCode = salesmanService.querySalesmanDeptCode(saleInfo.getUserCode());
 
         // 销售单编码
-        String saleCode = getCode();
+        //String saleCode = getCode();
+        String saleCode = getCode(saleInfo.getSaleDate());
         saleInfo.setSaleCode(saleCode);
         salesTicketService.saveSaleInfo(saleInfo);
         setSubordinateCompany(saleInfo, deptInfos, deptCode);
@@ -711,6 +709,21 @@ public class SalesTicketFacade {
         long count = salesTicketService.countByExample(example);
         while (count > 0) {
             getCode();
+        }
+        return code;
+    }
+
+    public String getCode(Date date) {
+        String busType = "sale_ticket";
+        String prefix = "Z";
+        String code = busEncodeFacade.nextBusCode(busType, prefix, date);
+
+        SaleInfoExample example = new SaleInfoExample();
+        SaleInfoExample.Criteria criteria =example.createCriteria();
+        criteria.andSaleCodeEqualTo(code);
+        long count = salesTicketService.countByExample(example);
+        while (count > 0) {
+            getCode(date);
         }
         return code;
     }
