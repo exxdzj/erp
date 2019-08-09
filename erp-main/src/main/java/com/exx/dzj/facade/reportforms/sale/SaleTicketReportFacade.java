@@ -268,10 +268,10 @@ public class SaleTicketReportFacade {
                     }
                 }
 
-                ur.setTotalGoodsNum(totalGoodsNum);
-                ur.setTotalCost(totalCost);
-                ur.setTotalGrossMargin(totalGrossMargin);
-                ur.setTotalSaleVolume(totalSaleVolume);
+                ur.setTotalGoodsNum(MathUtil.keepTwoAccurate(BigDecimal.valueOf(totalGoodsNum)).doubleValue());
+                ur.setTotalCost(MathUtil.keepTwoAccurate(totalCost));
+                ur.setTotalGrossMargin(MathUtil.keepTwoAccurate(totalGrossMargin));
+                ur.setTotalSaleVolume(MathUtil.keepTwoAccurate(totalSaleVolume));
                 ur.setTotalGrossRate(MathUtil.keepTwoBigdecimal(totalGrossMargin, totalSaleVolume, CommonConstant.DEFAULT_VALUE_FOUR));
             }
 
@@ -286,12 +286,12 @@ public class SaleTicketReportFacade {
         BigDecimal totalGrossRate = MathUtil.keepTwoBigdecimal(totalGrossMargin, totalSaleVolume, CommonConstant.DEFAULT_VALUE_FOUR);//毛利率总计
         BigDecimal backAmountTotal = data.stream().map(UserInfoReport::getBackAmountTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        map.put("totalGoodsNum", totalGoodsNum);
-        map.put("totalSaleVolume", totalSaleVolume);
-        map.put("totalCost", totalCost);
-        map.put("totalGrossMargin", totalGrossMargin);
-        map.put("totalGrossRate", totalGrossRate);
-        map.put("backAmountTotal", backAmountTotal);
+        map.put("totalGoodsNum", MathUtil.keepTwoAccurate(BigDecimal.valueOf(totalGoodsNum)).doubleValue());
+        map.put("totalSaleVolume", MathUtil.keepTwoAccurate(totalSaleVolume));
+        map.put("totalCost", MathUtil.keepTwoAccurate(totalCost));
+        map.put("totalGrossMargin", MathUtil.keepTwoAccurate(totalGrossMargin));
+        map.put("totalGrossRate", MathUtil.keepTwoAccurate(totalGrossRate));
+        map.put("backAmountTotal", MathUtil.keepTwoAccurate(backAmountTotal));
 
         return map;
     }
