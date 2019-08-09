@@ -650,4 +650,8 @@ public class MathUtil {
 
         return flag ? divisor : divisor.divide(dividend, scale, BigDecimal.ROUND_HALF_UP).multiply(BIG_DECIMAL_HUNDRED);
     }
+
+    public static BigDecimal keepTwoAccurate (BigDecimal b){
+        return b.divide(BigDecimal.valueOf(CommonConstant.DEFAULT_VALUE_ONE), CommonConstant.DEFAULT_VALUE_TWO, BigDecimal.ROUND_HALF_UP);
+    }
 }
