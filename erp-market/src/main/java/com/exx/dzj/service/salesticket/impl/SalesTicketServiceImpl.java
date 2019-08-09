@@ -77,7 +77,6 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
      * @return
      */
     @Override
-    @SaleLog(operate = "查询销售单列表")
     public List<SaleInfo> getSalesTicketList(SaleInfoQuery query, QueryWrapper queryWrapper) {
         return saleInfoMapper.getSalesTicketList(query, queryWrapper);
     }
@@ -90,7 +89,6 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
      * @return com.exx.dzj.entity.market.SaleInfo
      */
     @Override
-    @SaleLog(operate = "查询销售单详情")
     public SaleInfo querySalesTicketById(Integer id) {
         return saleInfoMapper.selectByPrimaryKey(id);
     }
