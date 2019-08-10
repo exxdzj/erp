@@ -3,11 +3,11 @@ package com.exx.dzj.entity.customer;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -68,7 +68,8 @@ public class CustomerSupplierBean implements Serializable {
     private String shipAddress;
 
     // 生日
-    private Timestamp birthday;
+    @JsonFormat(pattern = "yyyy-MM-dd",  timezone="GMT+8")
+    private Date birthday;
 
     //备注
     private String remarks;
@@ -89,4 +90,26 @@ public class CustomerSupplierBean implements Serializable {
     private String companyCode;
 
     private String companyName;
+
+    // 是否是问题客户 (0-非  1-是)
+    private Integer isQuestion;
+
+    // 问题原因
+    private String questionDesc;
+
+    /**
+     * 客户等级编码
+     *
+     * pt0001 普通客户
+     *
+     * vip001 黄金客户2万或6次
+     *
+     * vip002 铂金客户4万或12次
+     *
+     * vip003 钻石客户10万或30次
+     */
+    private String gradeCode;
+
+    // 客户等级名称
+    private String custGrade;
 }

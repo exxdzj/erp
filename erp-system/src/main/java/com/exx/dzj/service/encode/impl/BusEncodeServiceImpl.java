@@ -6,11 +6,14 @@ import com.exx.dzj.constant.LogType;
 import com.exx.dzj.entity.encode.BusEncodeRuleCacheData;
 import com.exx.dzj.entity.encode.BusEncodeRuleInfo;
 import com.exx.dzj.entity.encode.BusEncodingRule;
+import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.mapper.encode.BusEncodeMapper;
 import com.exx.dzj.service.encode.BusEncodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -40,11 +43,15 @@ public class BusEncodeServiceImpl extends ServiceImpl<BusEncodeMapper, BusEncodi
      * @param info
      */
     @Override
+    @Transactional(rollbackFor = ErpException.class, isolation = Isolation.READ_COMMITTED)
     public void updateEncodeData(BusEncodeRuleInfo info) {
-        try {
-            busEncodeMapper.updateEncodeData(info);
-        } catch(Exception ex) {
-            log.error("修改下一个编码失败,方法{},原因{}", BusEncodeServiceImpl.class.getName()+".updateEncodeData", ex.getMessage());
+        synchronized (BusEncodeServiceImpl.class){
+            try {
+                busEncodeMapper.updateEncodeData(info);
+            } catch(Exception ex) {
+                log.error("修改下一个编码失败,方法{},原因{}", BusEncodeServiceImpl.class.getName()+".updateEncodeData", ex.getMessage());
+                throw new ErpException(400, "修改编码数据失败!");
+            }
         }
     }
 

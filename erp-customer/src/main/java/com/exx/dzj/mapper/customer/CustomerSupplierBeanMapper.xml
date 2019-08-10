@@ -177,6 +177,18 @@
       <if test="updateUser != null and updateUser !=''">
         update_user,
       </if>
+      <if test="isQuestion != null">
+        is_question,
+      </if>
+      <if test="questionDesc != null">
+        question_desc,
+      </if>
+      <if test="gradeCode != null and gradeCode !=''">
+        grade_code,
+      </if>
+      <if test="custGrade != null and custGrade !=''">
+        cust_grade,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="custCode != null and custCode !=''">
@@ -243,6 +255,18 @@
         SYSDATE(),
       <if test="updateUser != null and updateUser !=''">
         #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isQuestion != null">
+        #{isQuestion},
+      </if>
+      <if test="questionDesc != null">
+        #{questionDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeCode != null and gradeCode !=''">
+        #{gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="custGrade != null and custGrade !=''">
+        #{custGrade,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -353,6 +377,18 @@
         update_time = SYSDATE(),
       <if test="updateUser != null and updateUser!=''">
         update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="isQuestion != null">
+        is_question = #{isQuestion},
+      </if>
+      <if test="questionDesc != null">
+        question_desc = #{questionDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeCode != null and gradeCode !=''">
+        grade_code = #{gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="custGrade != null and custGrade !=''">
+        cust_grade = #{custGrade,jdbcType=VARCHAR},
       </if>
     </set>
     where cust_code = #{custCode,jdbcType=VARCHAR}
@@ -555,6 +591,10 @@
     cs.ship_address shipAddress,
     cs.remarks,
     cs.birthday,
+    cs.is_question isQuestion,
+    cs.question_desc questionDesc,
+    cs.grade_code gradeCode,
+    cs.cust_grade custGrade,
     cw.link_man linkMan,
     cw.telephone_num telephoneNum,
     cw.phone_num phoneNum,

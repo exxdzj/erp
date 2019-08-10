@@ -341,8 +341,8 @@ public class CustomerSupplierFacade {
         CustomerSupplierBeanExample.Criteria criteria =example.createCriteria();
         criteria.andCustCodeEqualTo(custCode);
         int count = customerSupplierService.countCustomer(example);
-        while (count > 0) {
-            getCode(custType, prefix);
+        if (count > 0) {
+            custCode = getCode(custType, prefix);
         }
         return custCode;
     }
