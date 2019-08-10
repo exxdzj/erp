@@ -280,11 +280,11 @@ public class HomePageFacade {
         List<InsuranceCustomer> dataList = new ArrayList<>();
 
         InsuranceCustomer ic = new InsuranceCustomer();
-        ic.setCount(insuranceCustomers.stream().mapToInt(InsuranceCustomer::getCount).sum());
+        /**ic.setCount(insuranceCustomers.stream().mapToInt(InsuranceCustomer::getCount).sum());
         ic.setRankName("保险类客户");
         ic.setRankCode("AAAA");
 
-        dataList.add(ic);
+        dataList.add(ic);*/
 
         InsuranceCustomerLevelEnum[] values = InsuranceCustomerLevelEnum.values();
 
