@@ -9,6 +9,7 @@ import com.exx.dzj.facade.purchase.PurchaseTicketFacade;
 import com.exx.dzj.facade.reportforms.purchase.PurchaseReportFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.excel.ExcelUtil;
+import lombok.Cleanup;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -53,12 +55,13 @@ public class PurchaseExportController {
     @GetMapping("exportpurchaselistinfo")
     public void exportPurchaseListInfo (HttpServletRequest request, HttpServletResponse response, PurchaseQuery query){
         try {
+            @Cleanup ServletOutputStream outputStream = null;
             String code = ExcelUtil.getCode();
             List<PurchaseListInfo> list = null;
             response.setContentType("application/x-excel");
             response.setHeader("Content-Disposition", "attachment;filename=" + new String(("Sale-" + code + ".xlsx").getBytes(), "ISO-8859-1"));
 
-            ServletOutputStream outputStream = response.getOutputStream();
+            outputStream = response.getOutputStream();
             int type = query.getType();
             switch(type) {
                 // 列表原样式
@@ -67,7 +70,8 @@ public class PurchaseExportController {
                 // 采购单详细
                 case CommonConstant.DEFAULT_VALUE_TWO:
                     list = purchaseReportFacade.queryPurchaseListInfoDetail(query);
-                    PurchaseExportUtils.exportPurchaseListInfoDetail(outputStream, list, query.getFieldList());
+//                    PurchaseExportUtils.exportPurchaseListInfoDetail(outputStream, list, query.getFieldList());
+                    PurchaseExportUtils.exportPurchaseListInfoDetail2(outputStream, list);
                     break;
             }
         } catch (Exception e){

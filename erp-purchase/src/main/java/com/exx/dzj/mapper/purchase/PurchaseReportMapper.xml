@@ -51,11 +51,15 @@
     </resultMap>
 
 
-    <select id="queryPurchaseListInfoDetail" parameterType="com.exx.dzj.entity.purchase.PurchaseQuery" resultType="com.exx.dzj.entity.purchase.PurchaseListInfo">
+    <select id="queryPurchaseListInfoDetail" parameterType="com.exx.dzj.entity.purchase.PurchaseQuery" resultMap="purchaseListInfoDetailMap">
         SELECT
             pinfo.purchase_date AS purchaseDate,
             pinfo.purchase_code AS purchaseCode,
-            pinfo.payment_status AS paymentStatus,
+            CASE
+              WHEN pinfo.payment_status = 'cs01' THEN '未收款'
+              WHEN pinfo.payment_status = 'cs02' THEN '部分收款'
+              ELSE '全部已收款'
+              END paymentStatus,
             cs.cust_code AS purchaseDate,
             cs.cust_name AS custName,
             /*pinfo.cust_phone_num AS custPhoneNum,*/
@@ -88,14 +92,62 @@
             AND <![CDATA[pinfo.purchase_date <= DATE_FORMAT(#{endTime},'%Y-%m-%d 23:59:59')]]>
         </if>
         <if test="purchaseCode != null and purchaseCode != ''">
-            AND  pinfo.purchase_code LIKE CONCAT(#{purchaseCode}, '%')
+            AND pinfo.purchase_code LIKE CONCAT(#{purchaseCode}, '%')
         </if>
         <if test="salesmanCode != null and salesmanCode != ''">
-            AND  pinfo.salesman_code=#{salesmanCode}
+            AND pinfo.salesman_code=#{salesmanCode}
         </if>
         <if test="flowState != '' and flowState > 0">
             AND pinfo.flow_state = #{flowState}
         </if>
         ORDER BY pinfo.purchase_date, pinfo.purchase_code
+    </select>
+
+    <resultMap id="purchaseListInfoDetailMap" type="com.exx.dzj.entity.purchase.PurchaseListInfo">
+        <result column="purchaseDate" property="purchaseDate" />
+        <result column="purchaseCode" property="purchaseCode" />
+        <result column="paymentStatus" property="paymentStatus" />
+        <result column="purchaseDate" property="purchaseDate" />
+        <result column="custName" property="custName" />
+        <result column="currency" property="currency" />
+        <result column="exchangeRate" property="exchangeRate" />
+        <result column="deliveryAddress" property="deliveryAddress" />
+        <result column="salesmanName" property="salesmanName" />
+        <result column="purchaseProject" property="purchaseProject" />
+        <result column="purchaseOrderCode" property="purchaseOrderCode" />
+        <result column="invoiceCode" property="invoiceCode" />
+        <result column="purchaseRemark" property="purchaseRemark" />
+        <result column="purchaseSumVolume" property="purchaseSumVolume" />
+        <result column="discountAmount" property="discountAmount" />
+        <result column="collectionTerms" property="collectionTerms" />
+        <result column="accountPeriod" property="accountPeriod" />
+        <result column="flowStatus" property="flowStatus" />
+        <result column="createUser" property="createUser" />
+        <collection property="goodsList" column="purchaseCode" ofType="com.exx.dzj.entity.purchase.PurchaseGoodsListInfo" javaType="java.util.List"
+            select="com.exx.dzj.mapper.purchase.PurchaseReportMapper.queryPurchaseGoodsListInfo"/>
+        <collection property="receiptList" column="purchaseCode" ofType="com.exx.dzj.entity.purchase.PurchaseReceiptListInfo" javaType="java.util.List"
+            select="com.exx.dzj.mapper.purchase.PurchaseReportMapper.queryPurchaseReceiptListInfo"/>
+    </resultMap>
+
+    <select id="queryPurchaseGoodsListInfo" resultType="com.exx.dzj.entity.purchase.PurchaseGoodsListInfo" parameterType="String">
+        SELECT
+            goods.stock_code AS stockCode,
+            goods.stock_name AS stockName,
+            goods.stock_address AS stockAddress,
+            goods.goods_num AS goodsNum,
+            goods.real_sell_price AS realSellPrice,
+            goods.purchase_volume AS purchaseVolume,
+            goods.remarks AS goodsRemark
+        FROM tab_purchase_goods_detail goods
+        WHERE goods.purchase_code = #{purchaseCode}
+    </select>
+
+    <select id="queryPurchaseReceiptListInfo" resultType="com.exx.dzj.entity.purchase.PurchaseReceiptListInfo" parameterType="String">
+        SELECT
+            receipt.collected_amount AS collectedAmount,
+            receipt.collection_account AS collectionAccount,
+            receipt.payment_method AS paymentMethod
+        FROM tab_purchase_receipts_details receipt
+        WHERE receipt.purchase_code = #{purchaseCode}
     </select>
 </mapper>
