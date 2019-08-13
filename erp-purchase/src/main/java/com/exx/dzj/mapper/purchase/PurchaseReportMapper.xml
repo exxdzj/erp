@@ -62,6 +62,7 @@
               END paymentStatus,
             cs.cust_code AS purchaseDate,
             cs.cust_name AS custName,
+            cw.phone_num AS custPhoneNum,
             /*pinfo.cust_phone_num AS custPhoneNum,*/
             pinfo.currency AS currency,
             pinfo.exchange_rate AS exchangeRate,
@@ -84,6 +85,7 @@
         FROM tab_purchase_info pinfo
         LEFT JOIN tab_user_info uinfo ON pinfo.user_code = uinfo.user_code
         LEFT JOIN tab_customer_supplier cs ON cs.cust_code = pinfo.cust_code AND cs.cust_type IN  (2, 3)
+        INNER JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code AND cw.source = 2
         WHERE 1 = 1
         <if test="startTime != null and startTime != ''">
             AND <![CDATA[pinfo.purchase_date >= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')]]>
@@ -109,6 +111,7 @@
         <result column="paymentStatus" property="paymentStatus" />
         <result column="purchaseDate" property="purchaseDate" />
         <result column="custName" property="custName" />
+        <result column="custPhoneNum" property="custPhoneNum" />
         <result column="currency" property="currency" />
         <result column="exchangeRate" property="exchangeRate" />
         <result column="deliveryAddress" property="deliveryAddress" />
@@ -149,5 +152,47 @@
             receipt.payment_method AS paymentMethod
         FROM tab_purchase_receipts_details receipt
         WHERE receipt.purchase_code = #{purchaseCode}
+    </select>
+
+
+    <select id="queryPurchaseRawInfo" parameterType="com.exx.dzj.entity.purchase.PurchaseQuery" resultType="com.exx.dzj.entity.purchase.PurchaseListInfo">
+        SELECT
+            pinfo.purchase_code AS purchaseCode,
+            pinfo.purchase_date AS purchaseDate,
+            cs.cust_name AS custName,
+            cw.phone_num AS custPhoneNum,
+            CONCAT(pinfo.currency,"(", pinfo.exchange_rate ,")") AS currency,
+            pinfo.receivable_accoun AS purchaseSumVolume,
+            pinfo.due_date AS dueDate,
+            CASE
+            WHEN pinfo.payment_status = 'cs01' THEN '未收款'
+            WHEN pinfo.payment_status = 'cs02' THEN '部分收款'
+            ELSE '全部已收款'
+            END paymentStatus,
+            pinfo.invoice_code AS invoiceCode,
+            uinfo.real_name AS salesmanName,
+            pinfo.create_user AS createUser,
+            pinfo.remarks AS purchaseRemark
+        FROM tab_purchase_info pinfo
+        LEFT JOIN tab_customer_supplier cs ON pinfo.cust_code = cs.cust_code AND cs.cust_type IN  (2, 3)
+        INNER JOIN tab_contact_way cw ON cs.cust_code = cw.cust_code AND cw.source = 2
+        LEFT JOIN tab_user_info uinfo ON pinfo.user_code = uinfo.user_code
+        WHERE 1 = 1
+        <if test="startTime != null and startTime != ''">
+            AND <![CDATA[pinfo.purchase_date >= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND <![CDATA[pinfo.purchase_date <= DATE_FORMAT(#{endTime},'%Y-%m-%d 23:59:59')]]>
+        </if>
+        <if test="purchaseCode != null and purchaseCode != ''">
+            AND pinfo.purchase_code LIKE CONCAT(#{purchaseCode}, '%')
+        </if>
+        <if test="salesmanCode != null and salesmanCode != ''">
+            AND pinfo.salesman_code=#{salesmanCode}
+        </if>
+        <if test="flowState != '' and flowState > 0">
+            AND pinfo.flow_state = #{flowState}
+        </if>
+        ORDER BY pinfo.purchase_date, pinfo.purchase_code
     </select>
 </mapper>

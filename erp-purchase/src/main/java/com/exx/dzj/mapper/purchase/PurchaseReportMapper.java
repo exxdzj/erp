@@ -16,4 +16,6 @@ public interface PurchaseReportMapper {
     List<PurchaseInfoBaseReport> queryPurchaseFeePayDetail(PurchaseReportQuery query);
 
     List<PurchaseListInfo> queryPurchaseListInfoDetail(PurchaseQuery query);
+
+    List<PurchaseListInfo> queryPurchaseRawInfo(PurchaseQuery query);
 }

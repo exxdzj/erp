@@ -66,6 +66,7 @@ public class PurchaseExportController {
             switch(type) {
                 // 列表原样式
                 case CommonConstant.DEFAULT_VALUE_ONE:
+                    list = purchaseReportFacade.queryPurchaseRawInfo(query);
                     break;
                 // 采购单详细
                 case CommonConstant.DEFAULT_VALUE_TWO:

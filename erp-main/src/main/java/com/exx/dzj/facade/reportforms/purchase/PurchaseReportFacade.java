@@ -84,6 +84,11 @@ public class PurchaseReportFacade {
         return list;
     }
 
+    public List<PurchaseListInfo> queryPurchaseRawInfo (PurchaseQuery query){
+        List<PurchaseListInfo> list = purchaseReportService.queryPurchaseRawInfo(query);
+        return list;
+    }
+
     public List<PurchaseExportFieldReport> queryPurchaseExportField (){
         List<PurchaseExportFieldReport> list = new ArrayList<>();
         PurchaseExportFieldReport data = null;

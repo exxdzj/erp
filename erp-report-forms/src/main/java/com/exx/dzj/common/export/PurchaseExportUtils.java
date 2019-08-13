@@ -248,6 +248,37 @@ public class PurchaseExportUtils {
         Sheet sheet = new Sheet(1,0);
         sheet.setSheetName(sheetName);
 
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0,3000);
+        map.put(1,3200);
+        map.put(2,3000);
+        map.put(3,5000);
+        map.put(4,4000);
+        map.put(5,3000);
+        map.put(6,3000);
+        map.put(7,2800);
+        map.put(8,3000);
+        map.put(9,3000);
+        map.put(10,4000);
+        map.put(11,4000);
+        map.put(12,3000);
+        map.put(13,3000);
+        map.put(14,2000);
+        map.put(15,3000);
+        map.put(16,4000);
+        map.put(17,4000);
+        map.put(18,3000);
+        map.put(19,4000);
+        map.put(20,3000);
+        map.put(21,3200);
+        map.put(22,4000);
+        map.put(23,4000);
+        map.put(24,2800);
+        map.put(25,2800);
+        map.put(26,3000);
+        map.put(27,4000);
+        sheet.setColumnWidthMap(map);
+
         Table title = new Table(1);
         title.setClazz(PurchaseListModel.class);
         writer.write(null, sheet, title);
@@ -262,19 +293,17 @@ public class PurchaseExportUtils {
         PurchaseGoodsListInfo goods = null;
         PurchaseReceiptListInfo receipt = null;
 
-        List<PurchaseReceiptListInfo> receiptList = null;
-        List<PurchaseGoodsListInfo> goodsList = null;
 
         for (PurchaseListInfo p : list){
             model = new PurchaseListModel();
             setBasicModel(model, p);
-
+            model.setPurchaseSumVolume(p.getPurchaseSumVolume().doubleValue());
             content.add(model);
 
-            receiptList = p.getReceiptList();
+            List<PurchaseReceiptListInfo> receiptList = p.getReceiptList();
             receiptSize = receiptList.size();
 
-            goodsList = p.getGoodsList();
+            List<PurchaseGoodsListInfo> goodsList = p.getGoodsList();
             goodsSize = goodsList.size();
 
             froNum = goodsSize >= receiptSize ? goodsSize : receiptSize;
@@ -320,6 +349,7 @@ public class PurchaseExportUtils {
         }
 
         writer.write(content, sheet);
+        writer.finish();
     }
 
     private static void setBasicModel (PurchaseListModel model, PurchaseListInfo p){
@@ -333,7 +363,8 @@ public class PurchaseExportUtils {
         model.setInvoiceCode(p.getInvoiceCode());
         model.setPurchaseRemark(p.getPurchaseRemark());
         model.setDiscountAmount(p.getDiscountAmount().doubleValue());
-        model.setPurchaseSumVolume(p.getPurchaseSumVolume().doubleValue());
+        model.setCustPhoneNum(p.getCustPhoneNum());
+
         double s = 0;
         if (!CollectionUtils.isEmpty(p.getReceiptList())){
 
@@ -350,7 +381,25 @@ public class PurchaseExportUtils {
     }
 
     private static void setModelValue(PurchaseListModel model, PurchaseReceiptListInfo receipt, PurchaseGoodsListInfo goods){
+        if (receipt != null){
+            model.setCollectedAmount(receipt.getCollectedAmount().doubleValue());
+            model.setCollectionAccount(receipt.getCollectionAccount());
+            model.setPaymentMethod(receipt.getPaymentMethod());
+        }
 
+        if (goods != null){
+            model.setStockCode(goods.getStockCode());
+            model.setStockName(goods.getStockName());
+            model.setStockAddress(goods.getStockAddress());
+            model.setGoodsNum(goods.getGoodsNum());
+            model.setRealSellPrice(goods.getRealSellPrice().doubleValue());
+            model.setPurchaseVolume(goods.getPurchaseVolume().doubleValue());
+            model.setGoodsRemark(goods.getGoodsRemark());
+        }
+
+    }
+
+    private static void exprotPruchaseRawInfo (ServletOutputStream outputStream, List<PurchaseListInfo> list){
 
     }
 }

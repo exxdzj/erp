@@ -36,8 +36,12 @@ public class PurchaseListModel extends BaseRowModel {
     private String purchaseRemark;
     @ExcelProperty(value = "优惠", index = 9)
     private double discountAmount;
-    @ExcelProperty(value = "采购额", index = 10)
+    @ExcelProperty(value = "总金额", index = 10)
     private double purchaseSumVolume;
+
+//    @ExcelProperty(value = "采购额", index = 10)
+//    private double purchaseSumVolume;
+
     @ExcelProperty(value = "已付款", index = 11)
     private double sumCollectedAmount;
     @ExcelProperty(value = "审核状态", index = 12)

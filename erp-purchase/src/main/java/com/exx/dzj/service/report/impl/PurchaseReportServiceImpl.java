@@ -26,4 +26,9 @@ public class PurchaseReportServiceImpl implements PurchaseReportService {
     public List<PurchaseListInfo> queryPurchaseListInfoDetail(PurchaseQuery query) {
         return purchaseReportMapper.queryPurchaseListInfoDetail(query);
     }
+
+    @Override
+    public List<PurchaseListInfo> queryPurchaseRawInfo(PurchaseQuery query) {
+        return purchaseReportMapper.queryPurchaseRawInfo(query);
+    }
 }

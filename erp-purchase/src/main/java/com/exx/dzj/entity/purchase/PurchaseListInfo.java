@@ -38,6 +38,7 @@ public class PurchaseListInfo implements Serializable {
     private Integer accountPeriod;// 账期
     private String createUser; // 付款人, 创建人
     private String flowStatus; // 审核状态
+    private Timestamp dueDate; // 到期日
     /*****采购单信息*****/
 
     /****收款信息******/
