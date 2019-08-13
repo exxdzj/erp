@@ -34,4 +34,6 @@ public interface SaleTicketReportService {
     List<HomePageReport> queryStasticsSalesForMonth();
 
     List<SaleDetailBaseReport> querySaleDetailList(SaleDetailReportQuery query);
+
+    List<VIPCustomerLevelReport> queryVipCustomerlevelList();
 }

@@ -284,7 +284,7 @@ public class HomePageFacade {
         ic.setRankName("保险类客户");
         ic.setRankCode("AAAA");
 
-        dataList.add(ic);
+//        dataList.add(ic);
 
         InsuranceCustomerLevelEnum[] values = InsuranceCustomerLevelEnum.values();
 

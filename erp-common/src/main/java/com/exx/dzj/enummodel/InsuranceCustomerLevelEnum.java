@@ -9,7 +9,11 @@ public enum InsuranceCustomerLevelEnum {
     MANAGER("jl02", "经理"),
     DIRECTOR("zr03", "主管"),
     SALE("ywy04", "业务员"),
-    OTHER("qt05", "其他");
+    NQLDA("nqlda06", "内勤领导/A类"),
+    NQJLB("nqjlb07", "内勤经理/B类"),
+    NQZRC("nqzrc08", "内勤主任/C类"),
+    NQKHD("nqkhd09", "内勤客户/D类");
+//    OTHER("qt05", "其他");
 
     private final String code;
     private final String value;

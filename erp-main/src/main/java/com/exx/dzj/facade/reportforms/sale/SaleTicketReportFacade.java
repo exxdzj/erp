@@ -212,7 +212,7 @@ public class SaleTicketReportFacade {
                                             sgr.setGoodsNum(goods.getGoodsNum());
                                             sgr.setUnitPrice(goods.getUnitPrice());
                                             BigDecimal salesVolume = goods.getUnitPrice().multiply(new BigDecimal(goods.getGoodsNum()));
-                                            sgr.setSalesVolume(salesVolume.subtract(goods.getDiscountAmount()));
+                                            sgr.setSalesVolume(salesVolume);
                                             sgr.setStandardBuyPrice(goods.getStandardBuyPrice());
                                             BigDecimal cost = goods.getStandardBuyPrice().multiply(new BigDecimal(goods.getGoodsNum()));
                                             sgr.setCost(cost);
@@ -709,6 +709,33 @@ public class SaleTicketReportFacade {
 
 
         return map;
+    }
+
+    public List<VIPCustomerLevelReport> queryVipCustomerlevelList (){
+        List<VIPCustomerLevelReport> vipCustomerLevelReports = stockTypeReportService.queryVipCustomerlevelList();
+        if (vipCustomerLevelReports.size() < CommonConstant.DEFAULT_VALUE_ONE){
+            return vipCustomerLevelReports;
+        }
+
+        BigDecimal grossMargin = BigDecimal.ZERO;
+        BigDecimal saleVolume = BigDecimal.ZERO;
+        for (VIPCustomerLevelReport b : vipCustomerLevelReports){
+            saleVolume = b.getSaleVolume();
+            grossMargin = saleVolume.subtract(b.getCost());
+            // 毛利
+            b.setGrossMargin(grossMargin);
+            // 毛利率
+            b.setGrossRate(MathUtil.keepTwoBigdecimal(grossMargin, saleVolume, 2));
+
+            // 纯利
+            b.setPrfit(grossMargin.subtract(b.getDiscountAmount()));
+        }
+
+        return vipCustomerLevelReports;
+    }
+
+    private void setCustomerLevel (VIPCustomerLevelReport b){
+
     }
 
 }
