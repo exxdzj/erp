@@ -445,4 +445,18 @@
         HAVING saleVolume >= 15000 OR buyCount >= 4
         ORDER BY saleVolume DESC,buyCount DESC
     </select>
+    <select id="queryVipCustomerlevelList2" resultType="com.exx.dzj.entity.statistics.sales.VIPCustomerLevelReport">
+        SELECT
+            cs.cust_grade,
+            cs.cust_code AS custCode, cs.cust_name AS custName,
+            uinfo.real_name AS realName,
+            cs.totalVolume AS saleVolume, cs.buyCount AS buyCount
+        FROM tab_customer_supplier cs
+        LEFT JOIN tab_sale_info sinfo ON cs.cust_code = sinfo.cust_code
+        LEFT JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
+        WHERE cs.cust_type IN (1, 3)
+        GROUP BY cs.cust_code
+        HAVING cs.totalVolume >= 15000 OR cs.buyCount >= 4
+        ORDER BY cs.totalVolume DESC,cs.buyCount DESC
+    </select>
 </mapper>

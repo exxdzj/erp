@@ -712,25 +712,27 @@ public class SaleTicketReportFacade {
     }
 
     public List<VIPCustomerLevelReport> queryVipCustomerlevelList (){
-        List<VIPCustomerLevelReport> vipCustomerLevelReports = stockTypeReportService.queryVipCustomerlevelList();
-        if (vipCustomerLevelReports.size() < CommonConstant.DEFAULT_VALUE_ONE){
-            return vipCustomerLevelReports;
-        }
+//        List<VIPCustomerLevelReport> vipCustomerLevelReports = stockTypeReportService.queryVipCustomerlevelList();
+        List<VIPCustomerLevelReport> vipCustomerLevelReports = stockTypeReportService.queryVipCustomerlevelList2();
 
-        BigDecimal grossMargin = BigDecimal.ZERO;
-        BigDecimal saleVolume = BigDecimal.ZERO;
-        for (VIPCustomerLevelReport b : vipCustomerLevelReports){
-            saleVolume = b.getSaleVolume();
-            grossMargin = saleVolume.subtract(b.getCost());
-            // 毛利
-            b.setGrossMargin(grossMargin);
-            // 毛利率
-            b.setGrossRate(MathUtil.keepTwoBigdecimal(grossMargin, saleVolume, 2));
-
-            // 纯利
-            b.setPrfit(grossMargin.subtract(b.getDiscountAmount()));
-            setCustomerLevel(b);
-        }
+//        if (vipCustomerLevelReports.size() < CommonConstant.DEFAULT_VALUE_ONE){
+//            return vipCustomerLevelReports;
+//        }
+//
+//        BigDecimal grossMargin = BigDecimal.ZERO;
+//        BigDecimal saleVolume = BigDecimal.ZERO;
+//        for (VIPCustomerLevelReport b : vipCustomerLevelReports){
+//            saleVolume = b.getSaleVolume();
+//            grossMargin = saleVolume.subtract(b.getCost());
+//            // 毛利
+//            b.setGrossMargin(grossMargin);
+//            // 毛利率
+//            b.setGrossRate(MathUtil.keepTwoBigdecimal(grossMargin, saleVolume, 2));
+//
+//            // 纯利
+//            b.setPrfit(grossMargin.subtract(b.getDiscountAmount()));
+//            setCustomerLevel(b);
+//        }
         List<VIPCustomerLevelReport> data = vipCustomerLevelReports.stream().filter(o -> !StringUtils.contains(o.getRealName(), "成本中心")).collect(Collectors.toList());
 
         return data;
