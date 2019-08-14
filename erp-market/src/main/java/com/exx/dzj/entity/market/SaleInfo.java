@@ -132,6 +132,8 @@ public class SaleInfo extends BaseModule {
 
     private String updateUser;
 
+    private Integer vipCustType; // 0 问题客户 1 VIP客户 2 V1P-V6P 3 普通客户
+
     /**收款状态**/
     private  String paymentStatus;
 

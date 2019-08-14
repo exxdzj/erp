@@ -173,6 +173,16 @@
     DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') saleDate,
     DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') sale_date_str,
     CSUPPLIER.cust_name,
+    CASE
+      WHEN CSUPPLIER.is_question = 1 THEN 0
+      WHEN CSUPPLIER.buyCount >= 4 OR CSUPPLIER.totalVolume >= 15000 THEN 1
+      WHEN
+        CSUPPLIER.level_name REGEXP '^V1P' OR CSUPPLIER.level_name REGEXP '^V2P' OR
+        CSUPPLIER.level_name REGEXP '^V3P' OR CSUPPLIER.level_name REGEXP '^V4P' OR
+        CSUPPLIER.level_name REGEXP '^V5P' OR CSUPPLIER.level_name REGEXP '^V6P' OR CSUPPLIER.level_name REGEXP '^V7P'
+        THEN 2
+    ELSE 3
+    END vipCustType,
     SINFO.currency,
     SINFO.exchange_rate,
     SINFO.total_sum,
@@ -251,6 +261,7 @@
     <result column="createUser" property="createUser"/>
     <result column="userCode" property="userCode"/>
     <result column="userName" property="userName"/>
+    <result column="vipCustType" property="vipCustType"/>
     <result column="saleSourceName" property="saleSourceName"/>
     <result column="saleProject" property="saleProject"/>
     <result column="invoiceCode" property="invoiceCode"/>
