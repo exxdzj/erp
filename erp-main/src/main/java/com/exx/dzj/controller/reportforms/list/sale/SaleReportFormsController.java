@@ -190,6 +190,13 @@ public class SaleReportFormsController {
     }
 
 
+    /**
+     * @description: 客户vip等级
+     * @author yangyun
+     * @date 2019/8/13 0013
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
     @GetMapping("queryvipcustomerlevellist")
     public Result queryVipCustomerlevelList (){
         Result result = Result.responseSuccess();

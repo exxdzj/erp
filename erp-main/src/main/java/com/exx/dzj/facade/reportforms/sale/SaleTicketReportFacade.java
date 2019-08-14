@@ -729,13 +729,21 @@ public class SaleTicketReportFacade {
 
             // 纯利
             b.setPrfit(grossMargin.subtract(b.getDiscountAmount()));
+            setCustomerLevel(b);
         }
+        List<VIPCustomerLevelReport> data = vipCustomerLevelReports.stream().filter(o -> !StringUtils.contains(o.getRealName(), "成本中心")).collect(Collectors.toList());
 
-        return vipCustomerLevelReports;
+        return data;
     }
 
     private void setCustomerLevel (VIPCustomerLevelReport b){
-
+        if (b.getBuyCount() >= 20 || b.getSaleVolume().subtract(new BigDecimal(60000)).intValue() >= 0){
+            b.setCustGrade("砖石客户");
+        } else if(b.getBuyCount() >= 8 || b.getSaleVolume().subtract(new BigDecimal(30000)).intValue() >= 0) {
+            b.setCustGrade("铂金客户");
+        } else if(b.getBuyCount() >= 4 || b.getSaleVolume().subtract(new BigDecimal(15000)).intValue() >= 0) {
+            b.setCustGrade("黄金客户");
+        }
     }
 
 }
