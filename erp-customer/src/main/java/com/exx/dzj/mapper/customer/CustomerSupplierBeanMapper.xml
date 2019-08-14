@@ -771,4 +771,17 @@
       /*AND EXISTS (SELECT DISTINCT(cust_code) FROM tab_sale_info s WHERE s.cust_code = c.cust_code)*/
   </select>
 
+  <update id="updateBuyCountAndTotalVolume" parameterType="com.exx.dzj.entity.customer.CustomerSupplierInfo">
+    UPDATE tab_customer_supplier
+      SET
+        buyCount = #{buyCount}, totalVolume = #{totalVolume},
+        grade_code = #{gradeCode},
+        cust_grade = #{custGrade}
+    WHERE cust_code = #{custCode} AND cust_type IN (1, 3)
+  </update>
+
+  <select id="queryVIPCustomerSupplierInfo" resultType="com.exx.dzj.entity.customer.CustomerSupplierInfo">
+    select buyCount AS buyCount, totalVolume AS totalVolume FROM tab_customer_supplier
+      WHERE cust_code = #{custCode} AND cust_type IN (1, 3)
+  </select>
 </mapper>

@@ -7,6 +7,7 @@ import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -91,4 +92,8 @@ public interface CustomerService extends IService<CustomerSupplierBean> {
      * @return
      */
     Result batchUpdateCustomer(CustomerBatchBean bean);
+
+    int updateBuyCountAndTotalVolume (CustomerSupplierInfo customerSupplierInfo);
+
+    CustomerSupplierInfo queryVIPCustomerSupplierInfo(String custCode);
 }

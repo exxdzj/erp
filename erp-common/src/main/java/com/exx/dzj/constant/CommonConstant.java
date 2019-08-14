@@ -9,6 +9,8 @@ import java.math.BigDecimal;
  */
 public class CommonConstant {
 
+    public final static int DEFAULT_VALUE_LOSE_ONE = -1;
+
     public final static int DEFAULT_VALUE_ZERO = 0;
 
     public final static int DEFAULT_VALUE_ONE = 1;

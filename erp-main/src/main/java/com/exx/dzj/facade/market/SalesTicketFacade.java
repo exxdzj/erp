@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.annotation.SaleLog;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
+import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.*;
+import com.exx.dzj.entity.statistics.sales.VIPCustomerLevelReport;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.facade.market.task.AsyncSaleTask;
@@ -211,6 +213,20 @@ public class SalesTicketFacade {
                 saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
             }
         }
+
+        CustomerSupplierInfo customerSupplierInfo = customerService.queryVIPCustomerSupplierInfo(saleInfo.getCustCode());
+        if (customerSupplierInfo == null){
+            customerSupplierInfo = new CustomerSupplierInfo();
+            customerSupplierInfo.setTotalVolume(saleInfo.getReceivableAccoun());
+            customerSupplierInfo.setBuyCount(CommonConstant.DEFAULT_VALUE_ONE);
+            setCustomerLevel(customerSupplierInfo);
+        } else {
+            customerSupplierInfo.setTotalVolume(customerSupplierInfo.getTotalVolume().add(saleInfo.getReceivableAccoun()));
+            customerSupplierInfo.setBuyCount(CommonConstant.DEFAULT_VALUE_ONE + customerSupplierInfo.getBuyCount());
+            setCustomerLevel(customerSupplierInfo);
+        }
+        customerSupplierInfo.setCustCode(saleInfo.getCustCode());
+        customerService.updateBuyCountAndTotalVolume(customerSupplierInfo);
         return saleCode;
     }
 
@@ -311,9 +327,9 @@ public class SalesTicketFacade {
             saleInfo.setDiscountAmount(new BigDecimal(0));
         }
 
+        SaleInfo oldSaleInfo = querySalesTicketById(saleInfo.getId());
         salesTicketService.updateSalesTicketById(saleInfo);
 
-        SaleInfo oldSaleInfo = querySalesTicketById(saleInfo.getId());
 
 //        if (StringUtils.isEmpty(oldSaleInfo.getSubordinateCompanyCode())){
             List<DeptInfoBean> deptInfos = deptService.queryDeptList();
@@ -435,10 +451,38 @@ public class SalesTicketFacade {
                 saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
             }
         }
+        CustomerSupplierInfo customerSupplierInfo = customerService.queryVIPCustomerSupplierInfo(saleInfo.getCustCode());
+        if (customerSupplierInfo == null){
+            customerSupplierInfo = new CustomerSupplierInfo();
+            customerSupplierInfo.setTotalVolume(saleInfo.getReceivableAccoun());
+            customerSupplierInfo.setBuyCount(CommonConstant.DEFAULT_VALUE_ONE);
+            setCustomerLevel(customerSupplierInfo);
+        } else {
+            customerSupplierInfo.setTotalVolume(customerSupplierInfo.getTotalVolume().add(saleInfo.getReceivableAccoun()).subtract(oldSaleInfo.getReceivableAccoun()));
+            setCustomerLevel(customerSupplierInfo);
+        }
+        customerSupplierInfo.setCustCode(saleInfo.getCustCode());
+        customerService.updateBuyCountAndTotalVolume(customerSupplierInfo);
         /*if(null != saleInfo && ConvertUtils.isNotEmpty(saleInfo.getPaymentStatus())
                 && (saleInfo.getPaymentStatus().equals("cs03")) || (saleInfo.getPaymentStatus().equals("cs02"))) {
             salesTicketService.syncSaleData(saleInfo);
         }*/
+    }
+
+    private void setCustomerLevel (CustomerSupplierInfo b){
+        if (b.getBuyCount() >= 20 || b.getTotalVolume().subtract(new BigDecimal(60000)).intValue() >= 0){
+            b.setGradeCode("vip003");
+            b.setCustGrade("砖石客户");
+        } else if(b.getBuyCount() >= 8 || b.getTotalVolume().subtract(new BigDecimal(30000)).intValue() >= 0) {
+            b.setGradeCode("vip002");
+            b.setCustGrade("铂金客户");
+        } else if(b.getBuyCount() >= 4 || b.getTotalVolume().subtract(new BigDecimal(15000)).intValue() >= 0) {
+            b.setGradeCode("vip001");
+            b.setCustGrade("黄金客户");
+        } else {
+            b.setGradeCode("pt0001");
+            b.setCustGrade("普通客户");
+        }
     }
 
     /**
@@ -487,6 +531,22 @@ public class SalesTicketFacade {
         if(!CollectionUtils.isEmpty(sgbIds)){
             salesGoodsDetailService.batchDeleteSalesGoodsDetail(sgbIds);
         }
+
+        CustomerSupplierInfo customerSupplierInfo = customerService.queryVIPCustomerSupplierInfo(saleInfo.getCustCode());
+        if (customerSupplierInfo == null){
+            customerSupplierInfo = new CustomerSupplierInfo();
+            customerSupplierInfo.setTotalVolume(BigDecimal.ZERO);
+            customerSupplierInfo.setBuyCount(CommonConstant.DEFAULT_VALUE_ZERO);
+            setCustomerLevel(customerSupplierInfo);
+        } else {
+            BigDecimal b = customerSupplierInfo.getTotalVolume().subtract(saleInfo.getReceivableAccoun()).doubleValue() >= 0 ? customerSupplierInfo.getTotalVolume().subtract(saleInfo.getReceivableAccoun()) : BigDecimal.ZERO;
+            customerSupplierInfo.setTotalVolume(b);
+            int i = customerSupplierInfo.getBuyCount() - CommonConstant.DEFAULT_VALUE_ONE >= 0 ? customerSupplierInfo.getBuyCount() - CommonConstant.DEFAULT_VALUE_ONE : 0;
+            customerSupplierInfo.setBuyCount(i);
+            setCustomerLevel(customerSupplierInfo);
+        }
+        customerSupplierInfo.setCustCode(saleInfo.getCustCode());
+        customerService.updateBuyCountAndTotalVolume(customerSupplierInfo);
     }
 
     public List<SaleReceiptsDetails> querySaleReceviptDetailList(String saleCode){

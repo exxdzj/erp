@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -283,5 +284,15 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerSupplierBeanMapper,
             result.setMsg("批量修改客户数据失败!");
         }
         return result;
+    }
+
+    @Override
+    public int updateBuyCountAndTotalVolume(CustomerSupplierInfo customerSupplierInfo) {
+        return csMapper.updateBuyCountAndTotalVolume(customerSupplierInfo);
+    }
+
+    @Override
+    public CustomerSupplierInfo queryVIPCustomerSupplierInfo(String custCode) {
+        return csMapper.queryVIPCustomerSupplierInfo(custCode);
     }
 }

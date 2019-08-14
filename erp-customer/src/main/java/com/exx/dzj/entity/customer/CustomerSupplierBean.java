@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -112,4 +113,7 @@ public class CustomerSupplierBean implements Serializable {
 
     // 客户等级名称
     private String custGrade;
+
+    private BigDecimal totalVolume;
+    private Integer buyCount;
 }

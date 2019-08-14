@@ -6,6 +6,7 @@ import com.exx.dzj.entity.customer.*;
 import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.formula.functions.T;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface CustomerSupplierBeanMapper extends BaseMapper<CustomerSupplierBean> {
@@ -81,4 +82,8 @@ public interface CustomerSupplierBeanMapper extends BaseMapper<CustomerSupplierB
     List<InsuranceCustomer> queryIncreaseCutomerForMonth();
 
     List<CustomerSupplierBean> queryCustomerSelect(@Param("custName") String custName, @Param("type") Integer type);
+
+    int updateBuyCountAndTotalVolume(CustomerSupplierInfo customerSupplierInfo);
+
+    CustomerSupplierInfo queryVIPCustomerSupplierInfo(@Param("custCode") String custCode);
 }
