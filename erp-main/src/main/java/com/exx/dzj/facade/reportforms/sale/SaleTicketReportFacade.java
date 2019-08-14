@@ -740,7 +740,7 @@ public class SaleTicketReportFacade {
 
     private void setCustomerLevel (VIPCustomerLevelReport b){
         if (b.getBuyCount() >= 20 || b.getSaleVolume().subtract(new BigDecimal(60000)).intValue() >= 0){
-            b.setCustGrade("砖石客户");
+            b.setCustGrade("钻石客户");
         } else if(b.getBuyCount() >= 8 || b.getSaleVolume().subtract(new BigDecimal(30000)).intValue() >= 0) {
             b.setCustGrade("铂金客户");
         } else if(b.getBuyCount() >= 4 || b.getSaleVolume().subtract(new BigDecimal(15000)).intValue() >= 0) {

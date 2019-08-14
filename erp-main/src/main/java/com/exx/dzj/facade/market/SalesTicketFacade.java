@@ -472,7 +472,7 @@ public class SalesTicketFacade {
     private void setCustomerLevel (CustomerSupplierInfo b){
         if (b.getBuyCount() >= 20 || b.getTotalVolume().subtract(new BigDecimal(60000)).intValue() >= 0){
             b.setGradeCode("vip003");
-            b.setCustGrade("砖石客户");
+            b.setCustGrade("setCustomerLevel");
         } else if(b.getBuyCount() >= 8 || b.getTotalVolume().subtract(new BigDecimal(30000)).intValue() >= 0) {
             b.setGradeCode("vip002");
             b.setCustGrade("铂金客户");
