@@ -451,7 +451,7 @@
         AND cw.phone_num LIKE CONCAT("%", #{queryParam.phoneNum}, "%")
       </if>
       <if test="queryParam.custCode != null and queryParam.custCode != ''">
-        AND cs.cust_code = #{queryParam.custCode}
+        AND cs.cust_code LIKE CONCAT("%", #{queryParam.custCode}, "%")
       </if>
       <if test="queryParam.regionCode != null and queryParam.regionCode!=''">
         AND cs.region_code = #{queryParam.regionCode}
