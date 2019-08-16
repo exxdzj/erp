@@ -1,5 +1,6 @@
 package com.exx.dzj.entity.statistics.sales;
 
+import com.exx.dzj.page.BaseModule;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
  * @Version 1.0
  **/
 @Data
-public class VIPCustomerLevelReport implements Serializable {
+public class VIPCustomerLevelReport extends BaseModule {
     private static final long serialVersionUID = 3265197911624474820L;
 
     private String custCode;

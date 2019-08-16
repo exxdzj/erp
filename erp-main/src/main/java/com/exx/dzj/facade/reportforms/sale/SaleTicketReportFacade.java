@@ -8,16 +8,19 @@ import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
+import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleInfoQuery;
 import com.exx.dzj.entity.market.SaleListInfo;
 import com.exx.dzj.entity.statistics.sales.*;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.enummodel.SaleListFieldEnum;
+import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.dictionary.DictionaryService;
 import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
 import com.exx.dzj.service.user.UserService;
 import com.exx.dzj.util.MathUtil;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -716,28 +719,12 @@ public class SaleTicketReportFacade {
         return map;
     }
 
-    public Map<String, Object> queryVipCustomerlevelList (){
+    public Map<String, Object> queryVipCustomerlevelList (VipCustomerQueryCondition query, int pageNum, int pageSize){
 //        List<VIPCustomerLevelReport> vipCustomerLevelReports = stockTypeReportService.queryVipCustomerlevelList();
-        List<VIPCustomerLevelReport> vipCustomerLevelReports = stockTypeReportService.queryVipCustomerlevelList2();
+        PageHelper.startPage(pageNum, pageSize);
+        List<VIPCustomerLevelReport> vipCustomerLevelReports = stockTypeReportService.queryVipCustomerlevelList2(query);
 
-//        if (vipCustomerLevelReports.size() < CommonConstant.DEFAULT_VALUE_ONE){
-//            return vipCustomerLevelReports;
-//        }
 //
-//        BigDecimal grossMargin = BigDecimal.ZERO;
-//        BigDecimal saleVolume = BigDecimal.ZERO;
-//        for (VIPCustomerLevelReport b : vipCustomerLevelReports){
-//            saleVolume = b.getSaleVolume();
-//            grossMargin = saleVolume.subtract(b.getCost());
-//            // 毛利
-//            b.setGrossMargin(grossMargin);
-//            // 毛利率
-//            b.setGrossRate(MathUtil.keepTwoBigdecimal(grossMargin, saleVolume, 2));
-//
-//            // 纯利
-//            b.setPrfit(grossMargin.subtract(b.getDiscountAmount()));
-//            setCustomerLevel(b);
-//        }
         Map<String, Object> map = new HashMap<>();
         List<VIPCustomerLevelReport> data = vipCustomerLevelReports.stream().filter(o -> !StringUtils.contains(o.getRealName(), "成本中心")).collect(Collectors.toList());
 
@@ -753,24 +740,10 @@ public class SaleTicketReportFacade {
             map.put(s, count);
         }
 
-        map.put("data", data);
+        ERPage<VIPCustomerLevelReport> saleInfoPage = new ERPage<>(vipCustomerLevelReports);
+
+        map.put("data", saleInfoPage);
 
         return map;
     }
-
-    private void setCustomerLevel (VIPCustomerLevelReport b){
-        if (b.getBuyCount() >= 20 || b.getSaleVolume().subtract(new BigDecimal(60000)).intValue() >= 0){
-            b.setCustGrade("钻石客户");
-        } else if(b.getBuyCount() >= 8 || b.getSaleVolume().subtract(new BigDecimal(30000)).intValue() >= 0) {
-            b.setCustGrade("铂金客户");
-        } else if(b.getBuyCount() >= 4 || b.getSaleVolume().subtract(new BigDecimal(15000)).intValue() >= 0) {
-            b.setCustGrade("黄金客户");
-        }
-    }
-
-    public List<VipCustomerCountReport> queryVipCustomerCount(){
-        List<VipCustomerCountReport> vipCustomerCountReports = stockTypeReportService.queryVipCustomerCount();
-        return vipCustomerCountReports;
-    }
-
 }

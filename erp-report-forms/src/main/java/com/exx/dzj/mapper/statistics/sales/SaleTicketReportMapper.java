@@ -36,7 +36,7 @@ public interface SaleTicketReportMapper {
     List<SaleDetailBaseReport> querySaleDetailList(SaleDetailReportQuery query);
 
     List<VIPCustomerLevelReport> queryVipCustomerlevelList();
-    List<VIPCustomerLevelReport> queryVipCustomerlevelList2();
+    List<VIPCustomerLevelReport> queryVipCustomerlevelList2(VipCustomerQueryCondition query);
 
     List<VipCustomerCountReport> queryVipCustomerCount();
 }

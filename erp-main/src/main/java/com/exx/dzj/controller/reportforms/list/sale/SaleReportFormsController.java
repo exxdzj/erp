@@ -198,9 +198,11 @@ public class SaleReportFormsController {
      * @return com.exx.dzj.result.Result
      */
     @GetMapping("queryvipcustomerlevellist")
-    public Result queryVipCustomerlevelList (){
+    public Result queryVipCustomerlevelList (VipCustomerQueryCondition query){
         Result result = Result.responseSuccess();
-        Map<String, Object> map = saleTicketReportFacade.queryVipCustomerlevelList();
+        int pageNum = MathUtil.toInt(query.getPageNum(), CommonConstant.DEFAULT_VALUE_ZERO);
+        int pageSize = MathUtil.toInt(query.getPageSize(), CommonConstant.DEFAULT_PAGE_SIZE);
+        Map<String, Object> map = saleTicketReportFacade.queryVipCustomerlevelList(query, pageNum, pageSize);
         result.setData(map);
         return result;
     }

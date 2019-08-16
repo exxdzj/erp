@@ -179,7 +179,8 @@
       WHEN
         CSUPPLIER.level_name REGEXP '^V1P' OR CSUPPLIER.level_name REGEXP '^V2P' OR
         CSUPPLIER.level_name REGEXP '^V3P' OR CSUPPLIER.level_name REGEXP '^V4P' OR
-        CSUPPLIER.level_name REGEXP '^V5P' OR CSUPPLIER.level_name REGEXP '^V6P' OR CSUPPLIER.level_name REGEXP '^V7P'
+        CSUPPLIER.level_name REGEXP '^V5P' OR CSUPPLIER.level_name REGEXP '^V6P' OR
+        CSUPPLIER.level_name REGEXP '^V7P' OR CSUPPLIER.rank_code REGEXP 'jl02' OR CSUPPLIER.rank_code REGEXP 'zj01'
         THEN 2
     ELSE 3
     END vipCustType,
