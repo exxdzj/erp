@@ -200,8 +200,9 @@ public class SaleReportFormsController {
     @GetMapping("queryvipcustomerlevellist")
     public Result queryVipCustomerlevelList (){
         Result result = Result.responseSuccess();
-        List<VIPCustomerLevelReport> vipCustomerLevelReports = saleTicketReportFacade.queryVipCustomerlevelList();
-        result.setData(vipCustomerLevelReports);
+        Map<String, Object> map = saleTicketReportFacade.queryVipCustomerlevelList();
+        result.setData(map);
         return result;
     }
+
 }

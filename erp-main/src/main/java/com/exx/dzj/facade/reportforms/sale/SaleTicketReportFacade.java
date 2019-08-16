@@ -7,11 +7,13 @@ import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
+import com.exx.dzj.entity.dictionary.DictionaryInfo;
 import com.exx.dzj.entity.market.SaleInfoQuery;
 import com.exx.dzj.entity.market.SaleListInfo;
 import com.exx.dzj.entity.statistics.sales.*;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.enummodel.SaleListFieldEnum;
+import com.exx.dzj.service.dictionary.DictionaryService;
 import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
 import com.exx.dzj.service.user.UserService;
@@ -40,6 +42,9 @@ public class SaleTicketReportFacade {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private DictionaryService dictionaryService;
 
     /**
      * @description 销售单依库存统计
@@ -711,7 +716,7 @@ public class SaleTicketReportFacade {
         return map;
     }
 
-    public List<VIPCustomerLevelReport> queryVipCustomerlevelList (){
+    public Map<String, Object> queryVipCustomerlevelList (){
 //        List<VIPCustomerLevelReport> vipCustomerLevelReports = stockTypeReportService.queryVipCustomerlevelList();
         List<VIPCustomerLevelReport> vipCustomerLevelReports = stockTypeReportService.queryVipCustomerlevelList2();
 
@@ -733,9 +738,24 @@ public class SaleTicketReportFacade {
 //            b.setPrfit(grossMargin.subtract(b.getDiscountAmount()));
 //            setCustomerLevel(b);
 //        }
+        Map<String, Object> map = new HashMap<>();
         List<VIPCustomerLevelReport> data = vipCustomerLevelReports.stream().filter(o -> !StringUtils.contains(o.getRealName(), "成本中心")).collect(Collectors.toList());
 
-        return data;
+        List<VipCustomerCountReport> vipCustomerCount = stockTypeReportService.queryVipCustomerCount();
+        Map<String, List<VipCustomerCountReport>> collect = vipCustomerCount.stream().collect(Collectors.groupingBy(VipCustomerCountReport::getGradeCode));
+        String[] str = {"vip001", "vip002", "vip003"};
+        int count = 0;
+        for (String s : str){
+            List<VipCustomerCountReport> vipCustomerCountReports = collect.get(s);
+            if (vipCustomerCountReports != null){
+                count = vipCustomerCountReports.get(0).getCount();
+            }
+            map.put(s, count);
+        }
+
+        map.put("data", data);
+
+        return map;
     }
 
     private void setCustomerLevel (VIPCustomerLevelReport b){
@@ -746,6 +766,11 @@ public class SaleTicketReportFacade {
         } else if(b.getBuyCount() >= 4 || b.getSaleVolume().subtract(new BigDecimal(15000)).intValue() >= 0) {
             b.setCustGrade("黄金客户");
         }
+    }
+
+    public List<VipCustomerCountReport> queryVipCustomerCount(){
+        List<VipCustomerCountReport> vipCustomerCountReports = stockTypeReportService.queryVipCustomerCount();
+        return vipCustomerCountReports;
     }
 
 }

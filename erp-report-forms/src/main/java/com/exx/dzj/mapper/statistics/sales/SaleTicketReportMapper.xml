@@ -441,8 +441,8 @@
         LEFT JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
         LEFT JOIN tab_stock_num_price price ON goods.stock_code = price.stock_code
         WHERE cs.cust_type IN (1, 3)
+        AND (cs.totalVolume >= 10000 OR cs.buyCount >= 5)
         GROUP BY cs.cust_code
-        HAVING saleVolume >= 15000 OR buyCount >= 4
         ORDER BY saleVolume DESC,buyCount DESC
     </select>
     <select id="queryVipCustomerlevelList2" resultType="com.exx.dzj.entity.statistics.sales.VIPCustomerLevelReport">
@@ -455,8 +455,19 @@
         LEFT JOIN tab_sale_info sinfo ON cs.cust_code = sinfo.cust_code
         LEFT JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
         WHERE cs.cust_type IN (1, 3)
+        AND (cs.totalVolume >= 10000 OR cs.buyCount >= 5)
         GROUP BY cs.cust_code
-        HAVING cs.totalVolume >= 15000 OR cs.buyCount >= 4
         ORDER BY cs.totalVolume DESC,cs.buyCount DESC
+    </select>
+
+    <select id="queryVipCustomerCount" resultType="com.exx.dzj.entity.statistics.sales.VipCustomerCountReport">
+        SELECT
+            IFNULL(cs.grade_code,'') AS gradeCode,
+            cs.cust_grade AS custGrade,
+            COUNT(cs.grade_code) AS `count`
+        FROM tab_customer_supplier cs
+        WHERE cs.cust_type IN (1, 3) AND cs.grade_code IS NOT NULL
+        AND (cs.totalVolume >= 10000 OR cs.buyCount >= 5)
+        GROUP BY cs.grade_code
     </select>
 </mapper>

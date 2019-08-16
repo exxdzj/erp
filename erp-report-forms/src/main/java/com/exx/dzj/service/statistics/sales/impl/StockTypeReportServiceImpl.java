@@ -86,4 +86,9 @@ public class StockTypeReportServiceImpl implements SaleTicketReportService {
     public List<VIPCustomerLevelReport> queryVipCustomerlevelList2() {
         return stockTypeReportMapper.queryVipCustomerlevelList2();
     }
+
+    @Override
+    public List<VipCustomerCountReport> queryVipCustomerCount() {
+        return stockTypeReportMapper.queryVipCustomerCount();
+    }
 }
