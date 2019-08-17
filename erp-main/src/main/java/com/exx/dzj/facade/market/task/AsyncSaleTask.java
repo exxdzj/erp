@@ -5,6 +5,7 @@ import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.service.salesticket.SalesTicketService;
+import com.exx.dzj.service.sys.DeptService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,33 +22,44 @@ public class AsyncSaleTask implements Runnable {
 
     private SaleInfo saleInfo;
 
-    private List<DeptInfoBean> list;
-
-    private String deptCode;
+    private DeptInfoBean deptInfoBean;
 
     private SalesTicketService salesTicketService;
 
-    public AsyncSaleTask (SaleInfo saleInfo, List<DeptInfoBean> list, String deptCode, SalesTicketService salesTicketService){
+    private DeptService deptService;
+
+    public AsyncSaleTask (SaleInfo saleInfo, DeptInfoBean deptInfoBean, SalesTicketService salesTicketService, DeptService deptService){
         this.saleInfo = saleInfo;
-        this.list = list;
-        this.deptCode = deptCode;
+        this.deptInfoBean = deptInfoBean;
         this.salesTicketService = salesTicketService;
+        this.deptService = deptService;
     }
 
     @Override
     public void run() {
         logger.info("开始执行更新销售单销售员所属分公司信息, 销售单: {}", saleInfo.getSaleCode());
         try {
-            DeptInfoBean deptInfoBean = new DeptInfoBean();
-            deptInfoBean.setDeptCode(deptCode);
+            if (deptInfoBean ==  null){
+                logger.info("更新销售单销售员所属分公司信息失败, 销售员没有所属公司; 销售单: {}", saleInfo.getSaleCode());
+                return;
+            }
 
-            DeptInfoBean deptInfo = gainSubordinateCompanyInfo(list, deptInfoBean);
-            logger.info("销售员: {}, 所属部门: {}" ,saleInfo.getSalesmanCode(), deptInfo.getDeptName());
+            if (deptInfoBean.getIsCompare() != CommonConstant.DEFAULT_VALUE_ONE){
+                do {
+                    deptInfoBean = deptService.queryDeptInfo(deptInfoBean.getParentCode());
+                    if (deptInfoBean == null) {
+                        logger.info("更新销售单销售员所属分公司信息失败, 销售员没有所属公司; 销售单: {}", saleInfo.getSaleCode());
+                        return;
+                    }
+                } while (deptInfoBean.getIsCompare() != CommonConstant.DEFAULT_VALUE_ONE);
+            }
+
+            saleInfo.setSubordinateCompanyCode(deptInfoBean.getDeptCode());
+            saleInfo.setSubordinateCompanyName(deptInfoBean.getDeptName());
+
+            logger.info("销售员: {}, 所属部门: {}" ,saleInfo.getSalesmanCode(), deptInfoBean.getDeptName());
 
             String saleCode = saleInfo.getSaleCode();
-
-            saleInfo.setSubordinateCompanyCode(deptInfo.getDeptCode());
-            saleInfo.setSubordinateCompanyName(deptInfo.getDeptName());
 
             int count = 0;
             int times = 0;
@@ -69,7 +81,7 @@ public class AsyncSaleTask implements Runnable {
             if (times != CommonConstant.SALE_TIME_OUT){
                 salesTicketService.updateSalesmanSubordinateCompany(saleInfo);
 
-                logger.info("更新销售单销售员所属分公司信息完成, 销售单: {}, 所属分公司: {}", saleInfo.getSaleCode(), deptInfo.getDeptName());
+                logger.info("更新销售单销售员所属分公司信息完成, 销售单: {}, 所属分公司: {}", saleInfo.getSaleCode(), deptInfoBean.getDeptName());
             }
 
         } catch (InterruptedException e) {

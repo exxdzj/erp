@@ -180,18 +180,22 @@ public class SalesTicketFacade {
         saleInfo.setSaleTicketType(CommonConstant.DEFAULT_VALUE_ONE);
         saleInfo.setIsEnable(CommonConstant.DEFAULT_VALUE_ONE);
 
+//        List<DeptInfoBean> deptInfos = deptService.queryDeptList();
+
         // 获取部门信息
-        List<DeptInfoBean> deptInfos = deptService.queryDeptList();
+        DeptInfoBean deptInfoBean = deptService.queryDept(saleInfo.getUserCode());
+
 
         // 查询销售员部门编码
-        String deptCode = salesmanService.querySalesmanDeptCode(saleInfo.getUserCode());
+//        String deptCode = salesmanService.querySalesmanDeptCode(saleInfo.getUserCode());
 
         // 销售单编码
         //String saleCode = getCode();
+
         String saleCode = getCode(saleInfo.getSaleDate());
         saleInfo.setSaleCode(saleCode);
         salesTicketService.saveSaleInfo(saleInfo);
-        setSubordinateCompany(saleInfo, deptInfos, deptCode);
+        setSubordinateCompany(saleInfo, deptInfoBean);
 
         if(!CollectionUtils.isEmpty(goodsDetailBeanList)){
             goodsDetailBeanList = setGoodsSaleCode(goodsDetailBeanList, saleInfo.getSaleCode());
@@ -233,8 +237,8 @@ public class SalesTicketFacade {
     @Autowired
     private Executor asyncSaleExecutr;
 
-    private void setSubordinateCompany (SaleInfo saleInfo, List<DeptInfoBean> deptInfos, String deptCode){
-        AsyncSaleTask  asyncSaleTask = new AsyncSaleTask(saleInfo, deptInfos, deptCode, salesTicketService);
+    private void setSubordinateCompany (SaleInfo saleInfo,DeptInfoBean deptInfoBean){
+        AsyncSaleTask  asyncSaleTask = new AsyncSaleTask(saleInfo, deptInfoBean, salesTicketService, deptService);
         asyncSaleExecutr.execute(asyncSaleTask);
     }
 
@@ -334,10 +338,12 @@ public class SalesTicketFacade {
 //        if (StringUtils.isEmpty(oldSaleInfo.getSubordinateCompanyCode())){
             List<DeptInfoBean> deptInfos = deptService.queryDeptList();
 
+        DeptInfoBean deptInfoBean = deptService.queryDept(saleInfo.getUserCode());
+
             // 查询销售员部门编码
             String deptCode = salesmanService.querySalesmanDeptCode(saleInfo.getUserCode());
 
-            setSubordinateCompany(saleInfo, deptInfos, deptCode);
+            setSubordinateCompany(saleInfo, deptInfoBean);
 //        }
 
         List<SaleGoodsDetailBean> saleGoodsDetailBeanList = oldSaleInfo.getSaleGoodsDetailBeanList();
@@ -561,16 +567,12 @@ public class SalesTicketFacade {
             try {
                 filename = DateUtil.convertDateToString(s.getSaleDate(), "yyyy-MM");
                 // 获取部门信息
-                List<DeptInfoBean> deptInfos = deptService.queryDeptList();
 
+                DeptInfoBean deptInfoBean = deptService.queryDept(s.getUserCode());
                 saveSalesTicket3(s);
                 // 查询销售员部门编码
-                List<String> strings = salesmanService.querySalesmanDeptCode2(s.getSalesmanCode());
-                if (strings != null && strings.size() > 0){
 
-                    String deptCode = strings.get(0);
-                    setSubordinateCompany(s, deptInfos, deptCode);
-                }
+                setSubordinateCompany(s, deptInfoBean);
 
 
 

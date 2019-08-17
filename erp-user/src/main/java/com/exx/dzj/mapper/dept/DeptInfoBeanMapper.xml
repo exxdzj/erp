@@ -266,4 +266,15 @@
     OR parent_code
     <foreach collection="depts" item="code" open=" in (" close=")" separator=",">#{code}</foreach>
   </update>
+
+  <select id="queryDept" resultType="com.exx.dzj.entity.dept.DeptInfoBean">
+    SELECT
+        d.dept_code AS deptCode,
+        d.dept_name AS deptName,
+        d.parent_code AS parentCode,
+        d.is_compare AS isCompare
+    FROM tab_dept_info d
+        LEFT JOIN tab_user_info u ON d.dept_code = u.dept_code
+    WHERE u.user_code = #{userCode}
+  </select>
 </mapper>

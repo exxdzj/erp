@@ -56,4 +56,6 @@ public interface DeptService extends IService<DeptInfoBean> {
      * @return
      */
     Result delDept(DeptBean dept);
+
+    DeptInfoBean queryDept(String userCode);
 }

@@ -26,4 +26,6 @@ public interface DeptInfoBeanMapper extends BaseMapper<DeptInfoBean> {
     int queryMaxSeq();
 
     int delDept(DeptBean dept);
+
+    DeptInfoBean queryDept(@Param("userCode") String userCode);
 }
