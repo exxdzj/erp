@@ -726,7 +726,6 @@ public class SaleTicketReportFacade {
 
 //
         Map<String, Object> map = new HashMap<>();
-        List<VIPCustomerLevelReport> data = vipCustomerLevelReports.stream().filter(o -> !StringUtils.contains(o.getRealName(), "成本中心")).collect(Collectors.toList());
 
         List<VipCustomerCountReport> vipCustomerCount = stockTypeReportService.queryVipCustomerCount();
         Map<String, List<VipCustomerCountReport>> collect = vipCustomerCount.stream().collect(Collectors.groupingBy(VipCustomerCountReport::getGradeCode));
