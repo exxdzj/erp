@@ -243,6 +243,10 @@ public class SaleExportController {
                     list = saleTicketReportFacade.querySalesListForIds(query, queryWrapper);
                     writer = SaleExportUtils.exportSaleList2(outputStream, list);
                     break;
+                case CommonConstant.DEFAULT_VALUE_THREE:
+                    list = saleTicketReportFacade.querySalesListForIds2(query, queryWrapper);
+                    writer = SaleExportUtils.exportSaleFinanceList(outputStream, list);
+                    break;
                 default:
 
                     break;

@@ -1379,6 +1379,78 @@
                 select="com.exx.dzj.mapper.market.SaleGoodsDetailBeanMapper.querySaleGoodsDetailBeanList" />
   </resultMap>
 
+  <select id="querySalesListForIds2" resultMap="saleListInfoMap2" parameterType="com.exx.dzj.entity.market.SaleInfoQuery">
+    SELECT
+    SINFO.sale_code,
+    SINFO.sale_date AS saleDate,
+    SINFO.payment_status AS paymentStatus,
+    CSUPPLIER.cust_name AS custName,
+    SINFO.remarks AS saleRemark
+    FROM tab_sale_info SINFO
+    LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
+    LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
+    WHERE 1=1
+      <if test="ew!=null">
+        ${ew.sqlSegment}
+      </if>
+
+      <if test="query.startTime != null and query.startTime != ''">
+        AND  <![CDATA[SINFO.sale_date >= DATE_FORMAT(#{query.startTime},'%Y-%m-%d %H:%i:%s')]]>
+      </if>
+      <if test="query.paymentStatusList != null and query.paymentStatusList.size() > 0">
+        AND  SINFO.payment_status IN
+        <foreach collection="query.paymentStatusList" item="item" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+      </if>
+
+      <if test="query.endTime != null and query.endTime != ''">
+        AND  <![CDATA[SINFO.sale_date <= DATE_FORMAT(#{query.endTime},'%Y-%m-%d 23:59:59')]]>
+      </if>
+      <if test="query.saleCode != null and query.saleCode != ''">
+        AND  SINFO.sale_code LIKE CONCAT('%', #{query.saleCode}, '%')
+      </if>
+      <if test="query.userCode != null and query.userCode != ''">
+        AND  SINFO.user_code=#{query.userCode}
+      </if>
+      <if test="query.subordinateCompanyCode != null and query.subordinateCompanyCode != ''">
+        AND  SINFO.subordinate_company_code=#{query.subordinateCompanyCode}
+      </if>
+      <if test="query.custCode != null and query.custCode != ''">
+        AND  SINFO.cust_code=#{query.custCode}
+      </if>
+      <if test="query.custName != null and query.custName!=''">
+        AND CSUPPLIER.cust_name LIKE CONCAT('%', #{query.custName}, '%')
+      </if>
+
+      <if test="query.custPhoneNum != null and query.custPhoneNum != ''">
+        AND SINFO.cust_phone_num LIKE CONCAT('%', #{query.custPhoneNum}, '%')
+      </if>
+      <if test="query.idList.size() > 0">
+        AND SINFO.id IN
+        <foreach collection="query.idList" item="id" separator="," open="(" close=")" index="index">
+          #{id}
+        </foreach>
+      </if>
+      <if test="query.stockName != null and query.stockName != ''">
+        HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
+      </if>
+      ORDER BY SINFO.sale_date  DESC
+    </select>
+
+  <resultMap id="saleListInfoMap2" type="com.exx.dzj.entity.market.SaleListInfo">
+    <result column="saleDate" property="saleDate"/>
+    <result column="paymentStatus" property="paymentStatus"/>
+    <result column="custName" property="custName"/>
+    <result column="saleRemark" property="saleRemark"/>
+    <!-- 查询关联收款记录 -->
+    <!--<collection property="saleReceiptsDetailsList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleReceiptsDetails" javaType="java.util.List"-->
+                <!--select="com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper.querySaleReceiptsDetailsList" />-->
+    <!-- 查询关联商品详情 -->
+    <collection property="saleGoodsDetailBeanList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleGoodsDetailBean" javaType="java.util.List"
+                select="com.exx.dzj.mapper.market.SaleGoodsDetailBeanMapper.querySaleGoodsDetailBeanList" />
+  </resultMap>
+
   <select id="exportSaleList" resultMap="exportSaleListMap" parameterType="com.exx.dzj.entity.market.SaleInfoQuery">
     SELECT
       SINFO.sale_code AS saleCode,

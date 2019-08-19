@@ -206,6 +206,11 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     }
 
     @Override
+    public List<SaleListInfo> querySalesListForIds2(SaleInfoQuery query, QueryWrapper queryWrapper) {
+        return saleInfoMapper.querySalesListForIds2(query, queryWrapper);
+    }
+
+    @Override
     public List<SaleListInfo> exportSaleList(SaleInfoQuery query, QueryWrapper queryWrapper) {
         return saleInfoMapper.exportSaleList(query, queryWrapper);
     }

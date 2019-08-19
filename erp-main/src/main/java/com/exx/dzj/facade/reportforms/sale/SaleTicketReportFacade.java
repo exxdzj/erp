@@ -644,6 +644,17 @@ public class SaleTicketReportFacade {
         return saleInfoList;
     }
 
+    public List<SaleListInfo> querySalesListForIds2(SaleInfoQuery query, QueryWrapper queryWrapper){
+
+        List<SaleListInfo> saleInfoList = salesTicketService.querySalesListForIds2(query, queryWrapper);
+
+//        for(SaleInfo si : saleInfoList){
+//            SalesClassesEnum.getSalesClassesEnum(si.getIsReceipt()).
+//        }
+
+        return saleInfoList;
+    }
+
     public List<SaleListInfo> exportSaleList (SaleInfoQuery query, QueryWrapper queryWrapper){
         List<SaleListInfo> saleInfoList = salesTicketService.exportSaleList(query, queryWrapper);
         return saleInfoList;

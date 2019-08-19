@@ -966,6 +966,82 @@ public class SaleExportUtils {
         return writer;
     }
 
+    public static ExcelWriter exportSaleFinanceList (ServletOutputStream outputStream, List<SaleListInfo> list){
+        ExcelWriter writer = new ExcelWriter(outputStream, ExcelTypeEnum.XLSX);
+        String sheetName = "销售单";
+        Sheet sheet = new Sheet(1,0);
+        sheet.setSheetName(sheetName);
+
+        Table title = new Table(1);
+        title.setClazz(SaleFinanceListModel.class);
+        writer.write(null, sheet, title);
+
+        List<SaleFinanceListModel> content = new ArrayList<>();
+        SaleFinanceListModel model = null;
+
+        int receiptSize = 0;
+        int goodsSize = 0;
+        int froNum = 0;
+        SaleReceiptsDetails receiptsDetails = null;
+        SaleGoodsDetailBean goodsDetailBean =  null;
+
+        for (SaleListInfo sli : list){
+            model = new SaleFinanceListModel();
+            setBasicModel2(model, sli);
+
+            content.add(model);
+            // 收款信息
+            List<SaleReceiptsDetails> saleReceiptsDetailsList = sli.getSaleReceiptsDetailsList();
+
+            //商品信息
+            List<SaleGoodsDetailBean> saleGoodsDetailBeanList = sli.getSaleGoodsDetailBeanList();
+
+            receiptSize = saleReceiptsDetailsList.size();
+            goodsSize = saleGoodsDetailBeanList.size();
+            froNum = goodsSize >= receiptSize ? goodsSize : receiptSize;
+
+            if (froNum > CommonConstant.DEFAULT_VALUE_ONE){ // 说明商品详情和收款详情中至少有一个记录数多余 1 条
+                SaleFinanceListModel model1 = null;
+                for (int i = 0; i < froNum; i++){
+                    if (goodsSize > i){
+                        goodsDetailBean = saleGoodsDetailBeanList.get(i);
+                    } else {
+                        goodsDetailBean = null;
+                    }
+                    if (receiptSize > i){
+                        receiptsDetails = saleReceiptsDetailsList.get(i);
+                    } else {
+                        receiptsDetails = null;
+                    }
+                    if (i == 0){
+                        setModelValue2(model, goodsDetailBean);
+                    } else {
+                        model1 = new SaleFinanceListModel();
+                        setBasicModel2(model1, sli);
+
+                        setModelValue2(model1, goodsDetailBean);
+                        content.add(model1);
+                    }
+                }
+            } else { // 说明商品详情和收款详情最多都只有一条记录
+                if (goodsSize > 0){
+                    goodsDetailBean = saleGoodsDetailBeanList.get(0);
+                }
+                if (receiptSize > 0){
+
+                    receiptsDetails = saleReceiptsDetailsList.get(0);
+                }
+                setModelValue2(model, goodsDetailBean);
+                receiptsDetails = null;
+                goodsDetailBean = null;
+            }
+        }
+
+        writer.write(content, sheet);
+
+        return writer;
+    }
+
     private static String formateBigdecimal (Object b){
         if (b == null){
             return "0";
@@ -992,6 +1068,16 @@ public class SaleExportUtils {
         }
     }
 
+    private static void setModelValue2 (SaleFinanceListModel model, SaleGoodsDetailBean goodsDetailBean){
+        if (goodsDetailBean != null){
+            model.setStockName(goodsDetailBean.getStockName());
+            model.setGoodsNum(goodsDetailBean.getGoodsNum());
+            model.setUnitPrice(goodsDetailBean.getRealSellPrice().doubleValue());
+            model.setSalesVolume(goodsDetailBean.getSalesVolume().doubleValue());
+            model.setGoodsRemark(goodsDetailBean.getRemarks());
+        }
+    }
+
     private static void setBasicModel (SaleListModel model1, SaleListInfo sli){
         model1.setSaleCode(sli.getSaleCode());
         model1.setSaleDate(sli.getSaleDate());
@@ -1010,6 +1096,13 @@ public class SaleExportUtils {
         model1.setAccountPeriod(formateBigdecimal(sli.getAccountPeriod()));
         model1.setCollectionUserName(sli.getCollectionUserName());
         model1.setDueDate(sli.getDueDate());
+    }
+
+    private static void setBasicModel2 (SaleFinanceListModel model1, SaleListInfo sli){
+        model1.setSaleDate(sli.getSaleDate());
+        model1.setPaymentStatus(PayStatusEnum.getPayStatusEnumByKey(sli.getPaymentStatus()).getValue());
+        model1.setCustName(sli.getCustName());
+        model1.setSaleRemark(sli.getSaleRemark());
     }
 
     public static ExcelWriter exportSaleDetail (ServletOutputStream outputStream, Map<String, Object> map, String realName, SaleDetailReportQuery query){
