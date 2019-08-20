@@ -1225,6 +1225,7 @@
   <resultMap id="saleTicketTopMap" type="com.exx.dzj.entity.market.SaleInfo">
     <result column="real_name" property="realName"/>
     <result column="countTicket" property="countTicket"/>
+    <result column="salesman_code" property="salesmanCode"/>
   </resultMap>
   
   <select id="queryCustomerSalesToday" parameterType="com.exx.dzj.entity.market.SaleInfo" resultType="com.exx.dzj.entity.market.SaleInfo">

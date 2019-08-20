@@ -12,13 +12,16 @@ import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.market.SaleInfoQuery;
 import com.exx.dzj.entity.market.SaleListInfo;
+import com.exx.dzj.entity.purchase.PurchaseListInfo;
 import com.exx.dzj.entity.statistics.sales.StockTypeReport;
 import com.exx.dzj.entity.user.UserVo;
+import com.exx.dzj.facade.homepage.HomePageFacade;
 import com.exx.dzj.facade.reportforms.sale.SaleTicketReportFacade;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.query.QueryGenerator;
 import com.exx.dzj.util.enums.ExportFileNameEnum;
 import com.exx.dzj.util.excel.ExcelUtil;
+import lombok.Cleanup;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -286,6 +289,30 @@ public class SaleExportController {
 
             writer.finish();
         }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @description: 销售件数导出
+     * @author yangyun
+     * @date 2019/8/20 0020
+     * @param response
+     * @return void
+     */
+    @GetMapping("exportsaleticketcount")
+    public void exportSaleTicketCount (HttpServletResponse response, SaleInfoQuery query){
+        try {
+            @Cleanup ServletOutputStream outputStream = null;
+            String code = ExcelUtil.getCode();
+            response.setContentType("application/x-excel");
+            response.setHeader("Content-Disposition", "attachment;filename=" + new String(("SaleTicketCount-" + code + ".xlsx").getBytes(), "ISO-8859-1"));
+
+            outputStream = response.getOutputStream();
+
+            List<SaleInfo> list = saleTicketReportFacade.querySalesTicketCount(query);
+            SaleExportUtils.exportSaleTicketCount(outputStream, list);
+        } catch (Exception e){
             e.printStackTrace();
         }
     }

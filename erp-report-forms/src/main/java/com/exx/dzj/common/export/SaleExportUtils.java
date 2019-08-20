@@ -14,10 +14,12 @@ import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.enummodel.PayStatusEnum;
 import com.exx.dzj.enummodel.SaleListFieldEnum;
 import com.exx.dzj.enummodel.SalesClassesEnum;
+import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.util.DateUtil;
 import com.exx.dzj.util.MathUtil;
 import com.exx.dzj.util.enums.ExportFileNameEnum;
 import com.exx.dzj.util.excel.export.model.*;
+import lombok.Cleanup;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -1304,5 +1306,49 @@ public class SaleExportUtils {
         itemEnd.setSaleVolume("操作员: " + realName);
         writer.write(dataEnd, sheet);
         return writer;
+    }
+
+    public static void exportSaleTicketCount (ServletOutputStream outputStream, List<SaleInfo> list){
+        try {
+            @Cleanup XSSFWorkbook workbook = null;
+            workbook = new XSSFWorkbook();
+            XSSFSheet sheet = workbook.createSheet("今日件数");
+
+            // 设置表格默认列宽度为15个字节
+            sheet.setDefaultColumnWidth(40);
+
+            // 标题
+            String[] title = {"销售员编号", "销售员", "今日销售件数"};
+
+            // 标题
+            XSSFRow row = sheet.createRow(0);
+            XSSFCell titleCell;
+
+            for (int i = 0; i < title.length; i++) {
+                titleCell = row.createCell(i);
+                titleCell.setCellValue(title[i]);
+            }
+
+            int count = 0;
+            int index = 0;
+            XSSFCell cell = null;
+            for (SaleInfo s : list){
+                index ++;
+                row = sheet.createRow(index);
+
+                // 创建单元格
+                cell = row.createCell(count ++);
+                cell.setCellValue(s.getSalesmanCode());
+                cell = row.createCell(count ++);
+                cell.setCellValue(s.getRealName());
+                cell = row.createCell(count ++);
+                cell.setCellValue(s.getCountTicket());
+                count = 0;
+            }
+
+            workbook.write(outputStream);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

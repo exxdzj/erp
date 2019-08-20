@@ -493,4 +493,32 @@
         AND cs.cust_code NOT REGEXP '^CB'
         GROUP BY cs.grade_code
     </select>
+
+    <select id="querySalesTicketCount" resultMap="saleTicketTopMap" parameterType="com.exx.dzj.entity.market.SaleInfoQuery">
+        SELECT
+          u.real_name,s.salesman_code, IFNULL(COUNT(s.salesman_code), 0) AS countTicket
+        FROM tab_sale_info s
+        LEFT JOIN tab_user_info u ON s.user_code = u.user_code
+        WHERE 1= 1
+        <if test="startTime != null and startTime != ''">
+            AND  <![CDATA[s.sale_date >= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND  <![CDATA[s.sale_date <= DATE_FORMAT(#{endTime}, '%Y-%m-%d 23:59:59')]]>
+        </if>
+        <if test="userCode != null and userCode != ''">
+            AND  s.user_code=#{userCode}
+        </if>
+        <if test="subordinateCompanyCode != null and subordinateCompanyCode != ''">
+            AND  s.subordinate_company_code=#{subordinateCompanyCode}
+        </if>
+        GROUP BY s.user_code
+        ORDER BY countTicket DESC
+    </select>
+
+    <resultMap id="saleTicketTopMap" type="com.exx.dzj.entity.market.SaleInfo">
+        <result column="real_name" property="realName"/>
+        <result column="countTicket" property="countTicket"/>
+        <result column="salesman_code" property="salesmanCode"/>
+    </resultMap>
 </mapper>

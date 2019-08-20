@@ -6,6 +6,8 @@ import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
+import com.exx.dzj.entity.market.SaleInfo;
+import com.exx.dzj.entity.market.SaleInfoQuery;
 import com.exx.dzj.entity.statistics.sales.*;
 
 import java.util.List;
@@ -39,4 +41,6 @@ public interface SaleTicketReportService {
     List<VIPCustomerLevelReport> queryVipCustomerlevelList2(VipCustomerQueryCondition query);
 
     List<VipCustomerCountReport> queryVipCustomerCount();
+
+    List<SaleInfo> querySalesTicketCount (SaleInfoQuery query);
 }

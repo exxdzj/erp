@@ -21,6 +21,7 @@ import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
 import com.exx.dzj.service.user.UserService;
 import com.exx.dzj.util.MathUtil;
 import com.github.pagehelper.PageHelper;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -755,5 +756,10 @@ public class SaleTicketReportFacade {
         map.put("data", saleInfoPage);
 
         return map;
+    }
+
+    public List<SaleInfo> querySalesTicketCount (SaleInfoQuery query){
+        List<SaleInfo> list = stockTypeReportService.querySalesTicketCount(query);
+        return list;
     }
 }

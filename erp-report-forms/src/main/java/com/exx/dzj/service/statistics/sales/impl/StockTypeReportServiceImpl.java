@@ -6,6 +6,8 @@ import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
+import com.exx.dzj.entity.market.SaleInfo;
+import com.exx.dzj.entity.market.SaleInfoQuery;
 import com.exx.dzj.entity.statistics.sales.*;
 import com.exx.dzj.mapper.statistics.sales.SaleTicketReportMapper;
 import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
@@ -90,5 +92,10 @@ public class StockTypeReportServiceImpl implements SaleTicketReportService {
     @Override
     public List<VipCustomerCountReport> queryVipCustomerCount() {
         return stockTypeReportMapper.queryVipCustomerCount();
+    }
+
+    @Override
+    public List<SaleInfo> querySalesTicketCount(SaleInfoQuery query) {
+        return stockTypeReportMapper.querySalesTicketCount(query);
     }
 }

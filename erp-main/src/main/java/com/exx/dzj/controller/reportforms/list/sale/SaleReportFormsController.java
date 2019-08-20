@@ -6,8 +6,11 @@ import com.exx.dzj.entity.bean.CustomerQuery;
 import com.exx.dzj.entity.bean.DeptInfoQuery;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.bean.UserInfoQuery;
+import com.exx.dzj.entity.market.SaleInfo;
+import com.exx.dzj.entity.market.SaleInfoQuery;
 import com.exx.dzj.entity.statistics.sales.*;
 import com.exx.dzj.enummodel.SaleListFieldEnum;
+import com.exx.dzj.facade.homepage.HomePageFacade;
 import com.exx.dzj.facade.reportforms.sale.SaleTicketReportFacade;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.result.Result;
@@ -207,4 +210,18 @@ public class SaleReportFormsController {
         return result;
     }
 
+    /**
+     * @description: 今日销售件数统计
+     * @author yangyun
+     * @date 2019/8/20 0020
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querysaleticketcount")
+    public Result querySaleTicketCount(SaleInfoQuery query){
+        Result result = Result.responseSuccess();
+        List<SaleInfo> list = saleTicketReportFacade.querySalesTicketCount(query);
+        result.setData(list);
+        return result;
+    }
 }
