@@ -21,11 +21,14 @@ import com.exx.dzj.util.enums.ExportFileNameEnum;
 import com.exx.dzj.util.excel.export.model.*;
 import lombok.Cleanup;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FontFamily;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.ServletOutputStream;
@@ -1350,5 +1353,70 @@ public class SaleExportUtils {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public static void exportSalesManVipCustomerDetail(ServletOutputStream outputStream, Map<String, List<VIPCustomerLevelReport>> map, XSSFSheet sheet) {
+        try {
+
+
+            // 设置表格默认列宽度为15个字节
+            sheet.setDefaultColumnWidth(40);
+
+            // 标题
+            String[] title = {"客户", "客户等级", "累计金额", "购买次数"};
+
+            XSSFRow row = sheet.createRow(0);
+
+            XSSFCell titleCell;
+            XSSFCell cell = null;
+
+            for (int i = 0; i < title.length; i++) {
+                titleCell = row.createCell(i);
+                titleCell.setCellValue(title[i]);
+            }
+
+
+
+            int index = 1;
+            index = aa("钻石客户", map, sheet, row, index, cell);
+            index++;
+            index = aa("铂金客户", map, sheet, row, index, cell);
+            index++;
+            aa("黄金客户", map, sheet, row, index, cell);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static int aa (String name, Map<String, List<VIPCustomerLevelReport>> map, XSSFSheet sheet, XSSFRow row, int index, XSSFCell cell){
+        List<VIPCustomerLevelReport> data = map.get(name);
+        row = sheet.createRow(index);
+        cell = row.createCell(0);
+        cell.setCellValue(name);
+
+        cell = row.createCell(1);
+        if (data ==  null ){
+            cell.setCellValue(0);
+
+        } else {
+            cell.setCellValue(data.size());
+            for (VIPCustomerLevelReport temp : data) {
+                row = sheet.createRow(++index);
+
+                cell = row.createCell(0);
+                cell.setCellValue(temp.getCustName());
+
+                cell = row.createCell(1);
+                cell.setCellValue(temp.getCustGrade());
+
+                cell = row.createCell(2);
+                cell.setCellValue(temp.getSaleVolume().doubleValue());
+
+                cell = row.createCell(3);
+                cell.setCellValue(temp.getBuyCount());
+            }
+        }
+        return index;
     }
 }

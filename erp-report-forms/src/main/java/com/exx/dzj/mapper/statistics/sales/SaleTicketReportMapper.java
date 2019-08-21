@@ -43,4 +43,8 @@ public interface SaleTicketReportMapper {
     List<VipCustomerCountReport> queryVipCustomerCount();
 
     List<SaleInfo> querySalesTicketCount(SaleInfoQuery query);
+
+    List<VIPCustomerLevelReport> querySalesmanInfo();
+
+    List<VIPCustomerLevelReport> querySaleVipCustomerDetail(@Param("userCode") String userCode);
 }

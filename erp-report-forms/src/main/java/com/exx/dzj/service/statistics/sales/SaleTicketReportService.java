@@ -43,4 +43,8 @@ public interface SaleTicketReportService {
     List<VipCustomerCountReport> queryVipCustomerCount();
 
     List<SaleInfo> querySalesTicketCount (SaleInfoQuery query);
+
+    List<VIPCustomerLevelReport> querySalesmanInfo();
+
+    List<VIPCustomerLevelReport> querySaleVipCustomerDetail(String userCode);
 }

@@ -224,4 +224,19 @@ public class SaleReportFormsController {
         result.setData(list);
         return result;
     }
+
+    /**
+     * @description
+     * @author yangyun
+     * @date 2019/8/21 0021
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querydata")
+    public Result queryData (){
+        Result result = Result.responseSuccess();
+        List<VIPCustomerLevelReport> data = saleTicketReportFacade.querySalesmanInfo();
+        result.setData(data);
+        return result;
+    }
 }

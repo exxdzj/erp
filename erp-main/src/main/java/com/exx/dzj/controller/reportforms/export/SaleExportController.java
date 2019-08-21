@@ -14,6 +14,7 @@ import com.exx.dzj.entity.market.SaleInfoQuery;
 import com.exx.dzj.entity.market.SaleListInfo;
 import com.exx.dzj.entity.purchase.PurchaseListInfo;
 import com.exx.dzj.entity.statistics.sales.StockTypeReport;
+import com.exx.dzj.entity.statistics.sales.VIPCustomerLevelReport;
 import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.facade.homepage.HomePageFacade;
 import com.exx.dzj.facade.reportforms.sale.SaleTicketReportFacade;
@@ -22,6 +23,8 @@ import com.exx.dzj.query.QueryGenerator;
 import com.exx.dzj.util.enums.ExportFileNameEnum;
 import com.exx.dzj.util.excel.ExcelUtil;
 import lombok.Cleanup;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +36,11 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author yangyun
@@ -312,6 +318,47 @@ public class SaleExportController {
 
             List<SaleInfo> list = saleTicketReportFacade.querySalesTicketCount(query);
             SaleExportUtils.exportSaleTicketCount(outputStream, list);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @description , @PathVariable("userCode") String userCode, @PathVariable("realName") String realName
+     * @author yangyun
+     * @date 2019/8/21 0021
+     * @param response
+     * @return void
+     */
+    @GetMapping("exportsalesmanvipcustomerdetail")
+    public void exportSalesManVipCustomerDetail (HttpServletResponse response){
+        try {
+
+            List<VIPCustomerLevelReport> list = new ArrayList<>();
+            @Cleanup ServletOutputStream outputStream = null;
+            @Cleanup XSSFWorkbook workbook = null;
+            XSSFSheet sheet =null;
+            String code = ExcelUtil.getCode();
+            response.setContentType("application/x-excel");
+
+            outputStream = response.getOutputStream();
+            List<VIPCustomerLevelReport> data = saleTicketReportFacade.querySalesmanInfo();
+            String name = null;
+            workbook = new XSSFWorkbook();
+            for (VIPCustomerLevelReport temp : data) {
+                // 销售员对应 vip 客户数据
+                list = saleTicketReportFacade.querySaleVipCustomerDetail(temp.getUserCode());
+                if (list.size() > 0) {
+                    Map<String, List<VIPCustomerLevelReport>> collect = list.stream().collect(Collectors.groupingBy(VIPCustomerLevelReport::getCustGrade));
+                    response.setHeader("Content-Disposition", "attachment;filename=" + new String(("vip客户" + ".xlsx").getBytes(), "ISO-8859-1"));
+                    name = StringUtils.equals(temp.getRealName(), "") ? temp.getUserCode() : temp.getRealName().replace("/", "");
+                    sheet = workbook.createSheet(name);
+                    SaleExportUtils.exportSalesManVipCustomerDetail(outputStream, collect, sheet);
+                }
+
+//                TimeUnit.SECONDS.sleep(2);
+            }
+            workbook.write(outputStream);
         } catch (Exception e){
             e.printStackTrace();
         }

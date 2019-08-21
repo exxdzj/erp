@@ -762,4 +762,14 @@ public class SaleTicketReportFacade {
         List<SaleInfo> list = stockTypeReportService.querySalesTicketCount(query);
         return list;
     }
+
+    public List<VIPCustomerLevelReport> querySalesmanInfo (){
+        List<VIPCustomerLevelReport> data = stockTypeReportService.querySalesmanInfo();
+        return data;
+    }
+
+    public List<VIPCustomerLevelReport> querySaleVipCustomerDetail (String userCode){
+        List<VIPCustomerLevelReport> vipCustomerLevelReports = stockTypeReportService.querySaleVipCustomerDetail(userCode);
+        return vipCustomerLevelReports;
+    }
 }

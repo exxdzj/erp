@@ -29,4 +29,5 @@ public class VIPCustomerLevelReport extends BaseModule {
     private BigDecimal grossRate; // 毛利率
     private BigDecimal prfit; // 利润
     private String custGrade; // 客户等级名称
+    private String userCode;
 }
