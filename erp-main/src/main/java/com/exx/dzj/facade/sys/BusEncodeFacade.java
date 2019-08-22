@@ -107,12 +107,10 @@ public class BusEncodeFacade {
      * @return
      */
     public String nextBusCode(String busType, String prefix, Date saleDate) {
-        synchronized(BusEncodeFacade.class) {
-            Integer nextValue = saleEncodeFacade.nextBusCode(saleDate);
-            BusEncodingRule info = busEncodeService.getOne(new QueryWrapper<BusEncodingRule>().eq("prefix", prefix).eq("bus_type", busType));
-            String busCode = BusEncodeGenerater.nextBusCode(prefix, nextValue, info.getSerialNumLength(), info.getSerialNumFormat(), saleDate);
-            return busCode;
-        }
+        Integer nextValue = saleEncodeFacade.nextBusCode(saleDate);
+        BusEncodingRule info = busEncodeService.getOne(new QueryWrapper<BusEncodingRule>().eq("prefix", prefix).eq("bus_type", busType));
+        String busCode = BusEncodeGenerater.nextBusCode(prefix, nextValue, info.getSerialNumLength(), info.getSerialNumFormat(), saleDate);
+        return busCode;
     }
 
     /**

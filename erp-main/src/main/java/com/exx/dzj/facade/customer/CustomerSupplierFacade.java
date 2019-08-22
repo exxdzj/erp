@@ -326,7 +326,19 @@ public class CustomerSupplierFacade {
      * @param prefix
      * @return
      */
-    private String getCode(Integer custType, String prefix) {
+    public String getCode(Integer custType, String prefix) {
+        synchronized(CustomerSupplierFacade.class) {
+            String custCode = "";
+
+            do{
+                custCode = getCustCode(custType, prefix);
+            }while(StringUtils.isBlank(custCode) || chechExist(custCode));
+
+            return custCode;
+        }
+    }
+
+    private String getCustCode(Integer custType, String prefix) {
         String custCode = "";
         if(custType == CommonConstant.DEFAULT_VALUE_ONE){
             String busType = "customer";
@@ -336,15 +348,18 @@ public class CustomerSupplierFacade {
         if(custType == CommonConstant.DEFAULT_VALUE_TWO){
             custCode = SeqGenerator.nextCode();
         }
+        return custCode;
+    }
 
+    private boolean chechExist(String custCode) {
         CustomerSupplierBeanExample example = new CustomerSupplierBeanExample();
         CustomerSupplierBeanExample.Criteria criteria =example.createCriteria();
         criteria.andCustCodeEqualTo(custCode);
         int count = customerSupplierService.countCustomer(example);
-        if (count > 0) {
-            custCode = getCode(custType, prefix);
+        if(count > 0) {
+            return true;
         }
-        return custCode;
+        return false;
     }
 
     public List<CustomerSupplierInfo> queryCustomerPullDownInfo(Integer type){

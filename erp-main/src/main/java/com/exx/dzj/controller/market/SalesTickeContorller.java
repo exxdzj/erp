@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -364,5 +365,14 @@ public class SalesTickeContorller {
             result.setCode(CommonConstant.FAIL_CODE);
         }
         return result;
+    }
+
+    /**
+     * 编程测试接口
+     * @return
+     */
+    @GetMapping("testEncode")
+    public String testEncode() {
+        return salesTicketFacade.getCode(new Date());
     }
 }

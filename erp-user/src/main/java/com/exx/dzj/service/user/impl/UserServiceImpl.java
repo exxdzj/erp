@@ -64,18 +64,18 @@ public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> imple
             // 通过 detpCode 查询 orgCode
 
             DeptInfoBean deptBean = deptService.queryDeptInfo(bean.getDeptCode());
-            if(null != deptBean) {
+            if(null != deptBean && StringUtils.isNotBlank(bean.getOrgCode())) {
                 bean.setOrgCode(bean.getOrgCode());
             }
 
             if(null != bean && StringUtils.isBlank(bean.getUserCode())){
-                //获取 userCode
-                userCode = GenerateSequenceUtil.generateSequenceNo();
+
                 //判断 userCode 是否已存在
-                if(checkUserCode(userCode) > 0){
-                    // 类似自旋锁
-                    saveSalesman(bean);
-                }
+                do{
+                    //获取 userCode
+                    userCode = GenerateSequenceUtil.generateSequenceNo();
+                }while(checkUserCode(userCode) > 0);
+
                 bean.setUserCode(userCode);
                 userMapper.insertSelective(bean);
             }else{

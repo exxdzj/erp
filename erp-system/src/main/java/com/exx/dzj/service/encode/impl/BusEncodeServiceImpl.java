@@ -43,15 +43,12 @@ public class BusEncodeServiceImpl extends ServiceImpl<BusEncodeMapper, BusEncodi
      * @param info
      */
     @Override
-    @Transactional(rollbackFor = ErpException.class, isolation = Isolation.READ_COMMITTED)
     public void updateEncodeData(BusEncodeRuleInfo info) {
-        synchronized (BusEncodeServiceImpl.class){
-            try {
-                busEncodeMapper.updateEncodeData(info);
-            } catch(Exception ex) {
-                log.error("修改下一个编码失败,方法{},原因{}", BusEncodeServiceImpl.class.getName()+".updateEncodeData", ex.getMessage());
-                throw new ErpException(400, "修改编码数据失败!");
-            }
+        try {
+            busEncodeMapper.updateEncodeData(info);
+        } catch(Exception ex) {
+            log.error("修改下一个编码失败,方法{},原因{}", BusEncodeServiceImpl.class.getName()+".updateEncodeData", ex.getMessage());
+            throw new ErpException(400, "修改编码数据失败!");
         }
     }
 

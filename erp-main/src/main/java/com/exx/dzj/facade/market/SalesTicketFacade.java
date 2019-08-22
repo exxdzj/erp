@@ -7,7 +7,6 @@ import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.*;
-import com.exx.dzj.entity.statistics.sales.VIPCustomerLevelReport;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.facade.market.task.AsyncSaleTask;
@@ -776,18 +775,27 @@ public class SalesTicketFacade {
     }
 
     public String getCode(Date date) {
-        String busType = "sale_ticket";
-        String prefix = "Z";
-        String code = busEncodeFacade.nextBusCode(busType, prefix, date);
+        synchronized(SalesTicketFacade.class) {
+            String busType = "sale_ticket";
+            String prefix = "Z";
+            String code = "";
+            do{
+                code = busEncodeFacade.nextBusCode(busType, prefix, date);
+            }while(StringUtils.isBlank(code) || checkEncode(code));
 
+            return code;
+        }
+    }
+
+    private boolean checkEncode(String code) {
         SaleInfoExample example = new SaleInfoExample();
         SaleInfoExample.Criteria criteria =example.createCriteria();
         criteria.andSaleCodeEqualTo(code);
         long count = salesTicketService.countByExample(example);
-        while (count > 0) {
-            getCode(date);
+        if(count > 0) {
+            return true;
         }
-        return code;
+        return false;
     }
 
     public List<SaleInfo> queryCustomerSalesToday (SaleInfo saleInfo){

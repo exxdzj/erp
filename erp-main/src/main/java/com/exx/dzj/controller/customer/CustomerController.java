@@ -244,4 +244,13 @@ public class CustomerController {
         result = customerSupplierFacade.batchUpdateCustomer(bean);
         return result;
     }
+
+    /**
+     * 客户编程获取测试接口
+     * @return
+     */
+    @GetMapping("getCodeTest")
+    public String getCodeTest(){
+        return customerSupplierFacade.getCode(1, "K");
+    }
 }
