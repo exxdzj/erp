@@ -422,7 +422,7 @@
     <if test="isShelves!=null">
       AND ti.is_shelves = #{isShelves}
     </if>
-    ORDER BY ti.create_time DESC
+    ORDER BY  ti.stock_code /*ti.create_time DESC,*/
   </select>
 
   <select id="queryStockWarningList" resultType="com.exx.dzj.entity.stock.StockModel"
