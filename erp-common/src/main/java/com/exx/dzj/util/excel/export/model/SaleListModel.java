@@ -52,7 +52,7 @@ public class SaleListModel extends BaseRowModel {
     private String subordinateCompanyName;
 
     @ExcelProperty(value = "优惠金额", index = 13)
-    private String discountAmount;
+    private double discountAmount;
 
     @ExcelProperty(value = "账期", index = 14)
     private String accountPeriod;
@@ -67,7 +67,7 @@ public class SaleListModel extends BaseRowModel {
 
     /***收款信息**/
     @ExcelProperty(value = "本次收款", index = 18)
-    private String collectedAmount;
+    private double collectedAmount;
 
     @ExcelProperty(value = "收款账户", index = 19)
     private String collectionAccount;
@@ -86,10 +86,10 @@ public class SaleListModel extends BaseRowModel {
     private String stockAddress;
 
     @ExcelProperty(value = "数量", index = 23)
-    private String goodsNum;
+    private double goodsNum;
 
     @ExcelProperty(value = "单价", index = 24)
-    private String unitPrice;
+    private double unitPrice;
 
     @ExcelProperty(value = "折扣率%", index = 25)
     private String discountRate;
@@ -98,10 +98,10 @@ public class SaleListModel extends BaseRowModel {
     private String goodsDiscountAmount;
 
     @ExcelProperty(value = "销售额", index = 27)
-    private String salesVolume;
+    private double salesVolume;
 
     @ExcelProperty(value = "销售总额", index = 28)
-    private String salesSumVolume;
+    private double salesSumVolume;
 
     @ExcelProperty(value = "说明", index = 29)
     private String goodsRemark;

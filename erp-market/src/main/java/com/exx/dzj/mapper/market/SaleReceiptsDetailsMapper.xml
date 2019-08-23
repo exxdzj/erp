@@ -262,7 +262,7 @@
     SELECT
     SRDETAIL.id,
     SRDETAIL.collection_account ,
-    SRDETAIL.collected_amount ,
+    IFNULL(SRDETAIL.collected_amount,0)  collected_amount,
     SRDETAIL.payment_method ,
     SRDETAIL.ref_no refNo,
     SRDETAIL.create_user

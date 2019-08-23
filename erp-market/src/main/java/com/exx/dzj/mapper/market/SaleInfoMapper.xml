@@ -1277,7 +1277,7 @@
   <select id="querySalesListForIds" resultMap="saleListInfoMap" parameterType="com.exx.dzj.entity.market.SaleInfoQuery">
     SELECT
     SINFO.sale_code,
-    SINFO.receivable_accoun,
+    IFNULL(SINFO.receivable_accoun,0) receivable_accoun,
     SINFO.sale_date AS saleDate,
     SINFO.payment_status AS paymentStatus,
     CSUPPLIER.cust_name AS custName,
@@ -1289,7 +1289,7 @@
     SINFO.delivery_address AS deliveryAddress,
     SINFO.remarks AS saleRemark,
     SINFO.subordinate_company_name AS subordinateCompanyName,
-    SINFO.discount_amount AS discountAmount,
+    IFNULL(SINFO.discount_amount,0)  AS discountAmount,
     SINFO.collection_terms AS collectionTerms,
     SINFO.account_period AS accountPeriod,
     SINFO.invoice_code AS invoiceCode,

@@ -859,8 +859,8 @@ public class SaleExportUtils {
             model.setSaleRemark(sli.getSaleRemark());
             model.setIsReceipt(SalesClassesEnum.getSalesClassesEnum(sli.getIsReceipt()).getValue());
             model.setSubordinateCompanyName(sli.getSubordinateCompanyName());
-            model.setDiscountAmount(formateBigdecimal(sli.getDiscountAmount()));
-            model.setCollectedAmount(formateBigdecimal(sli.getCollectedAmount()));
+            model.setDiscountAmount(sli.getDiscountAmount().doubleValue());
+            model.setCollectedAmount(sli.getCollectedAmount().doubleValue());
             model.setCollectionAccount(sli.getCollectionAccount());
             model.setPaymentMethod(sli.getPaymentMethod());
             model.setCollectionTerms(sli.getCollectionTerms());
@@ -869,11 +869,11 @@ public class SaleExportUtils {
             model.setDueDate(sli.getDueDate());
             model.setStockName(sli.getStockName());
             model.setStockAddress(sli.getStockAddress());
-            model.setGoodsNum(formateBigdecimal(sli.getGoodsNum()));
-            model.setUnitPrice(formateBigdecimal(sli.getUnitPrice()));
+            model.setGoodsNum(sli.getGoodsNum().doubleValue());
+            model.setUnitPrice(sli.getUnitPrice().doubleValue());
             model.setDiscountRate(formateBigdecimal(sli.getDiscountRate()) + "%");
             model.setGoodsDiscountAmount(formateBigdecimal(sli.getGoodsDiscountAmount()));
-            model.setSalesVolume(formateBigdecimal(sli.getSalesVolume()));
+            model.setSalesVolume(sli.getSalesVolume().doubleValue());
             model.setGoodsRemark(sli.getGoodsRemark());
 
             content.add(model);
@@ -916,7 +916,7 @@ public class SaleExportUtils {
             model = new SaleListModel();
             setBasicModel(model, sli);
 
-            model.setSalesSumVolume(formateBigdecimal(sli.getReceivableAccoun()));
+            model.setSalesSumVolume(sli.getReceivableAccoun().doubleValue());
             model.setCollectionTerms(sli.getCollectionTerms());
             content.add(model);
             // 收款信息
@@ -1056,7 +1056,7 @@ public class SaleExportUtils {
 
     private static void setModelValue (SaleListModel model, SaleReceiptsDetails receiptsDetails, SaleGoodsDetailBean goodsDetailBean){
         if (receiptsDetails != null){
-            model.setCollectedAmount(formateBigdecimal(receiptsDetails.getCollectedAmount()));
+            model.setCollectedAmount(receiptsDetails.getCollectedAmount().doubleValue());
             model.setCollectionAccount(receiptsDetails.getCollectionAccount());
             model.setPaymentMethod(receiptsDetails.getPaymentMethod());
         }
@@ -1064,11 +1064,11 @@ public class SaleExportUtils {
         if (goodsDetailBean != null){
             model.setStockName(goodsDetailBean.getStockName());
             model.setStockAddress(goodsDetailBean.getStockAddress());
-            model.setGoodsNum(formateBigdecimal(goodsDetailBean.getGoodsNum()));
-            model.setUnitPrice(formateBigdecimal(goodsDetailBean.getRealSellPrice()));
+            model.setGoodsNum(goodsDetailBean.getGoodsNum().doubleValue());
+            model.setUnitPrice(goodsDetailBean.getRealSellPrice().doubleValue());
             model.setDiscountRate(formateBigdecimal(goodsDetailBean.getDiscountRate()) + "%");
             model.setGoodsDiscountAmount(formateBigdecimal(goodsDetailBean.getDiscountAmount()));
-            model.setSalesVolume(formateBigdecimal(goodsDetailBean.getSalesVolume()));
+            model.setSalesVolume(goodsDetailBean.getSalesVolume().doubleValue());
             model.setGoodsRemark(goodsDetailBean.getRemarks());
         }
     }
@@ -1097,7 +1097,7 @@ public class SaleExportUtils {
         model1.setSaleRemark(sli.getSaleRemark());
         model1.setIsReceipt(SalesClassesEnum.getSalesClassesEnum(sli.getIsReceipt()).getValue());
         model1.setSubordinateCompanyName(sli.getSubordinateCompanyName());
-        model1.setDiscountAmount(formateBigdecimal(sli.getDiscountAmount()));
+        model1.setDiscountAmount(sli.getDiscountAmount().doubleValue());
         model1.setAccountPeriod(formateBigdecimal(sli.getAccountPeriod()));
         model1.setCollectionUserName(sli.getCollectionUserName());
         model1.setDueDate(sli.getDueDate());
