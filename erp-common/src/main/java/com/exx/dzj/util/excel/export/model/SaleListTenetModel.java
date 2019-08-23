@@ -35,13 +35,13 @@ public class SaleListTenetModel extends BaseRowModel {
     private String exchangeRate;
 
     @ExcelProperty(value = "总金额", index = 7)
-    private String receivableAccoun;
+    private double receivableAccoun;
 
     @ExcelProperty(value = "已收款金额", index = 8)
-    private String sumCollectedAmount;
+    private double sumCollectedAmount;
 
     @ExcelProperty(value = "未收款金额", index = 9)
-    private String unCollectedAmount;
+    private double unCollectedAmount;
 
     @ExcelProperty(value = "状态", index = 10)
     private String paymentStatus;
@@ -78,7 +78,7 @@ public class SaleListTenetModel extends BaseRowModel {
     private String saleProject;
 
     @ExcelProperty(value = "优惠", index = 22)
-    private String discountAmount;
+    private double discountAmount;
 
     @ExcelProperty(value = "收款条件", index = 23)
     private String collectionTerms;

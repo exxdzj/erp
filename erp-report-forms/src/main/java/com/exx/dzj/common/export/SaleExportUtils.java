@@ -702,7 +702,7 @@ public class SaleExportUtils {
             model.setCustName(info.getCustName());
             model.setCurrency(info.getCurrency());
             model.setExchangeRate(formateBigdecimal(info.getExchangeRate()));
-            model.setReceivableAccoun(formateBigdecimal(info.getReceivableAccoun()));
+            model.setReceivableAccoun(info.getReceivableAccoun().doubleValue());
             model.setPaymentStatus(PayStatusEnum.getPayStatusEnumByKey(info.getPaymentStatus()).getValue());
             model.setIsReceipt(formateBigdecimal(SalesClassesEnum.getSalesClassesEnum(info.getIsReceipt()).getValue()));
             model.setSalesmanName(info.getSalesmanName());
@@ -732,7 +732,7 @@ public class SaleExportUtils {
 
             }
             model.setSaleProject(info.getSaleProject());
-            model.setDiscountAmount(formateBigdecimal(info.getDiscountAmount()));
+            model.setDiscountAmount((info.getDiscountAmount()).doubleValue());
             model.setCollectionTerms(info.getCollectionTerms());
             model.setAccountPeriod(formateBigdecimal(info.getAccountPeriod()));
             model.setSubordinateCompanyName(formateBigdecimal(info.getSubordinateCompanyName()));
@@ -785,13 +785,13 @@ public class SaleExportUtils {
             model.setCustPhoneNum(info.getCustPhoneNum());
             model.setCurrency(info.getCurrency());
             model.setExchangeRate(formateBigdecimal(info.getExchangeRate()));
-            model.setReceivableAccoun(formateBigdecimal(info.getReceivableAccoun()));
+            model.setReceivableAccoun(info.getReceivableAccoun().doubleValue());
             model.setPaymentStatus(PayStatusEnum.getPayStatusEnumByKey(info.getPaymentStatus()).getValue());
             model.setIsReceipt(formateBigdecimal(SalesClassesEnum.getSalesClassesEnum(info.getIsReceipt()).getValue()));
             model.setSalesmanName(info.getSalesmanName());
             model.setCollectionUserName(info.getCollectionUserName());
-            model.setSumCollectedAmount(formateBigdecimal(info.getSumCollectedAmount()));
-            model.setUnCollectedAmount(formateBigdecimal(info.getReceivableAccoun().subtract(info.getSumCollectedAmount())));
+            model.setSumCollectedAmount(info.getSumCollectedAmount().doubleValue());
+            model.setUnCollectedAmount((info.getReceivableAccoun().subtract(info.getSumCollectedAmount())).doubleValue());
             model.setSaleRemark(info.getSaleRemark());
             model.setDeliveryAddress(info.getDeliveryAddress());
 
@@ -817,7 +817,7 @@ public class SaleExportUtils {
 
             }
             model.setSaleProject(info.getSaleProject());
-            model.setDiscountAmount(formateBigdecimal(info.getDiscountAmount()));
+            model.setDiscountAmount((info.getDiscountAmount()).doubleValue());
             model.setCollectionTerms(info.getCollectionTerms());
             model.setAccountPeriod(formateBigdecimal(info.getAccountPeriod()));
             model.setSubordinateCompanyName(formateBigdecimal(info.getSubordinateCompanyName()));
