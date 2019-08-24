@@ -551,7 +551,7 @@ public class SaleExportUtils {
             sdm.setSaleVolume(sdr.getSumSaleVolume().doubleValue());
             sdm.setSaleCost(sdr.getSumSaleCost().doubleValue());
             sdm.setGrossMargin(sdr.getSumGrossMargin().doubleValue());
-            sdm.setGrossRate(sdr.getGrossRate().doubleValue());
+            sdm.setGrossRate((sdr.getGrossRate() == null ? BigDecimal.ZERO : sdr.getGrossRate()).doubleValue());
             sdm.setFee(sdr.getSumCost().doubleValue());
             sdm.setPureProfit(sdr.getPureProfit().doubleValue());
             sdm.setCommissionRate((sdr.getCommissionRate() == null ? 0 : sdr.getCommissionRate()) + "%");
