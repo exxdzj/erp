@@ -225,43 +225,28 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerSupplierBeanMapper,
             }
 
             String updateItem = bean.getUpdateItem();
-            /*Map<String, Object> params= new HashMap<>();
-            params.put("custCodes", bean.getCustCodes());
-            params.put("region", bean.getRegion());*/
             switch (updateItem) {
                 case "CUST_LEVEL":
-                    /*params.put("custLevel", bean.getCustLevel());
-                    params.put("levelName", bean.getLevelName());*/
                     csbean.setCustLevel(bean.getCustLevel());
                     csbean.setLevelName(bean.getLevelName());
                     break;
                 case "REGION_CODE":
-                    /*params.put("regionCode", bean.getRegionCode());
-                    params.put("regionName", bean.getRegionName());*/
                     csbean.setRegionCode(bean.getRegionCode());
                     csbean.setRegionName(bean.getRegionName());
                     break;
                 case "USER_CODE":
-                    /*params.put("salesmanCode", bean.getSalesmanCode());
-                    params.put("userCode", bean.getUserCode());*/
                     csbean.setSalesmanCode(bean.getSalesmanCode());
                     csbean.setUserCode(bean.getUserCode());
                     break;
                 case "SHIP_CODE":
-                    /*params.put("shipCode", bean.getShipCode());
-                    params.put("shipAddress", bean.getShipAddress());*/
                     csbean.setShipCode(bean.getShipCode());
                     csbean.setShipAddress(bean.getShipAddress());
                     break;
                 case "RANK_CODE":
-                    /*params.put("rankCode", bean.getRankCode());
-                    params.put("rankName", bean.getRankName());*/
                     csbean.setRankCode(bean.getRankCode());
                     csbean.setRankName(bean.getRankName());
                     break;
                 case "COMPANY_CODE":
-                    /*params.put("companyCode", bean.getCompanyCode());
-                    params.put("companyName", bean.getCompanyName());*/
                     csbean.setCompanyCode(bean.getCompanyCode());
                     csbean.setCompanyName(bean.getCompanyName());
                     break;
@@ -270,10 +255,6 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerSupplierBeanMapper,
                     csbean = null;
                     break;
             }
-
-            /*if(params.size() > 0) {
-                // 手写 SQL
-            }*/
 
             if(null != csbean) {
                 this.update(csbean, queryWrapper);
