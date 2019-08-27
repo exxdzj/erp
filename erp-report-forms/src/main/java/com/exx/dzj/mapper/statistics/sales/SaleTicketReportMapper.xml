@@ -512,6 +512,7 @@
         <if test="subordinateCompanyCode != null and subordinateCompanyCode != ''">
             AND  s.subordinate_company_code=#{subordinateCompanyCode}
         </if>
+        AND s.salesman_code IS NOT NULL
         GROUP BY s.user_code
         ORDER BY countTicket DESC
     </select>

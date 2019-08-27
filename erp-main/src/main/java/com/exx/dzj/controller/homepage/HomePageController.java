@@ -179,6 +179,13 @@ public class HomePageController {
         return result;
     }
 
+    /**
+     * @description: 公司销售额
+     * @author yangyun
+     * @date 2019/8/27 0027
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
     @GetMapping("querycompanysalesformonth")
     public Result queryCompanySalesForMonth (){
         Result result = Result.responseSuccess();
