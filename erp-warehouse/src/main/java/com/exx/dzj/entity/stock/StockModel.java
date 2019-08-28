@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @Data
 @ToString
 public class StockModel implements Serializable {
+    private Integer id;
     private String value;
     private String stockCode;
     private String stockNameForSpe;

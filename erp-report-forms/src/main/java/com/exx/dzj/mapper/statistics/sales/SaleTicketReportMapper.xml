@@ -30,8 +30,14 @@
         <if test="stockClass != null and stockClass != ''">
             AND stinfo.stock_class = #{stockClass}
         </if>
-        <if test="stockName != null and stockName != ''">
+        <!--<if test="stockName != null and stockName != ''">
             AND sgd.stock_name LIKE CONCAT('%' , #{stockName}, '%')
+        </if>-->
+        <if test="fromId != null and fromId != ''">
+            AND <![CDATA[stinfo.id >= #{fromId}]]>
+        </if>
+        <if test="toId != null and toId != ''">
+            AND <![CDATA[stinfo.id <= #{toId}]]>
         </if>
     </select>
 
