@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -42,7 +43,7 @@ public class ExecutorConfig {
     private int keepAliveSeconds;
 
     @Bean("asyncSaleExecutr")
-    public Executor asyncSaleExecutr (){
+    public AsyncTaskExecutor asyncSaleExecutr (){
         logger.info("start asyncSaleExecutr");
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(corePoolSize);

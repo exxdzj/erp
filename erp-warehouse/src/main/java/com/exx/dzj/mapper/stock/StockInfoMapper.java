@@ -71,4 +71,9 @@ public interface StockInfoMapper {
     List<StockNumPrice> queryStockNumPirckList(StockNumPrice stockNumPrice);
 
     List<StockInfo> queryStockGoodsInfoForImportData();
+
+    void updateStockCode (@Param("oldCode") String oldCode, @Param("newCode") String newCode);
+    void upateStockCodeForStockPriceTable (@Param("oldCode") String oldCode, @Param("newCode") String newCode);
+    void upateStockCodeForSaleGoodsTable (@Param("oldCode") String oldCode, @Param("newCode") String newCode);
+    void upateStockCodeForPurchaseGoodsTable (@Param("oldCode") String oldCode, @Param("newCode") String newCode);
 }

@@ -11,8 +11,7 @@ import com.exx.dzj.mapper.stock.StockNumPriceMapper;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.stock.StockService;
-import com.exx.dzj.unique.DefaultIdGenerator;
-import com.exx.dzj.unique.IdGenerator;
+import com.exx.dzj.service.task.StockCodeUpdateTask;
 import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.EntityJudgeUtil;
 import com.github.pagehelper.PageHelper;
@@ -21,11 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.*;
 
 /**
  * @Author
@@ -109,16 +109,19 @@ public class StockServiceImpl implements StockService {
             }
 
             if(stockInfo.getId() != null || (!ConvertUtils.isEmpty(bean.getDialogStatus()) && bean.getDialogStatus().equals("update"))){
+                StockInfo oldStockInfo = stockMapper.selectByPrimaryKey(stockInfo.getId());
                 stockMapper.updateByPrimaryKeySelective(stockInfo);
 
                 stockNumPrice.setStockCode(null);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(stockNumPrice)){
                     stockNumPrice.setStockCode(stockInfo.getStockCode());
+                    stockNumPrice.setStockCode(oldStockInfo.getStockCode());
                     int count = priceMapper.updateByPrimaryKeySelective(stockNumPrice);
                     if(count == 0){
                         priceMapper.insertSelective(stockNumPrice);
                     }
                 }
+                updateStockCode(oldStockInfo, stockInfo);
             } else {
                 /*IdGenerator idGenerator = new DefaultIdGenerator();
                 String stockCode = "STOCKCODE"+idGenerator.next();
@@ -140,6 +143,71 @@ public class StockServiceImpl implements StockService {
             throw ex;
         }
         return result;
+    }
+
+    // 用于保存修改的编码和任务线程
+    private static final Map<String, StockCodeUpdateTask> map =  new HashMap<>();
+
+    @Autowired
+    private AsyncTaskExecutor asyncSaleExecutr;
+
+    private void updateStockCode (StockInfo oldStockInfo, StockInfo stockInfo) {
+        // 只有新的编码和老的编码不一致时需要更新编码
+        if (oldStockInfo != null && !StringUtils.equals(stockInfo.getStockCode(), oldStockInfo.getStockCode())){
+            StockCodeUpdateTask temp = map.get(oldStockInfo.getStockCode());
+
+            // 第一次
+            if (temp == null){
+                execution(oldStockInfo, stockInfo);
+            } else {
+                // 当同时修改同一个编码时
+                do {
+                    temp = map.get(oldStockInfo.getStockCode());
+                    if (temp == null){
+                        execution(oldStockInfo, stockInfo);
+                    }
+                } while (temp != null);
+            }
+        }
+    }
+
+    private void execution (StockInfo oldStockInfo, StockInfo stockInfo ) {
+        StockCodeUpdateTask task = new StockCodeUpdateTask(map, oldStockInfo.getStockCode(), stockInfo.getStockCode() ,this);
+        map.put(oldStockInfo.getStockCode(), task);
+
+        Future future = asyncSaleExecutr.submit(task);
+//        do {
+//            if (future.isDone()){
+//                try {
+//                    Object o = future.get();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        } while (!future.isDone());
+    }
+
+    @SysLog(operate = "更新存货编码", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
+    @Transactional(rollbackFor = Exception.class)
+    public void updateRelatedStockCode (String oldCode, String newCode){
+        try {
+            // 存货主表
+            stockMapper.updateStockCode(oldCode, newCode);
+
+            // 存货价格表
+            stockMapper.upateStockCodeForStockPriceTable(oldCode, newCode);
+
+            // 销售单商品
+            stockMapper.upateStockCodeForSaleGoodsTable(oldCode, newCode);
+
+            // 采购单商品
+            stockMapper.upateStockCodeForPurchaseGoodsTable(oldCode, newCode);
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     /**

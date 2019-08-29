@@ -716,4 +716,17 @@
   <select id="queryStockGoodsInfoForImportData" resultType="com.exx.dzj.entity.stock.StockInfo">
     select stock_code, stock_name from tab_stock_info
   </select>
+
+  <update id="updateStockCode">
+    UPDATE tab_stock_info SET stock_code=#{newCode} WHERE stock_code = #{oldCode}
+  </update>
+  <update id="upateStockCodeForStockPriceTable">
+    UPDATE tab_stock_num_price SET stock_code=#{newCode} WHERE stock_code = #{oldCode}
+  </update>
+  <update id="upateStockCodeForSaleGoodsTable">
+    UPDATE tab_sale_goods_detail SET stock_code=#{newCode} WHERE stock_code = #{oldCode}
+  </update>
+  <update id="upateStockCodeForPurchaseGoodsTable">
+    UPDATE tab_purchase_goods_detail SET stock_code=#{newCode} WHERE stock_code = #{oldCode}
+  </update>
 </mapper>
