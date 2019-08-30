@@ -160,7 +160,7 @@ public class SaleExportUtils {
                     InventorySaleModel itemSaleGoods = new InventorySaleModel();
                     itemSaleGoods.setSaleCode(saleGoods.getSaleCode());
                     itemSaleGoods.setRealName(saleGoods.getRealName());
-                    itemSaleGoods.setCreateTime(DateUtil.getDate(saleGoods.getCreateTime()));
+                    itemSaleGoods.setCreateTime(DateUtil.getDate(saleGoods.getSaleDate()));
                     itemSaleGoods.setStockAddress(saleGoods.getStockAddress());
                     itemSaleGoods.setCustName(saleGoods.getCustName());
                     itemSaleGoods.setGoodsNum(saleGoods.getGoodsNum());
@@ -292,7 +292,7 @@ public class SaleExportUtils {
                 for (SaleGoodsReport sgr : saleGoodsReportList) {
                     if (count == CommonConstant.DEFAULT_VALUE_ZERO){
                         saleModel1 = new SalesManSaleModel();
-                        saleModel1.setCreateTime(DateUtil.getDate(sr.getCreateTime()));
+                        saleModel1.setCreateTime(DateUtil.getDate(sr.getSaleDate()));
                         saleModel1.setSaleCode(sr.getSaleCode());
                         saleModel1.setCustName(sr.getCustCode() + sr.getCustName());
                         saleModel1.setBackAmount(sr.getCollectedAmountTotal().toString());
@@ -424,7 +424,7 @@ public class SaleExportUtils {
                 for (SaleGoodsReport sgr : saleGoodsReports){
                     if (count == CommonConstant.DEFAULT_VALUE_ZERO){
                         csm =  new CustomerSaleModel();
-                        csm.setCreateTime(DateUtil.getDate(sir.getCreateTime()));
+                        csm.setCreateTime(DateUtil.getDate(sir.getSaleDate()));
                         csm.setSaleCode(sir.getSaleCode());
                         csm.setStockName(sgr.getStockName());
                         csm.setGoodsNum(sgr.getGoodsNum().toString());
