@@ -319,7 +319,7 @@
       <if test="meterUnit != null and meterUnit!=''">
         meter_unit = #{meterUnit,jdbcType=VARCHAR},
       </if>
-      <if test="pictures != null and pictures!=''">
+      <if test="pictures != null">
         pictures = #{pictures,jdbcType=VARCHAR},
       </if>
       <if test="barCode != null and barCode!=''">
