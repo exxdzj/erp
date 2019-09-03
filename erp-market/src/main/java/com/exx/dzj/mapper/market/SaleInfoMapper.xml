@@ -1436,7 +1436,7 @@
       <if test="query.stockName != null and query.stockName != ''">
         HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
       </if>
-      ORDER BY SINFO.sale_date  DESC
+      ORDER BY SINFO.sale_date
     </select>
 
   <resultMap id="saleListInfoMap2" type="com.exx.dzj.entity.market.SaleListInfo">
