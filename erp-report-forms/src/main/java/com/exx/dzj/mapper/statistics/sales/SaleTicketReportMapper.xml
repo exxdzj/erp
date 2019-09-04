@@ -412,6 +412,7 @@
                 #{item}
             </foreach>
         </if>
+        ORDER BY sinfo.sale_date
     </select>
 
     <resultMap id="saleDetailMap" type="com.exx.dzj.entity.statistics.sales.SaleDetailBaseReport">
