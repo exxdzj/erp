@@ -489,7 +489,7 @@
     <if test="isShelves!=null">
       AND ti.is_shelves = #{isShelves}
     </if>
-    ORDER BY sn.min_inventory DESC
+    ORDER BY minInventory
   </select>
 
   <select id="queryStockSet">
