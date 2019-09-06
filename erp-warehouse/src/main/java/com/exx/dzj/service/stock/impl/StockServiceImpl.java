@@ -356,4 +356,9 @@ public class StockServiceImpl implements StockService {
         return stockMapper.queryStockGoodsInfoForImportData();
     }
 
+    @Override
+    public void modifyStockInventory(StockNumPrice stockNumPrice) {
+        stockMapper.modifyStockInventory(stockNumPrice);
+    }
+
 }

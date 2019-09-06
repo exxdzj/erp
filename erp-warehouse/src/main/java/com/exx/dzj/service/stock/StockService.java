@@ -89,4 +89,6 @@ public interface StockService {
      * @return java.util.List<com.exx.dzj.entity.stock.StockInfo>
      */
     List<StockInfo> queryStockGoodsInfoForImportData();
+
+    void modifyStockInventory(StockNumPrice stockNumPrice);
 }

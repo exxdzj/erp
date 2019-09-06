@@ -10,6 +10,7 @@ import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.facade.market.task.AsyncSaleTask;
+import com.exx.dzj.facade.market.task.ModifyStockInventoryTask;
 import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.model.SaleReceiptModel;
@@ -26,6 +27,7 @@ import com.exx.dzj.util.DateUtil;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -230,11 +232,27 @@ public class SalesTicketFacade {
         }
         customerSupplierInfo.setCustCode(saleInfo.getCustCode());
         customerService.updateBuyCountAndTotalVolume(customerSupplierInfo);
+
+        updateStockInventory(null, saleInfo);
         return saleCode;
     }
 
+    /**
+     * @description 销售单新增修改删除, 商品库存更新
+     * @author yangyun
+     * @date 2019/9/5 0005
+     * @param old
+     * @param fresh
+     * @return void
+     */
+    @Transactional
+    public void updateStockInventory (SaleInfo old, SaleInfo fresh){
+        ModifyStockInventoryTask task = new ModifyStockInventoryTask(old, fresh, stockInfoService);
+        asyncSaleExecutr.execute(task);
+    }
+
     @Autowired
-    private Executor asyncSaleExecutr;
+    private AsyncTaskExecutor asyncSaleExecutr;
 
     private void setSubordinateCompany (SaleInfo saleInfo,DeptInfoBean deptInfoBean){
         AsyncSaleTask  asyncSaleTask = new AsyncSaleTask(saleInfo, deptInfoBean, salesTicketService, deptService);
@@ -472,6 +490,8 @@ public class SalesTicketFacade {
                 && (saleInfo.getPaymentStatus().equals("cs03")) || (saleInfo.getPaymentStatus().equals("cs02"))) {
             salesTicketService.syncSaleData(saleInfo);
         }*/
+
+        updateStockInventory(oldSaleInfo, saleInfo);
     }
 
     private void setCustomerLevel (CustomerSupplierInfo b){
@@ -552,6 +572,8 @@ public class SalesTicketFacade {
         }
         customerSupplierInfo.setCustCode(saleInfo.getCustCode());
         customerService.updateBuyCountAndTotalVolume(customerSupplierInfo);
+
+        updateStockInventory(saleInfo, null);
     }
 
     public List<SaleReceiptsDetails> querySaleReceviptDetailList(String saleCode){

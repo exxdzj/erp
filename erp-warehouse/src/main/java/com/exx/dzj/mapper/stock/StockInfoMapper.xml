@@ -729,4 +729,9 @@
   <update id="upateStockCodeForPurchaseGoodsTable">
     UPDATE tab_purchase_goods_detail SET stock_code=#{newCode} WHERE stock_code = #{oldCode}
   </update>
+
+  <update id="modifyStockInventory" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
+    update tab_stock_num_price set min_inventory = IFNULL(min_inventory, 0) + #{minInventory}
+      where stock_code = #{stockCode} and stock_address_code = #{stockAddressCode}
+  </update>
 </mapper>
