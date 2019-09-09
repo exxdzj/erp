@@ -363,8 +363,8 @@
           ti.specificate_type
       ) AS `value`,ti.id,
       ti.stock_code stockCode,
-      ti.stock_address stockAddress,
-      ti.stock_address_code stockAddressCode,
+      sn.stock_address stockAddress,
+      sn.stock_address_code stockAddressCode,
       DICTINFO.dict_name warehouseName,
       concat_ws(
           '/',
