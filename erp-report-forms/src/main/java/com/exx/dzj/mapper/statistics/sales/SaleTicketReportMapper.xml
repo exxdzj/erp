@@ -103,9 +103,9 @@
         SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) ,0)) AS sumSaleVolume,  /*销售额, 总金额*/
         SUM(IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) AS sumSaleCost,  /*成本*/
         SUM(IFNULL(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) ,0)) - SUM(IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0)) AS sumGrossMargin, /*毛利*/
-        CONVERT(
+        IFNULL(CONVERT(
         SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0) - IFNULL(sg.goods_num,0) * IFNULL(sprice.standard_buy_price,0))
-        / SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0)),DECIMAL(10, 4)) * 100 AS grossRate,/*毛利率*/
+        / SUM(IFNULL(sg.goods_num,0) * IFNULL(sg.real_sell_price,0)),DECIMAL(10, 4)) * 100, 0) AS grossRate,/*毛利率*/
         (SELECT SUM(IFNULL(sii.discount_amount,0)) FROM tab_sale_info sii WHERE 1=1
 
         <if test="startDate != null and startDate != ''">
