@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exx.dzj.mapper.statistics.warehouse.StockReceiptOutInventoryReportMapper">
+    <select id="queryReceiptOutInventoryList" resultType="com.exx.dzj.entity.statistics.warehouse.StockReceiptOutReport"
+        parameterType="com.exx.dzj.entity.bean.StockInfoQuery">
+        SELECT
+            stock.stock_code AS stock_code, /* 编码*/
+            stock.stock_name AS stock_name, /*名称*/
+            stock.meter_unit AS meterUnit,
+            IFNULL(stock.stock_class, '') AS stock_class, /*类别*/
+            IFNULL(stock.stock_class_name, '') AS stock_class_name, /*类别名称*/
+            price.stock_address AS stock_address, /*存货地点*/
+            /*出库*/
+            IFNULL(saleGoods.out_inventory_num,0) AS out_inventory_num, /*出库数量*/
+            IFNULL(saleGoods.out_inventory_num,0) * IFNULL(price.standard_buy_price, 0) AS out_cost, /*出库成本*/
+            /*入库*/
+            IFNULL(purchaeGoods.receipt_inventory_num,0) AS receipt_inventory_num, /*入库数量*/
+            IFNULL(purchaeGoods.receipt_inventory_num,0) * IFNULL(price.standard_buy_price, 0) receipt_cost, /*入库成本*/
+            /*结存*/
+            IFNULL(price.min_inventory, 0) AS min_inventory, /*结存库存*/
+            IFNULL(price.standard_buy_price, 0) AS standard_buy_price, /*单位成本(采购价)*/
+            IFNULL(price.min_inventory, 0) * IFNULL(price.standard_buy_price, 0) AS cost /*成本*/
+        FROM tab_stock_info stock
+        LEFT JOIN tab_stock_num_price price ON stock.stock_code = price.stock_code
+        /*出库*/
+        LEFT JOIN
+            (
+                SELECT SUM(g.goods_num) AS out_inventory_num, g.stock_code, g.stock_address FROM tab_sale_goods_detail g
+                INNER JOIN tab_sale_info sale ON g.sale_code = sale.sale_code
+                WHERE 1 = 1
+                <if test="startDate != null and startDate !=''">
+                    AND <![CDATA[sale.sale_date >= DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s')]]>
+                </if>
+
+                <if test="endDate != null and endDate !=''">
+                    AND <![CDATA[sale.sale_date <= DATE_FORMAT(#{endDate}, '%Y-%m-%d 23:59:59')]]>
+                </if>
+
+                GROUP BY g.stock_code
+            ) saleGoods ON stock.stock_code = saleGoods.stock_code AND saleGoods.stock_address = price.stock_address
+        /*入库*/
+        LEFT JOIN
+            (
+                SELECT SUM(p.goods_num) AS receipt_inventory_num, p.stock_code, p.stock_address FROM tab_purchase_goods_detail p
+                INNER JOIN tab_purchase_info pinfo ON p.purchase_code = pinfo.purchase_code
+                WHERE 1 = 1
+                <if test="startDate != null and startDate !=''">
+                  AND <![CDATA[pinfo.purchase_date >= DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s')]]>
+                </if>
+                <if test="endDate != null and endDate !=''">
+                  AND <![CDATA[pinfo.purchase_date <= DATE_FORMAT(#{endDate}, '%Y-%m-%d 23:59:59')]]>
+                </if>
+                GROUP BY p.stock_code
+            ) purchaeGoods ON purchaeGoods.stock_code = stock.stock_code AND purchaeGoods.stock_address = price.stock_address
+        WHERE 1 = 1
+        <if test="stockClass != null and stockClass != ''">
+          AND stock.stock_class = #{stockClass}
+        </if>
+        <if test="stockAddressCode != null and stockAddressCode != ''">
+          AND price.stock_address_code = #{stockAddressCode}
+        </if>
+        <if test="fromId != null and fromId != ''">
+          AND <![CDATA[stock.id >= #{fromId}]]>
+        </if>
+        <if test="toId != null and toId != ''">
+          AND <![CDATA[stock.id <= #{toId}]]>
+        </if>
+        AND stock.stock_class IS NOT NULL
+    </select>
+</mapper>
