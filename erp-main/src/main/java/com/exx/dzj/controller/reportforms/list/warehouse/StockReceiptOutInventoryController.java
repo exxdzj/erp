@@ -27,6 +27,13 @@ public class StockReceiptOutInventoryController {
     @Autowired
     private StockReceiptOutInventoryReportFacade stockReceiptOutInventoryReportFacade;
 
+    /**
+     * @description: 存货收发汇总
+     * @author yangyun
+     * @date 2019/9/10 0010
+     * @param query
+     * @return com.exx.dzj.result.Result
+     */
     @GetMapping("/queryreceiptoutinventorylist")
     public Result queryReceiptOutInventoryList (StockInfoQuery query){
         Result result = Result.responseSuccess();
