@@ -423,6 +423,9 @@
     <if test="isShelves!=null">
       AND ti.is_shelves = #{isShelves}
     </if>
+    <if test="stockCode != null and stockCode != ''">
+      AND ti.stock_code REGEXP #{stockCode}
+    </if>
     ORDER BY  ti.stock_code /*ti.create_time DESC,*/
   </select>
 
@@ -488,6 +491,9 @@
     </if>
     <if test="isShelves!=null">
       AND ti.is_shelves = #{isShelves}
+    </if>
+    <if test="stockCode != null and stockCode != ''">
+      AND ti.stock_code REGEXP #{stockCode}
     </if>
     ORDER BY minInventory
   </select>
