@@ -1,8 +1,10 @@
 package com.exx.dzj.shiro.auth;
 
+import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.shiro.excepte.AuthException;
 import com.exx.dzj.shiro.vo.DefContants;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Slf4j
 public class JwtFilter extends BasicHttpAuthenticationFilter {
+
+    private volatile static String type = null;
 
     /**
      * 执行登录认证
@@ -38,6 +42,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             log.error("异常方法{}异常信息{}", JwtFilter.class.getName()+".isAccessAllowed", e.getMessage());
             //throw new AuthException(1001, "Token失效，请重新登录");
             try {
+                if (StringUtils.equalsIgnoreCase(type, CommonConstant.ANDROID_TYPE)){
+                    return true;
+                }
                 response.getWriter().write("{\"code\":\"1001\",\"msg\":\"登录过期\"}");
             } catch(Exception ex) {
 
@@ -60,6 +67,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
          * 获取 user-token
          */
         String token = httpRequest.getHeader(DefContants.X_ACCESS_TOKEN);
+        type = httpRequest.getHeader(DefContants.X_ACCESS_TYPE);
+
         JwtToken jwtToken = new JwtToken(token);
         /**
          * 提交给realm进行登入，如果错误他会抛出异常并被捕获

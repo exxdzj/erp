@@ -8,4 +8,5 @@ package com.exx.dzj.shiro.vo;
 public class DefContants {
     //"X-Access-Token";
     public static String X_ACCESS_TOKEN = "user-token";
+    public static String X_ACCESS_TYPE = "type"; // 用于手机端判断  android
 }

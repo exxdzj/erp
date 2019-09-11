@@ -144,4 +144,6 @@ public class CommonConstant {
     public static final Integer INTEGER_VALUE_ONE = 1;
 
     public static final int SALE_TIME_OUT = 120;
+
+    public static final String ANDROID_TYPE = "android";
 }
