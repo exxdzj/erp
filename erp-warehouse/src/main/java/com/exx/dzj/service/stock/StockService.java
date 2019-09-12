@@ -91,4 +91,6 @@ public interface StockService {
     List<StockInfo> queryStockGoodsInfoForImportData();
 
     void modifyStockInventory(StockNumPrice stockNumPrice);
+
+    StockInfo queryStockInfoById(Integer id);
 }

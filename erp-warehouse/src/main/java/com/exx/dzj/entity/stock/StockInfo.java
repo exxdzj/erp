@@ -16,6 +16,8 @@ public class StockInfo extends BaseModule {
     private Integer id;
     /**存货code*/
     private String stockCode;
+
+    private String oldStockCode;
     /**存货性质(1-原材料 2-在产品 3-产成品  4-服务项目<服务项目性质的的存货不计入库存数量且不参与成本核算!>)*/
     private String nature;
     /**存货名称*/

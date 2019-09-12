@@ -83,10 +83,26 @@ public class StockFacade {
     public Result saveStockInfo(StockBean bean) {
         Result result = Result.responseSuccess();
         try{
+            StockInfo stockInfo = new StockInfo();
+            BeanUtils.copyProperties(bean, stockInfo);
+            if(stockInfo.getId() != null || (!ConvertUtils.isEmpty(bean.getDialogStatus()) && bean.getDialogStatus().equals("update"))){
+                StockInfo oldStockInfo = stockInfoService.queryStockInfoById(stockInfo.getId());
+                if(StringUtils.isNotBlank(stockInfo.getStockCode())
+                        && null != oldStockInfo
+                        && StringUtils.isNotBlank(oldStockInfo.getStockCode())
+                        && !stockInfo.getStockCode().equals(oldStockInfo.getStockCode())) {
+                    if(null != stockInfoService.queryStockInfo(stockInfo.getStockCode())) {
+                        result.setCode(400);
+                        result.setMsg("存货编码已存在!");
+                        return result;
+                    }
+                }
+            }
+
             String userCode = userTokenFacade.queryUserCodeForToken(null);
             bean.setCreateUser(userCode);
             bean.setUpdateUser(userCode);
-            stockInfoService.saveStockInfo(bean);
+            result = stockInfoService.saveStockInfo(bean);
         } catch (Exception ex){
             result.setCode(400);
             result.setMsg("数据更新失败!");

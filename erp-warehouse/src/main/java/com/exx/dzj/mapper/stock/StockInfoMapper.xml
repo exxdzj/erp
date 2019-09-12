@@ -295,6 +295,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.exx.dzj.entity.stock.StockInfo">
     update tab_stock_info
     <set>
+      <if test="stockCode != null">
+        stock_code = #{stockCode,jdbcType=VARCHAR},
+      </if>
       <if test="nature != null">
         nature = #{nature,jdbcType=VARCHAR},
       </if>
@@ -348,7 +351,7 @@
         update_user = #{updateUser,jdbcType=VARCHAR},
       </if>
     </set>
-    where stock_code = #{stockCode,jdbcType=VARCHAR}
+    where stock_code = #{oldStockCode,jdbcType=VARCHAR}
   </update>
 
   <!-- ********************************* -->

@@ -15,6 +15,8 @@ public class StockNumPrice implements Serializable {
 
     private String stockCode;
 
+    private String oldStockCode;
+
     private List<String> stockCodeList;
 
     private BigDecimal standardBuyPrice;

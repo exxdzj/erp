@@ -110,12 +110,15 @@ public class StockServiceImpl implements StockService {
 
             if(stockInfo.getId() != null || (!ConvertUtils.isEmpty(bean.getDialogStatus()) && bean.getDialogStatus().equals("update"))){
                 StockInfo oldStockInfo = stockMapper.selectByPrimaryKey(stockInfo.getId());
+
+                stockInfo.setOldStockCode(oldStockInfo.getStockCode());
+
                 stockMapper.updateByPrimaryKeySelective(stockInfo);
 
                 stockNumPrice.setStockCode(null);
                 if(!EntityJudgeUtil.checkObjAllFieldsIsNull(stockNumPrice)){
                     stockNumPrice.setStockCode(stockInfo.getStockCode());
-                    stockNumPrice.setStockCode(oldStockInfo.getStockCode());
+                    stockNumPrice.setOldStockCode(oldStockInfo.getStockCode());
                     int count = priceMapper.updateByPrimaryKeySelective(stockNumPrice);
                     if(count == 0){
                         priceMapper.insertSelective(stockNumPrice);
@@ -123,10 +126,6 @@ public class StockServiceImpl implements StockService {
                 }
                 updateStockCode(oldStockInfo, stockInfo);
             } else {
-                /*IdGenerator idGenerator = new DefaultIdGenerator();
-                String stockCode = "STOCKCODE"+idGenerator.next();
-
-                stockInfo.setStockCode(stockCode);*/
                 if(null == stockInfo.getIsShelves()) {
                     //待上架状态
                     stockInfo.setIsShelves(CommonConstant.DEFAULT_VALUE_THREE);
@@ -194,10 +193,10 @@ public class StockServiceImpl implements StockService {
     public void updateRelatedStockCode (String oldCode, String newCode){
         try {
             // 存货主表
-            stockMapper.updateStockCode(oldCode, newCode);
+            //stockMapper.updateStockCode(oldCode, newCode);
 
             // 存货价格表
-            stockMapper.upateStockCodeForStockPriceTable(oldCode, newCode);
+            //stockMapper.upateStockCodeForStockPriceTable(oldCode, newCode);
 
             // 销售单商品
             stockMapper.upateStockCodeForSaleGoodsTable(oldCode, newCode);
@@ -327,6 +326,7 @@ public class StockServiceImpl implements StockService {
         stockMapper.batchInsertStockNumPrice(stockNumPriceList);
     }
 
+    @Override
     public List<StockBean> queryStockInfoForPurchaseAudit(String stockCode) {
         return stockMapper.queryStockInfoForPurchaseAudit(stockCode);
     }
@@ -359,6 +359,11 @@ public class StockServiceImpl implements StockService {
     @Override
     public void modifyStockInventory(StockNumPrice stockNumPrice) {
         stockMapper.modifyStockInventory(stockNumPrice);
+    }
+
+    @Override
+    public StockInfo queryStockInfoById(Integer id) {
+        return stockMapper.selectByPrimaryKey(id);
     }
 
 }
