@@ -627,6 +627,7 @@
     <if test="custType != null and custType !=''">
       AND cs.cust_type IN (#{custType}, 3)
     </if>
+    LIMIT 1
   </select>
 
   <!-- excel导出数据 -->
