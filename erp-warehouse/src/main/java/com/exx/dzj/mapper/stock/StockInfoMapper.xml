@@ -359,12 +359,12 @@
   <!-- 列表 SQL 片段 -->
   <sql id="QueryStockListSQL">
     SELECT
-
       concat_ws(
           '/',
           ti.stock_name,
           ti.specificate_type
-      ) AS `value`,ti.id,
+      ) AS `value`,
+      ti.id,
       ti.stock_code stockCode,
       sn.stock_address stockAddress,
       sn.stock_address_code stockAddressCode,
@@ -414,6 +414,70 @@
   <select id="queryStockList" resultType="com.exx.dzj.entity.stock.StockModel"
           parameterType="com.exx.dzj.entity.stock.StockQuery">
     <include refid="QueryStockListSQL"/>
+    <if test="stockName!=null and stockName!=''">
+      AND ti.stock_name LIKE CONCAT('%', #{stockName}, '%')
+    </if>
+    <if test="specificateType!=null and specificateType!=''">
+      AND ti.specificate_type LIKE CONCAT('%', #{specificateType}, '%')
+    </if>
+    <if test="stockClass!=null and stockClass!=''">
+      AND ti.stock_class = #{stockClass}
+    </if>
+    <if test="isShelves!=null">
+      AND ti.is_shelves = #{isShelves}
+    </if>
+    <if test="stockCode != null and stockCode != ''">
+      AND ti.stock_code REGEXP #{stockCode}
+    </if>
+    ORDER BY  ti.stock_code /*ti.create_time DESC,*/
+  </select>
+
+  <select id="querySelectStockList" resultType="com.exx.dzj.entity.stock.StockModel"
+          parameterType="com.exx.dzj.entity.stock.StockQuery">
+    SELECT
+
+    ti.stock_name AS `value`,
+    ti.id,
+    ti.stock_code stockCode,
+    sn.stock_address stockAddress,
+    sn.stock_address_code stockAddressCode,
+    DICTINFO.dict_name warehouseName,
+
+    ti.stock_name stockNameForSpe,
+    ti.stock_class_name stockClassName,
+    sn.standard_buy_price standardBuyPrice,
+    IFNULL(sn.min_inventory, 0) minInventory,
+    sn.standard_sell_price standardSellPrice
+    /*CASE
+    WHEN ti.nature = '1' THEN
+    '原材料'
+    WHEN ti.nature = '2' THEN
+    '在产品'
+    WHEN ti.nature = '3' THEN
+    '产成品'
+    WHEN ti.nature = '4' THEN
+    '服务项目'
+    ELSE
+    '未知'
+    END natureName,
+    ti.is_shelves isShelves,
+    CASE
+    WHEN ti.is_shelves = 1 THEN
+    '上架'
+    WHEN ti.is_shelves = 0 THEN
+    '下架'
+    WHEN ti.is_shelves = 2 THEN
+    '入库'
+    WHEN ti.is_shelves = 3 THEN
+    '待上架'
+    ELSE
+    '未知'
+    END shelvesName*/
+    FROM
+    tab_stock_info ti
+    LEFT JOIN tab_stock_num_price sn ON ti.stock_code = sn.stock_code and sn.is_default = 1
+    LEFT JOIN tab_dictionary_info DICTINFO ON DICTINFO.dict_code=ti.stock_address AND DICTINFO.data_type='inventory_ship_address'
+    WHERE ti.is_enable = 1
     <if test="stockName!=null and stockName!=''">
       AND ti.stock_name LIKE CONCAT('%', #{stockName}, '%')
     </if>

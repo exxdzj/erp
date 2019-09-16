@@ -171,6 +171,17 @@ public class StockController {
         return stockFacade.checkStockCode(stockCode);
     }
 
+
+    @GetMapping("querySelectStockList")
+    public Result querySelectStockList(HttpServletRequest request, HttpServletResponse response, String query) {
+        Result result = Result.responseSuccess();
+        StockQuery queryParam = JsonUtils.jsonToPojo(query, StockQuery.class);
+        int pageNum = queryParam != null ? queryParam.getPage() : CommonConstant.DEFAULT_PAGE_NUM;
+        int pageSize = queryParam != null ? queryParam.getLimit() : CommonConstant.DEFAULT_PAGE_SIZE;
+        result = stockFacade.querySelectStockList(pageNum, pageSize, queryParam);
+        return result;
+    }
+
     @Deprecated
     @GetMapping("querystockgoodsinventory")
     public Result queryStockGoodsInventory (StockNumPrice stockNumPrice){

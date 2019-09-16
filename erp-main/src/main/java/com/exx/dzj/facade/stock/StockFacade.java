@@ -47,6 +47,10 @@ public class StockFacade {
         return stockInfoService.queryStockList(pageNum, pageSize, query);
     }
 
+    public Result querySelectStockList(int pageNum, int pageSize, StockQuery query) {
+        return stockInfoService.querySelectStockList(pageNum, pageSize, query);
+    }
+
     public Result queryStockWarningList(int pageNum, int pageSize, StockQuery query) {
         return stockInfoService.queryStockWarningList(pageNum, pageSize, query);
     }
