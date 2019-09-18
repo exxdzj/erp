@@ -84,6 +84,8 @@ public class SaleListInfo implements Serializable {
 
     private BigDecimal receivableAccoun; // 收款额
 
+    private String saleSource;
+
     /**销售单关联收款记录详情**/
     private List<SaleReceiptsDetails> saleReceiptsDetailsList = new ArrayList<>();
 

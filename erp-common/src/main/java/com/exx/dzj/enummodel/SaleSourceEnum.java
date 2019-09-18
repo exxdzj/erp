@@ -12,6 +12,7 @@ public enum SaleSourceEnum {
     SSTORE("201905301459001","微店"),
     TAOBAO("201905301459211", "淘宝"),
     ALI("201905301459261", "阿里"),
+    CB("201907190543021", "成本"),
     DZJAPP("201905301459401", "大专家APP");
 
     private final String key;
@@ -22,7 +23,7 @@ public enum SaleSourceEnum {
         this.value = value;
     }
 
-    public SaleSourceEnum getSaleSourceEnum(String key){
+    public static SaleSourceEnum getSaleSourceEnum(String key){
         if (key == null){
             return null;
         }

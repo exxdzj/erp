@@ -13,6 +13,7 @@ import com.exx.dzj.entity.statistics.sales.*;
 import com.exx.dzj.entity.user.UserVo;
 import com.exx.dzj.enummodel.PayStatusEnum;
 import com.exx.dzj.enummodel.SaleListFieldEnum;
+import com.exx.dzj.enummodel.SaleSourceEnum;
 import com.exx.dzj.enummodel.SalesClassesEnum;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.util.DateUtil;
@@ -822,8 +823,7 @@ public class SaleExportUtils {
             model.setAccountPeriod(formateBigdecimal(info.getAccountPeriod()));
             model.setSubordinateCompanyName(formateBigdecimal(info.getSubordinateCompanyName()));
             model.setSubordinateCompanyName(info.getSubordinateCompanyName());
-
-
+            model.setSaleSource(SaleSourceEnum.getSaleSourceEnum(info.getSaleSource()).getValue());
             content.add(model);
         }
 

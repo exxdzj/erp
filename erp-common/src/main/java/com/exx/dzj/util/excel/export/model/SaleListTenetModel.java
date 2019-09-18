@@ -91,4 +91,7 @@ public class SaleListTenetModel extends BaseRowModel {
 
     @ExcelProperty(value = "所属分公司", index = 25)
     private String subordinateCompanyName;
+
+    @ExcelProperty(value = "来源", index = 26)
+    private String saleSource;
 }
