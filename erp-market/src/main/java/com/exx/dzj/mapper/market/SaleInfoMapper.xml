@@ -1296,6 +1296,9 @@
     SINFO.collection_user_name AS collectionUserName,
     SINFO.due_date AS dueDate,
     SINFO.sale_source AS saleSource,
+    SINFO.deliver_remark AS deliverRemark,
+    IFNULL((SELECT GROUP_CONCAT(CONCAT(tsl.logistic_company_name, ':', tsl.freight_code) SEPARATOR ',') AS logistic
+    FROM tab_sale_logistic_info tsl WHERE tsl.sale_code = SINFO.sale_code), '无') AS logistic,
     SINFO.is_receipt AS isReceipt
     FROM tab_sale_info SINFO
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
@@ -1347,7 +1350,8 @@
       <if test="query.stockName != null and query.stockName != ''">
         HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
       </if>
-      ORDER BY SINFO.sale_date
+      GROUP BY SINFO.sale_code
+      ORDER BY saleDate,SINFO.sale_code
     </select>
 
   <resultMap id="saleListInfoMap" type="com.exx.dzj.entity.market.SaleListInfo">
@@ -1356,6 +1360,8 @@
     <result column="saleDate" property="saleDate"/>
     <result column="paymentStatus" property="paymentStatus"/>
     <result column="custName" property="custName"/>
+    <result column="deliverRemark" property="deliverRemark"/>
+    <result column="logistic" property="logistic"/>
     <result column="currency" property="currency"/>
     <result column="custPhoneNum" property="custPhoneNum"/>
     <result column="exchangeRate" property="exchangeRate"/>
@@ -1436,7 +1442,9 @@
       <if test="query.stockName != null and query.stockName != ''">
         HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
       </if>
-      ORDER BY SINFO.sale_date
+     /* ORDER BY SINFO.sale_date*/
+      GROUP BY SINFO.sale_code
+      ORDER BY saleDate,SINFO.sale_code
     </select>
 
   <resultMap id="saleListInfoMap2" type="com.exx.dzj.entity.market.SaleListInfo">
@@ -1526,7 +1534,8 @@
     <if test="query.stockName != null and query.stockName != ''">
       HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
     </if>
-    ORDER BY SINFO.sale_date
+    GROUP BY SINFO.sale_code
+    ORDER BY saleDate,SINFO.sale_code
   </select>
 
   <resultMap id="exportSaleListMap" type="com.exx.dzj.entity.market.SaleListInfo">

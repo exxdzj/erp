@@ -42,68 +42,74 @@ public class SaleListModel extends BaseRowModel {
     @ExcelProperty(value = "送货地址", index = 9)
     private String deliveryAddress;
 
-    @ExcelProperty(value = "备注", index = 10)
+    @ExcelProperty(value = "货运单号", index = 10)
+    private String logistic;
+
+    @ExcelProperty(value = "发货备注", index = 11)
+    private String deliverRemark;
+
+    @ExcelProperty(value = "备注", index = 12)
     private String saleRemark;
 
-    @ExcelProperty(value = "是否已签收", index = 11)
+    @ExcelProperty(value = "是否已签收", index = 13)
     private String isReceipt;
 
-    @ExcelProperty(value = "所属公司", index = 12)
+    @ExcelProperty(value = "所属公司", index = 14)
     private String subordinateCompanyName;
 
-    @ExcelProperty(value = "优惠金额", index = 13)
+    @ExcelProperty(value = "优惠金额", index = 15)
     private double discountAmount;
 
-    @ExcelProperty(value = "账期", index = 14)
+    @ExcelProperty(value = "账期", index = 16)
     private String accountPeriod;
 
-    @ExcelProperty(value = "收款人", index = 15)
+    @ExcelProperty(value = "收款人", index = 17)
     private String collectionUserName;
 
-    @ExcelProperty(value = "到期日", index = 16, format = "yyyy-MM-dd")
+    @ExcelProperty(value = "到期日", index = 18, format = "yyyy-MM-dd")
     private Timestamp dueDate;
-    @ExcelProperty(value = "收款条件", index = 17)
+    @ExcelProperty(value = "收款条件", index = 19)
     private String collectionTerms;
 
     /***收款信息**/
-    @ExcelProperty(value = "本次收款", index = 18)
+    @ExcelProperty(value = "本次收款", index = 20)
     private double collectedAmount;
 
-    @ExcelProperty(value = "收款账户", index = 19)
+    @ExcelProperty(value = "收款账户", index = 21)
     private String collectionAccount;
 
-    @ExcelProperty(value = "收款方式", index = 20)
+    @ExcelProperty(value = "收款方式", index = 22)
     private String paymentMethod;
 
     /***收款信息**/
 
     /********商品信息******/
 
-    @ExcelProperty(value = "存货服务", index = 21)
+    @ExcelProperty(value = "存货服务", index = 23)
     private String stockName;
 
-    @ExcelProperty(value = "地点", index = 22)
+    @ExcelProperty(value = "地点", index = 24)
     private String stockAddress;
 
-    @ExcelProperty(value = "数量", index = 23)
+    @ExcelProperty(value = "数量", index = 25)
     private double goodsNum;
 
-    @ExcelProperty(value = "单价", index = 24)
+    @ExcelProperty(value = "单价", index = 26)
     private double unitPrice;
 
-    @ExcelProperty(value = "折扣率%", index = 25)
+    @ExcelProperty(value = "折扣率%", index = 27)
     private String discountRate;
 
-    @ExcelProperty(value = "折扣额", index = 26)
+    @ExcelProperty(value = "折扣额", index = 28)
     private String goodsDiscountAmount;
 
-    @ExcelProperty(value = "销售额", index = 27)
+    @ExcelProperty(value = "销售额", index = 29)
     private double salesVolume;
 
-    @ExcelProperty(value = "销售总额", index = 28)
+    @ExcelProperty(value = "销售总额", index = 30)
     private double salesSumVolume;
 
-    @ExcelProperty(value = "说明", index = 29)
+    @ExcelProperty(value = "说明", index = 31)
     private String goodsRemark;
 
     /******商品信息******/

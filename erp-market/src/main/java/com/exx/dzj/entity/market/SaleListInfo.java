@@ -63,6 +63,8 @@ public class SaleListInfo implements Serializable {
     private Timestamp dueDate;
 
     private String stockName;
+    private String deliverRemark;
+    private String logistic;
 
     private String stockAddress;
 

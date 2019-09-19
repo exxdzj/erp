@@ -1101,6 +1101,8 @@ public class SaleExportUtils {
         model1.setAccountPeriod(formateBigdecimal(sli.getAccountPeriod()));
         model1.setCollectionUserName(sli.getCollectionUserName());
         model1.setDueDate(sli.getDueDate());
+        model1.setDeliverRemark(sli.getDeliverRemark());
+        model1.setLogistic(sli.getLogistic());
     }
 
     private static void setBasicModel2 (SaleFinanceListModel model1, SaleListInfo sli){
