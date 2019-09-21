@@ -451,7 +451,8 @@
         '男'
         ELSE
         '保密'
-      END genderName
+      END genderName,
+      tb.alone_role aloneRole
     FROM tab_user_info tb
     LEFT JOIN tab_dept_info td ON tb.dept_code = td.dept_code
     WHERE 1 = 1

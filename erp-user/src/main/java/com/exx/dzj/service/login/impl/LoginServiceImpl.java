@@ -61,11 +61,6 @@ public class LoginServiceImpl implements LoginService {
         tokenService.saveUserToken(tokenBean);
 
         //用户存在, 则生成 userToken, 并保存到数据库
-        /*String userToken = tokenService.getUserToken(userVo.getUserCode());
-        if(StringUtils.isNotBlank(userToken)){
-            //loginInfo.setUsertoken(userToken);
-            userVo.setUserToken(userToken);
-        }*/
         userVo.setUserToken(loginInfo.getUsertoken());
         if(ConvertUtils.isEmpty(userVo.getHeadImg())) {
             // 如果头像为空，则设置一个默认头像(此处暂时写死)

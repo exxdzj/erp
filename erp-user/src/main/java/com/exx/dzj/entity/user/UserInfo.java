@@ -50,6 +50,8 @@ public class UserInfo implements Serializable {
 
     private Date lastSignoutTime;
 
+    private Integer aloneRole;
+
     @LIKE
     public String getUserName() {
         return userName;
