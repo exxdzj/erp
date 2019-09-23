@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +25,19 @@ public class StockReceiptOutInventoryReportFacade {
 
     public Map<String, Object> queryReceiptOutInventoryList (StockInfoQuery query){
         List<StockReceiptOutReport> colloct = stockReceiptOutInventoryService.queryReceiptOutInventoryList(query);
+        LinkedHashMap<String, List<StockReceiptOutReport>> linkedMap = new LinkedHashMap<>();
+
+        List<StockReceiptOutReport> list = null;
+        for (StockReceiptOutReport temp: colloct){
+            list = linkedMap.get(temp.getStockClassName()) == null ? null : linkedMap.get(temp.getStockClassName());
+            if (list == null){
+                list = new ArrayList<>();
+                linkedMap.put(temp.getStockClassName(), list);
+            }
+            list.add(temp);
+
+        }
+
         StockReceiptOutReport sum = new StockReceiptOutReport();
         double sumReNum = colloct.stream().mapToDouble(StockReceiptOutReport::getReceiptInventoryNum).sum();
         BigDecimal sumReCost = colloct.stream().map(StockReceiptOutReport::getReceiptCost).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -39,8 +49,8 @@ public class StockReceiptOutInventoryReportFacade {
         sum.setReceiptInventoryNum(sumReNum).setReceiptCost(sumReCost).setOutInventoryNum(sumOutInventoryNum).
                 setOutCost(sumOutCost).setMinInventory(sumMinInventory).setCost(sumCost).setMeterUnit("总计: ");
 
-        Map<String, List<StockReceiptOutReport>> listMap = colloct.stream().collect(Collectors.groupingBy(StockReceiptOutReport::getStockClassName));
-        Collection<List<StockReceiptOutReport>> values = listMap.values();
+
+        Collection<List<StockReceiptOutReport>> values = linkedMap.values();
         double reNum = 0.0;
         double outNum = 0.0;
         double minInventory = 0.0;
@@ -61,8 +71,8 @@ public class StockReceiptOutInventoryReportFacade {
             data.add(res);
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("data", listMap);
-        map.put("len", listMap == null ? 0 : listMap.size());
+        map.put("data", linkedMap);
+        map.put("len", linkedMap == null ? 0 : linkedMap.size());
         map.put("sum", sum);
 
         return map;
