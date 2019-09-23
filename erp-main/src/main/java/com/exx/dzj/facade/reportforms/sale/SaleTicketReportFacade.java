@@ -65,14 +65,35 @@ public class SaleTicketReportFacade {
             return data;
         }
 
-        Map<String, Map<String, List<StockBaseReport>>> collect = stockTypeReports.stream().collect(Collectors.groupingBy(StockBaseReport::getStockClassName, Collectors.groupingBy(StockBaseReport::getStockCode)));
+        LinkedHashMap<String, LinkedHashMap<String, List<StockBaseReport>>> linkedMap = new LinkedHashMap<>();
+        LinkedHashMap<String, List<StockBaseReport>> map2 = null;
+        List<StockBaseReport> list = null;
+        for (StockBaseReport temp : stockTypeReports){
+            map2 = linkedMap.get(temp.getStockClassName()) == null ? null : linkedMap.get(temp.getStockClassName());
+            if (map2 == null){
+                map2 = new LinkedHashMap<>();
+                linkedMap.put(temp.getStockClassName(), map2);
 
-        collect.keySet().stream().forEach(
+                list = new ArrayList<>();
+                map2.put(temp.getStockCode(), list);
+
+                list.add(temp);
+            } else {
+                list = map2.get(temp.getStockCode()) == null ? null : map2.get(temp.getStockCode());
+                if (list == null){
+                    list = new ArrayList<>();
+                    map2.put(temp.getStockCode(), list);
+                    list.add(temp);
+                }
+            }
+        }
+
+        linkedMap.keySet().stream().forEach(
                 first -> {
                     StockTypeReport str = new StockTypeReport();
                     data.add(str);
                     str.setStockTypeName(first);
-                    Map<String, List<StockBaseReport>> stringListMap = collect.get(first);
+                    Map<String, List<StockBaseReport>> stringListMap = linkedMap.get(first);
                     stringListMap.keySet().stream().forEach(
                             second -> {
                                 StockInfoReport sir = new StockInfoReport();
