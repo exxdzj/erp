@@ -3,7 +3,7 @@
 <mapper namespace="com.exx.dzj.mapper.statistics.sales.SaleTicketReportMapper">
     <select id="statisticsSaleByInventory" resultMap="stockTypeMap" parameterType="com.exx.dzj.entity.bean.StockInfoQuery">
       SELECT
-        sgd.stock_code, sgd.stock_name, dinfo.dict_name,
+        sinfo.id, sgd.stock_code, sgd.stock_name, dinfo.dict_name,
         CASE
             WHEN sgd.real_sell_price > 0 THEN sgd.real_sell_price
         ELSE
@@ -42,6 +42,7 @@
     </select>
 
     <resultMap id="stockTypeMap" type="com.exx.dzj.entity.statistics.sales.StockBaseReport">
+        <result column="id" property="id"/>
         <result column="stock_code" property="stockCode"/>
         <result column="stock_name" property="stockName"/>
         <result column="discount_amount" property="discountAmount"/>
@@ -211,6 +212,7 @@
 
     <select id="querySalesTicketByCust"  parameterType="com.exx.dzj.entity.bean.CustomerQuery" resultMap="customerReportMap">
         SELECT
+            sinfo.id,
             sinfo.sale_code,
             DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d') sale_date,
             cs.cust_code,
@@ -251,6 +253,7 @@
     <!-- 销售员提成汇总统计 -->
     <resultMap id="customerReportMap" type="com.exx.dzj.entity.statistics.sales.CustomerBaseReport">
         <result column="sale_code" property="saleCode"/>
+        <result column="id" property="id"/>
         <result column="sale_date" property="saleDate"/>
         <result column="discount_amount" property="discountAmount"/>
         <result column="cust_code" property="custCode"/>

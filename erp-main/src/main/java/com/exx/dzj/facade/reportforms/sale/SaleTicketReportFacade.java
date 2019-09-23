@@ -104,6 +104,7 @@ public class SaleTicketReportFacade {
                                 stockBaseReports.stream().forEach(
                                         end -> {
                                             SaleGoodsReport sgr = new SaleGoodsReport();
+                                            sgr.setId(end.getId());
                                             sgr.setSaleCode(end.getSaleCode());
                                             sgr.setSaleDate(end.getSaleDate());
                                             sgr.setStockAddress(end.getStockAddress());
@@ -371,6 +372,7 @@ public class SaleTicketReportFacade {
                                 SaleInfoReport sir = new SaleInfoReport();
                                 cr.getSaleInfoReportList().add(sir);
                                 sir.setSaleCode(siReport);
+                                sir.setId(customerBases.get(0).getId());
                                 sir.setSaleDate(customerBases.get(0).getSaleDate());
 
                                 if (StringUtils.isEmpty(cr.getCustName())){
