@@ -138,7 +138,13 @@ public class UserFacade {
      * @return java.util.List<com.exx.dzj.entity.user.UserInfo>
      */
     public List<UserInfo> querySalesman(){
-        return salesmanService.querySalesman();
+        List<UserInfo> infos = salesmanService.querySalesman();
+        if (org.apache.commons.collections.CollectionUtils.isNotEmpty(infos)){
+            for (UserInfo temp : infos){
+                temp.setRealName(temp.getSalesmanCode2() + temp.getRealName());
+            }
+        }
+        return infos;
     }
 
     public Map<String, UserInfo> querySaleManCodeName (){
@@ -265,6 +271,12 @@ public class UserFacade {
     }
 
     public List<UserInfo> querySalesmanList(Integer type){
-        return salesmanService.querySalesmanList(type);
+        List<UserInfo> infos = salesmanService.querySalesmanList(type);
+        if (org.apache.commons.collections.CollectionUtils.isNotEmpty(infos)){
+            for (UserInfo temp : infos){
+                temp.setRealName(temp.getSalesmanCode2() + temp.getRealName());
+            }
+        }
+        return infos;
     }
 }

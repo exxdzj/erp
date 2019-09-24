@@ -321,7 +321,11 @@
     SELECT
         user_code userCode,
         salesman_code salesmanCode,
-        concat(IFNULL(salesman_code,''), IFNULL(real_name,'')) realName
+        CASE
+          WHEN ui.is_quit = 0 THEN CONCAT('L',ui.salesman_code)
+          ELSE ui.salesman_code
+          END  salesmanCode2,
+        IFNULL(real_name,'') realName
     FROM
         tab_user_info ui
     WHERE
@@ -382,7 +386,9 @@
     tu.user_code userCode,
     tu.user_name userName,
     tu.real_name realName,
-    tu.salesman_code salesmanCode,
+    case when tu.is_quit = 0 then concat('L', tu.salesman_code)
+      else tu.salesman_code
+      end salesmanCode,
     tu.head_img headImg,
     tu.phone_num phoneNum,
     td.dept_name deptName,
@@ -505,11 +511,12 @@
   <select id="querySalesmanList" resultType="com.exx.dzj.entity.user.UserInfo">
     SELECT
       user_code userCode,
+      CASE
+        WHEN ui.is_quit = 0 THEN CONCAT('L',salesman_code)
+        ELSE salesman_code
+        END salesmanCode2,
       salesman_code salesmanCode,
-      concat(
-          IFNULL(salesman_code, ''),
-          IFNULL(real_name, '')
-      ) realName
+      IFNULL(real_name, '') realName
     FROM
       tab_user_info ui
     WHERE 1 = 1

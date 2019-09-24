@@ -31,6 +31,7 @@ public class UserInfo implements Serializable {
     private String orgCode;
 
     private String salesmanCode;
+    private String salesmanCode2;
 
     private String headImg;
 
