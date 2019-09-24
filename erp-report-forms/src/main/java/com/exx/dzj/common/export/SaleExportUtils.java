@@ -951,6 +951,7 @@ public class SaleExportUtils {
                         setModelValue(model1, receiptsDetails, goodsDetailBean);
                         content.add(model1);
                     }
+                    receiptsDetails = null;
                 }
             } else { // 说明商品详情和收款详情最多都只有一条记录
                 if (goodsSize > 0){
