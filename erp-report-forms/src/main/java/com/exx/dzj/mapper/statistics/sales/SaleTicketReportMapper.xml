@@ -34,11 +34,12 @@
             AND sgd.stock_name LIKE CONCAT('%' , #{stockName}, '%')
         </if>-->
         <if test="fromId != null and fromId != ''">
-            AND <![CDATA[stinfo.id >= #{fromId}]]>
+            AND <![CDATA[stinfo.stock_code >= #{fromId}]]>
         </if>
         <if test="toId != null and toId != ''">
-            AND <![CDATA[stinfo.id <= #{toId}]]>
+            AND <![CDATA[stinfo.stock_code <= #{toId}]]>
         </if>
+        /*group by stinfo.id*/
     </select>
 
     <resultMap id="stockTypeMap" type="com.exx.dzj.entity.statistics.sales.StockBaseReport">

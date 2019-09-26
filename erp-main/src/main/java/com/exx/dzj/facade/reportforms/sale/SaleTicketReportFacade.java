@@ -84,6 +84,8 @@ public class SaleTicketReportFacade {
                     list = new ArrayList<>();
                     map2.put(temp.getStockCode(), list);
                     list.add(temp);
+                } else {
+                    list.add(temp);
                 }
             }
         }

@@ -5,6 +5,7 @@ import com.exx.dzj.entity.purchase.*;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.excepte.ErpException;
+import com.exx.dzj.facade.market.task.AddStockInventoryTask;
 import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
@@ -16,6 +17,7 @@ import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -52,6 +54,9 @@ public class PurchaseTicketFacade {
 
     @Autowired
     private BusEncodeFacade busEncodeFacade;
+
+    @Autowired
+    private StockService stockService;
 
     public void importData (List<PurchaseInfo> purchaseInfoList){
         for (PurchaseInfo p : purchaseInfoList){
@@ -170,6 +175,18 @@ public class PurchaseTicketFacade {
                 purchaseReceiptsService.batchInsertPurchaseReceipts(purchaseReceiptsDetailsBeans);
             }
         }
+
+        // 库存处理
+        updateStockInventory(null, purchaseInfo);
+    }
+
+    @Autowired
+    private AsyncTaskExecutor asyncSaleExecutr;
+
+    private void updateStockInventory (PurchaseInfo old, PurchaseInfo fresh){
+
+        AddStockInventoryTask task = new AddStockInventoryTask(old, fresh, stockService);
+        asyncSaleExecutr.execute(task);
     }
 
     /**
@@ -345,6 +362,8 @@ public class PurchaseTicketFacade {
                 purchaseReceiptsService.batchDeletePurchaseReceipts(collect);
             }
         }
+
+        updateStockInventory(oldPurchaseInfo, purchaseInfo);
     }
 
     @Transactional
@@ -364,6 +383,8 @@ public class PurchaseTicketFacade {
             List<Integer> receoptIds = purchaseReceiptsDetailsBeans.stream().map(o -> o.getId()).collect(Collectors.toList());
             purchaseReceiptsService.batchDeletePurchaseReceipts(receoptIds);
         }
+
+        updateStockInventory(purchaseInfo, null);
     }
 
     public List<PurchaseReceiptsDetailsBean> queryPurchaseReceviptDetailList(String purchaseCode){

@@ -367,6 +367,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    @SysLog(operate = "库存修改", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     public void modifyStockInventory(StockNumPrice stockNumPrice) {
         stockMapper.modifyStockInventory(stockNumPrice);
     }

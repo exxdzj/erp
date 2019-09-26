@@ -1350,7 +1350,6 @@
       <if test="query.stockName != null and query.stockName != ''">
         HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
       </if>
-      GROUP BY SINFO.sale_code
       ORDER BY saleDate,SINFO.sale_code
     </select>
 
@@ -1443,7 +1442,6 @@
         HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
       </if>
      /* ORDER BY SINFO.sale_date*/
-      GROUP BY SINFO.sale_code
       ORDER BY saleDate,SINFO.sale_code
     </select>
 
@@ -1534,7 +1532,6 @@
     <if test="query.stockName != null and query.stockName != ''">
       HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
     </if>
-    GROUP BY SINFO.sale_code
     ORDER BY saleDate,SINFO.sale_code
   </select>
 

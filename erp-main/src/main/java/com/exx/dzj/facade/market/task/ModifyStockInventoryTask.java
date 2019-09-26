@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -65,7 +66,8 @@ public class ModifyStockInventoryTask implements Runnable {
             } else {
                 oldGoods = old.getSaleGoodsDetailBeanList();
                 freshGoods = fresh.getSaleGoodsDetailBeanList();
-                int res = 0;
+                updatePurchaseTicketGoods(freshGoods, oldGoods);
+                /*int res = 0;
                 Map<String, List<SaleGoodsDetailBean>> collect = freshGoods.stream().collect(Collectors.groupingBy(SaleGoodsDetailBean::getStockCode));
                 List<SaleGoodsDetailBean> saleGoodsDetailBeans = null;
                 for (SaleGoodsDetailBean goods : oldGoods){
@@ -79,22 +81,32 @@ public class ModifyStockInventoryTask implements Runnable {
                     if (saleGoodsDetailBeans == null){
                         res = goods.getGoodsNum().intValue();
                     } else {
-                        res = -(saleGoodsDetailBeans.get(0).getGoodsNum().intValue() - goods.getGoodsNum().intValue());
+                        if (saleGoodsDetailBeans.get(0).getGoodsNum().intValue() - goods.getGoodsNum().intValue() == 0){
+                            res = 0;
+                        } else {
+                            if (saleGoodsDetailBeans.get(0).getGoodsNum().intValue() - goods.getGoodsNum().intValue() < 0) {
+                                res = (goods.getGoodsNum().intValue() - saleGoodsDetailBeans.get(0).getGoodsNum().intValue());
+                            } else {
+                                res = -(saleGoodsDetailBeans.get(0).getGoodsNum().intValue() - goods.getGoodsNum().intValue());
+                            }
+                        }
                     }
-                    System.out.println(res);
+
                     stockNumPrice.setMinInventory(res);
                     stockNumPrice.setStockCode(goods.getStockCode());
                     stockNumPrice.setStockAddressCode(goods.getStockAddressCode());
                     stockService.modifyStockInventory(stockNumPrice);
                 }
 
-                for (SaleGoodsDetailBean goods : freshGoods){
-                    if (!oldGoods.contains(goods)){
-                        stockNumPrice = new StockNumPrice();
-                        setValue("insert", stockNumPrice, goods);
-                        stockService.modifyStockInventory(stockNumPrice);
-                    }
-                }
+                final List<SaleGoodsDetailBean> temp = oldGoods;
+
+                List<SaleGoodsDetailBean> collect1 = freshGoods.stream().filter(a -> temp.stream().noneMatch(b -> StringUtils.equals(a.getStockCode(), b.getStockCode()))).collect(Collectors.toList());
+
+                for (SaleGoodsDetailBean goods : collect1){
+                    stockNumPrice = new StockNumPrice();
+                    setValue("insert", stockNumPrice, goods);
+                    stockService.modifyStockInventory(stockNumPrice);
+                }*/
 
             }
         } catch (Exception e){
@@ -107,5 +119,89 @@ public class ModifyStockInventoryTask implements Runnable {
         stockNumPrice.setStockCode(goods.getStockCode());
         stockNumPrice.setStockAddressCode(goods.getStockAddressCode());
         stockNumPrice.setMinInventory(StringUtils.equalsIgnoreCase(type, "delete") ? (goods.getGoodsNum()).intValue() : -(goods.getGoodsNum()).intValue());
+    }
+
+    private void updatePurchaseTicketGoods (List<SaleGoodsDetailBean> freshGoods, List<SaleGoodsDetailBean> oldGoods){
+        // 更新销售单, 需要更新的商品
+        List<SaleGoodsDetailBean> updateList = new ArrayList<>();
+        StockNumPrice stockNumPrice = null;
+
+        for (SaleGoodsDetailBean temp : freshGoods){
+            if (StringUtils.startsWithIgnoreCase(temp.getStockCode(), "cb")){
+                continue;
+            }
+            // 新增的商品
+            if (temp.getId() == null){
+                stockNumPrice = new StockNumPrice();
+                setValue(stockNumPrice, temp);
+                stockNumPrice.setMinInventory(-temp.getGoodsNum().intValue());
+                stockService.modifyStockInventory(stockNumPrice);
+            } else {
+                updateList.add(temp);
+            }
+        }
+
+        Map<Integer, List<SaleGoodsDetailBean>> collect = updateList.stream().collect(Collectors.groupingBy(SaleGoodsDetailBean::getId));
+        SaleGoodsDetailBean p = null;
+        SaleGoodsDetailBean sgd = null;
+
+        // 为什么用 oldGoods 做循环体, 因为不管什么情况下 oldGoods 总比 updateList 大或等于, 不会出现漏的情况
+        int res = 0;
+
+        for (SaleGoodsDetailBean temp : oldGoods){
+            // 需要更新的商品
+            p = temp;
+            if (updateList.contains(temp)){
+                sgd = collect.get(temp.getId()).get(0);
+                // 原始商品, 数量的改变
+                if (StringUtils.equals(sgd.getStockCode(), temp.getStockCode())){
+                    res = getRes(sgd, p);
+                    if (res == 0){
+                        continue;
+                    }
+                    stockNumPrice = new StockNumPrice();
+                    setValue(stockNumPrice, p);
+                    stockNumPrice.setMinInventory(res);
+                    stockService.modifyStockInventory(stockNumPrice);
+                } else {// 商品改变
+                    // 已经删除的商品, 需要加库存
+                    stockNumPrice = new StockNumPrice();
+                    setValue(stockNumPrice, p);
+                    stockNumPrice.setMinInventory(p.getGoodsNum().intValue());
+                    stockService.modifyStockInventory(stockNumPrice);
+
+                    // 被替换的商品为新商品, 需要减库存
+                    stockNumPrice = new StockNumPrice();
+                    setValue(stockNumPrice, sgd);
+                    stockNumPrice.setMinInventory(-sgd.getGoodsNum().intValue());
+                    stockService.modifyStockInventory(stockNumPrice);
+                }
+            } else { // 直接删除的商品
+                stockNumPrice = new StockNumPrice();
+                setValue(stockNumPrice, p);
+                stockNumPrice.setMinInventory(p.getGoodsNum().intValue());
+                stockService.modifyStockInventory(stockNumPrice);
+            }
+        }
+    }
+
+    private void setValue (StockNumPrice stockNumPrice, SaleGoodsDetailBean p){
+        stockNumPrice.setStockCode(p.getStockCode());
+        stockNumPrice.setStockAddressCode(p.getStockAddressCode());
+    }
+
+    public int getRes (SaleGoodsDetailBean pgd, SaleGoodsDetailBean p){
+        int res = 0;
+        if (pgd.getGoodsNum().intValue() - p.getGoodsNum().intValue() == 0){
+            return res;
+        } else {
+            if (pgd.getGoodsNum().intValue() - p.getGoodsNum().intValue() > 0){
+                res = - (pgd.getGoodsNum().intValue() - p.getGoodsNum().intValue());
+            } else {
+                res = p.getGoodsNum().intValue() - pgd.getGoodsNum().intValue();
+            }
+        }
+
+        return res;
     }
 }

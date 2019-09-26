@@ -22,6 +22,6 @@ public class StockInfoQuery extends StockInfo {
     private Integer gross; // 是否计算毛利 1 是 0否
     private String fromStockName; // 商品名称
     private String toStockName; // 商品名称
-    private Integer fromId;
-    private Integer toId;
+    private String fromId;
+    private String toId;
 }
