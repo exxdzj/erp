@@ -60,10 +60,10 @@
           AND price.stock_address_code = #{stockAddressCode}
         </if>
         <if test="fromId != null and fromId != ''">
-          AND <![CDATA[stock.id >= #{fromId}]]>
+          AND <![CDATA[stock.stock_code >= #{fromId}]]>
         </if>
         <if test="toId != null and toId != ''">
-          AND <![CDATA[stock.id <= #{toId}]]>
+          AND <![CDATA[stock.stock_code <= #{toId}]]>
         </if>
         AND stock.stock_class IS NOT NULL
     </select>
