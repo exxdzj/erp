@@ -25,10 +25,14 @@ public class StockReceiptOutReport implements Serializable {
     private String meterUnit;
     private String stockAddress;
     private BigDecimal standardBuyPrice;
+    private BigDecimal avgPrice; // 为入库出库共用单价
     private Double outInventoryNum; //出库数量
     private BigDecimal outCost; // 出库成本
     private Double receiptInventoryNum; // 入库数量
     private BigDecimal receiptCost; // 入库成本
     private Double minInventory; // 结存数量
     private BigDecimal cost; // 结存成本
+    private Double beginningMinInventory; // 期初数量
+    private BigDecimal beginningCost; // 期初成本
+    private BigDecimal beginningPrice; // 期初价格
 }

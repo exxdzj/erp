@@ -146,4 +146,8 @@ public class CommonConstant {
     public static final int SALE_TIME_OUT = 120;
 
     public static final String ANDROID_TYPE = "android";
+
+    public static final String INSERT = "insert";
+    public static final String UPDATE = "update";
+    public static final String DELETE = "delete";
 }

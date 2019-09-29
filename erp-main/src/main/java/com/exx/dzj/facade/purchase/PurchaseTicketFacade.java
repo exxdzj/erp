@@ -6,12 +6,14 @@ import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.entity.stock.StockNumPrice;
 import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.market.task.AddStockInventoryTask;
+import com.exx.dzj.facade.market.task.PurchaseGoodsAvgPirceCalculateTask;
 import com.exx.dzj.facade.sys.BusEncodeFacade;
 import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.service.purchasegoods.PurchaseGoodsService;
 import com.exx.dzj.service.purchasereceipts.PurchaseReceiptsService;
 import com.exx.dzj.service.purchaseticket.PurchaseTicketService;
+import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.stock.StockService;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +59,12 @@ public class PurchaseTicketFacade {
 
     @Autowired
     private StockService stockService;
+
+    @Autowired
+    private AsyncTaskExecutor asyncSaleExecutr;
+
+    @Autowired
+    private AsyncTaskExecutor syncCalculatePriceExecutor;
 
     public void importData (List<PurchaseInfo> purchaseInfoList){
         for (PurchaseInfo p : purchaseInfoList){
@@ -178,10 +186,9 @@ public class PurchaseTicketFacade {
 
         // 库存处理
         updateStockInventory(null, purchaseInfo);
-    }
 
-    @Autowired
-    private AsyncTaskExecutor asyncSaleExecutr;
+        calculateAvgPrice(CommonConstant.INSERT, purchaseInfo, null);
+    }
 
     private void updateStockInventory (PurchaseInfo old, PurchaseInfo fresh){
 
@@ -363,7 +370,13 @@ public class PurchaseTicketFacade {
             }
         }
 
+        // 库存修改
         updateStockInventory(oldPurchaseInfo, purchaseInfo);
+
+        // 计算每个商品平均价格
+        PurchaseInfo pricePurchaseInfo = purchaseTicketService.queryPurchaseTicketDetail(purchaseInfo.getId());
+
+        calculateAvgPrice(CommonConstant.UPDATE, pricePurchaseInfo, oldPurchaseInfo);
     }
 
     @Transactional
@@ -385,6 +398,8 @@ public class PurchaseTicketFacade {
         }
 
         updateStockInventory(purchaseInfo, null);
+
+        calculateAvgPrice(CommonConstant.DELETE, purchaseInfo, null);
     }
 
     public List<PurchaseReceiptsDetailsBean> queryPurchaseReceviptDetailList(String purchaseCode){
@@ -490,5 +505,10 @@ public class PurchaseTicketFacade {
             getCode();
         }
         return code;
+    }
+
+    private void calculateAvgPrice (String type, PurchaseInfo info, PurchaseInfo oldInfo){
+        PurchaseGoodsAvgPirceCalculateTask task = new PurchaseGoodsAvgPirceCalculateTask(type, info, oldInfo, purchaseGoodsService, stockService);
+        syncCalculatePriceExecutor.execute(task);
     }
 }

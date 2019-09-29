@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.core.task.SyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -33,7 +35,7 @@ public class ExecutorConfig {
     @Value("${asyn.executor.thread.max_pool_size}")
     private int maxPoolSize;
 
-    @Value("${asyn.executor.thread.queue_capacity}")
+    @Value("1000")
     private int queueCapacity;
 
     @Value("${asyn.executor.thread.name.prefix}")
@@ -46,6 +48,7 @@ public class ExecutorConfig {
     public AsyncTaskExecutor asyncSaleExecutr (){
         logger.info("start asyncSaleExecutr");
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+
         executor.setCorePoolSize(corePoolSize);
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
@@ -59,6 +62,28 @@ public class ExecutorConfig {
         // 初始化
         executor.initialize();
 
+        return executor;
+    }
+
+    /**
+     * @description: 处理价格计算
+     * @author yangyun
+     * @date 2019/9/27 0027
+     * @param
+     * @return org.springframework.core.task.AsyncTaskExecutor
+     */
+    @Bean("syncCalculatePriceExecutor")
+    public AsyncTaskExecutor syncCalculatePriceExecutor (){
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        // 为了保证线程有序执行
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(1);
+        executor.setQueueCapacity(queueCapacity);
+        executor.setThreadNamePrefix("syncCalculatePrice");
+
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+
+        executor.initialize();
         return executor;
     }
 }

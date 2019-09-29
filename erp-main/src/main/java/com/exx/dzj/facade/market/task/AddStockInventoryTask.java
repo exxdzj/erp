@@ -167,10 +167,6 @@ public class AddStockInventoryTask implements Runnable {
                     if (res == 0){
                         continue;
                     }
-//                    stockNumPrice = new StockNumPrice();
-//                    setValue(stockNumPrice, p);
-//                    stockNumPrice.setMinInventory(res);
-//                    stockService.modifyStockInventory(stockNumPrice);
                 } else {// 商品改变
                     // 已经删除的商品, 需要减去库存
                     stockNumPrice = new StockNumPrice();

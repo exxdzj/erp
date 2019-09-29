@@ -94,4 +94,6 @@ public interface StockService {
     void modifyStockInventory(StockNumPrice stockNumPrice);
 
     StockInfo queryStockInfoById(Integer id);
+
+    void updateStockAvgPrice(StockNumPrice stockNumPrice);
 }

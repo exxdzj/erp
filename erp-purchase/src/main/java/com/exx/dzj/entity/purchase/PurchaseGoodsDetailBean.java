@@ -48,4 +48,10 @@ public class PurchaseGoodsDetailBean implements Serializable {
     private Date updateTime;
 
     private String updateUser;
+
+    // 同仓的商品的总金额
+    private BigDecimal sumPrice;
+
+    // 同仓的商品的总数量
+    private Double sumNum;
 }

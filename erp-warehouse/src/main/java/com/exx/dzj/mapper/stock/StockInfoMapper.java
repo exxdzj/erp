@@ -79,4 +79,6 @@ public interface StockInfoMapper {
     void upateStockCodeForPurchaseGoodsTable (@Param("oldCode") String oldCode, @Param("newCode") String newCode);
 
     void modifyStockInventory(StockNumPrice stockNumPrice);
+
+    void updateStockAvgPrice(StockNumPrice stockNumPrice);
 }

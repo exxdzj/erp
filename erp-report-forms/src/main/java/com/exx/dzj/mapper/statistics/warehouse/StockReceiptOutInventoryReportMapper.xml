@@ -4,28 +4,52 @@
     <select id="queryReceiptOutInventoryList" resultType="com.exx.dzj.entity.statistics.warehouse.StockReceiptOutReport"
         parameterType="com.exx.dzj.entity.bean.StockInfoQuery">
         SELECT
-            stock.stock_code AS stock_code, /* 编码*/
-            stock.stock_name AS stock_name, /*名称*/
+            stock.stock_code AS stockCode, /* 编码*/
+            stock.stock_name AS stockName, /*名称*/
             stock.meter_unit AS meterUnit,
-            IFNULL(stock.stock_class, '') AS stock_class, /*类别*/
-            IFNULL(stock.stock_class_name, '') AS stock_class_name, /*类别名称*/
-            price.stock_address AS stock_address, /*存货地点*/
+            IFNULL(stock.stock_class, '') AS stockClass, /*类别*/
+            IFNULL(stock.stock_class_name, '') AS stockClassName, /*类别名称*/
+            price.stock_address AS stockAddress, /*存货地点*/
+            /*期初结存*/
+            IFNULL(beginningIn.beginningInNum, 0) - IFNULL(beginningOut.beginningOutNum, 0) beginningMinInventory,
+
             /*出库*/
-            IFNULL(saleGoods.out_inventory_num,0) AS out_inventory_num, /*出库数量*/
-            IFNULL(saleGoods.out_inventory_num,0) * IFNULL(price.standard_buy_price, 0) AS out_cost, /*出库成本*/
+            IFNULL(saleGoods.out_inventory_num,0) AS outInventoryNum, /*出库数量*/
+            IFNULL(saleGoods.out_inventory_num,0) * IFNULL(price.avg_price, 0) AS outCost, /*出库成本*/
             /*入库*/
-            IFNULL(purchaeGoods.receipt_inventory_num,0) AS receipt_inventory_num, /*入库数量*/
-            IFNULL(purchaeGoods.receipt_inventory_num,0) * IFNULL(price.standard_buy_price, 0) receipt_cost, /*入库成本*/
+            IFNULL(purchaeGoods.receipt_inventory_num,0) AS receiptInventoryNum, /*入库数量*/
+            IFNULL(purchaeGoods.receipt_inventory_num,0) * IFNULL(price.avg_price, 0) receiptCost, /*入库成本*/
             /*结存*/
-            IFNULL(price.min_inventory, 0) AS min_inventory, /*结存库存*/
-            IFNULL(price.standard_buy_price, 0) AS standard_buy_price, /*单位成本(采购价)*/
-            IFNULL(price.min_inventory, 0) * IFNULL(price.standard_buy_price, 0) AS cost /*成本*/
+            IFNULL(price.min_inventory, 0) AS minInventory, /*结存库存*/
+            IFNULL(price.avg_price, 0) AS avgPrice, /*单位成本(采购价)*/
+            IFNULL(price.min_inventory, 0) * IFNULL(price.avg_price, 0) AS cost /*成本*/
         FROM tab_stock_info stock
-        LEFT JOIN tab_stock_num_price price ON stock.stock_code = price.stock_code
+        LEFT JOIN tab_stock_num_price price ON stock.stock_code = price.stock_code AND stock.stock_address_code = price.stock_address_code
+        /*期初*/
+        /*期初入库*/
+        <if test="startDate != null and startDate !=''">
+            LEFT JOIN (
+                SELECT
+                  stock_code, stock_address_code, SUM(IF(real_sell_price = 0, 0, goods_num)) beginningInNum
+                FROM tab_purchase_goods_detail pg INNER JOIN tab_purchase_info pi ON pi.purchase_code = pg.purchase_code
+                WHERE 1=1
+                  AND <![CDATA[pi.purchase_date < DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s')]]>
+                  GROUP BY pg.stock_code, pg.stock_address_code
+            ) beginningIn ON beginningIn.stock_code = stock.stock_code AND beginningIn.stock_address_code = stock.stock_address_code
+            /*期初出库*/
+            LEFT JOIN (
+                SELECT
+                  stock_code, stock_address_code, SUM(IF(real_sell_price = 0, 0, goods_num)) beginningOutNum
+                FROM tab_sale_goods_detail sg INNER JOIN tab_sale_info si ON sg.sale_code = si.sale_code
+                WHERE 1=1
+                    AND <![CDATA[si.sale_date < DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s') ]]>
+                    GROUP BY sg.stock_code, sg.stock_address_code
+            ) beginningOut ON beginningOut.stock_code = stock.stock_code AND beginningOut.stock_address_code = stock.stock_address_code
+        </if>
         /*出库*/
         LEFT JOIN
             (
-                SELECT SUM(g.goods_num) AS out_inventory_num, g.stock_code, g.stock_address FROM tab_sale_goods_detail g
+                SELECT SUM(g.goods_num) AS out_inventory_num, g.stock_code, g.stock_address_code FROM tab_sale_goods_detail g
                 INNER JOIN tab_sale_info sale ON g.sale_code = sale.sale_code
                 WHERE 1 = 1
                 <if test="startDate != null and startDate !=''">
@@ -36,12 +60,12 @@
                     AND <![CDATA[sale.sale_date <= DATE_FORMAT(#{endDate}, '%Y-%m-%d 23:59:59')]]>
                 </if>
 
-                GROUP BY g.stock_code
-            ) saleGoods ON stock.stock_code = saleGoods.stock_code AND saleGoods.stock_address = price.stock_address
+                GROUP BY g.stock_code, g.stock_address_code
+            ) saleGoods ON stock.stock_code = saleGoods.stock_code AND saleGoods.stock_address_code = price.stock_address_code
         /*入库*/
         LEFT JOIN
             (
-                SELECT SUM(p.goods_num) AS receipt_inventory_num, p.stock_code, p.stock_address FROM tab_purchase_goods_detail p
+                SELECT SUM(p.goods_num) AS receipt_inventory_num, p.stock_code, p.stock_address_code FROM tab_purchase_goods_detail p
                 INNER JOIN tab_purchase_info pinfo ON p.purchase_code = pinfo.purchase_code
                 WHERE 1 = 1
                 <if test="startDate != null and startDate !=''">
@@ -50,8 +74,8 @@
                 <if test="endDate != null and endDate !=''">
                   AND <![CDATA[pinfo.purchase_date <= DATE_FORMAT(#{endDate}, '%Y-%m-%d 23:59:59')]]>
                 </if>
-                GROUP BY p.stock_code
-            ) purchaeGoods ON purchaeGoods.stock_code = stock.stock_code AND purchaeGoods.stock_address = price.stock_address
+                GROUP BY p.stock_code, p.stock_address_code
+            ) purchaeGoods ON purchaeGoods.stock_code = stock.stock_code AND purchaeGoods.stock_address_code = price.stock_address_code
         WHERE 1 = 1
         <if test="stockClass != null and stockClass != ''">
           AND stock.stock_class = #{stockClass}

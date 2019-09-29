@@ -33,4 +33,9 @@ public class PurchaseGoodsServiceImpl implements PurchaseGoodsService {
     public void batchDeletePurchaseGoods(List<Integer> goodIds) {
         purchaseGoodsDetailBeanMapper.batchDeletePurchaseGoods(goodIds);
     }
+
+    @Override
+    public PurchaseGoodsDetailBean queryGoodsPriceAndNum(String stockCode, String stockAddressCode) {
+        return purchaseGoodsDetailBeanMapper.queryGoodsPriceAndNum(stockCode, stockAddressCode);
+    }
 }

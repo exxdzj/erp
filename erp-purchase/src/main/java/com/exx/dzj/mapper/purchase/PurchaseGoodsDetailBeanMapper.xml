@@ -554,4 +554,11 @@
         #{id}
       </foreach>
   </delete>
+
+  <select id="queryGoodsPriceAndNum" resultType="com.exx.dzj.entity.purchase.PurchaseGoodsDetailBean">
+    SELECT
+      t.stock_code AS stockCode, t.stock_address_code AS stockAddressCode,
+      SUM(t.real_sell_price * t.goods_num) sumPrice, SUM(IF(t.real_sell_price = 0, 0, t.goods_num)) sumNum
+    FROM tab_purchase_goods_detail t WHERE t.stock_code = #{stockCode} AND t.stock_address_code = #{stockAddressCode}
+  </select>
 </mapper>

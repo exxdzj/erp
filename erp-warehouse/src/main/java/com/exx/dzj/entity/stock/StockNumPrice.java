@@ -2,6 +2,7 @@ package com.exx.dzj.entity.stock;
 
 import lombok.Data;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Data
 @ToString
+@Accessors(chain = true)
 public class StockNumPrice implements Serializable {
     private Integer id;
 
@@ -47,4 +49,6 @@ public class StockNumPrice implements Serializable {
     private Date updateTime;
 
     private String updateUser;
+
+    private BigDecimal avgPrice;
 }

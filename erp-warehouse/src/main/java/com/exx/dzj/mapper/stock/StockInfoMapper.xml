@@ -279,6 +279,9 @@
       <if test="record.isEnable != null">
         is_enable = #{record.isEnable,jdbcType=INTEGER},
       </if>
+      <if test="record.isShelves != null">
+        is_shelves = #{record.isShelves,jdbcType=INTEGER},
+      </if>
       <if test="record.isCommSale != null">
         is_comm_sale = #{record.isCommSale,jdbcType=INTEGER},
       </if>
@@ -328,7 +331,7 @@
       <if test="barCode != null and barCode!=''">
         bar_code = #{barCode,jdbcType=VARCHAR},
       </if>
-      <if test="isShelves != null and isShelves!=''">
+      <if test="isShelves != null">
         is_shelves = #{isShelves,jdbcType=VARCHAR},
       </if>
       <if test="isEnable != null">
@@ -785,5 +788,10 @@
   <update id="modifyStockInventory" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
     update tab_stock_num_price set min_inventory = IFNULL(min_inventory, 0) + #{minInventory}
       where stock_code = #{stockCode} and stock_address_code = #{stockAddressCode}
+  </update>
+
+  <update id="updateStockAvgPrice" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
+    UPDATE tab_stock_num_price set avg_price = #{avgPrice}
+      WHERE stock_code = #{stockCode} AND stock_address_code = #{stockAddressCode}
   </update>
 </mapper>

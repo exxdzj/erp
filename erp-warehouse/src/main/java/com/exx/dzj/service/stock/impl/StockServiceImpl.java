@@ -33,7 +33,9 @@ import java.util.concurrent.*;
  * @Description 存货
  */
 @Service("stockInfoService")
-public class StockServiceImpl implements StockService {
+public class
+
+StockServiceImpl implements StockService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(StockServiceImpl.class);
 
@@ -377,4 +379,8 @@ public class StockServiceImpl implements StockService {
         return stockMapper.selectByPrimaryKey(id);
     }
 
+    @Override
+    public void updateStockAvgPrice(StockNumPrice stockNumPrice) {
+        stockMapper.updateStockAvgPrice(stockNumPrice);
+    }
 }

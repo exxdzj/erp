@@ -1,8 +1,10 @@
 package com.exx.dzj.facade.reportforms.warehouse;
 
+import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.statistics.warehouse.StockReceiptOutReport;
 import com.exx.dzj.service.statistics.warehouse.StockReceiptOutInventoryReportService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,22 @@ public class StockReceiptOutInventoryReportFacade {
 
     public Map<String, Object> queryReceiptOutInventoryList (StockInfoQuery query){
         List<StockReceiptOutReport> colloct = stockReceiptOutInventoryService.queryReceiptOutInventoryList(query);
+
+        String startDate = query.getStartDate();
+
+        BigDecimal beginningCost = BigDecimal.ZERO;
+
+        for (StockReceiptOutReport temp : colloct){
+            if (StringUtils.isBlank(startDate)){
+                temp.setBeginningCost(BigDecimal.ZERO).setBeginningMinInventory(Double.valueOf(CommonConstant.DEFAULT_VALUE_ZERO))
+                        .setBeginningPrice(BigDecimal.ZERO);
+            } else {
+                beginningCost = temp.getAvgPrice().multiply(new BigDecimal(temp.getBeginningMinInventory()));
+                temp.setBeginningCost(beginningCost);
+                temp.setBeginningPrice(temp.getAvgPrice());
+            }
+        }
+
         LinkedHashMap<String, List<StockReceiptOutReport>> linkedMap = new LinkedHashMap<>();
 
         List<StockReceiptOutReport> list = null;
@@ -57,6 +75,8 @@ public class StockReceiptOutInventoryReportFacade {
         BigDecimal reCost = BigDecimal.ZERO;
         BigDecimal outCost = BigDecimal.ZERO;
         BigDecimal cost = BigDecimal.ZERO;
+        double beginningSumNum = 0.0; // 期初总计数量
+        BigDecimal beginningSumCost = BigDecimal.ZERO; // 期初成本总计
         StockReceiptOutReport res = null;
         for (List<StockReceiptOutReport> data : values){
             res = new StockReceiptOutReport();
@@ -66,8 +86,10 @@ public class StockReceiptOutInventoryReportFacade {
             outCost = data.stream().map(StockReceiptOutReport::getOutCost).reduce(BigDecimal.ZERO, BigDecimal::add);
             minInventory = data.stream().mapToDouble(StockReceiptOutReport::getMinInventory).sum();
             cost = data.stream().map(StockReceiptOutReport::getCost).reduce(BigDecimal.ZERO, BigDecimal::add);
-            res.setReceiptInventoryNum(reNum).setReceiptCost(reCost).setOutInventoryNum(outNum).
-                    setOutCost(outCost).setMinInventory(minInventory).setCost(cost).setMeterUnit("合计: ");
+            beginningSumNum = data.stream().mapToDouble(StockReceiptOutReport::getBeginningMinInventory).sum();
+            beginningSumCost = data.stream().map(StockReceiptOutReport::getBeginningCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+            res.setReceiptInventoryNum(reNum).setReceiptCost(reCost).setOutInventoryNum(outNum).setBeginningMinInventory(beginningSumNum)
+                    .setBeginningCost(beginningSumCost).setOutCost(outCost).setMinInventory(minInventory).setCost(cost).setMeterUnit("合计: ");
             data.add(res);
         }
         Map<String, Object> map = new HashMap<>();

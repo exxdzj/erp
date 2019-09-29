@@ -34,4 +34,6 @@ public interface PurchaseGoodsDetailBeanMapper {
     void batchUpdatePurchaseGoodsDetails(List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans);
 
     void batchDeletePurchaseGoods(List<Integer> goodIds);
+
+    PurchaseGoodsDetailBean queryGoodsPriceAndNum(@Param("stockCode") String stockCode, @Param("stockAddressCode") String stockAddressCode);
 }

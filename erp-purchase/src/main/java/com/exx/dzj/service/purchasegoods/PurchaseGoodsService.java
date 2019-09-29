@@ -15,4 +15,6 @@ public interface PurchaseGoodsService {
     void batchUpdatePurchaseGoodsDetails(List<PurchaseGoodsDetailBean> purchaseGoodsDetailBeans);
 
     void batchDeletePurchaseGoods(List<Integer> goodIds);
+
+    PurchaseGoodsDetailBean queryGoodsPriceAndNum(String stockCode, String stockAddressCode);
 }
