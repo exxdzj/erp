@@ -478,6 +478,49 @@
     ORDER BY  ti.stock_code /*ti.create_time DESC,*/
   </select>
 
+  <select id="querySelectStockList2" resultType="com.exx.dzj.entity.stock.StockModel"
+          parameterType="com.exx.dzj.entity.stock.StockQuery">
+    SELECT
+    concat_ws(
+    ' ',
+    ti.stock_code,
+    ti.stock_name
+    ) AS `value`,
+    /*ti.stock_name AS `value`,*/
+    ti.id,
+    ti.stock_code stockCode,
+    sn.stock_address stockAddress,
+    sn.stock_address_code stockAddressCode,
+    DICTINFO.dict_name warehouseName,
+
+    ti.stock_name stockNameForSpe,
+    ti.stock_class_name stockClassName,
+    sn.standard_buy_price standardBuyPrice,
+    IFNULL(sn.min_inventory, 0) minInventory,
+    sn.standard_sell_price standardSellPrice
+    FROM
+    tab_stock_info ti
+    LEFT JOIN tab_stock_num_price sn ON ti.stock_code = sn.stock_code and sn.is_default = 1
+    LEFT JOIN tab_dictionary_info DICTINFO ON DICTINFO.dict_code=ti.stock_address AND DICTINFO.data_type='inventory_ship_address'
+    WHERE ti.is_enable = 1
+    <if test="stockName!=null and stockName!=''">
+      AND ti.stock_code like CONCAT('%', #{stockName}, '%') or ti.stock_name like CONCAT('%', #{stockName}, '%')
+    </if>
+    <if test="specificateType!=null and specificateType!=''">
+      AND ti.specificate_type LIKE CONCAT('%', #{specificateType}, '%')
+    </if>
+    <if test="stockClass!=null and stockClass!=''">
+      AND ti.stock_class = #{stockClass}
+    </if>
+
+      AND ti.is_shelves = 1
+
+    <!--<if test="stockCode != null and stockCode != ''">
+      AND ti.stock_code REGEXP #{stockCode}
+    </if>-->
+    ORDER BY  ti.stock_code /*ti.create_time DESC,*/
+  </select>
+
   <select id="queryStockWarningList" resultType="com.exx.dzj.entity.stock.StockModel"
           parameterType="com.exx.dzj.entity.stock.StockQuery">
     SELECT

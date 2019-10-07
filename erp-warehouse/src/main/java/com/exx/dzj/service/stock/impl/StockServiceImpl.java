@@ -78,6 +78,16 @@ StockServiceImpl implements StockService {
     }
 
     @Override
+    public Result querySelectStockList2(int pageNum, int pageSize, StockQuery query) {
+        Result result = Result.responseSuccess();
+        PageHelper.startPage(pageNum, pageSize);
+        List<StockModel> list = stockMapper.querySelectStockList(query);
+        ERPage<StockModel> page = new ERPage<>(list);
+        result.setData(page);
+        return result;
+    }
+
+    @Override
     public Result queryStockWarningList(int pageNum, int pageSize, StockQuery query) {
         Result result = Result.responseSuccess();
         PageHelper.startPage(pageNum, pageSize);

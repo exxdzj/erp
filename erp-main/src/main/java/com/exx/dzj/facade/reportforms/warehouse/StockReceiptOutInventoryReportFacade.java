@@ -32,6 +32,10 @@ public class StockReceiptOutInventoryReportFacade {
 
         BigDecimal beginningCost = BigDecimal.ZERO;
 
+        // 结存数量和成本
+        Double resMinInventory = 0.0;
+        BigDecimal resCost = BigDecimal.ZERO;
+
         for (StockReceiptOutReport temp : colloct){
             if (StringUtils.isBlank(startDate)){
                 temp.setBeginningCost(BigDecimal.ZERO).setBeginningMinInventory(Double.valueOf(CommonConstant.DEFAULT_VALUE_ZERO))
@@ -41,6 +45,9 @@ public class StockReceiptOutInventoryReportFacade {
                 temp.setBeginningCost(beginningCost);
                 temp.setBeginningPrice(temp.getAvgPrice());
             }
+            resMinInventory = temp.getBeginningMinInventory() + temp.getReceiptInventoryNum() - temp.getOutInventoryNum();
+            resCost = temp.getBeginningPrice().multiply(new BigDecimal(resMinInventory));
+            temp.setMinInventory(resMinInventory).setCost(resCost);
         }
 
         LinkedHashMap<String, List<StockReceiptOutReport>> linkedMap = new LinkedHashMap<>();

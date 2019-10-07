@@ -25,6 +25,7 @@ public interface StockInfoMapper {
      */
     List<StockModel> queryStockList(StockQuery param);
     List<StockModel> querySelectStockList(StockQuery param);
+    List<StockModel> querySelectStockList2(StockQuery param);
     List<StockModel> queryStockWarningList(StockQuery param);
 
     /**

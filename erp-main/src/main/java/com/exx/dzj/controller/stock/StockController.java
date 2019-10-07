@@ -182,6 +182,25 @@ public class StockController {
         return result;
     }
 
+    /**
+     * @description: 销售单新增时,过滤已下架产品
+     * @author yangyun
+     * @date 2019/10/7 0007
+     * @param request
+     * @param response
+     * @param query
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("querySelectStockList2")
+    public Result querySelectStockList2(HttpServletRequest request, HttpServletResponse response, String query) {
+        Result result = Result.responseSuccess();
+        StockQuery queryParam = JsonUtils.jsonToPojo(query, StockQuery.class);
+        int pageNum = queryParam != null ? queryParam.getPage() : CommonConstant.DEFAULT_PAGE_NUM;
+        int pageSize = queryParam != null ? queryParam.getLimit() : CommonConstant.DEFAULT_PAGE_SIZE;
+        result = stockFacade.querySelectStockList2(pageNum, pageSize, queryParam);
+        return result;
+    }
+
     @Deprecated
     @GetMapping("querystockgoodsinventory")
     public Result queryStockGoodsInventory (StockNumPrice stockNumPrice){

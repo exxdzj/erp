@@ -11,8 +11,9 @@
             IFNULL(stock.stock_class_name, '') AS stockClassName, /*类别名称*/
             price.stock_address AS stockAddress, /*存货地点*/
             /*期初结存*/
-            IFNULL(beginningIn.beginningInNum, 0) - IFNULL(beginningOut.beginningOutNum, 0) beginningMinInventory,
-
+            <if test="startDate != null and startDate !=''">
+              IFNULL(beginningIn.beginningInNum, 0) - IFNULL(beginningOut.beginningOutNum, 0) beginningMinInventory,
+            </if>
             /*出库*/
             IFNULL(saleGoods.out_inventory_num,0) AS outInventoryNum, /*出库数量*/
             IFNULL(saleGoods.out_inventory_num,0) * IFNULL(price.avg_price, 0) AS outCost, /*出库成本*/
