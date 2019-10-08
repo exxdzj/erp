@@ -70,9 +70,12 @@ public class StockReceiptOutInventoryReportFacade {
         BigDecimal sumOutCost = colloct.stream().map(StockReceiptOutReport::getOutCost).reduce(BigDecimal.ZERO, BigDecimal::add);
         double sumMinInventory = colloct.stream().mapToDouble(StockReceiptOutReport::getMinInventory).sum();
         BigDecimal sumCost = colloct.stream().map(StockReceiptOutReport::getCost).reduce(BigDecimal.ZERO, BigDecimal::add);
+        double beginSum = colloct.stream().mapToDouble(StockReceiptOutReport::getBeginningMinInventory).sum();
+        BigDecimal BeginSumCost = colloct.stream().map(StockReceiptOutReport::getBeginningCost).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         sum.setReceiptInventoryNum(sumReNum).setReceiptCost(sumReCost).setOutInventoryNum(sumOutInventoryNum).
-                setOutCost(sumOutCost).setMinInventory(sumMinInventory).setCost(sumCost).setMeterUnit("总计: ");
+                setOutCost(sumOutCost).setMinInventory(sumMinInventory).setCost(sumCost).setMeterUnit("总计: ")
+                .setBeginningMinInventory(beginSum).setBeginningCost(BeginSumCost);
 
 
         Collection<List<StockReceiptOutReport>> values = linkedMap.values();

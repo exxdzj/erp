@@ -367,6 +367,16 @@ public class SalesTickeContorller {
         return result;
     }
 
+    @ApiOperation(nickname = "querysalesticket/{id}", value="查询销售单详情", notes="查询销售单详情", httpMethod = "GET")
+    @ApiImplicitParam(name = "id", value = "销售单ID", required = true, dataType = "Integer", paramType = "path")
+    @GetMapping("querysalesticketforandroid/{id}")
+    public Result querySalesTicketForAndroid(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Integer id){
+        Result result = Result.responseSuccess();
+        SaleInfo saleInfo = salesTicketFacade.querySalesTicketForAndroid(id);
+        result.setData(saleInfo);
+        return result;
+    }
+
     /**
      * 编程测试接口
      * @return

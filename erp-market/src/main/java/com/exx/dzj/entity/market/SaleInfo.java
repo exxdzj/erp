@@ -127,6 +127,9 @@ public class SaleInfo extends BaseModule {
     private Date createTime;
 
     private String createUser;
+    private String billName;
+    private String sourceName;
+    private String isAndReceipt;
 
     private Date updateTime;
 

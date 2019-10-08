@@ -19,6 +19,20 @@ public class DateUtil {
     private static Log log = LogFactory.getLog(DateUtil.class);
     private static final String TIME_PATTERN = "HH:mm";
 
+    public static final String DATE = "MMdd";
+
+    public static String getCurrentDate(Date aDate) {
+        SimpleDateFormat df;
+        String returnValue = "";
+
+        if (aDate != null) {
+            df = new SimpleDateFormat(DATE);
+            returnValue = df.format(aDate);
+        }
+
+        return (returnValue);
+    }
+
     /**
      * 日期格式 yyyy-MM-dd
      */

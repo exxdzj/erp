@@ -292,6 +292,10 @@ public class SalesTicketFacade {
         return salesTicketService.querySalesTicketById(id);
     }
 
+    public SaleInfo querySalesTicketForAndroid(Integer id){
+        return salesTicketService.querySalesTicketForAndroid(id);
+    }
+
     /**
      * 打印销售单数据
      * @param saleCodes

@@ -93,6 +93,11 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
         return saleInfoMapper.selectByPrimaryKey(id);
     }
 
+    @Override
+    public SaleInfo querySalesTicketForAndroid(Integer id) {
+        return saleInfoMapper.querySalesTicketForAndroid(id);
+    }
+
     /**
      * @description 打印销售单
      * @author yangyun

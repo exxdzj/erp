@@ -27,6 +27,8 @@ public interface SalesTicketService extends IService<SaleInfo> {
 
     SaleInfo querySalesTicketById(Integer id);
 
+    SaleInfo querySalesTicketForAndroid(Integer id);
+
     List<SaleInfo> printSalesTicket(List<String> saleCodes);
 
     void updateSalesTicketById(SaleInfo saleInfo);

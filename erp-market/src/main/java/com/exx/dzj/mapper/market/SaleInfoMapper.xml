@@ -1593,4 +1593,110 @@
     </foreach>
   </insert>
 
+
+  <!-- 销售单详情 -->
+  <select id="querySalesTicketForAndroid" parameterType="java.lang.Integer" resultMap="saleTicketMapAndroid">
+    SELECT
+      SINFO.id,
+      SINFO.sale_code,
+      SINFO.user_code ,
+      SINFO.deliver_remark ,
+      SINFO.salesman_code ,
+      IFNULL(SINFO.cust_code, '') AS custCode,
+      SINFO.payment_term ,
+      SINFO.subordinate_company_code ,
+      IFNULL(CSUPPLIER.cust_name,'') AS custName,
+      UINFO.user_name AS userName,
+      UINFO.real_name AS realName,
+      SINFO.sale_project,
+      SINFO.cust_phone_num,
+      DICTIONPRO.dict_name AS saleProjectName,
+      IFNULL(SUM(collected_amount), 0) AS sumCollectedAmount,
+      DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') sale_date ,
+      SINFO.cust_order_code ,
+      SINFO.delivery_address ,
+      SINFO.invoice_code ,
+      SINFO.bill_type ,
+			DICTIONBTYPE.dict_name AS billName,
+      SINFO.total_sum ,
+      SINFO.discount_amount ,
+      SINFO.receivable_accoun ,
+      SINFO.receipt_num ,
+      SINFO.collection_terms ,
+      SINFO.account_period ,
+      DATE_FORMAT(SINFO.due_date, '%Y-%m-%d') due_date ,
+      SINFO.is_enable ,
+      SINFO.create_time ,
+      SINFO.is_receipt,
+      SINFO.remarks ,
+			CASE
+				WHEN is_receipt = 0 THEN '未签收'
+				WHEN is_receipt = 1 THEN '已签收'
+				else '其他'
+			END isAndReceipt,
+      SINFO.sale_source ,
+			DICTIONSOU.dict_name AS sourceName,
+      SINFO.create_user ,
+      SINFO.collection_user_name,
+      SINFO.payment_term ,
+      SINFO.payment_status,
+      CASE
+        WHEN COUNT(SRDETAIL.sale_code) > 1
+        THEN '1719240000000034'
+        ELSE SRDETAIL.collection_account
+        END collectedAmounts
+    FROM tab_sale_info SINFO
+    LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
+    LEFT JOIN tab_dictionary_info DICTIONSOU ON SINFO.sale_source=DICTIONSOU.dict_code AND DICTIONSOU.data_type='source_sales_order'
+    LEFT JOIN tab_dictionary_info DICTIONBTYPE ON SINFO.bill_type=DICTIONBTYPE.dict_code AND DICTIONBTYPE.data_type='billing_type'
+    LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code
+    LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
+    LEFT JOIN tab_sale_receipts_details SRDETAIL ON SINFO.sale_code=SRDETAIL.sale_code
+    WHERE SINFO.id = #{id,jdbcType=INTEGER}
+  </select>
+  <resultMap id="saleTicketMapAndroid" type="com.exx.dzj.entity.market.SaleInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sale_code" property="saleCode" />
+    <result column="deliver_remark" property="deliverRemark" />
+    <result column="cust_phone_num" property="custPhoneNum" />
+    <result column="user_code" property="userCode" />
+    <result column="salesman_code" jdbcType="VARCHAR" property="salesmanCode" />
+    <result column="payment_term" jdbcType="VARCHAR" property="paymentTerm" />
+    <result column="custCode" jdbcType="VARCHAR" property="custCode" />
+    <result column="custName" jdbcType="VARCHAR" property="custName" />
+    <result column="sale_project" jdbcType="VARCHAR" property="saleProject" />
+    <result column="sale_date" jdbcType="DATE" property="saleDate" />
+    <result column="currency" jdbcType="VARCHAR" property="currency" />
+    <result column="exchange_rate" jdbcType="DOUBLE" property="exchangeRate" />
+    <result column="cust_order_code" jdbcType="VARCHAR" property="custOrderCode" />
+    <result column="delivery_address" jdbcType="VARCHAR" property="deliveryAddress" />
+    <result column="invoice_code" jdbcType="VARCHAR" property="invoiceCode" />
+    <result column="subordinate_company_code" jdbcType="VARCHAR" property="subordinateCompanyCode" />
+    <result column="bill_type" jdbcType="VARCHAR" property="billType" />
+    <result column="billName" jdbcType="VARCHAR" property="billName" />
+    <result column="total_sum" jdbcType="DECIMAL" property="totalSum" />
+    <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount" />
+    <result column="receivable_accoun" jdbcType="DECIMAL" property="receivableAccoun" />
+    <result column="receipt_num" jdbcType="VARCHAR" property="receiptNum" />
+    <result column="collection_terms" jdbcType="VARCHAR" property="collectionTerms" />
+    <result column="account_period" jdbcType="INTEGER" property="accountPeriod" />
+    <result column="due_date" jdbcType="DATE" property="dueDate" />
+    <result column="is_enable" jdbcType="INTEGER" property="isEnable" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="isAndReceipt" jdbcType="INTEGER" property="isAndReceipt" />
+    <result column="is_receipt" jdbcType="INTEGER" property="isReceipt" />
+    <result column="sale_source" jdbcType="VARCHAR" property="saleSource" />
+    <result column="sourceName" jdbcType="VARCHAR" property="sourceName" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="collection_user_name" jdbcType="VARCHAR" property="collectionUserName" />
+    <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+    <result column="payment_status" jdbcType="VARCHAR" property="paymentStatus" />
+    <!-- 查询关联收款记录 -->
+    <collection property="saleReceiptsDetailsList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleReceiptsDetails" javaType="java.util.List"
+                select="com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper.querySaleReceiptsDetailsList" />
+    <!-- 查询关联商品详情 -->
+    <collection property="saleGoodsDetailBeanList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleGoodsDetailBean" javaType="java.util.List"
+                select="com.exx.dzj.mapper.market.SaleGoodsDetailBeanMapper.querySaleGoodsDetailBeanList" />
+  </resultMap>
+
 </mapper>
