@@ -26,9 +26,9 @@ public class ExportUtil {
      * @param sheetName
      * @return com.alibaba.excel.metadata.Sheet
      */
-    public static Sheet gainSheet (Map<Integer, Integer> cellsSize, String sheetName){
+    public static Sheet gainSheet (Map<Integer, Integer> cellsSize, String sheetName, int sheetNo){
         // 单 sheet excel
-        Sheet sheet = new Sheet(1,0);
+        Sheet sheet = new Sheet(sheetNo,0);
 
         // sheet 内容样式
         TableStyle style = new TableStyle();

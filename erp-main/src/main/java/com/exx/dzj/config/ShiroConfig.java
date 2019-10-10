@@ -52,6 +52,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/import/**", "anon");
         filterChainDefinitionMap.put("/print/**", "anon");
         filterChainDefinitionMap.put("/WarehouseExport/**", "anon");
+        filterChainDefinitionMap.put("/newyeargiftexport/**", "anon");
 
         filterChainDefinitionMap.put("/favicon.ico", "anon");
         filterChainDefinitionMap.put("/swagger-ui.html", "anon");

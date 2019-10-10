@@ -8,8 +8,6 @@ import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.statistics.warehouse.StockReceiptOutReport;
 import com.exx.dzj.util.DateUtil;
 import com.exx.dzj.util.excel.export.model.StockReceiptOutInventoryModel;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
-
 import javax.servlet.ServletOutputStream;
 import java.math.BigDecimal;
 import java.util.*;
@@ -39,7 +37,7 @@ public class WareHouseExportUtils extends ExportUtil {
                 mapStyle.put(i, 4000);
             }
 
-            Sheet sheet = gainSheet(mapStyle, sheetName);
+            Sheet sheet = gainSheet(mapStyle, sheetName, 1);
             sheet.setSheetName(sheetName);
 
             Table title = new Table(1);

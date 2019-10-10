@@ -77,7 +77,7 @@ public class SaleExportUtils extends ExportUtil {
         map.put(13,4000);
 
         String sheetName = ExportFileNameEnum.INVENTORY_SALE_NAME.getValue();
-        Sheet sheet = gainSheet(map, sheetName);
+        Sheet sheet = gainSheet(map, sheetName, 1);
 
         Table title = new Table(1);
         title.setClazz(InventorySaleModel.class);
@@ -219,7 +219,7 @@ public class SaleExportUtils extends ExportUtil {
         map.put(13,4000);
 
         String sheetName = ExportFileNameEnum.INVENTORY_SALE_NAME.getValue();
-        Sheet sheet = gainSheet(map, sheetName);
+        Sheet sheet = gainSheet(map, sheetName, 1);
 
         Table title = new Table(1);
         title.setClazz(SalesManSaleModel.class);
@@ -353,7 +353,7 @@ public class SaleExportUtils extends ExportUtil {
         map.put(10,4000);
 
         String sheetName = ExportFileNameEnum.CUSTOMER_SALE_NAME.getValue();
-        Sheet sheet = gainSheet(map, sheetName);
+        Sheet sheet = gainSheet(map, sheetName, 1);
 
         Table title = new Table(1);
         title.setClazz(CustomerSaleModel.class);
@@ -490,7 +490,7 @@ public class SaleExportUtils extends ExportUtil {
 
 
         String sheetName = ExportFileNameEnum.SALEMAN_SALE_DEDUCTION.getValue();
-        Sheet sheet = gainSheet(map, sheetName);
+        Sheet sheet = gainSheet(map, sheetName, 1);
 
         Table title = new Table(1);
         title.setClazz(SaleDeductionModel.class);
@@ -1098,7 +1098,7 @@ public class SaleExportUtils extends ExportUtil {
         mapStyle.put(8,4000);
 
 
-        Sheet sheet = gainSheet(mapStyle, sheetName);
+        Sheet sheet = gainSheet(mapStyle, sheetName, 1);
         sheet.setSheetName(sheetName);
 
         Table title = new Table(1);
@@ -1203,7 +1203,7 @@ public class SaleExportUtils extends ExportUtil {
         mapStyle.put(8,4000);
 
 
-        Sheet sheet = gainSheet(mapStyle, sheetName);
+        Sheet sheet = gainSheet(mapStyle, sheetName, 1);
         sheet.setSheetName(sheetName);
 
         Table title = new Table(1);
