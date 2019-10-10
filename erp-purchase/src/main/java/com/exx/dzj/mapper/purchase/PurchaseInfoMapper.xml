@@ -128,6 +128,9 @@
     <if test="endTime != null and endTime != ''">
       AND  <![CDATA[PINFO.purchase_date <= DATE_FORMAT(#{endTime},'%Y-%m-%d 23:59:59')]]>
     </if>
+    <if test="custCode != null and custCode != ''">
+      AND PINFO.cust_code = #{custCode}
+    </if>
     <if test="purchaseCode != null and purchaseCode != ''">
       AND  PINFO.purchase_code LIKE CONCAT(#{purchaseCode}, '%')
     </if>

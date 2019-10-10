@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exx.dzj.mapper.newyeargoods.NewYearGoodsMapper">
+
+    <select id="query2020NewYearList" resultType="com.exx.dzj.entity.newyeargoods.NewGiftBaseInfo">
+        SELECT
+            main.id,
+            main.category_name AS categoryName,
+            main.category_code AS categoryCode,
+            main.sort_value AS sortValue,
+            detail.id AS detailId,
+            detail.stock_code AS detailStockCode,
+            detail.show_name AS showName,
+            stock.stock_code AS stockCode,
+            stock.stock_name AS stockName,
+            IFNULL(a.goodsNum, 0) AS goodsNum,
+            IFNULL(a.sumVolume,0) AS sumVolume
+        FROM tab_panel_gift_category main
+        LEFT JOIN tab_panel_gift_stock detail ON main.category_code = detail.category_code
+        LEFT JOIN tab_stock_info stock ON stock.stock_name LIKE CONCAT('%', detail.stock_name, '%')
+        LEFT JOIN (SELECT stock_code, stock_address_code,
+                    SUM(IFNULL(goods_num, 0)) AS goodsNum,
+                    SUM(IFNULL(goods_num, 0) * IFNULL(real_sell_price, 0)) sumVolume
+            FROM tab_sale_goods_detail GROUP BY stock_code, stock_address_code) a
+            ON a.stock_code = stock.stock_code AND a.stock_address_code = stock.stock_address_code
+        ORDER BY main.sort_value
+    </select>
+
+    <select id="queryDayData" resultType="com.exx.dzj.entity.newyeargoods.NewYearGoodsBean">
+        select
+        ifnull(sum(IFNULL(a.goodsNum, 0)), 0) AS goodsNum,
+        ifnull(sum(IFNULL(a.sumVolume,0)),0) AS sumVolume
+
+        from tab_panel_gift_category main
+        LEFT JOIN tab_panel_gift_stock detail ON main.category_code = detail.category_code
+        LEFT JOIN tab_stock_info stock ON stock.stock_name like CONCAT('%', detail.stock_name, '%')
+        right JOIN	(SELECT stock_code, stock_address_code,
+        SUM(IFNULL(goods_num, 0)) AS goodsNum,
+        SUM(IFNULL(goods_num, 0) * IFNULL(real_sell_price, 0)) sumVolume
+        FROM tab_sale_goods_detail b
+        INNER JOIN tab_sale_info sale
+        ON b.sale_code = sale.sale_code
+        <![CDATA[AND sale.sale_date >= DATE_FORMAT(CURDATE(), '%Y-%m-%d %H:%i:%s')
+        AND sale.sale_date <= DATE_FORMAT(CURDATE(), '%Y-%m-%d 23:59:59')]]>
+        GROUP BY stock_code, stock_address_code) a
+        ON a.stock_code = stock.stock_code AND a.stock_address_code = stock.stock_address_code
+
+    </select>
+</mapper>
