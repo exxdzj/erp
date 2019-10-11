@@ -115,10 +115,10 @@ public class SaleTicketReportFacade {
                                             sgr.setCustName(end.getCustName());
                                             sgr.setStandardBuyPrice(end.getStandardBuyPrice());
                                             BigDecimal bigDecimal = new BigDecimal(end.getGoodsNum() == null ? 0 : end.getGoodsNum());
-                                            sgr.setSalesVolume(end.getUnitPrice().multiply(bigDecimal).subtract(end.getDiscountAmount()));
+                                            sgr.setSalesVolume(end.getUnitPrice().multiply(bigDecimal)); //.subtract(end.getDiscountAmount()));
                                             sgr.setCost(end.getStandardBuyPrice().multiply(bigDecimal));
                                             sgr.setRealName(end.getRealName());
-                                            sgr.setGrossMargin(sgr.getSalesVolume().subtract(sgr.getCost()));
+                                            sgr.setGrossMargin((sgr.getSalesVolume().intValue() == 0) ? BigDecimal.ZERO : sgr.getSalesVolume().subtract(sgr.getCost()));
                                             BigDecimal decimal = MathUtil.keepTwoBigdecimal(sgr.getGrossMargin(), sgr.getSalesVolume(), CommonConstant.DEFAULT_VALUE_FOUR);
                                             sgr.setGrossRate(decimal);
                                             sir.getSaleInfoReports().add(sgr);

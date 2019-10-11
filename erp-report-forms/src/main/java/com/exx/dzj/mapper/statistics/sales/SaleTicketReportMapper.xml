@@ -4,11 +4,12 @@
     <select id="statisticsSaleByInventory" resultMap="stockTypeMap" parameterType="com.exx.dzj.entity.bean.StockInfoQuery">
       SELECT
         sinfo.id, sgd.stock_code, sgd.stock_name, dinfo.dict_name,
-        CASE
+        /*CASE
             WHEN sgd.real_sell_price > 0 THEN sgd.real_sell_price
         ELSE
             sgd.unit_price
-        END unitPrice,
+        END unitPrice,*/
+        sgd.real_sell_price AS unitPrice,
         snp.standard_buy_price, uinfo.real_name,
         sgd.goods_num, snp.stock_address,
         sinfo.sale_code, DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d') sale_date,IFNULL(sinfo.discount_amount,0) discount_amount,
