@@ -34,7 +34,7 @@
         from tab_panel_gift_category main
         LEFT JOIN tab_panel_gift_stock detail ON main.category_code = detail.category_code
         LEFT JOIN tab_stock_info stock ON stock.stock_name like CONCAT('%', detail.stock_name, '%')
-        right JOIN	(SELECT stock_code, stock_address_code,
+        INNER JOIN	(SELECT stock_code, stock_address_code,
         SUM(IFNULL(goods_num, 0)) AS goodsNum,
         SUM(IFNULL(goods_num, 0) * IFNULL(real_sell_price, 0)) sumVolume
         FROM tab_sale_goods_detail b
