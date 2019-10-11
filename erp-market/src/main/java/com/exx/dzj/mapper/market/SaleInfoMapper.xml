@@ -1212,12 +1212,13 @@
   </resultMap>
 
   <select id="querySalesTicketTop" resultMap="saleTicketTopMap">
-    SELECT u.real_name,s.salesman_code, IFNULL(COUNT(s.salesman_code), 0) AS countTicket
+    SELECT u.real_name,u.salesman_code, IFNULL(COUNT(s.salesman_code), 0) AS countTicket, u.user_code
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.user_code = u.user_code
         WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
 									 AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
-				GROUP BY s.salesman_code
+									 AND u.salesman_code IS NOT NULL
+				GROUP BY u.user_code
 				ORDER BY countTicket DESC
 				/*LIMIT 30*/
   </select>
