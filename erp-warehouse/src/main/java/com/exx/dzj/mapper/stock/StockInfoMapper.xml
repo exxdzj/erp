@@ -837,4 +837,12 @@
     UPDATE tab_stock_num_price set avg_price = #{avgPrice}
       WHERE stock_code = #{stockCode} AND stock_address_code = #{stockAddressCode}
   </update>
+
+  <update id="upateStockNameForSaleGoodsTable">
+    UPDATE tab_sale_goods_detail SET stock_name=#{stockName} WHERE stock_code = #{stockCode}
+  </update>
+
+  <update id="upateStockNameForPurchaseGoodsTable">
+      UPDATE tab_purchase_goods_detail SET stock_name=#{stockName} WHERE stock_code = #{stockCode}
+  </update>
 </mapper>

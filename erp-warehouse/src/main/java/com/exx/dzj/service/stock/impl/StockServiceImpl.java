@@ -173,8 +173,8 @@ StockServiceImpl implements StockService {
     private AsyncTaskExecutor asyncSaleExecutr;
 
     private void updateStockCode (StockInfo oldStockInfo, StockInfo stockInfo) {
-        // 只有新的编码和老的编码不一致时需要更新编码
-        if (oldStockInfo != null && !StringUtils.equals(stockInfo.getStockCode(), oldStockInfo.getStockCode())){
+
+//        if (oldStockInfo != null && !StringUtils.equals(stockInfo.getStockCode(), oldStockInfo.getStockCode())){
             StockCodeUpdateTask temp = map.get(oldStockInfo.getStockCode());
 
             // 第一次
@@ -189,11 +189,11 @@ StockServiceImpl implements StockService {
                     }
                 } while (temp != null);
             }
-        }
+//        }
     }
 
     private void execution (StockInfo oldStockInfo, StockInfo stockInfo ) {
-        StockCodeUpdateTask task = new StockCodeUpdateTask(map, oldStockInfo.getStockCode(), stockInfo.getStockCode() ,this);
+        StockCodeUpdateTask task = new StockCodeUpdateTask(map, oldStockInfo, stockInfo,this);
         map.put(oldStockInfo.getStockCode(), task);
 
         Future future = asyncSaleExecutr.submit(task);
@@ -212,7 +212,7 @@ StockServiceImpl implements StockService {
 
     @SysLog(operate = "更新存货编码", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     @Transactional(rollbackFor = Exception.class)
-    public void updateRelatedStockCode (String oldCode, String newCode){
+    public void updateRelatedStockCode (StockInfo oldStockInfo, StockInfo stockInfo){
         try {
             // 存货主表
             //stockMapper.updateStockCode(oldCode, newCode);
@@ -220,15 +220,61 @@ StockServiceImpl implements StockService {
             // 存货价格表
             //stockMapper.upateStockCodeForStockPriceTable(oldCode, newCode);
 
-            // 销售单商品
-            stockMapper.upateStockCodeForSaleGoodsTable(oldCode, newCode);
+            // 只有新的编码和老的编码不一致时需要更新编码
+            if (oldStockInfo != null && !StringUtils.equals(stockInfo.getStockCode(), oldStockInfo.getStockCode())){
 
-            // 采购单商品
-            stockMapper.upateStockCodeForPurchaseGoodsTable(oldCode, newCode);
+                // 销售单商品
+                stockMapper.upateStockCodeForSaleGoodsTable(oldStockInfo.getStockCode(), stockInfo.getStockCode());
+
+                // 采购单商品
+                stockMapper.upateStockCodeForPurchaseGoodsTable(oldStockInfo.getStockCode(), stockInfo.getStockCode());
+
+                // 名称需要同步修改, 使用修改后的编码
+                updateRelatedStockName(oldStockInfo, stockInfo, CommonConstant.USE_NEW_CDOE);
+            } else {
+                // 名称需要同步修改, 使用旧原code
+                updateRelatedStockName(oldStockInfo, stockInfo, CommonConstant.USE_OLD_CDOE);
+            }
+
+
         } catch (Exception e){
             e.printStackTrace();
             throw e;
         }
+    }
+
+    /**
+     * @Author yangyun
+     * @Description:  更新存货名称
+     * @Date 2019/10/12 0012 10:16
+     * @Param [oldStockInfo, stockInfo, type]
+     * @returnm void
+     **/
+    @Transactional(rollbackFor = Exception.class)
+    public void updateRelatedStockName (StockInfo oldStockInfo, StockInfo stockInfo, String type){
+        try {
+            if (!StringUtils.equals(oldStockInfo.getStockName(), stockInfo.getStockName())) {
+                String stockCode = null;
+                switch (type) {
+                    case CommonConstant.USE_NEW_CDOE:
+                        stockCode = stockInfo.getStockCode();
+                        break;
+                    case CommonConstant.USE_OLD_CDOE:
+                        stockCode = oldStockInfo.getStockCode();
+                        break;
+
+                }
+                updatePurchaseAndSaleTickeStockName(stockCode, stockInfo.getStockName());
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @SysLog(operate = "更新存货编码", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
+    private void updatePurchaseAndSaleTickeStockName (String stockCode, String stockName){
+        stockMapper.upateStockNameForSaleGoodsTable(stockCode, stockName);
+        stockMapper.upateStockNameForPurchaseGoodsTable(stockCode, stockName);
     }
 
     /**

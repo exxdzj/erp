@@ -23,7 +23,7 @@
                     SUM(IFNULL(goods_num, 0) * IFNULL(real_sell_price, 0)) sumVolume
             FROM tab_sale_goods_detail GROUP BY stock_code, stock_address_code) a
             ON a.stock_code = stock.stock_code AND a.stock_address_code = stock.stock_address_code
-        ORDER BY main.sort_value
+        ORDER BY main.sort_value, goodsNum DESC
     </select>
 
     <select id="queryDayData" resultType="com.exx.dzj.entity.newyeargoods.NewYearGoodsBean">

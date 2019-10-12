@@ -150,4 +150,7 @@ public class CommonConstant {
     public static final String INSERT = "insert";
     public static final String UPDATE = "update";
     public static final String DELETE = "delete";
+
+    public static final String USE_NEW_CDOE ="useNewCode";
+    public static final String USE_OLD_CDOE ="useOldCode";
 }
