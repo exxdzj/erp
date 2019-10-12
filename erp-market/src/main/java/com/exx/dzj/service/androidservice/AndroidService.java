@@ -13,7 +13,7 @@ import java.util.List;
  **/
 public interface AndroidService {
 
-    SaleInfo queryPersonageSaleVolume(String userCode, String date);
+    List<SaleInfo> queryPersonageSaleVolume(List<String> list, String date);
 
-    int queryCustomerCount (String userCode, String newly);
+    int queryCustomerCount (List<String> list, String newly);
 }

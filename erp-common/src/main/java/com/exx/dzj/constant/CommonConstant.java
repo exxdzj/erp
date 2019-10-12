@@ -1,6 +1,8 @@
 package com.exx.dzj.constant;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @Author
@@ -153,4 +155,6 @@ public class CommonConstant {
 
     public static final String USE_NEW_CDOE ="useNewCode";
     public static final String USE_OLD_CDOE ="useOldCode";
+
+    public static final List<String> USERCODE = Arrays.asList("5002", "006", "010");
 }

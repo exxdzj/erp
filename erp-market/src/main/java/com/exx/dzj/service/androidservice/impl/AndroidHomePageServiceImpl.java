@@ -6,6 +6,8 @@ import com.exx.dzj.service.androidservice.AndroidService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @ClassName AndroidHomePageServiceImpl
  * @Description:
@@ -20,13 +22,13 @@ public class AndroidHomePageServiceImpl implements AndroidService {
     private AndroidMapper androidMapper;
 
     @Override
-    public SaleInfo queryPersonageSaleVolume(String userCode, String date) {
-        return androidMapper.queryPersonageSaleVolume(userCode, date);
+    public List<SaleInfo> queryPersonageSaleVolume(List<String> list, String date) {
+        return androidMapper.queryPersonageSaleVolume(list, date);
     }
 
     @Override
-    public int queryCustomerCount(String userCode, String newly) {
+    public int queryCustomerCount(List<String> list, String newly) {
 
-        return androidMapper.queryCustomerCount(userCode, newly);
+        return androidMapper.queryCustomerCount(list, newly);
     }
 }

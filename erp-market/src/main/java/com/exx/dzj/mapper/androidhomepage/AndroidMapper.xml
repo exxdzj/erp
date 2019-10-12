@@ -7,7 +7,12 @@
         <if test="newly != null and newly != ''">
             AND create_time BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
         </if>
-        AND user_code = #{userCode}
+        <if test="listParam != null">
+            AND user_code IN
+            <foreach collection="listParam" separator="," open="(" close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
     </select>
 
     <select id="queryPersonageSaleVolume" resultType="com.exx.dzj.entity.market.SaleInfo">
@@ -26,8 +31,11 @@
         <if test="type == 'year'.toString()">
             AND YEAR(s.sale_date) = YEAR(NOW())
         </if>
-        <if test="userCode != null and userCode != ''">
-            AND s.user_code = #{userCode}
+        <if test="listParam != null">
+            AND s.user_code IN
+            <foreach collection="listParam" separator="," open="(" close=")" item="item">
+                #{item}
+            </foreach>
         </if>
         /*AND u.real_name IS NOT NULL*/
         GROUP BY s.salesman_code,u.real_name

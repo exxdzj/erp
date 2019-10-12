@@ -1,14 +1,15 @@
 package com.exx.dzj.facade.androidfacade.homepage;
 
+import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.service.androidservice.AndroidService;
-import com.exx.dzj.service.customer.CustomerService;
-import com.exx.dzj.service.salesticket.SalesTicketService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @ClassName AndroidHomePageFacade
@@ -23,35 +24,68 @@ public class AndroidFacade {
     @Autowired
     private AndroidService androidService;
 
-    @Autowired
-    private CustomerService customerSupplierService;
-
-    @Autowired
-    private SalesTicketService salesTicketService;
+    private List<String> checkUserCode (String userCode){
+        List<String> list = new ArrayList<>();
+        for (String code : CommonConstant.USERCODE){
+            if (StringUtils.equals(code, userCode)){
+                list = CommonConstant.USERCODE;
+                return list;
+            }
+        }
+        list.add(userCode);
+        return list;
+    }
 
     public Map<String, SaleInfo> queryPersonageSaleVolume(String userCode){
         Map<String, SaleInfo> data = new HashMap<>();
+        List<String> list = checkUserCode(userCode);
 
+        SaleInfo s = null;
         // 个人今日销售额
-        SaleInfo day = androidService.queryPersonageSaleVolume(userCode, "day");
-        data.put("day", day);
+        List<SaleInfo> day = androidService.queryPersonageSaleVolume(list, "day");
+        s = new SaleInfo();
+        s.setReceivableAccoun(BigDecimal.ZERO);
+        if (!CollectionUtils.isEmpty(day)){
+            s.setReceivableAccoun(day.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
+        }
+
+        data.put("day", s);
         // 个人当月销售额
-        SaleInfo month = androidService.queryPersonageSaleVolume(userCode, "month");
-        data.put("month", month);
+        List<SaleInfo> month = androidService.queryPersonageSaleVolume(list, "month");
+
+        s = new SaleInfo();
+        s.setReceivableAccoun(BigDecimal.ZERO);
+        if (!CollectionUtils.isEmpty(month)){
+            s.setReceivableAccoun(month.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
+        }
+        data.put("month", s);
         // 个人今年销售额
-        SaleInfo year = androidService.queryPersonageSaleVolume(userCode, "year");
-        data.put("year", year);
+        List<SaleInfo> year = androidService.queryPersonageSaleVolume(list, "year");
+        s = new SaleInfo();
+        s.setReceivableAccoun(BigDecimal.ZERO);
+        if (!CollectionUtils.isEmpty(year)){
+            s.setReceivableAccoun(year.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
+        }
+        data.put("year", s);
 
         return data;
     }
 
+    /**
+     * 5002  app-yangshouhai
+     * 006    yangshouhai
+     * 010    jinyingluntan
+     **/
+
     public Map<String, Object> queryCustomerCount(String userCode) {
         Map<String, Object> data = new HashMap<>();
+        List<String> list = checkUserCode(userCode);
+
         // 今日新增客户数
-        int newly = androidService.queryCustomerCount(userCode, "newly");
+        int newly = androidService.queryCustomerCount(list, "newly");
         data.put("newly", newly);
         // 客户总数
-        int sum = androidService.queryCustomerCount(userCode, null);
+        int sum = androidService.queryCustomerCount(list, null);
         data.put("sum", sum);
         return data;
     }

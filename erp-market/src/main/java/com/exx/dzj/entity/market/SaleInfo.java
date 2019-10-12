@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -23,6 +24,7 @@ import java.util.List;
 @TableName("tab_sale_info")
 @JsonIgnoreProperties(value = {"handler"})
 @ApiModel(description = "销售单Model")
+@Accessors(chain = true)
 public class SaleInfo extends BaseModule {
     private static final long serialVersionUID = 4886114971525378166L;
 
