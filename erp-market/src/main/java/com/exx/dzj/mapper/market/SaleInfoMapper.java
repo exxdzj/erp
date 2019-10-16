@@ -17,6 +17,8 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
 
     int deleteByPrimaryKey(Integer id);
 
+    void upateSaleTicketStatus(@Param("saleCode") String saleCode);
+
     @Override
     int insert(SaleInfo record);
 

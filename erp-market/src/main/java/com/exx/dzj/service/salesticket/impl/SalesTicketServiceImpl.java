@@ -130,6 +130,11 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     }
 
     @Override
+    public void upateSaleTicketStatus(String saleCode) {
+        saleInfoMapper.upateSaleTicketStatus(saleCode);
+    }
+
+    @Override
     @SaleLog(operate = "删除销售单物流信息")
     public void logisticsInfoDel(Integer id) {
         saleInfoMapper.logisticsInfoDel(id);

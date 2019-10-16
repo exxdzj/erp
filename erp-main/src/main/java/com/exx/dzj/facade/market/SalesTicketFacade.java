@@ -546,9 +546,11 @@ public class SalesTicketFacade {
     public void deleteSalesTicket(Integer id){
         SaleInfo saleInfo = salesTicketService.querySalesTicketById(id);
         Optional<SaleInfo> saleInfoOptional = Optional.of(saleInfo);
-        salesTicketService.deleteSaleinfo(id);
+//        salesTicketService.deleteSaleinfo(id);
 
-        List<SaleReceiptsDetails> saleReceiptsDetails = Optional.of(saleInfo.getSaleReceiptsDetailsList()).get();
+        salesTicketService.upateSaleTicketStatus(saleInfo.getSaleCode());
+
+        /*List<SaleReceiptsDetails> saleReceiptsDetails = Optional.of(saleInfo.getSaleReceiptsDetailsList()).get();
         Stream<SaleReceiptsDetails> stream = saleReceiptsDetails.stream();
         List<Integer> srdIds = stream.map(s -> s.getId()).collect(Collectors.toList());
         if(!CollectionUtils.isEmpty(srdIds)){
@@ -559,7 +561,7 @@ public class SalesTicketFacade {
         List<Integer> sgbIds = saleGoodsDetailBeans.stream().map((s) -> s.getId()).collect(Collectors.toList());
         if(!CollectionUtils.isEmpty(sgbIds)){
             salesGoodsDetailService.batchDeleteSalesGoodsDetail(sgbIds);
-        }
+        }*/
 
         CustomerSupplierInfo customerSupplierInfo = customerService.queryVIPCustomerSupplierInfo(saleInfo.getCustCode());
         if (customerSupplierInfo == null){

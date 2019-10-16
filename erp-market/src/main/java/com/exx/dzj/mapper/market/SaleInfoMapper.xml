@@ -248,6 +248,7 @@
       <if test="query.custPhoneNum != null and query.custPhoneNum != ''">
         AND SINFO.cust_phone_num LIKE CONCAT('%', #{query.custPhoneNum}, '%')
       </if>
+      AND SINFO.is_enable = 1
     </where>
     GROUP BY SINFO.sale_code
     ORDER BY saleDate,SINFO.sale_code
@@ -523,10 +524,15 @@
         td.sale_code = #{saleCode}
   </select>
     
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tab_sale_info
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    /*delete from tab_sale_info
+    where id = #{id,jdbcType=INTEGER}*/
+    update tab_sale_info set is_enable = 0 where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="upateSaleTicketStatus">
+    update tab_sale_info set is_enable = 0 where sale_code = #{saleCode}
+  </update>
 
   <delete id="deleteByExample" parameterType="com.exx.dzj.entity.market.SaleInfoExample">
     delete from tab_sale_info
@@ -1201,7 +1207,7 @@
     /*WHERE DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')*/
     WHERE s.sale_date BETWEEN date_add(curdate(),INTERVAL - DAY(curdate())+1 DAY) AND date_add(curdate() - DAY(curdate()) +1,INTERVAL 1 MONTH)
     AND s.user_code = u.user_code
-    GROUP BY s.salesman_code,u.real_name
+    GROUP BY s.user_code,u.real_name
     ORDER BY receivable_accoun DESC
 /*    LIMIT 30*/
   </select>

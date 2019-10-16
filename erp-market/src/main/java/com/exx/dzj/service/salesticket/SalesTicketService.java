@@ -35,6 +35,8 @@ public interface SalesTicketService extends IService<SaleInfo> {
 
     void deleteSaleinfo(Integer id);
 
+    void upateSaleTicketStatus(String saleCode);
+
     void logisticsInfoDel (Integer id);
 
     List<SaleInfo> querySumSalesOnDay();
