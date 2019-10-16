@@ -233,6 +233,18 @@ public class StockFacade {
         }
         return result;
     }
+    public Result checkStockName(String stockName) {
+        StockInfoExample example = new StockInfoExample();
+        StockInfoExample.Criteria criteria = example.createCriteria();
+        criteria.andStockNameEqualTo(stockName);
+        long count = stockInfoService.countByExample(example);
+        Result result = Result.responseSuccess();
+        if(count > 0) {
+            result.setCode(400);
+            result.setMsg("编码已存在!");
+        }
+        return result;
+    }
 
     public List<StockInfo> queryStockGoodsInfoForImportData (){
         List<StockInfo> list = stockInfoService.queryStockGoodsInfoForImportData();

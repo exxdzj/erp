@@ -170,6 +170,10 @@ public class StockController {
     public Result checkStockCode(String stockCode) {
         return stockFacade.checkStockCode(stockCode);
     }
+    @GetMapping("checkStockName")
+    public Result checkStockName(String stockName) {
+        return stockFacade.checkStockName(stockName);
+    }
 
 
     @GetMapping("querySelectStockList")
