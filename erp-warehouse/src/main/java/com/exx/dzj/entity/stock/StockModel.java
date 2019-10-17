@@ -27,7 +27,7 @@ public class StockModel implements Serializable {
     private String stockAddress;
     private String stockAddressCode;
     private Integer minInventory;
-
+    private Integer cumulativeSales;
     /*仓库名称*/
     private String warehouseName;
 }

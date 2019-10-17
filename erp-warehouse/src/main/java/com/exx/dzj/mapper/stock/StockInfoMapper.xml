@@ -381,6 +381,7 @@
       sn.standard_buy_price standardBuyPrice,
       IFNULL(sn.min_inventory, 0) minInventory,
       sn.standard_sell_price standardSellPrice,
+      sn.cumulative_sales cumulativeSales,
       CASE
     WHEN ti.nature = '1' THEN
         '原材料'
