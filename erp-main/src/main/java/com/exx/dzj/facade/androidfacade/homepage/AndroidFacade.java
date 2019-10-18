@@ -68,6 +68,24 @@ public class AndroidFacade {
         }
         data.put("year", s);
 
+        // 个人当月销售件数
+        List<Integer> monthNum = androidService.queryPersonageNum(list, "month");
+        s = new SaleInfo();
+        s.setGoodsNum(0);
+        if (!CollectionUtils.isEmpty(monthNum)){
+            s.setGoodsNum(monthNum.stream().mapToInt(Integer::intValue).sum());
+        }
+        data.put("monthNum", s);
+
+        // 个人当年销售件数
+        List<Integer> yearNum = androidService.queryPersonageNum(list, "year");
+        s = new SaleInfo();
+        s.setGoodsNum(0);
+        if (!CollectionUtils.isEmpty(yearNum)){
+            s.setGoodsNum(yearNum.stream().mapToInt(Integer::intValue).sum());
+        }
+        data.put("yearNum", s);
+
         return data;
     }
 

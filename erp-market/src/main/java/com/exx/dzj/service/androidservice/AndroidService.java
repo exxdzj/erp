@@ -16,4 +16,6 @@ public interface AndroidService {
     List<SaleInfo> queryPersonageSaleVolume(List<String> list, String date);
 
     int queryCustomerCount (List<String> list, String newly);
+
+    List<Integer> queryPersonageNum(List<String> list, String date);
 }

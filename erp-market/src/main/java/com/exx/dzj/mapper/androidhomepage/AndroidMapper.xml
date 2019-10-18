@@ -41,4 +41,21 @@
         GROUP BY s.salesman_code,u.real_name
         ORDER BY receivable_accoun DESC
     </select>
+
+    <select id="queryPersonageNum" resultType="java.lang.Integer">
+        SELECT count(1) from tab_sale_info s
+        where 1 = 1 and is_enable = 1
+        <if test="type == 'month'">
+            AND (s.sale_date BETWEEN concat(date_format(LAST_DAY(now()),'%Y-%m-'),'01') AND LAST_DAY(now()))
+        </if>
+        <if test="type == 'year'.toString()">
+            AND YEAR(s.sale_date) = YEAR(NOW())
+        </if>
+        <if test="listParam != null">
+            AND s.user_code IN
+            <foreach collection="listParam" separator="," open="(" close=")" item="item">
+                #{item}
+            </foreach>
+        </if>
+    </select>
 </mapper>

@@ -14,4 +14,6 @@ public interface AndroidMapper {
     List<SaleInfo> queryPersonageSaleVolume(@Param("listParam") List<String> listParam, @Param("type") String date);
 
     int queryCustomerCount(@Param("listParam") List<String> listParam, @Param("newly") String newly);
+
+    List<Integer> queryPersonageNum(@Param("listParam") List<String> list, @Param("type") String date);
 }

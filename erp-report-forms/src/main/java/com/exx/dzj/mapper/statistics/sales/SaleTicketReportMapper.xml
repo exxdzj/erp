@@ -513,23 +513,36 @@
 
     <select id="querySalesTicketCount" resultMap="saleTicketTopMap" parameterType="com.exx.dzj.entity.market.SaleInfoQuery">
         SELECT
-          u.real_name,s.salesman_code, IFNULL(COUNT(s.salesman_code), 0) AS countTicket
+          u.real_name,s.salesman_code, IFNULL(COUNT(s.user_code), 0) AS countTicket
         FROM tab_sale_info s
         LEFT JOIN tab_user_info u ON s.user_code = u.user_code
         WHERE 1= 1
-        <if test="startTime != null and startTime != ''">
-            AND  <![CDATA[s.sale_date >= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')]]>
-        </if>
-        <if test="endTime != null and endTime != ''">
-            AND  <![CDATA[s.sale_date <= DATE_FORMAT(#{endTime}, '%Y-%m-%d 23:59:59')]]>
-        </if>
-        <if test="userCode != null and userCode != ''">
-            AND  s.user_code=#{userCode}
-        </if>
-        <if test="subordinateCompanyCode != null and subordinateCompanyCode != ''">
-            AND  s.subordinate_company_code=#{subordinateCompanyCode}
-        </if>
-        AND s.salesman_code IS NOT NULL
+        <choose>
+            <when test="dateType == null">
+                <if test="startTime != null and startTime != ''">
+                    AND  <![CDATA[s.sale_date >= DATE_FORMAT(#{startTime},'%Y-%m-%d %H:%i:%s')]]>
+                </if>
+                <if test="endTime != null and endTime != ''">
+                    AND  <![CDATA[s.sale_date <= DATE_FORMAT(#{endTime}, '%Y-%m-%d 23:59:59')]]>
+                </if>
+                <if test="userCode != null and userCode != ''">
+                    AND  s.user_code=#{userCode}
+                </if>
+                <if test="subordinateCompanyCode != null and subordinateCompanyCode != ''">
+                    AND  s.subordinate_company_code=#{subordinateCompanyCode}
+                </if>
+            </when>
+            <otherwise>
+                <if test="dateType == 'month'">
+                    and s.sale_date BETWEEN concat(date_format(LAST_DAY(now()),'%Y-%m-'),'01') AND LAST_DAY(now())
+                </if>
+                <if test="dateType == 'year'">
+                    AND YEAR(s.sale_date) = YEAR(NOW())
+                </if>
+            </otherwise>
+        </choose>
+        /*AND s.salesman_code IS NOT NULL*/
+        AND s.is_enable = 1
         GROUP BY s.user_code
         ORDER BY countTicket DESC
     </select>

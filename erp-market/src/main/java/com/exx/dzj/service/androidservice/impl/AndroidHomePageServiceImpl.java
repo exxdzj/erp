@@ -31,4 +31,9 @@ public class AndroidHomePageServiceImpl implements AndroidService {
 
         return androidMapper.queryCustomerCount(list, newly);
     }
+
+    @Override
+    public List<Integer> queryPersonageNum(List<String> list, String date) {
+        return androidMapper.queryPersonageNum(list, date);
+    }
 }
