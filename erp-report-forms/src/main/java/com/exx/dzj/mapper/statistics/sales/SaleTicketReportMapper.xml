@@ -21,7 +21,7 @@
         LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code AND cs.cust_type IN (1, 3)
         INNER JOIN tab_dictionary_info dinfo ON dinfo.dict_code = stinfo.stock_class AND dinfo.data_type = 'inventory_type'
         INNER JOIN tab_stock_num_price snp ON sgd.stock_code = snp.stock_code
-      WHERE 1 =1
+      WHERE 1 =1 AND sinfo.is_enable = 1
         <if test="startDate != null and startDate != ''">
             AND  <![CDATA[sinfo.sale_date >= DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s')]]>
         </if>
@@ -84,7 +84,7 @@
             LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code
 /*            LEFT JOIN tab_sale_receipts_details srd ON sinfo.sale_code = srd.sale_code*/
             INNER JOIN tab_stock_num_price snp ON sgd.stock_code = snp.stock_code
-        WHERE 1 = 1
+        WHERE 1 = 1 AND sinfo.is_enable = 1
         <if test="startDate != null and startDate != ''">
             AND  <![CDATA[sinfo.sale_date >= DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s')]]>
         </if>
@@ -130,7 +130,7 @@
         LEFT JOIN tab_user_info ui ON ui.user_code = si.user_code
         LEFT JOIN tab_sale_goods_detail sg ON si.sale_code = sg.sale_code
         LEFT JOIN tab_stock_num_price sprice ON sprice.stock_code = sg.stock_code
-        WHERE 1 =1
+        WHERE 1 =1 AND si.is_enable = 1
         <if test="userCodeList != null">
             AND si.user_code IN
             <foreach collection="userCodeList" separator="," open="(" close=")" item="item">
@@ -170,7 +170,7 @@
             tab_sale_info si
         LEFT JOIN tab_user_info ui ON ui.user_code = si.user_code
         LEFT JOIN tab_sale_receipts_details rd ON si.sale_code = rd.sale_code
-        WHERE 1 =1
+        WHERE 1 =1 AND si.is_enable = 1
         <if test="userCodeList != null">
             AND si.user_code IN
             <foreach collection="userCodeList" separator="," open="(" close=")" item="item">
@@ -241,7 +241,7 @@
         LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code
         LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code
         INNER JOIN tab_stock_num_price snp ON sgd.stock_code = snp.stock_code
-        WHERE 1 = 1
+        WHERE 1 = 1 AND sinfo.is_enable = 1
         <if test="startDate != null and startDate != ''">
             AND  <![CDATA[sinfo.sale_date >= DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s')]]>
         </if>
@@ -403,7 +403,7 @@
         LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code AND (cs.cust_type = 1 OR cs.cust_type = 3)
         LEFT JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
         WHERE
-          1 = 1
+          1 = 1 AND sinfo.is_enable = 1
         <if test="startDate != null and startDate != ''">
             AND  <![CDATA[sinfo.sale_date >= DATE_FORMAT(#{startDate},'%Y-%m-%d %H:%i:%s')]]>
         </if>
