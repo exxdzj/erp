@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exx.dzj.annotation.SaleLog;
 import com.exx.dzj.entity.market.*;
+import com.exx.dzj.enummodel.SaleProjectEnum;
 import com.exx.dzj.mapper.market.SaleInfoMapper;
 import com.exx.dzj.mapper.market.SaleReceiptsDetailsMapper;
 import com.exx.dzj.service.salesticket.SalesTicketService;
@@ -78,7 +79,16 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
      */
     @Override
     public List<SaleInfo> getSalesTicketList(SaleInfoQuery query, QueryWrapper queryWrapper) {
-        return saleInfoMapper.getSalesTicketList(query, queryWrapper);
+        List<SaleInfo> list = saleInfoMapper.getSalesTicketList(query, queryWrapper);
+        SaleProjectEnum saleProjectEnum = null;
+        for (SaleInfo temp : list){
+            saleProjectEnum = SaleProjectEnum.getSaleProjectEnum(temp.getSaleProject());
+            if (saleProjectEnum != null){
+                temp.setSaleProject(saleProjectEnum.getName());
+            }
+        }
+
+        return list;
     }
 
     /**

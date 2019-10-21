@@ -161,6 +161,9 @@ public class SaleInfo extends BaseModule {
     @TableField(exist = false, select = false)
     private String userName;
 
+    private String custRealName;
+    private String userRealName;
+
     /*已收款总金额*/
     @TableField(exist = false, select = false)
     private BigDecimal sumCollectedAmount;

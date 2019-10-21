@@ -172,7 +172,7 @@
     SINFO.sale_code,
     DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') saleDate,
     DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') sale_date_str,
-    CSUPPLIER.cust_name,
+    SINFO.cust_real_name cust_name,
     CASE
       WHEN CSUPPLIER.is_question = 1 THEN 0
       WHEN CSUPPLIER.buyCount >= 4 OR CSUPPLIER.totalVolume >= 15000 THEN 1
@@ -194,8 +194,8 @@
     DATE_FORMAT(SINFO.due_date, '%Y-%m-%d') due_date,
     SINFO.payment_status AS paymentStatus,
     SINFO.invoice_code AS invoiceCode,
-    DICTIONPRO.dict_name AS saleProject,
-    UINFO.real_name AS userName,
+    SINFO.sale_project AS saleProject,
+    SINFO.user_real_name AS userName,
     SINFO.user_code AS userCode,
     SINFO.create_user AS createUser,
     SINFO.collection_user_name AS collectionUserName,
@@ -207,10 +207,10 @@
     FROM tab_sale_logistic_info tsl WHERE tsl.sale_code = SINFO.sale_code), '无') AS logistic
 /*    GROUP_CONCAT(CONCAT(tsl.logistic_company_name, ':', tsl.freight_code) SEPARATOR ',') AS logistic*/
     FROM tab_sale_info SINFO
-    LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
+    /*LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'*/
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
     LEFT JOIN tab_sale_goods_detail goods ON SINFO.sale_code = goods.sale_code
-    LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
+    /*LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code*/
 /*    LEFT JOIN tab_sale_logistic_info tsl ON tsl.sale_code = SINFO.sale_code*/
     <where>
       ${ew.sqlSegment}
@@ -673,6 +673,12 @@
       <if test="deliverRemark != null and deliverRemark != ''">
         deliver_remark,
       </if>
+      <if test="userRealName != null and userRealName != ''">
+        user_real_name,
+      </if>
+      <if test="custRealName != null and custRealName != ''">
+        cust_real_name,
+      </if>
       create_time
     </trim>
     <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
@@ -780,6 +786,12 @@
       </if>
       <if test="deliverRemark != null and deliverRemark != ''">
         #{deliverRemark},
+      </if>
+      <if test="userRealName != null and userRealName != ''">
+        #{userRealName},
+      </if>
+      <if test="custRealName != null and custRealName != ''">
+        #{custRealName},
       </if>
       sysdate()
     </trim>
@@ -1025,6 +1037,12 @@
       </if>
       <if test="isReceipt != null">
         is_receipt = #{isReceipt,jdbcType=INTEGER},
+      </if>
+      <if test="userRealName != null and userRealName != ''">
+        user_real_name = #{userRealName},
+      </if>
+      <if test="custRealName != null and custRealName != ''">
+        cust_real_name = #{custRealName},
       </if>
       update_time = SYSDATE()
     </set>
