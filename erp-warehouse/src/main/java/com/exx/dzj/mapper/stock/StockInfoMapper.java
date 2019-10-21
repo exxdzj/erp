@@ -81,6 +81,8 @@ public interface StockInfoMapper {
 
     void modifyStockInventory(StockNumPrice stockNumPrice);
 
+    void addUpSalesNum(StockNumPrice stockNumPrice);
+
     void updateStockAvgPrice(StockNumPrice stockNumPrice);
 
     void upateStockNameForSaleGoodsTable(@Param("stockCode") String stockCode, @Param("stockName") String stockName);
