@@ -210,7 +210,7 @@
     /*LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'*/
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
     LEFT JOIN tab_sale_goods_detail goods ON SINFO.sale_code = goods.sale_code
-    /*LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code*/
+    LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
 /*    LEFT JOIN tab_sale_logistic_info tsl ON tsl.sale_code = SINFO.sale_code*/
     <where>
       ${ew.sqlSegment}
@@ -305,6 +305,8 @@
       SINFO.id,
       SINFO.sale_code,
       SINFO.user_code ,
+      SINFO.user_real_name ,
+      SINFO.cust_real_name ,
       SINFO.deliver_remark ,
       SINFO.salesman_code ,
       IFNULL(SINFO.cust_code, '') AS custCode,
@@ -355,6 +357,8 @@
   <resultMap id="saleTicketMap" type="com.exx.dzj.entity.market.SaleInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="sale_code" property="saleCode" />
+    <result column="cust_real_name" property="custRealName" />
+    <result column="user_real_name" property="userRealName" />
     <result column="deliver_remark" property="deliverRemark" />
     <result column="cust_phone_num" property="custPhoneNum" />
     <result column="user_code" property="userCode" />
@@ -1183,7 +1187,7 @@
     SELECT
       u.real_name,SUM(goods.goods_num * goods.real_sell_price) AS receivable_accoun
     FROM tab_sale_info s
-    LEFT JOIN tab_user_info u ON s.user_code = u.user_code
+    LEFT JOIN tab_user_info u ON s.user_code = u.user_code and u.is_quit = 1
     INNER JOIN tab_sale_goods_detail goods ON s.sale_code = goods.sale_code
     WHERE 1 = 1
     <if test="type == 'day'">
@@ -1221,7 +1225,7 @@
     SELECT u.salesman_code,u.real_name,
     IFNULL(SUM(s.receivable_accoun) - sum((SELECT sum(IFNULL(collected_amount, 0)) FROM tab_sale_receipts_details p WHERE p.sale_code = s.sale_code)), 0) AS receivable_accoun
     FROM tab_sale_info s
-    LEFT JOIN tab_user_info u ON s.user_code = u.user_code
+    LEFT JOIN tab_user_info u ON s.user_code = u.user_code and u.is_quit = 1
     /*WHERE DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')*/
     WHERE s.sale_date BETWEEN date_add(curdate(),INTERVAL - DAY(curdate())+1 DAY) AND date_add(curdate() - DAY(curdate()) +1,INTERVAL 1 MONTH)
     AND s.user_code = u.user_code
@@ -1238,7 +1242,7 @@
   <select id="querySalesTicketTop" resultMap="saleTicketTopMap">
     SELECT u.real_name,u.salesman_code, IFNULL(COUNT(s.salesman_code), 0) AS countTicket, u.user_code
     FROM tab_sale_info s
-    LEFT JOIN tab_user_info u ON s.user_code = u.user_code
+    LEFT JOIN tab_user_info u ON s.user_code = u.user_code and u.is_quit = 1
         WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
 									 AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
 									 AND u.salesman_code IS NOT NULL
@@ -1255,7 +1259,7 @@
   
   <select id="queryCustomerSalesToday" parameterType="com.exx.dzj.entity.market.SaleInfo" resultType="com.exx.dzj.entity.market.SaleInfo">
     SELECT SINFO.id AS id, SINFO.sale_code AS saleCode, UINFO.real_name AS realName, CS.cust_name AS custName FROM tab_sale_info SINFO
-		LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
+		LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code and UINFO.is_quit = 1
 		LEFT JOIN tab_customer_supplier CS ON SINFO.cust_code = CS.cust_code
         WHERE SINFO.cust_code = #{custCode} AND DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') = DATE_FORMAT(#{saleDate}, '%Y-%m-%d')
   </select>
@@ -1723,5 +1727,13 @@
     <collection property="saleGoodsDetailBeanList" column="sale_code" ofType="com.exx.dzj.entity.market.SaleGoodsDetailBean" javaType="java.util.List"
                 select="com.exx.dzj.mapper.market.SaleGoodsDetailBeanMapper.querySaleGoodsDetailBeanList" />
   </resultMap>
+
+  <select id="querySaleNumForCustCode" resultType="com.exx.dzj.entity.market.SaleInfo">
+    select user_code, count(sale_code) goodsNum, user_real_name
+      from tab_sale_info s
+      left join tab_user_info u on s.user_code = u.user_code
+	  where s.cust_code = #{custCode}  AND YEAR(s.sale_date) = YEAR(NOW())
+		group by s.user_code
+  </select>
 
 </mapper>

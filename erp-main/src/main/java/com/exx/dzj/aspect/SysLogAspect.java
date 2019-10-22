@@ -110,9 +110,11 @@ public class SysLogAspect {
             }
 
             //获取request
-            HttpServletRequest request = SpringContextUtils.getHttpServletRequest();
-            //设置IP地址
-            logBean.setNode(IPUtils.getIpAddr(request));
+//            HttpServletRequest request = SpringContextUtils.getHttpServletRequest();
+//            if (request != null){
+//                //设置IP地址
+//                logBean.setNode(IPUtils.getIpAddr(request));
+//            }
 
             //获取登录用户信息
             UserInfo userInfo = (UserInfo)SecurityUtils.getSubject().getPrincipal();
@@ -126,6 +128,7 @@ public class SysLogAspect {
             //保存日志
             sysLogFacade.saveSysLog(logBean);
         } catch(Exception ex) {
+            ex.printStackTrace();
             log.error("执行方法:{}错误信息:{}", SysLogAspect.class.getName()+".saveLog", ex.getMessage());
         }
     }

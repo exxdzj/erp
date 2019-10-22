@@ -3,6 +3,7 @@ package com.exx.dzj.controller.user;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.annotation.DataPermission;
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.entity.user.UserQuery;
 import com.exx.dzj.entity.user.UserVo;
@@ -57,6 +58,14 @@ public class UserController {
     public Result querySalesman() {
         Result result = Result.responseSuccess();
         result.setData(userFacade.querySalesman());
+        return result;
+    }
+
+    @ApiOperation(nickname = "querySalesman2", value="查询业务员列表", notes="查询业务员列表", httpMethod = "GET")
+    @GetMapping("querySalesman2")
+    public Result querySalesman2() {
+        Result result = Result.responseSuccess();
+        result.setData(userFacade.querySalesman2());
         return result;
     }
 
@@ -217,6 +226,14 @@ public class UserController {
         Result result = Result.responseSuccess();
         List<UserInfo> userInfoList = userFacade.querySalesmanList(type);
         result.setData(userInfoList);
+        return result;
+    }
+
+    @GetMapping("queryUserInfo/{custCode}/{userCode}")
+    public Result querySelectUserInfo (@PathVariable("custCode") String custCode, @PathVariable("userCode") String userCode){
+        Result result = Result.responseSuccess();
+        SaleInfo saleInfo = userFacade.querySelectUserInfo(custCode, userCode);
+        result.setData(saleInfo);
         return result;
     }
 }

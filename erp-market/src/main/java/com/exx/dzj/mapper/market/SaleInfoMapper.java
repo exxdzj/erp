@@ -84,5 +84,5 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
 
     void batchInsertLogistics(List<LogisticsInfo> list);
 
-
+    List<SaleInfo> querySaleNumForCustCode(@Param("custCode") String custCode);
 }

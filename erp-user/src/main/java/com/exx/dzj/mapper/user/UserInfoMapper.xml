@@ -334,6 +334,24 @@
         salesman_code IS NOT NULL and length(salesman_code) > 0
     ]]>
   </select>
+  <select id="querySalesman2" resultType="com.exx.dzj.entity.user.UserInfo">
+    <![CDATA[
+    SELECT
+        user_code userCode,
+        salesman_code salesmanCode,
+        real_name AS userName,
+        CASE
+          WHEN ui.is_quit = 0 THEN CONCAT('L',ui.salesman_code)
+          ELSE ui.salesman_code
+          END  salesmanCode2,
+        IFNULL(real_name,'') realName
+    FROM
+        tab_user_info ui
+    WHERE
+        ui.is_quit = 1 and
+        salesman_code IS NOT NULL and length(salesman_code) > 0
+    ]]>
+  </select>
 
   <!-- 查询公司员工列表数据 -->
   <select id="queryUserList" resultType="com.exx.dzj.entity.user.UserModel">

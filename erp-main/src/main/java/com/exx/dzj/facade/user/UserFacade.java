@@ -3,6 +3,7 @@ package com.exx.dzj.facade.user;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.dept.DeptInfoBean;
+import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.entity.user.UserModel;
 import com.exx.dzj.entity.user.UserQuery;
@@ -12,6 +13,7 @@ import com.exx.dzj.excepte.ErpException;
 import com.exx.dzj.facade.sys.RoleFacade;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.result.SelectionSaleInfo;
+import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.sys.DeptService;
 import com.exx.dzj.service.user.UserRoleService;
 import com.exx.dzj.service.user.UserService;
@@ -51,6 +53,9 @@ public class UserFacade {
 
     @Autowired
     private DeptService deptService;
+
+    @Autowired
+    private SalesTicketService salesTicketService;
 
     /**
      * 获取用户信息和用户角色
@@ -139,6 +144,16 @@ public class UserFacade {
      */
     public List<UserInfo> querySalesman(){
         List<UserInfo> infos = salesmanService.querySalesman();
+        if (org.apache.commons.collections.CollectionUtils.isNotEmpty(infos)){
+            for (UserInfo temp : infos){
+                temp.setRealName(temp.getSalesmanCode2() + temp.getRealName());
+            }
+        }
+        return infos;
+    }
+
+    public List<UserInfo> querySalesman2(){
+        List<UserInfo> infos = salesmanService.querySalesman2();
         if (org.apache.commons.collections.CollectionUtils.isNotEmpty(infos)){
             for (UserInfo temp : infos){
                 temp.setRealName(temp.getSalesmanCode2() + temp.getRealName());
@@ -278,5 +293,25 @@ public class UserFacade {
             }
         }
         return infos;
+    }
+
+    public SaleInfo querySelectUserInfo (String custCode, String userCode){
+        UserInfo u = new UserInfo();
+        u.setUserCode(userCode);
+        UserVo userVo = salesmanService.queryUserInfo(u);
+
+        SaleInfo saleInfo = null;
+        if (userVo.getIsQuit() == 0){
+            List<SaleInfo> list = salesTicketService.querySaleNumForCustCode(custCode);
+
+            if (list.size() > 0){
+                saleInfo = list.stream().max((a, b) -> a.getGoodsNum().compareTo(b.getGoodsNum())).get();
+            }
+        } else {
+            saleInfo = new SaleInfo();
+            saleInfo.setUserCode(userVo.getUserCode());
+            saleInfo.setRealName(userVo.getRealName());
+        }
+        return saleInfo;
     }
 }

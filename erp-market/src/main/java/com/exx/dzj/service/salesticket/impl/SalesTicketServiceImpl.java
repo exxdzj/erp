@@ -251,4 +251,9 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     public void batchInsertLogistics(List<LogisticsInfo> list) {
         saleInfoMapper.batchInsertLogistics(list);
     }
+
+    @Override
+    public List<SaleInfo> querySaleNumForCustCode(String custCode) {
+        return saleInfoMapper.querySaleNumForCustCode(custCode);
+    }
 }

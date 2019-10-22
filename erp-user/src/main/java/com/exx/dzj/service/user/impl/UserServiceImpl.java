@@ -51,6 +51,11 @@ public class UserServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> imple
         return userMapper.querySalesman();
     }
 
+    @Override
+    public List<UserInfo> querySalesman2() {
+        return userMapper.querySalesman2();
+    }
+
     /**
      * 保存 业务员信息
      * @param bean

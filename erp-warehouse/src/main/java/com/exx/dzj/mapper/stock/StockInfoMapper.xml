@@ -831,7 +831,8 @@
 
   <update id="modifyStockInventory" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
     update tab_stock_num_price
-      set min_inventory = IFNULL(min_inventory, 0) + #{minInventory}
+      set min_inventory = IFNULL(min_inventory, 0) + #{minInventory},
+      cumulative_sales = IFNULL(cumulative_sales, 0) - #{minInventory}
       where stock_code = #{stockCode} and stock_address_code = #{stockAddressCode}
   </update>
 

@@ -23,6 +23,8 @@ public interface UserService extends IService<UserInfo> {
      */
     List<UserInfo> querySalesman();
 
+    List<UserInfo> querySalesman2();
+
     /**
      * 保存 业务员信息
      * @param bean

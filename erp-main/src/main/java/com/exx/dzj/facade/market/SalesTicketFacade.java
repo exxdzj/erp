@@ -248,11 +248,14 @@ public class SalesTicketFacade {
     @Transactional
     public void updateStockInventory (SaleInfo old, SaleInfo fresh){
         ModifyStockInventoryTask task = new ModifyStockInventoryTask(old, fresh, stockInfoService);
-        asyncSaleExecutr.execute(task);
+        syncCalculatePriceExecutor.execute(task);
     }
 
     @Autowired
     private AsyncTaskExecutor asyncSaleExecutr;
+
+    @Autowired
+    private AsyncTaskExecutor syncCalculatePriceExecutor;
 
     private void setSubordinateCompany (SaleInfo saleInfo,DeptInfoBean deptInfoBean){
         AsyncSaleTask  asyncSaleTask = new AsyncSaleTask(saleInfo, deptInfoBean, salesTicketService, deptService);

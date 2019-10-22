@@ -25,6 +25,8 @@ public interface UserInfoMapper extends BaseMapper<UserInfo> {
 
     List<UserInfo> querySalesman();
 
+    List<UserInfo> querySalesman2();
+
     List<UserModel> queryUserList(UserQuery query);
 
     List<UserModel> queryList(@Param("ew") Wrapper<T> queryWrapper);
