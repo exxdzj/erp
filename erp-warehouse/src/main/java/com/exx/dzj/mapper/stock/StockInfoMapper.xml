@@ -764,7 +764,8 @@
     min_sell_price minSellPrice,
     IFNULL(min_inventory, 0) minInventory,
     stock_address stockAddress,
-    stock_address_code stockAddressCode
+    stock_address_code stockAddressCode,
+    cumulative_sales cumulativeSales
     FROM
     tab_stock_num_price
     WHERE
@@ -830,9 +831,8 @@
   </update>
 
   <update id="modifyStockInventory" parameterType="com.exx.dzj.entity.stock.StockNumPrice">
-    update tab_stock_num_price
-      set min_inventory = IFNULL(min_inventory, 0) + #{minInventory},
-      cumulative_sales = IFNULL(cumulative_sales, 0) - #{minInventory}
+      update tab_stock_num_price
+      set min_inventory = #{minInventory}, cumulative_sales = #{cumulativeSales}
       where stock_code = #{stockCode} and stock_address_code = #{stockAddressCode}
   </update>
 

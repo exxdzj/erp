@@ -163,6 +163,9 @@
     <!--记录日志文件 test 测试环境 dev 开发环境 -->
     <springProfile name="dev">
         <logger name="com.dzj.exx" level="debug"/>
+        <logger name="com.dzj.exx.dzj.mapper" level="debug">
+            <appender-ref ref = "debug"></appender-ref>
+        </logger>
     </springProfile>
 
     <root level="info">

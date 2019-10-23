@@ -22,8 +22,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -427,9 +429,18 @@ StockServiceImpl implements StockService {
     @Override
     @SysLog(operate = "库存修改,销量累加", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)
     @Transactional
-    public void modifyStockInventory(StockNumPrice stockNumPrice) {
-        stockMapper.modifyStockInventory(stockNumPrice);
-//        addUpSalesNum(stockNumPrice);
+    public synchronized void modifyStockInventory(StockNumPrice stockNumPrice) {
+        StockNumPrice old = stockMapper.queryStockNumPirck(stockNumPrice);
+
+        int i = old.getMinInventory() + stockNumPrice.getMinInventory();
+
+        old.setMinInventory(i);
+
+        BigDecimal add = BigDecimal.ZERO.add(old.getCumulativeSales()).subtract(new BigDecimal(stockNumPrice.getMinInventory()));
+
+        old.setCumulativeSales(add);
+
+        stockMapper.modifyStockInventory(old);
     }
 
     @SysLog(operate = "销量累加", logType = LogType.LOG_TYPE_OPERATE, logLevel = LogLevel.LOG_LEVEL_INFO)

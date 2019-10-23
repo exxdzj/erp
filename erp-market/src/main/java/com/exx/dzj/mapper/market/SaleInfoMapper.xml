@@ -172,7 +172,7 @@
     SINFO.sale_code,
     DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') saleDate,
     DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') sale_date_str,
-    SINFO.cust_real_name cust_name,
+    CSUPPLIER.cust_name cust_name,
     CASE
       WHEN CSUPPLIER.is_question = 1 THEN 0
       WHEN CSUPPLIER.buyCount >= 4 OR CSUPPLIER.totalVolume >= 15000 THEN 1
@@ -195,7 +195,7 @@
     SINFO.payment_status AS paymentStatus,
     SINFO.invoice_code AS invoiceCode,
     SINFO.sale_project AS saleProject,
-    SINFO.user_real_name AS userName,
+    UINFO.real_name AS userName,
     SINFO.user_code AS userCode,
     SINFO.create_user AS createUser,
     SINFO.collection_user_name AS collectionUserName,

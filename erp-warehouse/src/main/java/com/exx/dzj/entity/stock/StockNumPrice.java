@@ -51,4 +51,6 @@ public class StockNumPrice implements Serializable {
     private String updateUser;
 
     private BigDecimal avgPrice;
+
+    private BigDecimal cumulativeSales;
 }
