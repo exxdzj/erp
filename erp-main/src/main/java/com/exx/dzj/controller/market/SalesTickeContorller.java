@@ -11,10 +11,14 @@ import com.exx.dzj.page.ERPage;
 import com.exx.dzj.query.QueryGenerator;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.util.ConvertUtils;
+import com.exx.dzj.util.DateUtil;
+import com.exx.dzj.util.IPUtils;
 import com.exx.dzj.util.MathUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +38,8 @@ import java.util.List;
 @Api(value = "销售单接口服务", description = "销售单接口服务")
 @RequestMapping("salesticket/")
 public class SalesTickeContorller {
+
+    private static final Logger logger = LoggerFactory.getLogger(SalesTickeContorller.class);
 
     @Autowired
     private SalesTicketFacade salesTicketFacade;
@@ -358,7 +364,10 @@ public class SalesTickeContorller {
      * @return com.exx.dzj.result.Result
      */
     @PutMapping("updatlistcellinfo")
-    public Result updatListCellInfo (SaleInfo saleInfo){
+    public Result updatListCellInfo (SaleInfo saleInfo, HttpServletRequest request){
+        String ipAddr = IPUtils.getIpAddr(request);
+        logger.info(saleInfo.toString() + ": " + DateUtil.convertDateToString(new Date()) + ", 操作地址: " + ipAddr);
+
         Result result = Result.responseSuccess();
         int res = salesTicketFacade.updatReceiptStatus(saleInfo);
         if (res == CommonConstant.DEFAULT_VALUE_ZERO){
