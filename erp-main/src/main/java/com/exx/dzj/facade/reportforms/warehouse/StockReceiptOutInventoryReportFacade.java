@@ -4,6 +4,7 @@ import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.bean.StockInfoQuery;
 import com.exx.dzj.entity.statistics.warehouse.StockReceiptOutReport;
 import com.exx.dzj.service.statistics.warehouse.StockReceiptOutInventoryReportService;
+import com.exx.dzj.util.MathUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,12 +43,14 @@ public class StockReceiptOutInventoryReportFacade {
                         .setBeginningPrice(BigDecimal.ZERO);
             } else {
                 beginningCost = temp.getAvgPrice().multiply(new BigDecimal(temp.getBeginningMinInventory()));
-                temp.setBeginningCost(beginningCost);
+                temp.setBeginningCost(MathUtil.keepTwoBigdecimal(beginningCost, new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR));
                 temp.setBeginningPrice(temp.getAvgPrice());
             }
             resMinInventory = temp.getBeginningMinInventory() + temp.getReceiptInventoryNum() - temp.getOutInventoryNum();
             resCost = temp.getBeginningPrice().multiply(new BigDecimal(resMinInventory));
-            temp.setMinInventory(resMinInventory).setCost(resCost);
+            temp.setMinInventory(resMinInventory).setCost(MathUtil.keepTwoBigdecimal(resCost, new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR));
+            temp.setOutCost(MathUtil.keepTwoBigdecimal(temp.getOutCost(), new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR)).
+                    setReceiptCost(MathUtil.keepTwoBigdecimal(temp.getReceiptCost(), new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR));
         }
 
         LinkedHashMap<String, List<StockReceiptOutReport>> linkedMap = new LinkedHashMap<>();
@@ -73,9 +76,9 @@ public class StockReceiptOutInventoryReportFacade {
         double beginSum = colloct.stream().mapToDouble(StockReceiptOutReport::getBeginningMinInventory).sum();
         BigDecimal BeginSumCost = colloct.stream().map(StockReceiptOutReport::getBeginningCost).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        sum.setReceiptInventoryNum(sumReNum).setReceiptCost(sumReCost).setOutInventoryNum(sumOutInventoryNum).
-                setOutCost(sumOutCost).setMinInventory(sumMinInventory).setCost(sumCost).setMeterUnit("总计: ")
-                .setBeginningMinInventory(beginSum).setBeginningCost(BeginSumCost);
+        sum.setReceiptInventoryNum(sumReNum).setReceiptCost(MathUtil.keepTwoBigdecimal(sumReCost, new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR)).setOutInventoryNum(sumOutInventoryNum).
+                setOutCost(MathUtil.keepTwoBigdecimal(sumOutCost, new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR)).setMinInventory(sumMinInventory).setCost(MathUtil.keepTwoBigdecimal(sumCost, new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR)).setMeterUnit("总计: ")
+                .setBeginningMinInventory(beginSum).setBeginningCost(MathUtil.keepTwoBigdecimal(BeginSumCost, new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR));
 
 
         Collection<List<StockReceiptOutReport>> values = linkedMap.values();
@@ -98,8 +101,12 @@ public class StockReceiptOutInventoryReportFacade {
             cost = data.stream().map(StockReceiptOutReport::getCost).reduce(BigDecimal.ZERO, BigDecimal::add);
             beginningSumNum = data.stream().mapToDouble(StockReceiptOutReport::getBeginningMinInventory).sum();
             beginningSumCost = data.stream().map(StockReceiptOutReport::getBeginningCost).reduce(BigDecimal.ZERO, BigDecimal::add);
-            res.setReceiptInventoryNum(reNum).setReceiptCost(reCost).setOutInventoryNum(outNum).setBeginningMinInventory(beginningSumNum)
-                    .setBeginningCost(beginningSumCost).setOutCost(outCost).setMinInventory(minInventory).setCost(cost).setMeterUnit("合计: ");
+            res.setReceiptInventoryNum(reNum).setReceiptCost(MathUtil.keepTwoBigdecimal(reCost, new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR)).
+                    setOutInventoryNum(outNum).setBeginningMinInventory(beginningSumNum)
+                    .setBeginningCost(MathUtil.keepTwoBigdecimal(beginningSumCost, new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR)).
+                    setOutCost(MathUtil.keepTwoBigdecimal(outCost, new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR)).
+                    setMinInventory(MathUtil.keepTwoBigdecimal(new BigDecimal(minInventory), new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR).doubleValue()).
+                    setCost(MathUtil.keepTwoBigdecimal(cost, new BigDecimal(1), CommonConstant.DEFAULT_VALUE_FOUR)).setMeterUnit("合计: ");
             data.add(res);
         }
         Map<String, Object> map = new HashMap<>();
