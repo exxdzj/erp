@@ -705,42 +705,42 @@ public class SalesTicketFacade {
                 saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
 
                 // 未减库存
-                List<SaleGoodsDetailBean> noSubtract = new ArrayList<>();
-                int isSubtractInventory = 1;
-                for (SaleGoodsDetailBean sgdb : saleGoods){
-                    isSubtractInventory = sgdb.getIsSubtractInventory();
-                    if (CommonConstant.DEFAULT_VALUE_ZERO == isSubtractInventory){
-                        noSubtract.add(sgdb);
-                    }
-                }
-
-                // 还没减过库存
-                if (!CollectionUtils.isEmpty(noSubtract)){
-                    // 修改减库存状态为已减
-                    List<Integer> collect = noSubtract.stream().map(o -> o.getId()).collect(Collectors.toList());
-                    salesGoodsDetailService.batchUpdateSalesGoodsSubtractStatus(collect);
-
-                    // 根据 存货编号获取商品信息, 减库存
-                    if (stockNumPriceList != null && stockNumPriceList.size() > 0) {
-
-                        String userCode = userTokenFacade.queryUserCodeForToken(null);
-                        for (StockNumPrice snps : stockNumPriceList){
-                            for (SaleGoodsDetailBean sgd : noSubtract){
-                                if (StringUtils.equals(snps.getStockCode(), sgd.getStockCode())){
-                                    // 减少库存
-                                    StockBean stockInfo = new StockBean();
-                                    stockInfo.setStockAddressCode(sgd.getStockAddressCode());
-                                    stockInfo.setStockCode(sgd.getStockCode());
-                                    stockInfo.setMinInventory(-sgd.getGoodsNum().intValue());
-                                    stockInfoService.updateStockGoodsInventory(stockInfo);
-                                    stockInfo.setUpdateUser(userCode);
-                                    stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);
-                                    stockInfoService.updateStockInfoSourceModel(stockInfo);
-                                }
-                            }
-                        }
-                    }
-                }
+//                List<SaleGoodsDetailBean> noSubtract = new ArrayList<>();
+//                int isSubtractInventory = 1;
+//                for (SaleGoodsDetailBean sgdb : saleGoods){
+//                    isSubtractInventory = sgdb.getIsSubtractInventory();
+//                    if (CommonConstant.DEFAULT_VALUE_ZERO == isSubtractInventory){
+//                        noSubtract.add(sgdb);
+//                    }
+//                }
+//
+//                // 还没减过库存
+//                if (!CollectionUtils.isEmpty(noSubtract)){
+//                    // 修改减库存状态为已减
+//                    List<Integer> collect = noSubtract.stream().map(o -> o.getId()).collect(Collectors.toList());
+//                    salesGoodsDetailService.batchUpdateSalesGoodsSubtractStatus(collect);
+//
+//                    // 根据 存货编号获取商品信息, 减库存
+//                    if (stockNumPriceList != null && stockNumPriceList.size() > 0) {
+//
+//                        String userCode = userTokenFacade.queryUserCodeForToken(null);
+//                        for (StockNumPrice snps : stockNumPriceList){
+//                            for (SaleGoodsDetailBean sgd : noSubtract){
+//                                if (StringUtils.equals(snps.getStockCode(), sgd.getStockCode())){
+//                                    // 减少库存
+//                                    StockBean stockInfo = new StockBean();
+//                                    stockInfo.setStockAddressCode(sgd.getStockAddressCode());
+//                                    stockInfo.setStockCode(sgd.getStockCode());
+//                                    stockInfo.setMinInventory(-sgd.getGoodsNum().intValue());
+//                                    stockInfoService.updateStockGoodsInventory(stockInfo);
+//                                    stockInfo.setUpdateUser(userCode);
+//                                    stockInfo.setSourceMode(CommonConstant.DEFAULT_VALUE_ZERO);
+//                                    stockInfoService.updateStockInfoSourceModel(stockInfo);
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
 
             }
         } catch (Exception e){
