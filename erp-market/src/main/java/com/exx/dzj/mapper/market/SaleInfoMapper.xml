@@ -1260,7 +1260,7 @@
   <select id="queryCustomerSalesToday" parameterType="com.exx.dzj.entity.market.SaleInfo" resultType="com.exx.dzj.entity.market.SaleInfo">
     SELECT SINFO.id AS id, SINFO.sale_code AS saleCode, UINFO.real_name AS realName, CS.cust_name AS custName FROM tab_sale_info SINFO
 		LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code and UINFO.is_quit = 1
-		LEFT JOIN tab_customer_supplier CS ON SINFO.cust_code = CS.cust_code
+		LEFT JOIN tab_customer_supplier CS ON SINFO.cust_code = CS.cust_code and CS.cust_type in(1, 3)
         WHERE SINFO.cust_code = #{custCode} AND DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') = DATE_FORMAT(#{saleDate}, '%Y-%m-%d')
   </select>
 
