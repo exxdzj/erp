@@ -1201,7 +1201,7 @@
     </if>
     <!--DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')  DATE_FORMAT(sysdate(), '%Y-%m-%d')-->
     AND u.real_name IS NOT NULL
-    GROUP BY s.salesman_code,u.real_name
+    GROUP BY u.salesman_code,u.real_name
     ORDER BY receivable_accoun DESC
 /*    LIMIT 30*/
   </select>
