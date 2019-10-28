@@ -15,7 +15,7 @@ public interface LoginService {
      * @param loginInfo
      * @return 返回 userToken, 前端获取之后,将 userToken 放到 header 域中
      */
-    Result signIn(LoginInfo loginInfo);
+    Result signIn(String type, LoginInfo loginInfo);
 
     /**
      * 用户退出登录

@@ -25,9 +25,9 @@ public class LoginFacade {
      * @param loginInfo
      * @return 返回 userToken, 前端获取之后,将 userToken 放到 header 域中
      */
-    public Result signIn(LoginInfo loginInfo){
+    public Result signIn(String type, LoginInfo loginInfo){
         Result result = Result.responseSuccess();
-        result = logonService.signIn(loginInfo);
+        result = logonService.signIn(type, loginInfo);
         return result;
     }
 

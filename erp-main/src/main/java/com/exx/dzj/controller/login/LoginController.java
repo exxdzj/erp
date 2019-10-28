@@ -51,7 +51,10 @@ public class LoginController {
         //生成token
         String token = JwtUtil.sign(loginInfo.getUsername(), loginInfo.getPassword());
         loginInfo.setUsertoken(token);
-        result = loginFacade.signIn(loginInfo);
+
+        String type = request.getHeader(DefContants.X_ACCESS_TYPE);
+
+        result = loginFacade.signIn(type, loginInfo);
         return result;
     }
 

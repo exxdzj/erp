@@ -22,4 +22,6 @@ public class RoleMenuInfo implements Serializable {
      * 半选择的菜单
      */
     private List<String> halfNodes;
+
+    private List<String> dataIds; // key = values, values = value1,value2
 }

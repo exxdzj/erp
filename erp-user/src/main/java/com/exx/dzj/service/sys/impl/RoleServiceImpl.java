@@ -250,6 +250,15 @@ public class RoleServiceImpl implements RoleService {
             RoleMenuBeanExample.Criteria criteria = example.createCriteria();
             criteria.andRoleCodeEqualTo(info.getRoleCode());
             roleMenuMapper.deleteByExample(example);
+            List<RoleMenuBean> menuBeans = roleMenuMapper.selectByExample(example);
+            if (menuBeans.size() > 0){
+                for (RoleMenuBean temp : menuBeans){
+                    if (StringUtils.isNotBlank(temp.getDataRuleIds())){
+                        System.out.println(temp.getDataRuleIds());
+                    }
+                }
+            }
+
 
             //授权
             List<RoleMenuBean> list = new ArrayList<>();

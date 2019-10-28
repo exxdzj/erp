@@ -1,7 +1,7 @@
 package com.exx.dzj.shiro.auth;
 
 import com.exx.dzj.constant.CommonConstant;
-import com.exx.dzj.shiro.excepte.AuthException;
+import com.exx.dzj.share.TokenCache;
 import com.exx.dzj.shiro.vo.DefContants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -35,10 +35,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        try {
-            executeLogin(request, response);
-            return true;
-        } catch (AuthException e) {
+       try{
+            return executeLogin(request, response);
+        } catch (Exception e) {
             log.error("异常方法{}异常信息{}", JwtFilter.class.getName()+".isAccessAllowed", e.getMessage());
             //throw new AuthException(1001, "Token失效，请重新登录");
             try {
@@ -62,12 +61,30 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) {
+
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         /**
          * 获取 user-token
          */
         String token = httpRequest.getHeader(DefContants.X_ACCESS_TOKEN);
+
         type = httpRequest.getHeader(DefContants.X_ACCESS_TYPE);
+
+        String userCode = httpRequest.getHeader(DefContants.X_USER_CODE);
+
+        TokenCache tokenCache = TokenCache.getTokenCache();
+        Object o = null;
+        if (StringUtils.equals(type, CommonConstant.ANDROID_TYPE)){
+            o = tokenCache.getCache(type).get(userCode);
+        } else {
+            o = tokenCache.getCache(null).get(userCode);
+        }
+
+        if (!StringUtils.equals(token, o.toString())) {
+            HttpServletResponse response1 = (HttpServletResponse) response;
+            response1.setStatus(9999);
+            return false;
+        }
 
         JwtToken jwtToken = new JwtToken(token);
         /**
@@ -100,5 +117,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             return false;
         }
         return super.preHandle(request, response);
+    }
+
+    protected boolean sendChallenge(ServletRequest request, ServletResponse response) {
+        return false;
     }
 }

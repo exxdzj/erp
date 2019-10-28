@@ -11,12 +11,12 @@ import com.exx.dzj.mapper.user.UserInfoMapper;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.login.LoginService;
 import com.exx.dzj.service.user.UserTokenService;
+import com.exx.dzj.share.TokenCache;
 import com.exx.dzj.util.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 /**
  * @Author
  * @Date 2019/1/8 0008 15:31
@@ -40,7 +40,7 @@ public class LoginServiceImpl implements LoginService {
      */
     @Override
     @SysLog(operate = "登录", logType = LogType.LOG_TYPE_LOGIN, logLevel = LogLevel.LOG_LEVEL_INFO)
-    public Result signIn(LoginInfo loginInfo){
+    public Result signIn(String type, LoginInfo loginInfo){
         Result result = Result.responseSuccess();
 
         //首先判断用户是否存在，用户名和密码是否错误
@@ -59,6 +59,10 @@ public class LoginServiceImpl implements LoginService {
         tokenBean.setUserCode(userVo.getUserCode());
         tokenBean.setUserToken(loginInfo.getUsertoken());
         tokenService.saveUserToken(tokenBean);
+
+        TokenCache tokenCache = TokenCache.getTokenCache();
+
+        tokenCache.put(userVo.getUserCode(), loginInfo.getUsertoken(), tokenCache.getCache(type));
 
         //用户存在, 则生成 userToken, 并保存到数据库
         userVo.setUserToken(loginInfo.getUsertoken());
