@@ -82,7 +82,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 
         if (!StringUtils.equals(token, o.toString())) {
             HttpServletResponse response1 = (HttpServletResponse) response;
-            response1.setStatus(9999);
+            response1.setStatus(999);
             return false;
         }
 

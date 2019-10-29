@@ -462,7 +462,7 @@
     LEFT JOIN tab_dictionary_info DICTINFO ON DICTINFO.dict_code=ti.stock_address AND DICTINFO.data_type='inventory_ship_address'
     WHERE ti.is_enable = 1
     <if test="stockName!=null and stockName!=''">
-      AND ti.stock_code like CONCAT('%', #{stockName}, '%') or ti.stock_name like CONCAT('%', #{stockName}, '%')
+      AND concat(ti.stock_code, ti.stock_name) regexp #{stockName}
     </if>
     <if test="specificateType!=null and specificateType!=''">
       AND ti.specificate_type LIKE CONCAT('%', #{specificateType}, '%')
@@ -505,7 +505,7 @@
     LEFT JOIN tab_dictionary_info DICTINFO ON DICTINFO.dict_code=ti.stock_address AND DICTINFO.data_type='inventory_ship_address'
     WHERE ti.is_enable = 1
     <if test="stockName!=null and stockName!=''">
-      AND ti.stock_code like CONCAT('%', #{stockName}, '%') or ti.stock_name like CONCAT('%', #{stockName}, '%')
+      AND concat(ti.stock_code, ti.stock_name) regexp #{stockName}
     </if>
     <if test="specificateType!=null and specificateType!=''">
       AND ti.specificate_type LIKE CONCAT('%', #{specificateType}, '%')
