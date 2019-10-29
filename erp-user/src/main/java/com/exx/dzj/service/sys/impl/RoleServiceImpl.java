@@ -27,7 +27,10 @@ import org.springframework.util.CollectionUtils;
 
 import javax.management.relation.RoleInfo;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author
@@ -250,20 +253,29 @@ public class RoleServiceImpl implements RoleService {
             RoleMenuBeanExample.Criteria criteria = example.createCriteria();
             criteria.andRoleCodeEqualTo(info.getRoleCode());
             roleMenuMapper.deleteByExample(example);
-            List<RoleMenuBean> menuBeans = roleMenuMapper.selectByExample(example);
-            if (menuBeans.size() > 0){
-                for (RoleMenuBean temp : menuBeans){
-                    if (StringUtils.isNotBlank(temp.getDataRuleIds())){
-                        System.out.println(temp.getDataRuleIds());
-                    }
-                }
-            }
+//            List<RoleMenuBean> menuBeans = roleMenuMapper.selectByExample(example);
+//            if (menuBeans.size() > 0){
+//                for (RoleMenuBean temp : menuBeans){
+//                    if (StringUtils.isNotBlank(temp.getDataRuleIds())){
+//                        System.out.println(temp.getDataRuleIds());
+//                    }
+//                }
+//            }
 
 
             //授权
             List<RoleMenuBean> list = new ArrayList<>();
             RoleMenuBean bean = null;
             if(!CollectionUtils.isEmpty(info.getMenuCodes())){
+                List<String> dataIds = info.getDataIds();
+                Map<String, String> map = new HashMap<>();
+                if (dataIds.size() > 0){
+                    for (String str : dataIds){
+                        map.put(str.split("=")[0], str.split("=")[1]);
+                    }
+                }
+
+
                 // 数据量很少的情况下使用 foreach 增强，比 JDK8 的新特性循环速度更快
                 for(String menuCode : info.getMenuCodes()){
                     bean = new RoleMenuBean();
@@ -275,6 +287,9 @@ public class RoleServiceImpl implements RoleService {
                         }
                     }
                     bean.setRoleCode(info.getRoleCode());
+                    if (map.get(menuCode) != null){
+                        bean.setDataRuleIds(map.get(menuCode));
+                    }
                     bean.setCreateUser(operator);
                     bean.setUpdateUser(operator);
                     list.add(bean);
