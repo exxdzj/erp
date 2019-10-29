@@ -140,6 +140,7 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     }
 
     @Override
+    @SaleLog(operate = "删除销售单")
     public void upateSaleTicketStatus(String saleCode) {
         saleInfoMapper.upateSaleTicketStatus(saleCode);
     }

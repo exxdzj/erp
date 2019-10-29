@@ -1094,7 +1094,7 @@
       subordinate_company_name AS subordinateCompanyName
       FROM tab_sale_info sinfo
       INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
-	  WHERE sinfo.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
+	  WHERE is_enable = 1 and sinfo.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
 	        GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
@@ -1103,7 +1103,7 @@
       subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info sinfo
       INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
-	  WHERE sinfo.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
+	  WHERE is_enable = 1 and sinfo.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
                             AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
                             GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
@@ -1120,7 +1120,7 @@
 								WHERE bb.sale_code = s.sale_code)), 0) + IFNULL(sum(s.discount_amount),0) AS receivableAccoun
 				, subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info s
-    WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
+    WHERE s.is_enable = 1 and s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
 					GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
@@ -1134,7 +1134,7 @@
 								WHERE bb.sale_code = s.sale_code)), 0) + IFNULL(sum(s.discount_amount),0) AS receivableAccoun,
 				subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info s
-    WHERE s.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
+    WHERE s.is_enable = 1 and s.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
                       AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
                       GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
@@ -1147,7 +1147,7 @@
 	  subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
 	FROM tab_sale_info sinfo
 	  INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
-	  WHERE sinfo.sale_date BETWEEN DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY) AND concat(YEAR(now()),'-12-31')
+	  WHERE sinfo.is_enable = 1 and sinfo.sale_date BETWEEN DATE_SUB(CURDATE(),INTERVAL dayofyear(now())-1 DAY) AND concat(YEAR(now()),'-12-31')
             GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
@@ -1165,7 +1165,7 @@
       FROM
         tab_sale_info ts
       INNER JOIN tab_sale_goods_detail goods ON ts.sale_code = goods.sale_code
-      WHERE
+      WHERE ts.is_enable = 1 and
         YEAR (ts.sale_date) = YEAR (NOW())
         AND DATE_FORMAT(ts.sale_date, '%m-%d') <= DATE_FORMAT(NOW(), '%m-%d')
     ) tt,
@@ -1175,7 +1175,7 @@
       FROM
         tab_sale_info ts
       INNER JOIN tab_sale_goods_detail goods ON ts.sale_code = goods.sale_code
-      WHERE
+      WHERE ts.is_enable = 1 and
         YEAR (ts.sale_date) = YEAR (
         date_sub(NOW(), INTERVAL 1 YEAR)
       )
@@ -1189,7 +1189,7 @@
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.user_code = u.user_code and u.is_quit = 1
     INNER JOIN tab_sale_goods_detail goods ON s.sale_code = goods.sale_code
-    WHERE 1 = 1
+    WHERE 1 = 1 and s.is_enable = 1
     <if test="type == 'day'">
       AND (s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59'))
     </if>
@@ -1227,7 +1227,7 @@
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.user_code = u.user_code and u.is_quit = 1
     /*WHERE DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')*/
-    WHERE s.sale_date BETWEEN date_add(curdate(),INTERVAL - DAY(curdate())+1 DAY) AND date_add(curdate() - DAY(curdate()) +1,INTERVAL 1 MONTH)
+    WHERE s.is_enable = 1 and s.sale_date BETWEEN date_add(curdate(),INTERVAL - DAY(curdate())+1 DAY) AND date_add(curdate() - DAY(curdate()) +1,INTERVAL 1 MONTH)
     AND s.user_code = u.user_code
     GROUP BY s.user_code,u.real_name
     ORDER BY receivable_accoun DESC
@@ -1243,7 +1243,7 @@
     SELECT u.real_name,u.salesman_code, IFNULL(COUNT(s.salesman_code), 0) AS countTicket, u.user_code
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.user_code = u.user_code and u.is_quit = 1
-        WHERE s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
+        WHERE s.is_enable = 1 and s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s')
 									 AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
 									 AND u.salesman_code IS NOT NULL
 				GROUP BY u.user_code
@@ -1261,7 +1261,7 @@
     SELECT SINFO.id AS id, SINFO.sale_code AS saleCode, UINFO.real_name AS realName, CS.cust_name AS custName FROM tab_sale_info SINFO
 		LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code and UINFO.is_quit = 1
 		LEFT JOIN tab_customer_supplier CS ON SINFO.cust_code = CS.cust_code and CS.cust_type in(1, 3)
-        WHERE SINFO.cust_code = #{custCode} AND DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') = DATE_FORMAT(#{saleDate}, '%Y-%m-%d')
+        WHERE SINFO.is_enable = 1 and SINFO.cust_code = #{custCode} AND DATE_FORMAT(SINFO.sale_date, '%Y-%m-%d') = DATE_FORMAT(#{saleDate}, '%Y-%m-%d')
   </select>
 
     <select id="querySaleGoodsTop" resultType="com.exx.dzj.entity.market.SaleGoodsTop">
@@ -1270,7 +1270,7 @@
         FROM tab_sale_info SINFO
             LEFT JOIN tab_sale_goods_detail SGD ON SINFO.sale_code = SGD.sale_code
             LEFT JOIN tab_stock_info STINFO ON STINFO.stock_code = SGD.stock_code
-            WHERE 1=1 AND SINFO.sale_date
+            WHERE 1=1 AND SINFO.sale_date and SINFO.is_enable = 1
             <if test="type == 'day'">
                 BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
             </if>
@@ -1333,7 +1333,7 @@
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
     LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
-    WHERE 1=1
+    WHERE 1=1 AND SINFO.is_enable = 1 and
       <if test="ew!=null">
         ${ew.sqlSegment}
       </if>
@@ -1424,7 +1424,7 @@
     FROM tab_sale_info SINFO
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
     LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
-    WHERE 1=1
+    WHERE 1=1 AND SINFO.is_enable = 1 and
       <if test="ew!=null">
         ${ew.sqlSegment}
       </if>
@@ -1558,6 +1558,7 @@
         </foreach>
       </if>
     </where>
+    AND SINFO.is_enable = 1 and
     <if test="query.stockName != null and query.stockName != ''">
       HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
     </if>
