@@ -1333,7 +1333,7 @@
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
     LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
-    WHERE 1=1 AND SINFO.is_enable = 1 and
+    WHERE 1=1 AND SINFO.is_enable = 1
       <if test="ew!=null">
         ${ew.sqlSegment}
       </if>
@@ -1424,7 +1424,7 @@
     FROM tab_sale_info SINFO
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
     LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
-    WHERE 1=1 AND SINFO.is_enable = 1 and
+    WHERE 1=1 AND SINFO.is_enable = 1
       <if test="ew!=null">
         ${ew.sqlSegment}
       </if>
@@ -1516,6 +1516,7 @@
     LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code AND CSUPPLIER.cust_type IN (1, 3)
     LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
     <where>
+      SINFO.is_enable = 1
       <if test="ew!=null">
         ${ew.sqlSegment}
       </if>
@@ -1558,7 +1559,6 @@
         </foreach>
       </if>
     </where>
-    AND SINFO.is_enable = 1 and
     <if test="query.stockName != null and query.stockName != ''">
       HAVING (SELECT COUNT(1) FROM tab_sale_goods_detail goods WHERE SINFO.sale_code = goods.sale_code AND goods.stock_name LIKE CONCAT('%', #{query.stockName}, '%')) > 0
     </if>
