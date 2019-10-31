@@ -1103,8 +1103,9 @@
       subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info sinfo
       INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
-	  WHERE is_enable = 1 and sinfo.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
-                            AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
+	  WHERE is_enable = 1 and
+        <![CDATA[sinfo.sale_date >= DATE_FORMAT(date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY),'%Y-%m-%d %H:%i:%s')]]>
+        <![CDATA[AND sinfo.sale_date < DATE_FORMAT(date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH ), '%Y-%m-%d %H:%i:%s')]]>
                             GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
@@ -1134,8 +1135,9 @@
 								WHERE bb.sale_code = s.sale_code)), 0) + IFNULL(sum(s.discount_amount),0) AS receivableAccoun,
 				subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
     FROM tab_sale_info s
-    WHERE s.is_enable = 1 and s.sale_date BETWEEN date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY)
-                      AND date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH )
+    WHERE s.is_enable = 1 and
+          <![CDATA[s.sale_date >= DATE_FORMAT(date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY),'%Y-%m-%d %H:%i:%s')]]>
+          <![CDATA[AND s.sale_date < DATE_FORMAT(date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH ), '%Y-%m-%d %H:%i:%s')]]>
                       GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
@@ -1227,10 +1229,12 @@
     FROM tab_sale_info s
     LEFT JOIN tab_user_info u ON s.user_code = u.user_code and u.is_quit = 1
     /*WHERE DATE_FORMAT(s.sale_date, '%Y-%m-%d') = DATE_FORMAT('2019-03-16', '%Y-%m-%d')*/
-    WHERE s.is_enable = 1 and s.sale_date BETWEEN date_add(curdate(),INTERVAL - DAY(curdate())+1 DAY) AND date_add(curdate() - DAY(curdate()) +1,INTERVAL 1 MONTH)
-    AND s.user_code = u.user_code
-    GROUP BY s.user_code,u.real_name
-    ORDER BY receivable_accoun DESC
+    WHERE s.is_enable = 1 and
+      <![CDATA[s.sale_date >= DATE_FORMAT(date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY),'%Y-%m-%d %H:%i:%s')]]>
+      <![CDATA[AND s.sale_date < DATE_FORMAT(date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH ), '%Y-%m-%d %H:%i:%s')]]>
+      AND s.user_code = u.user_code
+      GROUP BY s.user_code,u.real_name
+      ORDER BY receivable_accoun DESC
 /*    LIMIT 30*/
   </select>
 
