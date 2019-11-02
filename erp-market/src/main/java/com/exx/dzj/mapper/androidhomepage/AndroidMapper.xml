@@ -21,7 +21,7 @@
         FROM tab_sale_info s
         LEFT JOIN tab_user_info u ON s.user_code = u.user_code
         INNER JOIN tab_sale_goods_detail goods ON s.sale_code = goods.sale_code
-        WHERE 1 = 1
+        WHERE 1 = 1 and s.is_enable = 1
         <if test="type == 'day'">
             AND (s.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59'))
         </if>
