@@ -436,12 +436,13 @@
 
   <select id="getSaleGoodsSelected" resultMap="goodsSelected">
     SELECT
-      stock_code, stock_name
+      id, stock_code, stock_name
     FROM tab_sale_goods_detail
     WHERE sale_code = #{saleCode}
   </select>
   
   <resultMap id="goodsSelected" type="com.exx.dzj.entity.market.SaleGoodsSelected">
+    <result property="id" column="id"/>
     <result property="stockName" column="stock_name"/>
     <result property="stockCode" column="stock_code"/>
   </resultMap>

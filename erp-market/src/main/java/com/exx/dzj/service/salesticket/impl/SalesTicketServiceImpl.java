@@ -157,8 +157,8 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     }
 
     @Override
-    public List<SaleInfo> querySumSalesOnMonth() {
-        return saleInfoMapper.querySumSalesOnMonth();
+    public List<SaleInfo> querySumSalesOnMonth(String type) {
+        return saleInfoMapper.querySumSalesOnMonth(type);
     }
 
     @Override

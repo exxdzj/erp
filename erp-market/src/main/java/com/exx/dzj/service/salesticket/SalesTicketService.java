@@ -41,7 +41,7 @@ public interface SalesTicketService extends IService<SaleInfo> {
 
     List<SaleInfo> querySumSalesOnDay();
 
-    List<SaleInfo> querySumSalesOnMonth();
+    List<SaleInfo> querySumSalesOnMonth(String type);
 
     List<SaleInfo> queryAdditionalSumSalesOnDay();
 

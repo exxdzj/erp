@@ -183,13 +183,13 @@ public class HomePageController {
      * @description: 公司销售额
      * @author yangyun
      * @date 2019/8/27 0027
-     * @param
+     * @param /{type}  @PathVariable("type") String type
      * @return com.exx.dzj.result.Result
      */
     @GetMapping("querycompanysalesformonth")
     public Result queryCompanySalesForMonth (){
         Result result = Result.responseSuccess();
-        List<SaleInfo> list = homePageFacade.queryCompanySalesForMonth();
+        List<SaleInfo> list = homePageFacade.queryCompanySalesForMonth("month");
         result.setData(list);
         return result;
     }

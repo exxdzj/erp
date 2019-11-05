@@ -46,7 +46,7 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
 
     List<SaleInfo> querySumSalesOnDay();
 
-    List<SaleInfo> querySumSalesOnMonth();
+    List<SaleInfo> querySumSalesOnMonth(@Param("type") String type);
 
     List<SaleInfo> queryAdditionalSumSalesOnDay();
 

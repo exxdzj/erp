@@ -170,7 +170,7 @@ public class SaleTicketReportFacade {
                     }
                 }
 
-                stockType.setCountTotal(sum);
+                stockType.setCountTotal(MathUtil.keepTwoAccurate(new BigDecimal(sum)).doubleValue());
                 stockType.setSalesTotal(saleIncomeTotal);
                 stockType.setCostTotal(costTotal);
                 stockType.setGrossTotal(grossTotal);

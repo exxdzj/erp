@@ -110,11 +110,11 @@ public class SysLogAspect {
             }
 
             //获取request
-//            HttpServletRequest request = SpringContextUtils.getHttpServletRequest();
-//            if (request != null){
-//                //设置IP地址
-//                logBean.setNode(IPUtils.getIpAddr(request));
-//            }
+            HttpServletRequest request = SpringContextUtils.getHttpServletRequest();
+            if (request != null){
+                //设置IP地址
+                logBean.setNode(IPUtils.getIpAddr(request));
+            }
 
             //获取登录用户信息
             UserInfo userInfo = (UserInfo)SecurityUtils.getSubject().getPrincipal();

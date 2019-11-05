@@ -12,8 +12,8 @@ import java.io.Serializable;
 public class SaleGoodsSelected implements Serializable {
     private static final long serialVersionUID = 5192916086859129704L;
 
+    private Integer id;
     private String stockCode;
     private String stockName;
     private String saleCode;
-
 }

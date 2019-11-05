@@ -36,8 +36,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
        try{
-            return executeLogin(request, response);
-        } catch (Exception e) {
+            executeLogin(request, response);
+            return true;
+       } catch (Exception e) {
             log.error("异常方法{}异常信息{}", JwtFilter.class.getName()+".isAccessAllowed", e.getMessage());
             //throw new AuthException(1001, "Token失效，请重新登录");
             try {

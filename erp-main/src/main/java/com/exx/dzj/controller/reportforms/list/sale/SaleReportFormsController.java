@@ -62,7 +62,7 @@ public class SaleReportFormsController {
         BigDecimal costTotal = stockTypeReports.stream().map(StockTypeReport::getCostTotal).reduce(BigDecimal.ZERO, BigDecimal::add); // 成本总计
         BigDecimal grossTotal = stockTypeReports.stream().map(StockTypeReport::getGrossTotal).reduce(BigDecimal.ZERO, BigDecimal::add); // 毛利总计
         BigDecimal rateTotal = MathUtil.keepTwoBigdecimal(grossTotal, salesTotal, CommonConstant.DEFAULT_VALUE_FOUR);//毛利率总计
-
+        sum = MathUtil.keepTwoAccurate(new BigDecimal(sum)).doubleValue();
 
         map.put("sum", sum);
         map.put("salesTotal", salesTotal);

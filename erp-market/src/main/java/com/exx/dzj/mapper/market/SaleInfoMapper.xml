@@ -1104,9 +1104,17 @@
     FROM tab_sale_info sinfo
       INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
 	  WHERE is_enable = 1 and
+	  <if test="type == 'month'">
         <![CDATA[sinfo.sale_date >= DATE_FORMAT(date_add(curdate(), INTERVAL - DAY(curdate())+1 DAY),'%Y-%m-%d %H:%i:%s')]]>
         <![CDATA[AND sinfo.sale_date < DATE_FORMAT(date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH ), '%Y-%m-%d %H:%i:%s')]]>
-                            GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
+      </if>
+      <if test="type == 'day'">
+        sinfo.sale_date BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
+      </if>
+      <if test="type == 'year'">
+        YEAR(sinfo.sale_date) = YEAR(NOW())
+      </if>
+          GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
 
     <select id="queryAdditionalSumSalesOnDay" resultType="com.exx.dzj.entity.market.SaleInfo">

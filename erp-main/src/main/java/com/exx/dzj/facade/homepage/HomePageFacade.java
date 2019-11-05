@@ -80,7 +80,7 @@ public class HomePageFacade {
         getCompanySaleVolumeOnDay(topData);
 
         // 当月分公司销售额
-        List<SaleInfo> salesOnMonthList = salesTicketService.querySumSalesOnMonth();
+        List<SaleInfo> salesOnMonthList = salesTicketService.querySumSalesOnMonth("month");
         BigDecimal sumSalesOnMonth = new BigDecimal(0);
         if (!CollectionUtils.isEmpty(salesOnMonthList)){
             sumSalesOnMonth = salesOnMonthList.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -359,8 +359,8 @@ public class HomePageFacade {
         return saleGoodsTops;
     }
 
-    public List<SaleInfo> queryCompanySalesForMonth (){
-        List<SaleInfo> salesOnMonthList = salesTicketService.querySumSalesOnMonth();
+    public List<SaleInfo> queryCompanySalesForMonth (String type){
+        List<SaleInfo> salesOnMonthList = salesTicketService.querySumSalesOnMonth(type);
 
         Map<String, SaleInfo> map = new HashMap<>();
         salesOnMonthList.stream().forEach(
