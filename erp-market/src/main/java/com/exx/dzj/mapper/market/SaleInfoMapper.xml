@@ -1282,12 +1282,12 @@
         FROM tab_sale_info SINFO
             LEFT JOIN tab_sale_goods_detail SGD ON SINFO.sale_code = SGD.sale_code
             LEFT JOIN tab_stock_info STINFO ON STINFO.stock_code = SGD.stock_code
-            WHERE 1=1 AND SINFO.sale_date and SINFO.is_enable = 1
+            WHERE 1=1 and SINFO.is_enable = 1 AND SINFO.sale_date
             <if test="type == 'day'">
                 BETWEEN DATE_FORMAT(CURDATE(),'%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59')
             </if>
             <if test="type == 'week'">
-                BETWEEN date_sub(curdate(),INTERVAL WEEKDAY(curdate()) + 1 DAY) AND date_sub(curdate(),INTERVAL WEEKDAY(curdate()) - 5 DAY)
+                BETWEEN date_sub(curdate(),INTERVAL WEEKDAY(curdate()) + 2 DAY) AND date_sub(curdate(),INTERVAL WEEKDAY(curdate()) - 6 DAY)
             </if>
             <if test="type == 'month'">
                 BETWEEN concat(date_format(LAST_DAY(now()),'%Y-%m-'),'01') AND LAST_DAY(now())
