@@ -13,11 +13,11 @@ import java.util.List;
  */
 public interface SalesGoodsDetailService {
 
-    void batchInsertSalesGoodsDetail(List<SaleGoodsDetailBean> goodsDetailBeanList);
+    void batchInsertSalesGoodsDetail(List<SaleGoodsDetailBean> goodsDetailBeanList, String saleCode);
 
-    void batchUpdateSalesGoodsDetail(List<SaleGoodsDetailBean> goodsDetailBeanList);
+    void batchUpdateSalesGoodsDetail(List<SaleGoodsDetailBean> goodsDetailBeanList, String saleCode);
 
-    void batchDeleteSalesGoodsDetail(List<Integer> sgbIds);
+    void batchDeleteSalesGoodsDetail(List<Integer> sgbIds, String saleCode);
 
     SaleGoodsDetailBean querySaleGoodsDetail(SaleGoodsDetailBean bean);
 

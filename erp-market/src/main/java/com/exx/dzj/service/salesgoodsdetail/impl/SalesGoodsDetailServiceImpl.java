@@ -21,20 +21,20 @@ public class SalesGoodsDetailServiceImpl implements SalesGoodsDetailService {
     private SaleGoodsDetailBeanMapper saleGoodsDetailBeanMapper;
 
     @Override
-    @SaleLog(operate = "批量保存销售单商品数据")
-    public void batchInsertSalesGoodsDetail(List<SaleGoodsDetailBean> goodsDetailBeanList) {
+    @SaleLog(operate = "批量保存销售单商品数据", saleCode = "#saleCode")
+    public void batchInsertSalesGoodsDetail(List<SaleGoodsDetailBean> goodsDetailBeanList, String saleCode) {
         saleGoodsDetailBeanMapper.batchInsertSalesGoodsDetail(goodsDetailBeanList);
     }
 
     @Override
-    @SaleLog(operate = "批量修改销售单商品数据")
-    public void batchUpdateSalesGoodsDetail(List<SaleGoodsDetailBean> goodsDetailBeanList) {
+    @SaleLog(operate = "批量修改销售单商品数据", saleCode = "#saleCode")
+    public void batchUpdateSalesGoodsDetail(List<SaleGoodsDetailBean> goodsDetailBeanList, String saleCode) {
         saleGoodsDetailBeanMapper.batchUpdateSalesGoodsDetail(goodsDetailBeanList);
     }
 
     @Override
-    @SaleLog(operate = "批量删除销售单商品数据")
-    public void batchDeleteSalesGoodsDetail(List<Integer> sgbIds) {
+    @SaleLog(operate = "批量删除销售单商品数据", saleCode = "#saleCode")
+    public void batchDeleteSalesGoodsDetail(List<Integer> sgbIds, String saleCode) {
         saleGoodsDetailBeanMapper.batchDeleteSalesGoodsDetail(sgbIds);
     }
 

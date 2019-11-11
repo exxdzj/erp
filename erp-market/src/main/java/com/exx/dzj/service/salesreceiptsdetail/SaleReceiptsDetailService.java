@@ -21,17 +21,17 @@ public interface SaleReceiptsDetailService {
      * @param saleReceiptsDetails
      * @return void
      */
-    void batchInsertSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails);
+    void batchInsertSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails, String saleCode);
 
-    void batchUpdateSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails);
+    void batchUpdateSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails, String saleCode);
 
-    void batchDeleteSalesReceiptsDeail(List<Integer> srdIds);
+    void batchDeleteSalesReceiptsDeail(List<Integer> srdIds, String saleCode);
 
     List<SaleReceiptsDetails> querySaleReceviptDetailList(String saleCode);
 
-    void addLogisticsInfo (LogisticsInfo logisticsInfo);
+    void addLogisticsInfo (LogisticsInfo logisticsInfo, String saleCode);
 
-    void updateLogisticsInfo(LogisticsInfo logisticsInfo);
+    void updateLogisticsInfo(LogisticsInfo logisticsInfo, String saleCode);
 
     List<LogisticsInfo> getLogisticsInfo (String saleCode);
 

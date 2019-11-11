@@ -23,20 +23,20 @@ public class SaleReceiptsDetailServiceImpl implements SaleReceiptsDetailService 
     private SaleReceiptsDetailsMapper saleReceiptsDetailsMapper;
 
     @Override
-    @SaleLog(operate="批量写入收款信息")
-    public void batchInsertSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails) {
+    @SaleLog(operate="批量写入收款信息", saleCode = "#saleCode")
+    public void batchInsertSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails, String saleCode) {
         saleReceiptsDetailsMapper.batchInsertSalesReceiptsDeail(saleReceiptsDetails);
     }
 
     @Override
-    @SaleLog(operate="批量修改收款信息")
-    public void batchUpdateSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails) {
+    @SaleLog(operate="批量修改收款信息", saleCode = "#saleCode")
+    public void batchUpdateSalesReceiptsDeail(List<SaleReceiptsDetails> saleReceiptsDetails, String saleCode) {
         saleReceiptsDetailsMapper.batchUpdateSalesReceiptsDeail(saleReceiptsDetails);
     }
 
     @Override
-    @SaleLog(operate="批量删除收款信息")
-    public void batchDeleteSalesReceiptsDeail(List<Integer> srdIds) {
+    @SaleLog(operate="批量删除收款信息", saleCode = "#saleCode")
+    public void batchDeleteSalesReceiptsDeail(List<Integer> srdIds, String saleCode) {
         saleReceiptsDetailsMapper.batchDeleteSalesReceiptsDeail(srdIds);
     }
 
@@ -46,14 +46,14 @@ public class SaleReceiptsDetailServiceImpl implements SaleReceiptsDetailService 
     }
 
     @Override
-    @SaleLog(operate="保存物流信息")
-    public void addLogisticsInfo(LogisticsInfo logisticsInfo) {
+    @SaleLog(operate="保存物流信息", saleCode = "#saleCode")
+    public void addLogisticsInfo(LogisticsInfo logisticsInfo, String saleCode) {
         saleReceiptsDetailsMapper.addLogisticsInfo(logisticsInfo);
     }
 
     @Override
-    @SaleLog(operate="修改物流信息")
-    public void updateLogisticsInfo(LogisticsInfo logisticsInfo) {
+    @SaleLog(operate="修改物流信息", saleCode = "#saleCode")
+    public void updateLogisticsInfo(LogisticsInfo logisticsInfo, String saleCode) {
         saleReceiptsDetailsMapper.updateLogisticsInfo(logisticsInfo);
     }
 

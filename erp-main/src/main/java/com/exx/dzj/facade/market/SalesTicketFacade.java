@@ -150,11 +150,11 @@ public class SalesTicketFacade {
             saleInfo.setReceivableAccoun(receivableAccoun.setScale(2, BigDecimal.ROUND_HALF_UP));
             // 该部分代码用于金蝶导入金额计算, 优惠后金额
 
-            salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList);
+            salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList, saleInfo.getSaleCode());
         }
         if (!CollectionUtils.isEmpty(receiptsDetailsList)){
             receiptsDetailsList = setReceiptsSaleCode(receiptsDetailsList, saleInfo.getSaleCode());
-            saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+            saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList, saleInfo.getSaleCode());
         }
         if (StringUtils.isNotEmpty(saleInfo.getInvoiceCode()) && saleInfo.getInvoiceCode().contains("签收")){
 
@@ -172,7 +172,6 @@ public class SalesTicketFacade {
      * @return void
      */
     @Transactional
-    @SaleLog(operate = "更新销售单")
     public String saveSalesTicket(SaleInfo saleInfo){
         Optional.of(saleInfo);
         List<SaleGoodsDetailBean> goodsDetailBeanList = saleInfo.getSaleGoodsDetailBeanList();
@@ -200,11 +199,11 @@ public class SalesTicketFacade {
 
         if(!CollectionUtils.isEmpty(goodsDetailBeanList)){
             goodsDetailBeanList = setGoodsSaleCode(goodsDetailBeanList, saleInfo.getSaleCode());
-            salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList);
+            salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList, saleCode);
         }
         if (!CollectionUtils.isEmpty(receiptsDetailsList)){
             receiptsDetailsList = setReceiptsSaleCode(receiptsDetailsList, saleInfo.getSaleCode());
-            saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+            saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList, saleCode);
         } else {
             String collectedAmounts = saleInfo.getCollectedAmounts();
             BigDecimal sumCollectedAmount = saleInfo.getSumCollectedAmount();
@@ -215,7 +214,7 @@ public class SalesTicketFacade {
                 srd.setCollectedAmount(sumCollectedAmount);
                 srd.setSaleCode(saleInfo.getSaleCode());
                 receiptsDetailsList.add(srd);
-                saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+                saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList, saleCode);
             }
         }
 
@@ -345,7 +344,6 @@ public class SalesTicketFacade {
      * @return void
      */
     @Transactional
-    @SaleLog(operate = "更新销售单")
     public void updateSalesTicket(SaleInfo saleInfo){
 //        saleInfo = calculatePrice(saleInfo);
         Optional.ofNullable(saleInfo);
@@ -386,7 +384,7 @@ public class SalesTicketFacade {
                 List<SaleGoodsDetailBean> collect = goodsDetailBeanList.stream().filter(o -> finalCentreGoods.stream().anyMatch(b -> StringUtils.equals(o.getId() + "", b.getId() + ""))).collect(Collectors.toList());
                 if (!CollectionUtils.isEmpty(collect)){
                     collect = setGoodsSaleCode(collect, saleInfo.getSaleCode());
-                    salesGoodsDetailService.batchUpdateSalesGoodsDetail(collect);
+                    salesGoodsDetailService.batchUpdateSalesGoodsDetail(collect, saleInfo.getSaleCode());
                 }
 
                 List<Integer> deleteSaleGoods = new ArrayList<>();
@@ -398,7 +396,7 @@ public class SalesTicketFacade {
                     }
                 }
                 if (!CollectionUtils.isEmpty(deleteSaleGoods)){
-                    salesGoodsDetailService.batchDeleteSalesGoodsDetail(deleteSaleGoods);
+                    salesGoodsDetailService.batchDeleteSalesGoodsDetail(deleteSaleGoods, saleInfo.getSaleCode());
                 }
 
                 for(SaleGoodsDetailBean s : goodsDetailBeanList){
@@ -409,16 +407,16 @@ public class SalesTicketFacade {
 
                 if (!CollectionUtils.isEmpty(insertSaleGoods)){
                     insertSaleGoods = setGoodsSaleCode(insertSaleGoods, saleInfo.getSaleCode());
-                    salesGoodsDetailService.batchInsertSalesGoodsDetail(insertSaleGoods);
+                    salesGoodsDetailService.batchInsertSalesGoodsDetail(insertSaleGoods, saleInfo.getSaleCode());
                 }
             } else{
                 goodsDetailBeanList = setGoodsSaleCode(goodsDetailBeanList, saleInfo.getSaleCode());
-                salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList);
+                salesGoodsDetailService.batchInsertSalesGoodsDetail(goodsDetailBeanList, saleInfo.getSaleCode());
             }
         } else {
             if (!CollectionUtils.isEmpty(saleGoodsDetailBeanList)){
                 List<Integer> collect = saleGoodsDetailBeanList.stream().map(o -> o.getId()).collect(Collectors.toList());
-                salesGoodsDetailService.batchDeleteSalesGoodsDetail(collect);
+                salesGoodsDetailService.batchDeleteSalesGoodsDetail(collect, saleInfo.getSaleCode());
             }
         }
 
@@ -437,7 +435,7 @@ public class SalesTicketFacade {
                 List<SaleReceiptsDetails> collects = receiptsDetailsList.stream().filter(o -> finalCentreReceipts.stream().anyMatch(b -> StringUtils.equals(o.getId() + "", b.getId() + ""))).collect(Collectors.toList());
                 if (!CollectionUtils.isEmpty(collects)){
                     collects = setReceiptsSaleCode(collects, saleInfo.getSaleCode());
-                    saleReceiptsDetailService.batchUpdateSalesReceiptsDeail(collects);
+                    saleReceiptsDetailService.batchUpdateSalesReceiptsDeail(collects, saleInfo.getSaleCode());
                 }
 
                 List<Integer> deleteSaleReceipts = new ArrayList<>();
@@ -448,7 +446,7 @@ public class SalesTicketFacade {
                     }
                 }
                 if (!CollectionUtils.isEmpty(deleteSaleReceipts)){
-                    saleReceiptsDetailService.batchDeleteSalesReceiptsDeail(deleteSaleReceipts);
+                    saleReceiptsDetailService.batchDeleteSalesReceiptsDeail(deleteSaleReceipts, saleInfo.getSaleCode());
                 }
 
                 for(SaleReceiptsDetails e: receiptsDetailsList){
@@ -458,16 +456,16 @@ public class SalesTicketFacade {
                 }
                 if(!CollectionUtils.isEmpty(insertSaleReceipts)){
                     insertSaleReceipts = setReceiptsSaleCode(insertSaleReceipts, saleInfo.getSaleCode());
-                    saleReceiptsDetailService.batchInsertSalesReceiptsDeail(insertSaleReceipts);
+                    saleReceiptsDetailService.batchInsertSalesReceiptsDeail(insertSaleReceipts, saleInfo.getSaleCode());
                 }
             }else {
                 receiptsDetailsList = setReceiptsSaleCode(receiptsDetailsList, saleInfo.getSaleCode());
-                saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+                saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList, saleInfo.getSaleCode());
             }
         } else {
             if (!CollectionUtils.isEmpty(saleReceiptsDetailsList)){
                 List<Integer> collect = saleReceiptsDetailsList.stream().map(o -> o.getId()).collect(Collectors.toList());
-                saleReceiptsDetailService.batchDeleteSalesReceiptsDeail(collect);
+                saleReceiptsDetailService.batchDeleteSalesReceiptsDeail(collect, saleInfo.getSaleCode());
             }
             String collectedAmounts = saleInfo.getCollectedAmounts();
             BigDecimal sumCollectedAmount = saleInfo.getSumCollectedAmount();
@@ -478,7 +476,7 @@ public class SalesTicketFacade {
                 srd.setCollectedAmount(sumCollectedAmount);
                 srd.setSaleCode(saleInfo.getSaleCode());
                 receiptsDetailsList.add(srd);
-                saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList);
+                saleReceiptsDetailService.batchInsertSalesReceiptsDeail(receiptsDetailsList, saleInfo.getSaleCode());
             }
         }
         CustomerSupplierInfo customerSupplierInfo = customerService.queryVIPCustomerSupplierInfo(saleInfo.getCustCode());
@@ -649,7 +647,7 @@ public class SalesTicketFacade {
 //            saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
         } else {
             updateLogisticsGoodsInfo(logisticsInfo);
-            saleReceiptsDetailService.updateLogisticsInfo(logisticsInfo);
+            saleReceiptsDetailService.updateLogisticsInfo(logisticsInfo, logisticsInfo.getSaleCode());
         }
     }
 
@@ -702,7 +700,7 @@ public class SalesTicketFacade {
 
                 logisticsInfo.setStockName(stockName.toString());
 
-                saleReceiptsDetailService.addLogisticsInfo(logisticsInfo);
+                saleReceiptsDetailService.addLogisticsInfo(logisticsInfo, logisticsInfo.getSaleCode());
 
                 // 未减库存
 //                List<SaleGoodsDetailBean> noSubtract = new ArrayList<>();
@@ -787,7 +785,10 @@ public class SalesTicketFacade {
     }
 
     public void logisticsInfoDel (Integer id){
-        salesTicketService.logisticsInfoDel(id);
+        LogisticsInfo logisticsInfo = salesTicketService.queryLogisticsInfo(id);
+        if (logisticsInfo != null){
+            salesTicketService.logisticsInfoDel(logisticsInfo, logisticsInfo.getSaleCode());
+        }
     }
 
     public String getCode() {

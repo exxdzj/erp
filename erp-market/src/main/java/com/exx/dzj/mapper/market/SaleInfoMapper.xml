@@ -349,7 +349,7 @@
         END collectedAmounts
     FROM tab_sale_info SINFO
     LEFT JOIN tab_dictionary_info DICTIONPRO ON SINFO.sale_project=DICTIONPRO.dict_code AND DICTIONPRO.data_type='project_list'
-    LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code
+    LEFT JOIN tab_customer_supplier CSUPPLIER ON SINFO.cust_code=CSUPPLIER.cust_code and CSUPPLIER.cust_type in (1, 3)
     LEFT JOIN tab_user_info UINFO ON SINFO.user_code = UINFO.user_code
     LEFT JOIN tab_sale_receipts_details SRDETAIL ON SINFO.sale_code=SRDETAIL.sale_code
     WHERE SINFO.id = #{id,jdbcType=INTEGER}
@@ -1088,6 +1088,10 @@
   <delete id="logisticsInfoDel">
       DELETE FROM tab_sale_logistic_info WHERE id = #{id}
   </delete>
+
+  <select id="queryLogisticsInfo" resultType="com.exx.dzj.entity.market.LogisticsInfo">
+    select id AS id, sale_code AS saleCode from tab_sale_logistic_info WHERE id = #{id}
+  </select>
 
   <select id="querySumSalesOnDay" resultType="com.exx.dzj.entity.market.SaleInfo">
     SELECT SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun, subordinate_company_code AS subordinateCompanyCode,

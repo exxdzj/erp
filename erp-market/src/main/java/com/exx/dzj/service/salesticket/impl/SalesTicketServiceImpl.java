@@ -54,7 +54,7 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
      * @return void
      */
     @Override
-    @SaleLog(operate = "新增销售单")
+    @SaleLog(operate = "新增销售单", saleCode = "#saleInfo")
     public void saveSaleInfo(SaleInfo saleInfo) {
         saleInfoMapper.insertSelective(saleInfo);
     }
@@ -128,7 +128,7 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
      * @return void
      */
     @Override
-    @SaleLog(operate = "更新销售单")
+    @SaleLog(operate = "更新销售单", saleCode = "#saleInfo")
     public void updateSalesTicketById(SaleInfo saleInfo) {
         saleInfoMapper.updateByPrimaryKeySelective(saleInfo);
     }
@@ -140,15 +140,20 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     }
 
     @Override
-    @SaleLog(operate = "删除销售单")
+    @SaleLog(operate = "删除销售单", saleCode = "#saleCode")
     public void upateSaleTicketStatus(String saleCode) {
         saleInfoMapper.upateSaleTicketStatus(saleCode);
     }
 
     @Override
-    @SaleLog(operate = "删除销售单物流信息")
-    public void logisticsInfoDel(Integer id) {
-        saleInfoMapper.logisticsInfoDel(id);
+    @SaleLog(operate = "删除销售单物流信息", saleCode = "#saleCode")
+    public void logisticsInfoDel(LogisticsInfo logisticsInfo, String saleCode) {
+        saleInfoMapper.logisticsInfoDel(logisticsInfo.getId());
+    }
+
+
+    public LogisticsInfo queryLogisticsInfo(Integer id) {
+        return saleInfoMapper.queryLogisticsInfo(id);
     }
 
     @Override
@@ -216,7 +221,7 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     }
 
     @Override
-    @SaleLog(operate = "根据销售单所属业务员修改公司")
+    @SaleLog(operate = "根据销售单所属业务员修改公司", saleCode = "#saleInfo")
     public void updateSalesmanSubordinateCompany(SaleInfo saleInfo) {
         saleInfoMapper.updateSalesmanSubordinateCompany(saleInfo);
     }
@@ -237,7 +242,7 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     }
 
     @Override
-    @SaleLog(operate = "修改发货备注或者发货状态")
+    @SaleLog(operate = "修改发货备注或者发货状态", saleCode = "#saleInfo")
     public int updatReceiptStatus(SaleInfo saleInfo) {
         return saleInfoMapper.updatReceiptStatus(saleInfo);
     }

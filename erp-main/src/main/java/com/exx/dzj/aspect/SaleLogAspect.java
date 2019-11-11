@@ -2,17 +2,16 @@ package com.exx.dzj.aspect;
 
 import com.alibaba.fastjson.JSONObject;
 import com.exx.dzj.annotation.SaleLog;
+import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.salelog.SaleLogBean;
 import com.exx.dzj.entity.user.UserInfo;
 import com.exx.dzj.facade.log.SaleLogFacade;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,6 +52,37 @@ public class SaleLogAspect {
         return result;
     }
 
+    public String before (JoinPoint joinPoint){
+        MethodSignature signature = (MethodSignature)joinPoint.getSignature();
+        SaleLog saleLog = signature.getMethod().getAnnotation(SaleLog.class);
+        Class[] parameterTypes = signature.getParameterTypes();
+
+        String saleCode = null;
+        String fieldName;
+        if (StringUtils.isNotEmpty(fieldName = saleLog.saleCode())){
+            if (StringUtils.startsWith(fieldName, "#")) {
+                saleCode = fieldName = fieldName.substring(1);
+
+                String[] parameterNames = signature.getParameterNames();
+                for (int i = 0; i < parameterNames.length; i++) {
+                    Class parameterType = parameterTypes[i];
+                    if (StringUtils.equals(parameterNames[i], fieldName)) {
+                        if (parameterType.isPrimitive() || StringUtils.equals(parameterType.getSimpleName(), "String")) {
+                            saleCode = joinPoint.getArgs()[i].toString();
+                        } else {
+                            if (parameterType.isInstance(new SaleInfo())){
+                                SaleInfo o = (SaleInfo)joinPoint.getArgs()[i];
+                                saleCode = o.getSaleCode();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return saleCode;
+    }
+
     /**
      * @功能: 异常通知
      * @param point
@@ -70,6 +100,7 @@ public class SaleLogAspect {
      */
     private void saveSaleLog(JoinPoint point, Throwable t) {
         try {
+            String saleCode = before(point);
             /**
              * 获取方法签名(即：切面方法的全限定名)
              */
@@ -77,6 +108,7 @@ public class SaleLogAspect {
             Method method = signature.getMethod();
 
             SaleLogBean saleLogBean = new SaleLogBean();
+            saleLogBean.setSaleCode(saleCode);
             SaleLog saleLog = method.getAnnotation(SaleLog.class);
             if(null != saleLog) {
                 saleLogBean.setOperate(saleLog.operate());

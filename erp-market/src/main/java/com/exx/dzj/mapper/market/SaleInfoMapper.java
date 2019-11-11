@@ -44,6 +44,8 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
 
     void logisticsInfoDel(@Param("id") Integer id);
 
+    LogisticsInfo queryLogisticsInfo(@Param("id") Integer id);
+
     List<SaleInfo> querySumSalesOnDay();
 
     List<SaleInfo> querySumSalesOnMonth(@Param("type") String type);

@@ -16,4 +16,6 @@ public @interface SaleLog {
      * @return
      */
     String operate() default "";
+
+    String saleCode() default "";
 }
