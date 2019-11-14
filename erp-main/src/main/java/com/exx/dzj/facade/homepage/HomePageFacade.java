@@ -1,7 +1,10 @@
 package com.exx.dzj.facade.homepage;
 
 import com.exx.dzj.constant.CommonConstant;
+import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.InsuranceCustomer;
+import com.exx.dzj.entity.market.CompanySaleAccounYearOnYearInfo;
+import com.exx.dzj.entity.market.CompanySumSaleAccounInfo;
 import com.exx.dzj.entity.market.SaleGoodsTop;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.statistics.sales.HomePageReport;
@@ -14,6 +17,7 @@ import com.exx.dzj.service.salesticket.SalesTicketService;
 import com.exx.dzj.service.statistics.sales.SaleTicketReportService;
 import com.exx.dzj.service.stock.StockService;
 import com.exx.dzj.util.DateUtil;
+import com.exx.dzj.util.MathUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -389,6 +393,67 @@ public class HomePageFacade {
         }
 
 
+        return data;
+    }
+
+    public List<CompanySumSaleAccounInfo> queryCompanySaleAccounOnYearOnYear (){
+        List<CompanySaleAccounYearOnYearInfo> list = salesTicketService.queryCompanySaleAccounOnYearOnYear();
+
+        Map<String, List<CompanySaleAccounYearOnYearInfo>> collect = list.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getSubordinateCompanyCode));
+
+        CompanyEnum[] values = CompanyEnum.values();
+        List<SaleInfo> data = new ArrayList<>();
+
+        String code = "";
+
+        List<CompanySumSaleAccounInfo> listData = new ArrayList<>();
+        List<CompanySaleAccounYearOnYearInfo> companySaleAccounYearOnYearInfos = null;
+        CompanySumSaleAccounInfo sumInfo = null;
+
+        BigDecimal sumThisYearAccoun = BigDecimal.ZERO;
+        BigDecimal sumLastYearAccoun = BigDecimal.ZERO;
+        BigDecimal sumBeforeLastYearAccoun = BigDecimal.ZERO;
+
+        for (CompanyEnum ce : values){
+            code = ce.getCode();
+            companySaleAccounYearOnYearInfos = collect.get(code);
+            sumInfo = new CompanySumSaleAccounInfo();
+            listData.add(sumInfo);
+            sumInfo.setSubordinateCompanyCode(code).setSubordinateCompanyName(ce.getValue());
+            if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(companySaleAccounYearOnYearInfos)){
+                sumThisYearAccoun = MathUtil.keepTwoAccurate(companySaleAccounYearOnYearInfos.stream().map(CompanySaleAccounYearOnYearInfo::getThisYearAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
+                sumLastYearAccoun = MathUtil.keepTwoAccurate(companySaleAccounYearOnYearInfos.stream().map(CompanySaleAccounYearOnYearInfo::getLastYearAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
+                sumBeforeLastYearAccoun = MathUtil.keepTwoAccurate(companySaleAccounYearOnYearInfos.stream().map(CompanySaleAccounYearOnYearInfo::getBeforeLastYearAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
+                sumInfo.setSumThisYearAccoun(sumThisYearAccoun).setSumLastYearAccoun(sumLastYearAccoun).
+                        setSumBeforeLastYearAccoun(sumBeforeLastYearAccoun).setList(companySaleAccounYearOnYearInfos);
+            } else {
+                sumInfo.setSumThisYearAccoun(BigDecimal.ZERO).setSumLastYearAccoun(BigDecimal.ZERO).setSumBeforeLastYearAccoun(BigDecimal.ZERO);
+            }
+        }
+
+        return listData;
+    }
+
+    private static final String [] STR = {"zj01", "jl02"};
+    public List<CustomerSupplierBean> queryNewAddCustomer (){
+
+        List<CustomerSupplierBean> list = customerSupplierService.queryNewAddCustomer();
+        Map<String, List<CustomerSupplierBean>> collect = list.stream().collect(Collectors.groupingBy(CustomerSupplierBean::getRankCode));
+        List<CustomerSupplierBean> temp = null;
+        CustomerSupplierBean bean = null;
+        List<CustomerSupplierBean> data = new ArrayList<>();
+        for (String s : STR){
+            temp = collect.get(s);
+            if (temp == null){
+                bean = new CustomerSupplierBean();
+                bean.setRankCode(s);
+                bean.setRankName(InsuranceCustomerLevelEnum.getInsuranceCustomerLevelEnum(s).getValue());
+                bean.setBuyCount(0);
+                data.add(bean);
+            } else {
+                data.add(temp.get(0));
+            }
+        }
         return data;
     }
 }

@@ -253,4 +253,13 @@ public class CustomerController {
     public String getCodeTest(){
         return customerSupplierFacade.getCode(1, "K");
     }
+
+
+    @GetMapping("queryCustBirthday/{userCode}")
+    public Result queryCustBirthday (@PathVariable("userCode") String userCode){
+        Result result = Result.responseSuccess();
+        List<CustomerSupplierInfo> list = customerSupplierFacade.queryCustBirthday(userCode);
+        result.setData(list);
+        return result;
+    }
 }

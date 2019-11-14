@@ -262,4 +262,9 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     public List<SaleInfo> querySaleNumForCustCode(String custCode) {
         return saleInfoMapper.querySaleNumForCustCode(custCode);
     }
+
+    @Override
+    public List<CompanySaleAccounYearOnYearInfo> queryCompanySaleAccounOnYearOnYear() {
+        return saleInfoMapper.queryCompanySaleAccounOnYearOnYear();
+    }
 }

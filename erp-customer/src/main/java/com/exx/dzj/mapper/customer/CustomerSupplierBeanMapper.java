@@ -86,4 +86,8 @@ public interface CustomerSupplierBeanMapper extends BaseMapper<CustomerSupplierB
     int updateBuyCountAndTotalVolume(CustomerSupplierInfo customerSupplierInfo);
 
     CustomerSupplierInfo queryVIPCustomerSupplierInfo(@Param("custCode") String custCode);
+
+    List<CustomerSupplierInfo> queryCustBirthday(@Param("userCode") String userCode);
+
+    List<CustomerSupplierBean> queryNewAddCustomer();
 }

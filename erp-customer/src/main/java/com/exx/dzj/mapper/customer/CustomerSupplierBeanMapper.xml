@@ -785,4 +785,25 @@
     select buyCount AS buyCount, totalVolume AS totalVolume FROM tab_customer_supplier
       WHERE cust_code = #{custCode} AND cust_type IN (1, 3)
   </select>
+
+  <select id="queryCustBirthday" resultType="com.exx.dzj.entity.customer.CustomerSupplierInfo">
+    SELECT
+		id AS id,
+		b.cust_code AS custCode,
+		b.cust_name AS custName,
+		b.identity AS identity,
+		b.birthday AS birthday,
+		b.cust_grade AS custGrade,
+		b.rank_name AS rankName
+	from tab_customer_supplier b
+	where b.birthday is not null
+          and DATE_FORMAT(b.birthday,'%m-%d') = DATE_FORMAT(DATE_SUB(NOW(),INTERVAL -1 DAY),'%m-%d')
+          and b.cust_type in (1, 3) and b.is_enable = 1 AND b.user_code = #{userCode}
+  </select>
+
+  <select id="queryNewAddCustomer" resultType="com.exx.dzj.entity.customer.CustomerSupplierBean">
+    select a.rank_code as rankCode, a.rank_name as rankName, ifnull(count(a.rank_code), 0) as buyCount from tab_customer_supplier a
+		where a.rank_code in ('zj01', 'jl02') and DATE_FORMAT(a.create_time,'%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d') and a.cust_type in (1, 3)
+		GROUP BY a.rank_code
+  </select>
 </mapper>

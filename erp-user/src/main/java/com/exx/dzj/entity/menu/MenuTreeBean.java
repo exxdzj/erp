@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 public class MenuTreeBean implements Serializable {
 
+    private Integer id;
     private String menuCode;
     private String menuName;
     private Integer menuType;
@@ -26,6 +27,7 @@ public class MenuTreeBean implements Serializable {
     private List<MenuTreeBean> children;
 
     public MenuTreeBean(MenuBean menu) {
+        this.id = menu.getId();
         this.menuCode = menu.getMenuCode();
         this.menuName = menu.getMenuName();
         this.menuType = menu.getMenuType();

@@ -96,4 +96,8 @@ public interface CustomerService extends IService<CustomerSupplierBean> {
     int updateBuyCountAndTotalVolume (CustomerSupplierInfo customerSupplierInfo);
 
     CustomerSupplierInfo queryVIPCustomerSupplierInfo(String custCode);
+
+    List<CustomerSupplierInfo> queryCustBirthday (String userCode);
+
+    List<CustomerSupplierBean> queryNewAddCustomer ();
 }

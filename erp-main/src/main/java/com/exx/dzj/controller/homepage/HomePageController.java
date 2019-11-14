@@ -1,7 +1,9 @@
 package com.exx.dzj.controller.homepage;
 
+import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.entity.customer.InsuranceCustomer;
+import com.exx.dzj.entity.market.CompanySumSaleAccounInfo;
 import com.exx.dzj.entity.market.SaleGoodsTop;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.stock.StockBean;
@@ -186,11 +188,41 @@ public class HomePageController {
      * @param /{type}  @PathVariable("type") String type
      * @return com.exx.dzj.result.Result
      */
-    @GetMapping("querycompanysalesformonth")
-    public Result queryCompanySalesForMonth (){
+    @GetMapping("querycompanysalesformonth/{type}")
+    public Result queryCompanySalesForMonth (@PathVariable("type") String type){
         Result result = Result.responseSuccess();
-        List<SaleInfo> list = homePageFacade.queryCompanySalesForMonth("month");
+        List<SaleInfo> list = homePageFacade.queryCompanySalesForMonth(type);
         result.setData(list);
+        return result;
+    }
+
+    /**
+     * @description: 各分公司销售额看板
+     * @author yangyun
+     * @date 2019/11/13 0013
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("queryCompanySaleAccounOnYearOnYear")
+    public Result queryCompanySaleAccounOnYearOnYear (){
+        Result result = Result.responseSuccess();
+        List<CompanySumSaleAccounInfo> companySumSaleAccounInfos = homePageFacade.queryCompanySaleAccounOnYearOnYear();
+        result.setData(companySumSaleAccounInfos);
+        return result;
+    }
+
+    /**
+     * @description: 今日新增总监经理客户数
+     * @author yangyun
+     * @date 2019/11/14 0014
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("queryNewAddCustomer")
+    public Result queryNewAddCustomer (){
+        Result result = Result.responseSuccess();
+        List<CustomerSupplierBean> customerSupplierBeans = homePageFacade.queryNewAddCustomer();
+        result.setData(customerSupplierBeans);
         return result;
     }
 }

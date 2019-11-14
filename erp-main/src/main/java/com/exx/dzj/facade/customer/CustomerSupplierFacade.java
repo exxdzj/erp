@@ -437,4 +437,9 @@ public class CustomerSupplierFacade {
     public Result batchUpdateCustomer(CustomerBatchBean bean) {
         return customerSupplierService.batchUpdateCustomer(bean);
     }
+
+    public List<CustomerSupplierInfo> queryCustBirthday (String userCode){
+
+        return customerSupplierService.queryCustBirthday(userCode);
+    }
 }

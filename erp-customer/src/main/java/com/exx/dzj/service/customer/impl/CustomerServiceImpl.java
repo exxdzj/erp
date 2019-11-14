@@ -276,4 +276,14 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerSupplierBeanMapper,
     public CustomerSupplierInfo queryVIPCustomerSupplierInfo(String custCode) {
         return csMapper.queryVIPCustomerSupplierInfo(custCode);
     }
+
+    @Override
+    public List<CustomerSupplierInfo> queryCustBirthday(String userCode) {
+        return csMapper.queryCustBirthday(userCode);
+    }
+
+    @Override
+    public List<CustomerSupplierBean> queryNewAddCustomer() {
+        return csMapper.queryNewAddCustomer();
+    }
 }

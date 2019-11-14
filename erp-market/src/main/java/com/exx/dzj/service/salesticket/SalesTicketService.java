@@ -81,4 +81,6 @@ public interface SalesTicketService extends IService<SaleInfo> {
     void batchInsertLogistics (List<LogisticsInfo> list);
 
     List<SaleInfo> querySaleNumForCustCode(String custCode);
+
+    List<CompanySaleAccounYearOnYearInfo> queryCompanySaleAccounOnYearOnYear();
 }
