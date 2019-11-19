@@ -46,6 +46,10 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
         saleReceiptsDetailsMapper.insertSelective(saleReceiptsDetails);
     }
 
+    public List<SaleInfo> queryList (){
+        return saleInfoMapper.queryList();
+    }
+
     /**
      * @description 新增销售表
      * @author yangyun
@@ -266,5 +270,10 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     @Override
     public List<CompanySaleAccounYearOnYearInfo> queryCompanySaleAccounOnYearOnYear() {
         return saleInfoMapper.queryCompanySaleAccounOnYearOnYear();
+    }
+
+    @Override
+    public List<CompanySaleAccounYearOnYearInfo> queryCustomerCompanySaleAccoun() {
+        return saleInfoMapper.queryCustomerCompanySaleAccoun();
     }
 }

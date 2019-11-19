@@ -3,6 +3,7 @@ package com.exx.dzj.controller.homepage;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.entity.customer.InsuranceCustomer;
+import com.exx.dzj.entity.market.CompanySaleAccounYearOnYearInfo;
 import com.exx.dzj.entity.market.CompanySumSaleAccounInfo;
 import com.exx.dzj.entity.market.SaleGoodsTop;
 import com.exx.dzj.entity.market.SaleInfo;
@@ -223,6 +224,21 @@ public class HomePageController {
         Result result = Result.responseSuccess();
         List<CustomerSupplierBean> customerSupplierBeans = homePageFacade.queryNewAddCustomer();
         result.setData(customerSupplierBeans);
+        return result;
+    }
+
+    /**
+     * @description: 按客户保险公司统计销售额
+     * @author yangyun
+     * @date 2019/11/15 0015
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("queryCustomerCompanySaleAccoun")
+    public Result queryCustomerCompanySaleAccoun (){
+        Result result = Result.responseSuccess();
+        List<CompanySaleAccounYearOnYearInfo> companySaleAccounYearOnYearInfos = homePageFacade.queryCustomerCompanySaleAccoun();
+        result.setData(companySaleAccounYearOnYearInfos);
         return result;
     }
 }

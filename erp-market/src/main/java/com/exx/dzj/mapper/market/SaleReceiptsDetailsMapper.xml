@@ -344,11 +344,11 @@
   <insert id="addLogisticsInfo" parameterType="com.exx.dzj.entity.market.LogisticsInfo">
     INSERT INTO tab_sale_logistic_info
       (logistic_company_code, logistic_company_name, freight_code, deliver_goods_time, selector_phone_num, remark,
-        logistics_kind, sale_code, express_fee, charge_method, create_user, stock_code, stock_name,stock_address_code, crate_time)
+        logistics_kind, sale_code, express_fee, charge_method, create_user, goods_ids,stock_code, stock_name,stock_address_code, crate_time)
     VALUES
       (
         #{logisticsCompanyCode}, #{logisticsCompamyName}, #{freihtCode}, #{deliverGoodsTime}, #{selectorPhoneNum}, #{remark},
-        #{logisticsKind}, #{saleCode}, #{expressFee}, #{chargeMethod}, #{createUser}, #{stockCode}, #{stockName},#{stockAddressCode}, SYSDATE()
+        #{logisticsKind}, #{saleCode}, #{expressFee}, #{chargeMethod}, #{createUser}, #{goodsIds},#{stockCode}, #{stockName},#{stockAddressCode}, SYSDATE()
       )
   </insert>
 
@@ -391,6 +391,9 @@
       <if test="createUser != null">
         create_user = #{createUser},
       </if>
+      <if test="goodsIds != null">
+        goods_ids = #{goodsIds},
+      </if>
       last_update_time = SYSDATE()
     </set>
     <where>
@@ -406,6 +409,7 @@
       freight_code,
       sale_code,
       stock_code,
+      goods_ids,
       stock_name,
       deliver_goods_time,
       selector_phone_num,
@@ -423,6 +427,7 @@
     <result property="logisticsCompamyName" column="logistic_company_name"/>
     <result property="freihtCode" column="freight_code"/>
     <result property="saleCode" column="sale_code"/>
+    <result property="goodsIds" column="goods_ids"/>
     <result property="stockCode" column="stock_code"/>
     <result property="stockName" column="stock_name"/>
     <result property="deliverGoodsTime" column="deliver_goods_time"/>

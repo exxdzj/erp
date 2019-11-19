@@ -31,4 +31,5 @@ public class LogisticsInfo implements Serializable {
     private String chargeMethod;
     private String createUser;
     private String stockAddressCode;
+    private String goodsIds;
 }

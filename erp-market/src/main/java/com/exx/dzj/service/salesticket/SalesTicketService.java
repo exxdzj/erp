@@ -19,6 +19,8 @@ public interface SalesTicketService extends IService<SaleInfo> {
 
     void saveSaleReceiptsDetails(SaleReceiptsDetails saleReceiptsDetails);
 
+    List<SaleInfo> queryList();
+
     void saveSaleInfo(SaleInfo saleInfo);
 
     List<SaleInfo> querySalesTicketList(SaleInfoQuery query);
@@ -83,4 +85,6 @@ public interface SalesTicketService extends IService<SaleInfo> {
     List<SaleInfo> querySaleNumForCustCode(String custCode);
 
     List<CompanySaleAccounYearOnYearInfo> queryCompanySaleAccounOnYearOnYear();
+
+    List<CompanySaleAccounYearOnYearInfo> queryCustomerCompanySaleAccoun();
 }

@@ -164,6 +164,16 @@ public class SalesTicketFacade {
         salesTicketService.saveSaleInfo(saleInfo);
     }
 
+    public void updateCompanyInfo(){
+        List<SaleInfo> saleInfos = salesTicketService.queryList();
+
+        DeptInfoBean deptInfoBean = null;
+        for (SaleInfo temp : saleInfos){
+            deptInfoBean =deptService.queryDept(temp.getUserCode());
+            setSubordinateCompany(temp, deptInfoBean);
+        }
+    }
+
     /**
      * @description 新建销售单
      * @author yangyun
@@ -652,8 +662,8 @@ public class SalesTicketFacade {
     }
 
     private void updateLogisticsGoodsInfo (LogisticsInfo logisticsInfo){
-        List<String> stockCodeList = Arrays.asList(logisticsInfo.getStockCode().split("&"));
-        List<SaleGoodsDetailBean> saleGoods = salesGoodsDetailService.queryGoodsForStock(logisticsInfo.getSaleCode(), stockCodeList);
+        String[] array = logisticsInfo.getGoodsIds().split(",");
+        List<SaleGoodsDetailBean> saleGoods = salesGoodsDetailService.queryGoodsForStock(array);
         if (!CollectionUtils.isEmpty(saleGoods)) {
             StringBuilder stockName = new StringBuilder("");
             for (int i = 0; i < saleGoods.size(); i++) {
@@ -671,22 +681,15 @@ public class SalesTicketFacade {
     @Transactional(rollbackFor = Exception.class)
     public void addLogisticsInfoAndUpdateStockInventory (LogisticsInfo logisticsInfo) {
         try {
+            String goodsIds = logisticsInfo.getGoodsIds();
 
+            String[] array = goodsIds.split(",");
 
-            // 查询对应仓库商品信息
-            StockNumPrice snp = new StockNumPrice();
-
-            // 商品编号信息
-            List<String> stockCodeList = Arrays.asList(logisticsInfo.getStockCode().split("&"));
-            snp.setStockCodeList(stockCodeList);
-//            snp.setStockAddressCode(logisticsInfo.getStockAddressCode());
-
-            List<StockNumPrice> stockNumPriceList = stockInfoService.queryStockNumPirckList(snp);
 
 
             // 根据 销售单编号和商品编号,获取销售单卖出商品数量, 并对库存做修改
             // 查询销售单销售商品数量
-            List<SaleGoodsDetailBean> saleGoods = salesGoodsDetailService.queryGoodsForStock(logisticsInfo.getSaleCode(), stockCodeList);
+            List<SaleGoodsDetailBean> saleGoods = salesGoodsDetailService.queryGoodsForStock(array);
 
 
             if (!CollectionUtils.isEmpty(saleGoods)){

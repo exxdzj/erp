@@ -44,6 +44,13 @@ public class SalesTickeContorller {
     @Autowired
     private SalesTicketFacade salesTicketFacade;
 
+    @GetMapping("updateCompanyInfo")
+    public Result updateCompanyInfo (){
+        Result result = Result.responseSuccess();
+        salesTicketFacade.updateCompanyInfo();
+        return result;
+    }
+
     /**
      * @description 新增销售单
      * @author yangyun

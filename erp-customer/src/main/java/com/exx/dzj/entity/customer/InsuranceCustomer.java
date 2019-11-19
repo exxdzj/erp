@@ -15,6 +15,6 @@ public class InsuranceCustomer implements Serializable {
     private String rankCode;
     private String rankName;
     private Integer count;
-
+    private Integer newCount;
     private String month;
 }

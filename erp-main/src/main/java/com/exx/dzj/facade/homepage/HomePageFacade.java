@@ -317,6 +317,16 @@ public class HomePageFacade {
             }
         }
 
+        Map<String, List<CustomerSupplierBean>> collect = queryNewAddCustomer().stream().collect(Collectors.groupingBy(CustomerSupplierBean::getRankCode));
+
+        List<CustomerSupplierBean> b = null;
+        for (InsuranceCustomer temp : dataList){
+            b = collect.get(temp.getRankCode());
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(b)){
+                temp.setNewCount(b.get(0).getBuyCount());
+            }
+        }
+
         return dataList;
     }
 
@@ -455,5 +465,12 @@ public class HomePageFacade {
             }
         }
         return data;
+    }
+
+    public List<CompanySaleAccounYearOnYearInfo> queryCustomerCompanySaleAccoun(){
+        List<CompanySaleAccounYearOnYearInfo> companySaleAccounYearOnYearInfos = salesTicketService.queryCustomerCompanySaleAccoun();
+//        Comparator<CompanySaleAccounYearOnYearInfo> com = (b, a) -> a.getSubordinateCompanyCode().compareTo(b.getSubordinateCompanyCode());
+//        List<CompanySaleAccounYearOnYearInfo> collect = companySaleAccounYearOnYearInfos.stream().sorted(com).collect(Collectors.toList());
+        return companySaleAccounYearOnYearInfos;
     }
 }

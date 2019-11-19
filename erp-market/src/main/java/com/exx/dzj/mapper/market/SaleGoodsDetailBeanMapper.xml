@@ -536,9 +536,9 @@
 
   <select id="queryGoodsForStock" resultType="com.exx.dzj.entity.market.SaleGoodsDetailBean">
     SELECT  id AS id, stock_code AS stockCode, stock_name AS stockName, stock_address_code AS stockAddressCode, goods_num AS goodsNum, is_subtract_inventory AS isSubtractInventory
-	FROM tab_sale_goods_detail WHERE sale_code = #{saleCode}
-    AND stock_code IN
-	<foreach collection="list" item="item" separator="," open="(" close=")">
+	FROM tab_sale_goods_detail WHERE 1 = 1
+    AND id IN
+	<foreach collection="array" item="item" separator="," open="(" close=")">
       #{item}
     </foreach>
   </select>

@@ -22,6 +22,8 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
     @Override
     int insert(SaleInfo record);
 
+    List<SaleInfo> queryList ();
+
     int insertSelective(SaleInfo record);
 
     List<SaleInfo> querySalesTicketList(SaleInfoQuery query);
@@ -89,4 +91,6 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
     List<SaleInfo> querySaleNumForCustCode(@Param("custCode") String custCode);
 
     List<CompanySaleAccounYearOnYearInfo> queryCompanySaleAccounOnYearOnYear();
+
+    List<CompanySaleAccounYearOnYearInfo> queryCustomerCompanySaleAccoun();
 }
