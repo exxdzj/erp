@@ -425,14 +425,6 @@ public class HomePageFacade {
 
         Set<String> strings = userCodeMap.keySet();
 
-//        Map<String, List<CompanySaleAccounYearOnYearInfo>> collect = lastYear.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getSubordinateCompanyCode));
-
-//        for (String temp : collect.keySet()){
-//            List<CompanySaleAccounYearOnYearInfo> companySaleAccounYearOnYearInfos = collect.get(temp);
-//            BigDecimal reduce = companySaleAccounYearOnYearInfos.stream().map(CompanySaleAccounYearOnYearInfo::getLastYearAccoun).reduce(BigDecimal.ZERO, BigDecimal::add);
-//            System.out.println(companySaleAccounYearOnYearInfos.get(0).getSubordinateCompanyName() + "====" + reduce);
-//        }
-
         Map<String, List<CompanySaleAccounYearOnYearInfo>> thisYearMap = thisYear.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getUserCode));
         Map<String, List<CompanySaleAccounYearOnYearInfo>> lastYearMap = lastYear.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getUserCode));
         Map<String, List<CompanySaleAccounYearOnYearInfo>> beforeLastYearMap = beforeLastYear.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getUserCode));
@@ -483,7 +475,6 @@ public class HomePageFacade {
         List<CompanySumSaleAccounInfo> listData = new ArrayList<>();
 
         CompanyEnum[] values = CompanyEnum.values();
-        List<SaleInfo> data = new ArrayList<>();
 
         String code = "";
 
