@@ -84,7 +84,7 @@ public interface SalesTicketService extends IService<SaleInfo> {
 
     List<SaleInfo> querySaleNumForCustCode(String custCode);
 
-    List<CompanySaleAccounYearOnYearInfo> queryCompanySaleAccounOnYearOnYear();
+    List<CompanySaleAccounYearOnYearInfo> queryCompanySaleAccounOnYearOnYear(String type);
 
     List<CompanySaleAccounYearOnYearInfo> queryCustomerCompanySaleAccoun();
 }

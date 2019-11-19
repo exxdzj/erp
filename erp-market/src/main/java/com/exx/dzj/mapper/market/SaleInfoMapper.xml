@@ -1764,44 +1764,70 @@
                 select="com.exx.dzj.mapper.market.SaleGoodsDetailBeanMapper.querySaleGoodsDetailBeanList" />
   </resultMap>
 
+  <select id="queryCompanySaleAccounOnYearOnYear" resultType="com.exx.dzj.entity.market.CompanySaleAccounYearOnYearInfo">
+    /*select a.user_code, a.real_name, cast(a.receivableAccoun AS decimal(20, 3)) AS thisYearAccoun, a.subordinateCompanyCode,
+    a.subordinateCompanyName, cast(ifnull(b.receivableAccoun, 0) AS decimal(20, 3)) AS lastYearAccoun, cast(ifnull(c.receivableAccoun, 0) AS decimal(20, 3)) AS beforeLastYearAccoun
+    from
+    (SELECT sinfo.user_code, uinfo.real_name, SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,
+    subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
+    FROM tab_sale_info sinfo
+    INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
+    INNER JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
+    WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now())
+    and sinfo.subordinate_company_code is not null
+    GROUP BY sinfo.user_code) a
+    LEFT JOIN
+    (SELECT sinfo.user_code, uinfo.real_name, SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,
+    subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
+    FROM tab_sale_info sinfo
+    INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
+    INNER JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
+    WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now()) -1
+    and sinfo.subordinate_company_code is not null
+    GROUP BY sinfo.user_code) b on a.user_code = b.user_code
+    LEFT JOIN
+    (SELECT sinfo.user_code, uinfo.real_name, SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,
+    subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
+    FROM tab_sale_info sinfo
+    INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
+    INNER JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
+    WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now()) -2
+    and sinfo.subordinate_company_code is not null
+    GROUP BY sinfo.user_code) c on a.user_code = c.user_code*/
+    SELECT sinfo.user_code AS userCode, uinfo.real_name AS realName, SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS
+    <if test="type == 'thisYear'">
+      thisYearAccoun,
+    </if>
+    <if test="type == 'lastYear'">
+      lastYearAccoun,
+    </if>
+    <if test="type == 'beforeLastYear'">
+      beforeLastYearAccoun,
+    </if>
+    subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
+    FROM tab_sale_info sinfo
+    INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
+    INNER JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
+    WHERE sinfo.is_enable = 1
+    <if test="type == 'thisYear'">
+      and year(sinfo.sale_date) = year(now())
+    </if>
+    <if test="type == 'lastYear'">
+      and year(sinfo.sale_date) = year(now()) - 1
+    </if>
+    <if test="type == 'beforeLastYear'">
+      and year(sinfo.sale_date) = year(now()) - 2
+    </if>
+    and sinfo.subordinate_company_code is not null
+    GROUP BY sinfo.user_code
+  </select>
+
   <select id="querySaleNumForCustCode" resultType="com.exx.dzj.entity.market.SaleInfo">
     select user_code, count(sale_code) goodsNum, user_real_name
       from tab_sale_info s
       left join tab_user_info u on s.user_code = u.user_code
 	  where s.cust_code = #{custCode}  AND YEAR(s.sale_date) = YEAR(NOW())
 		group by s.user_code
-  </select>
-
-  <select id="queryCompanySaleAccounOnYearOnYear" resultType="com.exx.dzj.entity.market.CompanySaleAccounYearOnYearInfo">
-      select a.user_code, a.real_name, cast(a.receivableAccoun AS decimal(20, 3)) AS thisYearAccoun, a.subordinateCompanyCode,
-			a.subordinateCompanyName, cast(ifnull(b.receivableAccoun, 0) AS decimal(20, 3)) AS lastYearAccoun, cast(ifnull(c.receivableAccoun, 0) AS decimal(20, 3)) AS beforeLastYearAccoun
-      from
-      (SELECT sinfo.user_code, uinfo.real_name, SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,
-        subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
-      FROM tab_sale_info sinfo
-        INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
-          INNER JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
-        WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now())
-          and sinfo.subordinate_company_code is not null
-          GROUP BY sinfo.user_code) a
-      LEFT JOIN
-      (SELECT sinfo.user_code, uinfo.real_name, SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,
-        subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
-      FROM tab_sale_info sinfo
-        INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
-          INNER JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
-        WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now()) -1
-          and sinfo.subordinate_company_code is not null
-          GROUP BY sinfo.user_code) b on a.user_code = b.user_code
-      LEFT JOIN
-      (SELECT sinfo.user_code, uinfo.real_name, SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,
-        subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
-      FROM tab_sale_info sinfo
-        INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
-          INNER JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
-        WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now()) -2
-          and sinfo.subordinate_company_code is not null
-          GROUP BY sinfo.user_code) c on a.user_code = c.user_code
   </select>
 
   <select id="queryCustomerCompanySaleAccoun" resultType="com.exx.dzj.entity.market.CompanySaleAccounYearOnYearInfo">

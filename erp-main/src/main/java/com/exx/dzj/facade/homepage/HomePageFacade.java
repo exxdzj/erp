@@ -406,39 +406,142 @@ public class HomePageFacade {
         return data;
     }
 
-    public List<CompanySumSaleAccounInfo> queryCompanySaleAccounOnYearOnYear (){
-        List<CompanySaleAccounYearOnYearInfo> list = salesTicketService.queryCompanySaleAccounOnYearOnYear();
+    private void addCode (List<CompanySaleAccounYearOnYearInfo> data, Map<String, String> map){
+        for (CompanySaleAccounYearOnYearInfo temp : data){
+            map.put(temp.getUserCode(), temp.getRealName());
+        }
+    }
 
-        Map<String, List<CompanySaleAccounYearOnYearInfo>> collect = list.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getSubordinateCompanyCode));
+    public List<CompanySumSaleAccounInfo> queryCompanySaleAccounOnYearOnYear (){
+        Map<String, String> userCodeMap = new HashMap<>();
+        List<CompanySaleAccounYearOnYearInfo> thisYear = salesTicketService.queryCompanySaleAccounOnYearOnYear("thisYear");
+        addCode(thisYear, userCodeMap);
+
+        List<CompanySaleAccounYearOnYearInfo> lastYear = salesTicketService.queryCompanySaleAccounOnYearOnYear("lastYear");
+        addCode(thisYear, userCodeMap);
+
+        List<CompanySaleAccounYearOnYearInfo> beforeLastYear = salesTicketService.queryCompanySaleAccounOnYearOnYear("beforeLastYear");
+        addCode(thisYear, userCodeMap);
+
+        Set<String> strings = userCodeMap.keySet();
+
+//        Map<String, List<CompanySaleAccounYearOnYearInfo>> collect = lastYear.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getSubordinateCompanyCode));
+
+//        for (String temp : collect.keySet()){
+//            List<CompanySaleAccounYearOnYearInfo> companySaleAccounYearOnYearInfos = collect.get(temp);
+//            BigDecimal reduce = companySaleAccounYearOnYearInfos.stream().map(CompanySaleAccounYearOnYearInfo::getLastYearAccoun).reduce(BigDecimal.ZERO, BigDecimal::add);
+//            System.out.println(companySaleAccounYearOnYearInfos.get(0).getSubordinateCompanyName() + "====" + reduce);
+//        }
+
+        Map<String, List<CompanySaleAccounYearOnYearInfo>> thisYearMap = thisYear.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getUserCode));
+        Map<String, List<CompanySaleAccounYearOnYearInfo>> lastYearMap = lastYear.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getUserCode));
+        Map<String, List<CompanySaleAccounYearOnYearInfo>> beforeLastYearMap = beforeLastYear.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getUserCode));
+
+
+
+        List<CompanySaleAccounYearOnYearInfo> list = new ArrayList<>();
+
+        CompanySaleAccounYearOnYearInfo info = null;
+        List<CompanySaleAccounYearOnYearInfo> thiss = null;
+        List<CompanySaleAccounYearOnYearInfo> last = null;
+        List<CompanySaleAccounYearOnYearInfo> beforeLast = null;
+        for (String s : strings){
+
+            thiss = thisYearMap.get(s);
+            last = lastYearMap.get(s);
+            beforeLast = beforeLastYearMap.get(s);
+
+            if (thiss != null || last != null || beforeLast != null){
+                info = new CompanySaleAccounYearOnYearInfo();
+                list.add(info);
+                info.setUserCode(s).setRealName(userCodeMap.get(s));
+
+                if (org.apache.commons.collections.CollectionUtils.isNotEmpty(thiss)){
+                    info.setThisYearAccoun(thiss.get(0).getThisYearAccoun())
+                            .setSubordinateCompanyName(thiss.get(0).getSubordinateCompanyName()).setSubordinateCompanyCode(thiss.get(0).getSubordinateCompanyCode());
+                } else {
+                    info.setThisYearAccoun(BigDecimal.ZERO);
+                }
+
+                if (org.apache.commons.collections.CollectionUtils.isNotEmpty(last)){
+                    info.setLastYearAccoun(last.get(0).getLastYearAccoun())
+                            .setSubordinateCompanyName(last.get(0).getSubordinateCompanyName()).setSubordinateCompanyCode(last.get(0).getSubordinateCompanyCode());
+                } else {
+                    info.setLastYearAccoun(BigDecimal.ZERO);
+                }
+
+                if (org.apache.commons.collections.CollectionUtils.isNotEmpty(beforeLast)){
+                    info.setBeforeLastYearAccoun(beforeLast.get(0).getBeforeLastYearAccoun())
+                            .setSubordinateCompanyName(thiss.get(0).getSubordinateCompanyName()).setSubordinateCompanyCode(beforeLast.get(0).getSubordinateCompanyCode());
+                } else {
+                    info.setBeforeLastYearAccoun(BigDecimal.ZERO);
+                }
+            }
+        }
+
+
+        List<CompanySumSaleAccounInfo> listData = new ArrayList<>();
 
         CompanyEnum[] values = CompanyEnum.values();
         List<SaleInfo> data = new ArrayList<>();
 
         String code = "";
 
-        List<CompanySumSaleAccounInfo> listData = new ArrayList<>();
+
         List<CompanySaleAccounYearOnYearInfo> companySaleAccounYearOnYearInfos = null;
+        List<CompanySaleAccounYearOnYearInfo> companySaleAccounYearOnYearInfos1 = null;
+        List<CompanySaleAccounYearOnYearInfo> companySaleAccounYearOnYearInfos2 = null;
+        List<CompanySaleAccounYearOnYearInfo> companySaleAccounYearOnYearInfos3 = null;
         CompanySumSaleAccounInfo sumInfo = null;
 
         BigDecimal sumThisYearAccoun = BigDecimal.ZERO;
         BigDecimal sumLastYearAccoun = BigDecimal.ZERO;
         BigDecimal sumBeforeLastYearAccoun = BigDecimal.ZERO;
 
+        Map<String, List<CompanySaleAccounYearOnYearInfo>> collect = list.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getSubordinateCompanyCode));
+
+        Map<String, List<CompanySaleAccounYearOnYearInfo>> collect1 = thisYear.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getSubordinateCompanyCode));
+        Map<String, List<CompanySaleAccounYearOnYearInfo>> collect2 = lastYear.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getSubordinateCompanyCode));
+        Map<String, List<CompanySaleAccounYearOnYearInfo>> collect3 = beforeLastYear.stream().collect(Collectors.groupingBy(CompanySaleAccounYearOnYearInfo::getSubordinateCompanyCode));
+
         for (CompanyEnum ce : values){
             code = ce.getCode();
-            companySaleAccounYearOnYearInfos = collect.get(code);
+            companySaleAccounYearOnYearInfos1 = collect1.get(code);
+
             sumInfo = new CompanySumSaleAccounInfo();
             listData.add(sumInfo);
             sumInfo.setSubordinateCompanyCode(code).setSubordinateCompanyName(ce.getValue());
-            if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(companySaleAccounYearOnYearInfos)){
-                sumThisYearAccoun = MathUtil.keepTwoAccurate(companySaleAccounYearOnYearInfos.stream().map(CompanySaleAccounYearOnYearInfo::getThisYearAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
-                sumLastYearAccoun = MathUtil.keepTwoAccurate(companySaleAccounYearOnYearInfos.stream().map(CompanySaleAccounYearOnYearInfo::getLastYearAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
-                sumBeforeLastYearAccoun = MathUtil.keepTwoAccurate(companySaleAccounYearOnYearInfos.stream().map(CompanySaleAccounYearOnYearInfo::getBeforeLastYearAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
-                sumInfo.setSumThisYearAccoun(sumThisYearAccoun).setSumLastYearAccoun(sumLastYearAccoun).
-                        setSumBeforeLastYearAccoun(sumBeforeLastYearAccoun).setList(companySaleAccounYearOnYearInfos);
+            if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(companySaleAccounYearOnYearInfos1)){
+                sumThisYearAccoun = MathUtil.keepTwoAccurate(companySaleAccounYearOnYearInfos1.stream().map(CompanySaleAccounYearOnYearInfo::getThisYearAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
             } else {
-                sumInfo.setSumThisYearAccoun(BigDecimal.ZERO).setSumLastYearAccoun(BigDecimal.ZERO).setSumBeforeLastYearAccoun(BigDecimal.ZERO);
+                sumThisYearAccoun = BigDecimal.ZERO;
             }
+
+            companySaleAccounYearOnYearInfos2 = collect2.get(code);
+            if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(companySaleAccounYearOnYearInfos2)){
+                sumLastYearAccoun = MathUtil.keepTwoAccurate(companySaleAccounYearOnYearInfos2.stream().map(CompanySaleAccounYearOnYearInfo::getLastYearAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
+            } else {
+                sumLastYearAccoun = BigDecimal.ZERO;
+            }
+
+            companySaleAccounYearOnYearInfos3 = collect3.get(code);
+            if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(companySaleAccounYearOnYearInfos3)){
+                sumBeforeLastYearAccoun = MathUtil.keepTwoAccurate(companySaleAccounYearOnYearInfos3.stream().map(CompanySaleAccounYearOnYearInfo::getBeforeLastYearAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
+            } else {
+                sumBeforeLastYearAccoun = BigDecimal.ZERO;
+            }
+
+            companySaleAccounYearOnYearInfos = collect.get(code);
+
+            if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(companySaleAccounYearOnYearInfos)){
+                Comparator<CompanySaleAccounYearOnYearInfo> com = (b, a) -> a.getThisYearAccoun().compareTo(b.getThisYearAccoun());
+
+                List<CompanySaleAccounYearOnYearInfo> collect4 = companySaleAccounYearOnYearInfos.stream().sorted(com).collect(Collectors.toList());
+                sumInfo.setList(collect4);
+            }
+
+            sumInfo.setSumThisYearAccoun(sumThisYearAccoun).setSumLastYearAccoun(sumLastYearAccoun).
+                        setSumBeforeLastYearAccoun(sumBeforeLastYearAccoun);
         }
 
         return listData;

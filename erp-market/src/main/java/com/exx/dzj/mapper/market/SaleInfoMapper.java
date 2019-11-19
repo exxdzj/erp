@@ -90,7 +90,7 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
 
     List<SaleInfo> querySaleNumForCustCode(@Param("custCode") String custCode);
 
-    List<CompanySaleAccounYearOnYearInfo> queryCompanySaleAccounOnYearOnYear();
+    List<CompanySaleAccounYearOnYearInfo> queryCompanySaleAccounOnYearOnYear(@Param("type") String type);
 
     List<CompanySaleAccounYearOnYearInfo> queryCustomerCompanySaleAccoun();
 }
