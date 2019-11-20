@@ -1863,7 +1863,7 @@
 				FROM tab_sale_info sinfo
 					INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
 					LEFT JOIN tab_customer_supplier b on sinfo.cust_code = b.cust_code and b.cust_type in (1, 3)
-					WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now()) -1
+					WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now()) -2
 						and sinfo.cust_code is not null
 						GROUP BY b.company_code) d ON a.company_code = d.companyCode
 		GROUP BY a.company_code order by  a.company_code asc
