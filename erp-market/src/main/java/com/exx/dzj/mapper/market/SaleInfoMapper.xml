@@ -1831,7 +1831,44 @@
   </select>
 
   <select id="queryCustomerCompanySaleAccoun" resultType="com.exx.dzj.entity.market.CompanySaleAccounYearOnYearInfo">
-      	select
+      	/*select
+		a.company_code AS subordinateCompanyCode, a.company_name AS subordinateCompanyName,
+		ifnull(sum(b.receivableAccoun),0) AS thisYearAccoun,
+		ifnull(sum(c.receivableAccoun),0) as lastYearAccoun,
+		ifnull(sum(d.receivableAccoun),0) as beforeLastYearAccoun
+	from
+	  (select ifnull(a.company_code, -1) AS company_code, ifnull(company_name, '其他') AS company_name from tab_customer_supplier a
+			where a.cust_type in (1, 3) GROUP BY a.company_code) a
+		LEFT JOIN
+			(SELECT SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,
+				 ifnull(b.company_code,-1) AS companyCode
+				FROM tab_sale_info sinfo
+					INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
+					LEFT JOIN tab_customer_supplier b on sinfo.cust_code = b.cust_code and b.cust_type in (1, 3)
+					WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now())
+						and sinfo.cust_code is not null and receivableAccoun >= 1000
+						GROUP BY b.company_code) b ON a.company_code = b.companyCode
+		 LEFT JOIN
+				(SELECT SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,
+				 ifnull(b.company_code,-1) AS companyCode
+				FROM tab_sale_info sinfo
+					INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
+					LEFT JOIN tab_customer_supplier b on sinfo.cust_code = b.cust_code and b.cust_type in (1, 3)
+					WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now()) -1
+						and sinfo.cust_code is not null and receivableAccoun >= 1000
+						GROUP BY b.company_code) c ON a.company_code = c.companyCode
+			LEFT JOIN
+				(SELECT SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,
+				 ifnull(b.company_code,-1) AS companyCode
+				FROM tab_sale_info sinfo
+					INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
+					LEFT JOIN tab_customer_supplier b on sinfo.cust_code = b.cust_code and b.cust_type in (1, 3)
+					WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now()) -2
+						and sinfo.cust_code is not null and receivableAccoun >= 1000
+						GROUP BY b.company_code) d ON a.company_code = d.companyCode
+		GROUP BY a.company_code order by  a.company_code asc*/
+
+select
 		a.company_code AS subordinateCompanyCode, a.company_name AS subordinateCompanyName,
 		ifnull(sum(b.receivableAccoun),0) AS thisYearAccoun,
 		ifnull(sum(c.receivableAccoun),0) as lastYearAccoun,
@@ -1866,6 +1903,8 @@
 					WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now()) -2
 						and sinfo.cust_code is not null
 						GROUP BY b.company_code) d ON a.company_code = d.companyCode
-		GROUP BY a.company_code order by  a.company_code asc
+			LEFT JOIN tab_insurance_company aa on a.company_code = aa.company_code
+			where 1 = 1 and (b.receivableAccoun >= 1000 or c.receivableAccoun >= 1000 or d.receivableAccoun >= 1000)
+		GROUP BY a.company_code order by aa.seq desc
   </select>
 </mapper>
