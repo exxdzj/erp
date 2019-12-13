@@ -3,10 +3,7 @@ package com.exx.dzj.controller.homepage;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.entity.customer.InsuranceCustomer;
-import com.exx.dzj.entity.market.CompanySaleAccounYearOnYearInfo;
-import com.exx.dzj.entity.market.CompanySumSaleAccounInfo;
-import com.exx.dzj.entity.market.SaleGoodsTop;
-import com.exx.dzj.entity.market.SaleInfo;
+import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.facade.homepage.HomePageFacade;
 import com.exx.dzj.result.Result;
@@ -239,6 +236,14 @@ public class HomePageController {
         Result result = Result.responseSuccess();
         List<CompanySaleAccounYearOnYearInfo> companySaleAccounYearOnYearInfos = homePageFacade.queryCustomerCompanySaleAccoun();
         result.setData(companySaleAccounYearOnYearInfos);
+        return result;
+    }
+
+    @GetMapping("queryCompanyProfit")
+    public Result queryCompanyProfit (){
+        Result result = Result.responseSuccess();
+        Map<String, List<CompanyProfit>> map = homePageFacade.queryCompanyProfit();
+        result.setData(map);
         return result;
     }
 }

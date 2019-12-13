@@ -391,8 +391,8 @@
         cust_grade = #{custGrade,jdbcType=VARCHAR},
       </if>
     </set>
-    where cust_code = #{custCode,jdbcType=VARCHAR}
-  </update>
+    where cust_code = #{custCode,jdbcType=VARCHAR} and cust_type =#{custType}
+  </update><!--  and cust_type = #{custType} -->
 
   <!-- *****************************************手写 sql  start ******************************************* -->
   <!-- 查询 客户或供应商列表数据 -->
@@ -806,4 +806,19 @@
 		where a.rank_code in ('zj01', 'jl02') and DATE_FORMAT(a.create_time,'%Y-%m-%d') = DATE_FORMAT(curdate(), '%Y-%m-%d') and a.cust_type in (1, 3)
 		GROUP BY a.rank_code
   </select>
+
+  <update id="updateCustomerCompany" parameterType="com.exx.dzj.entity.customer.CustomerSupplierInfo">
+    update tab_customer_supplier
+    <set>
+
+      <if test="companyCode != null">
+        company_code = #{companyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+
+    </set>
+    where cust_code = #{custCode,jdbcType=VARCHAR} and cust_type in (1, 3)
+  </update>
 </mapper>

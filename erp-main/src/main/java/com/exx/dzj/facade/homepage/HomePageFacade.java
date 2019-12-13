@@ -3,10 +3,7 @@ package com.exx.dzj.facade.homepage;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.InsuranceCustomer;
-import com.exx.dzj.entity.market.CompanySaleAccounYearOnYearInfo;
-import com.exx.dzj.entity.market.CompanySumSaleAccounInfo;
-import com.exx.dzj.entity.market.SaleGoodsTop;
-import com.exx.dzj.entity.market.SaleInfo;
+import com.exx.dzj.entity.market.*;
 import com.exx.dzj.entity.statistics.sales.HomePageReport;
 import com.exx.dzj.entity.stock.StockBean;
 import com.exx.dzj.enummodel.CompanyEnum;
@@ -26,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author yangyun
@@ -402,6 +400,10 @@ public class HomePageFacade {
             }
         }
 
+        for (SaleInfo temp : data){
+            temp.setSubordinateCompanyName(temp.getSubordinateCompanyName().replace("E行销", ""));
+        }
+
 
         return data;
     }
@@ -535,7 +537,22 @@ public class HomePageFacade {
                         setSumBeforeLastYearAccoun(sumBeforeLastYearAccoun);
         }
 
-        return listData;
+        Comparator<CompanySumSaleAccounInfo> com = (b, a) -> a.getSumThisYearAccoun().compareTo(b.getSumThisYearAccoun());
+
+        Comparator<CompanySaleAccounYearOnYearInfo> com1 = (b, a) -> a.getThisYearAccoun().compareTo(b.getThisYearAccoun());
+
+        List<CompanySumSaleAccounInfo> collect4 = listData.stream().sorted(com).collect(Collectors.toList());
+        List<CompanySaleAccounYearOnYearInfo> list1 = null;
+        List<CompanySaleAccounYearOnYearInfo> collect5 = null;
+        for (CompanySumSaleAccounInfo temp : collect4){
+            list1 = temp.getList();
+            if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(list1)){
+                collect5 = list1.stream().sorted(com1).collect(Collectors.toList());
+                temp.setList(collect5);
+            }
+        }
+
+        return collect4;
     }
 
     private static final String [] STR = {"zj01", "jl02"};
@@ -566,5 +583,58 @@ public class HomePageFacade {
 //        Comparator<CompanySaleAccounYearOnYearInfo> com = (b, a) -> a.getSubordinateCompanyCode().compareTo(b.getSubordinateCompanyCode());
 //        List<CompanySaleAccounYearOnYearInfo> collect = companySaleAccounYearOnYearInfos.stream().sorted(com).collect(Collectors.toList());
         return companySaleAccounYearOnYearInfos;
+    }
+
+    public Map<String, List<CompanyProfit>> queryCompanyProfit (){
+        List<CompanyProfit> data = salesTicketService.queryCompanyProfit();
+
+        List<String> strList = Arrays.asList("E行销深圳", "E行销培训", "E行销温州", "E行销技术", "E行销西安",  "E行销北京", "E行销广州", "E行销礼品", "其他");
+
+        Map<String, List<CompanyProfit>> map = new LinkedHashMap<>();
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(data)){
+            Map<String, List<CompanyProfit>> collect = data.stream().collect(Collectors.groupingBy(CompanyProfit::getYear));
+            List<CompanyProfit> thisYear = collect.get("2019");
+            map.put("2019", processData(thisYear, strList));
+
+            List<CompanyProfit> lastYear = collect.get("2018");
+            map.put("2018", processData(lastYear, strList));
+
+            List<CompanyProfit> beforeLastYear = collect.get("2017");
+            map.put("2017", processData(beforeLastYear, strList));
+        }
+
+        return map;
+    }
+
+    public List<CompanyProfit> processData (List<CompanyProfit> data, List<String> strList){
+        List<CompanyProfit> list = new ArrayList<>();
+        CompanyProfit info = null;
+        List<CompanyProfit> temp = null;
+        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal profit = BigDecimal.ZERO;
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(data)){
+            Map<String, List<CompanyProfit>> collect = data.stream().collect(Collectors.groupingBy(CompanyProfit::getCompanyName));
+            for(String str : strList){
+                temp = collect.get(str);
+                info = new CompanyProfit();
+                if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(temp)){
+                    total = temp.get(0).getTotal();
+                    profit = temp.get(0).getProfit();
+                } else {
+                    total = BigDecimal.ZERO;
+                    profit = BigDecimal.ZERO;
+                }
+                info.setCompanyName(str).setTotal(total).setProfit(profit);
+                list.add(info);
+            }
+        } else {
+            for(String str : strList){
+                info = new CompanyProfit();
+                info.setCompanyName(str).setProfit(total).setProfit(profit);
+                list.add(info);
+            }
+        }
+
+        return list;
     }
 }

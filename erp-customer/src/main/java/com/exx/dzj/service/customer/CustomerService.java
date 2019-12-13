@@ -100,4 +100,6 @@ public interface CustomerService extends IService<CustomerSupplierBean> {
     List<CustomerSupplierInfo> queryCustBirthday (String userCode);
 
     List<CustomerSupplierBean> queryNewAddCustomer ();
+
+    void updateCustomerCompany(CustomerSupplierInfo temp);
 }

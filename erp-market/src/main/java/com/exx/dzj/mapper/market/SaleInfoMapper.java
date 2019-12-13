@@ -93,4 +93,6 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
     List<CompanySaleAccounYearOnYearInfo> queryCompanySaleAccounOnYearOnYear(@Param("type") String type);
 
     List<CompanySaleAccounYearOnYearInfo> queryCustomerCompanySaleAccoun();
+
+    List<CompanyProfit> queryCompanyProfit();
 }

@@ -369,7 +369,7 @@
         source = #{source},
       </if>
     </set>
-    where cust_code = #{custCode,jdbcType=VARCHAR}
+    where cust_code = #{custCode,jdbcType=VARCHAR} and source = #{source}
   </update>
 
   <update id="updateByPrimaryKey" parameterType="com.exx.dzj.entity.contactway.ContactWayBean">

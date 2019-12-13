@@ -286,4 +286,9 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerSupplierBeanMapper,
     public List<CustomerSupplierBean> queryNewAddCustomer() {
         return csMapper.queryNewAddCustomer();
     }
+
+    @Override
+    public void updateCustomerCompany(CustomerSupplierInfo temp) {
+        csMapper.updateCustomerCompany(temp);
+    }
 }

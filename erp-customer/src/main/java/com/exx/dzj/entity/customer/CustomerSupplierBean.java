@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.Date;
  */
 @Data
 @ToString
+@Accessors(chain = true)
 @TableName("tab_customer_supplier")
 public class CustomerSupplierBean implements Serializable {
     private String value;

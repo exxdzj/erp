@@ -2,6 +2,7 @@ package com.exx.dzj.mapper.company;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exx.dzj.entity.company.InsuranceCompanyDO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @Author
@@ -9,4 +10,6 @@ import com.exx.dzj.entity.company.InsuranceCompanyDO;
  * @Description
  */
 public interface InsuranceCompanyMapper extends BaseMapper<InsuranceCompanyDO> {
+
+    InsuranceCompanyDO queryByName(@Param("name") String name);
 }

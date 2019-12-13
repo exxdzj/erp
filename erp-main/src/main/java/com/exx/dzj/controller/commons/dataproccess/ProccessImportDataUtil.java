@@ -5,6 +5,7 @@ import com.exx.dzj.controller.commons.DataImportUtil;
 import com.exx.dzj.entity.accountatt.AccountAttributeBean;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
+import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.dept.DeptInfoBean;
 import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
@@ -873,6 +874,23 @@ public class ProccessImportDataUtil {
 
             info =  new LogisticsInfo();
             BeanUtils.copyProperties(model, info);
+            data.add(info);
+        }
+
+        return data;
+    }
+
+    public static List<CustomerSupplierInfo> proccessCustomerCompany (List<Object> custCompany){
+        List<CustomerSupplierInfo> data = null;
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(custCompany)){
+            return data;
+        }
+        data = new ArrayList<>();
+        CustomerCompany temp = null;
+        for (Object t : custCompany){
+            temp = (CustomerCompany)t;
+            CustomerSupplierInfo info = new CustomerSupplierInfo();
+            info.setCustCode(temp.getCustCode()).setCustName(temp.getCustName()).setCompanyName(temp.getCompanyName());
             data.add(info);
         }
 

@@ -1870,9 +1870,9 @@
 
 select
 		a.company_code AS subordinateCompanyCode, a.company_name AS subordinateCompanyName,
-		ifnull(sum(b.receivableAccoun),0) AS thisYearAccoun,
-		ifnull(sum(c.receivableAccoun),0) as lastYearAccoun,
-		ifnull(sum(d.receivableAccoun),0) as beforeLastYearAccoun
+		cast(ifnull(sum(b.receivableAccoun),0) AS decimal(20, 0)) AS thisYearAccoun,
+		cast(ifnull(sum(c.receivableAccoun),0) AS decimal(20, 0)) as lastYearAccoun,
+		cast(ifnull(sum(d.receivableAccoun),0) AS decimal(20, 0)) as beforeLastYearAccoun
 	from
 	  (select ifnull(a.company_code, -1) AS company_code, ifnull(company_name, '其他') AS company_name from tab_customer_supplier a
 			where a.cust_type in (1, 3) GROUP BY a.company_code) a
@@ -1905,6 +1905,22 @@ select
 						GROUP BY b.company_code) d ON a.company_code = d.companyCode
 			LEFT JOIN tab_insurance_company aa on a.company_code = aa.company_code
 			where 1 = 1 and (b.receivableAccoun >= 1000 or c.receivableAccoun >= 1000 or d.receivableAccoun >= 1000)
-		GROUP BY a.company_code order by aa.seq desc
+		GROUP BY a.company_code order by thisYearAccoun desc, aa.seq desc
+  </select>
+
+  <select id="queryCompanyProfit" resultType="com.exx.dzj.entity.market.CompanyProfit">
+    SELECT
+      (CASE WHEN t.subordinate_company_name IS NULL THEN '其他' ELSE t.subordinate_company_name END) companyName,
+      DATE_FORMAT(t.sale_date,'%Y') `year`,
+      SUM(g.goods_num * g.real_sell_price) total,
+      SUM(g.goods_num * (g.real_sell_price - s.standard_buy_price)) profit
+    FROM tab_sale_info t
+    LEFT JOIN tab_sale_goods_detail g ON t.sale_code = g.sale_code
+    LEFT JOIN tab_stock_num_price s ON g.stock_code = s.stock_code AND g.stock_address_code = s.stock_address_code
+    WHERE
+      <![CDATA[DATE_FORMAT(t.sale_date,'%Y') >= 2017 AND DATE_FORMAT(t.sale_date,'%Y') <= 2019]]>
+      AND t.is_enable = 1
+      GROUP BY DATE_FORMAT(t.sale_date,'%Y'),t.subordinate_company_code
+      ORDER BY DATE_FORMAT(t.sale_date,'%Y') DESC,total DESC
   </select>
 </mapper>

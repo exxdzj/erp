@@ -3,6 +3,7 @@ package com.exx.dzj.controller.commons;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.controller.commons.dataproccess.ProccessImportDataUtil;
 import com.exx.dzj.entity.customer.CustomerSupplierBean;
+import com.exx.dzj.entity.customer.CustomerSupplierInfo;
 import com.exx.dzj.entity.market.LogisticsInfo;
 import com.exx.dzj.entity.market.SaleGoodsDetailBean;
 import com.exx.dzj.entity.market.SaleInfo;
@@ -24,7 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -102,7 +104,7 @@ public class DataImportController {
                     List<Object> objects = ExcelUtil.readExcel(excelFile, new SaleGoodsModel(), CommonConstant.DEFAULT_VALUE_ONE);
                     SaleGoodsModel o = (SaleGoodsModel)objects.get(0);
                     List<SaleGoodsDetailBean> saleGoodsBeans = ProccessImportDataUtil.processSaleGoodsImportData(objects, stringMap, stockInfos);
-                    salesTicketFacade.insertImportGoodsData(saleGoodsBeans, DateUtil.convertDateToString(o.getSaleDate(), "yyyy-MM"));
+//                    salesTicketFacade.insertImportGoodsData(saleGoodsBeans, DateUtil.convertDateToString(o.getSaleDate(), "yyyy-MM"));
                     break;
                 case 5: //销售关联收款金额导入
                     List<Object> receipts = ExcelUtil.readExcel(excelFile, new SaleReceiptModel(), CommonConstant.DEFAULT_VALUE_ONE);
@@ -120,6 +122,14 @@ public class DataImportController {
 
                     salesTicketFacade.batchInsertLogistics(logisticsInfos);
                     break;
+                case 7: // 更新客户公司名称
+                    List<Object> custCompany = ExcelUtil.readExcel(excelFile, new CustomerCompany(), CommonConstant.DEFAULT_VALUE_ONE);
+                    List<CustomerSupplierInfo> customerSupplierInfos = ProccessImportDataUtil.proccessCustomerCompany(custCompany);
+                    List<CustomerSupplierInfo> diffData = customerSupplierFacade.updateCustomerCompany(customerSupplierInfos);
+
+                    // 写出不同数据
+                    writeDifferentCustomerCompany(diffData, excelFile.getOriginalFilename());
+                    break;
             }
 
         } catch (IOException e) {
@@ -128,6 +138,40 @@ public class DataImportController {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public void writeDifferentCustomerCompany(List<CustomerSupplierInfo> diffData, String name){
+
+        File file = new File("a.txt");
+        OutputStream os = null;
+        BufferedOutputStream bos = null;
+        try {
+            os = new FileOutputStream(file, true);
+            bos = new BufferedOutputStream(os);
+
+            if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(diffData)){
+                name = name + "\n";
+                bos.write(name.getBytes());
+                String str = null;
+                for (CustomerSupplierInfo temp : diffData){
+                    str = temp.getCustCode() + "\t" + temp.getCustName() + "\t" + temp.getCompanyCode() + "\t" + temp.getCompanyName() + "\t" + temp.getRemarks() + "\n";
+                    bos.write(str.getBytes());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(bos != null){
+                    bos.close();
+                }
+                if (os != null){
+                    os.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @GetMapping("test")

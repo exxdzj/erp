@@ -3,6 +3,7 @@ package com.exx.dzj.facade.customer;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exx.dzj.constant.CommonConstant;
 import com.exx.dzj.entity.accountatt.AccountAttributeBean;
+import com.exx.dzj.entity.company.InsuranceCompanyDO;
 import com.exx.dzj.entity.contactway.ContactWayBean;
 import com.exx.dzj.entity.customer.*;
 import com.exx.dzj.entity.dictionary.DictionaryInfo;
@@ -13,6 +14,7 @@ import com.exx.dzj.facade.user.UserTokenFacade;
 import com.exx.dzj.page.ERPage;
 import com.exx.dzj.result.Result;
 import com.exx.dzj.service.accountatt.AccountAttributeService;
+import com.exx.dzj.service.company.InsuranceCompanyService;
 import com.exx.dzj.service.contactway.ContactWayService;
 import com.exx.dzj.service.customer.CustomerService;
 import com.exx.dzj.service.dictionary.DictionaryService;
@@ -60,6 +62,9 @@ public class CustomerSupplierFacade {
     private UserTokenFacade userTokenFacade;
     @Autowired
     private BusEncodeFacade busEncodeFacade;
+
+    @Autowired
+    private InsuranceCompanyService insuranceCompanyService;
 
     /**
      * 查询 客户或供应商列表数据
@@ -441,5 +446,50 @@ public class CustomerSupplierFacade {
     public List<CustomerSupplierInfo> queryCustBirthday (String userCode){
 
         return customerSupplierService.queryCustBirthday(userCode);
+    }
+
+    public List<CustomerSupplierInfo> updateCustomerCompany(List<CustomerSupplierInfo> customerSupplierInfos){
+
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(customerSupplierInfos)){
+            List<CustomerSupplierInfo> diff = new ArrayList<>();
+            CustomerSupplierInfo info = null;
+            for (CustomerSupplierInfo temp : customerSupplierInfos){
+                info = customerSupplierService.queryCustomerSupplierInfo(1, temp.getCustCode());
+
+                if (info == null){
+                    temp.setRemarks("没有该客户");
+                    diff.add(temp);
+                    continue;
+                }
+
+                // 查询公司信息
+                InsuranceCompanyDO company = insuranceCompanyService.queryByName(temp.getCompanyName());
+
+                if(company == null){
+                    temp.setRemarks("没有该公司");
+                    diff.add(temp);
+                    continue;
+                }
+
+                if ((StringUtils.isEmpty(info.getCompanyCode()) && StringUtils.isEmpty(info.getCompanyName()))
+                    || (StringUtils.isEmpty(info.getCompanyCode()) && StringUtils.equals(info.getCompanyName(), temp.getCompanyName()))
+                    ){
+                    temp.setCompanyCode(company.getCompanyCode());
+                    // 更新
+                    customerSupplierService.updateCustomerCompany(temp);
+                }
+
+                else {
+                    if (StringUtils.isNotEmpty(info.getCompanyCode()) && !StringUtils.equals(info.getCompanyName(), temp.getCompanyName())){
+                        // 记录不同
+                        diff.add(info);
+                    }
+                }
+            }
+
+            return diff;
+        }
+
+        return null;
     }
 }

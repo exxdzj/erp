@@ -2,6 +2,7 @@ package com.exx.dzj.entity.customer;
 
 import lombok.Data;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @ToString
+@Accessors(chain = true)
 public class CustomerSupplierInfo extends CustomerSupplierBean implements Serializable {
 
     private String dialogStatus;

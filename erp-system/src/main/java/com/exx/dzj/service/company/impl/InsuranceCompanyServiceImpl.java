@@ -42,4 +42,9 @@ public class InsuranceCompanyServiceImpl
 
         return companyMapper.selectList(queryWrapper);
     }
+
+    @Override
+    public InsuranceCompanyDO queryByName(String name) {
+        return companyMapper.queryByName(name);
+    }
 }
