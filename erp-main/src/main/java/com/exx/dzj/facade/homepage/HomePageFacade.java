@@ -128,6 +128,7 @@ public class HomePageFacade {
         topData.put("companyProfitSaleListOnDay", companyProfitSaleListOnDay);
 
         BigDecimal sumSalesOnDay = (BigDecimal)topData.get("sumSalesOnDay");
+
         // 各分公司今日总利润
         BigDecimal subtractDay = sumSalesOnDay.subtract(sumAdditionalSalesOnDay);
         topData.put("sumAdditionalSalesOnDay", subtractDay);
@@ -172,6 +173,11 @@ public class HomePageFacade {
         // 当月总利润
         topData.put("sumAdditionalSalesOnMonth", subtractMonth);
 
+
+        // 个分公司年度额外费用
+        List<SaleInfo> saleInfos = salesTicketService.queryAdditionalSumSalesOnYear();
+
+
         // 各分公司年度销售额
         List<SaleInfo> sumSalesOnYearList = salesTicketService.querySumSalesOnYear();
 
@@ -184,8 +190,38 @@ public class HomePageFacade {
         List<SaleInfo> companySalesOnYearList = sumSalesOnYearList.stream().filter(o -> StringUtils.isNotEmpty(o.getSubordinateCompanyCode())).collect(Collectors.toList());
         topData.put("companySalesOnYearList", companySalesOnYearList);
 
+        // 各分公司年利润
+        List<SaleInfo> companyProfitSaleListOnYear = new ArrayList<>();
+
+        companySalesOnYearList.stream().forEach(a ->{
+            saleInfos.stream().forEach(b -> {
+                if (StringUtils.equals(a.getSubordinateCompanyCode(), b.getSubordinateCompanyCode())){
+                    SaleInfo s = new SaleInfo();
+                    BigDecimal subtract = a.getReceivableAccoun().subtract(b.getReceivableAccoun());
+                    s.setReceivableAccoun(subtract);
+                    s.setSubordinateCompanyName(a.getSubordinateCompanyName());
+                    s.setSubordinateCompanyCode(a.getSubordinateCompanyCode());
+                    companyProfitSaleListOnYear.add(s);
+                }
+            });
+        });
+
         // 年度销售额
         topData.put("sumSalesOnYear", sumSalesOnYear);
+
+        // 个公司年利润
+
+        topData.put("companyProfitSaleListOnYear", companyProfitSaleListOnYear);
+
+        // 年总利润
+        BigDecimal sumcompanyProfitOnYear = BigDecimal.ZERO;
+        if (companyProfitSaleListOnYear.size() > 0){
+            sumcompanyProfitOnYear = companyProfitSaleListOnYear.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add);
+            Comparator<SaleInfo> com = (a, b) -> b.getReceivableAccoun().compareTo(a.getReceivableAccoun());
+            List<SaleInfo> collect1 = companyProfitSaleListOnYear.stream().sorted(com).collect(Collectors.toList());
+            topData.put("companyProfitSaleListOnYear", collect1);
+        }
+        topData.put("sumcompanyProfitOnYear", sumcompanyProfitOnYear);
 
         Map<String, Object> map = salesTicketService.queryYearGrowth();
         topData.put("yearToYearGrowth", "0.00%");

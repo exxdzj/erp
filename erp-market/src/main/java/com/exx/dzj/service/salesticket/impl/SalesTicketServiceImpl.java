@@ -181,6 +181,11 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     }
 
     @Override
+    public List<SaleInfo> queryAdditionalSumSalesOnYear() {
+        return saleInfoMapper.queryAdditionalSumSalesOnYear();
+    }
+
+    @Override
     public List<SaleInfo> querySumSalesOnYear() {
         return saleInfoMapper.querySumSalesOnYear();
     }

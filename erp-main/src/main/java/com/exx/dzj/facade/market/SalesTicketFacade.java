@@ -182,7 +182,7 @@ public class SalesTicketFacade {
      * @return void
      */
     @Transactional
-    public String saveSalesTicket(SaleInfo saleInfo){
+    public SaleInfo saveSalesTicket(SaleInfo saleInfo){
         Optional.of(saleInfo);
         List<SaleGoodsDetailBean> goodsDetailBeanList = saleInfo.getSaleGoodsDetailBeanList();
         List<SaleReceiptsDetails> receiptsDetailsList = saleInfo.getSaleReceiptsDetailsList();
@@ -243,7 +243,7 @@ public class SalesTicketFacade {
         customerService.updateBuyCountAndTotalVolume(customerSupplierInfo);
 
         updateStockInventory(null, saleInfo);
-        return saleCode;
+        return saleInfo;
     }
 
     /**

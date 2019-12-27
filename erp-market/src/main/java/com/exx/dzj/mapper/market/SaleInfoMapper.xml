@@ -574,7 +574,7 @@
   </select>
 
   <!-- 新增销售单 -->
-  <insert id="insertSelective" parameterType="com.exx.dzj.entity.market.SaleInfo">
+  <insert id="insertSelective" parameterType="com.exx.dzj.entity.market.SaleInfo" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
     insert into tab_sale_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="saleCode != null">
@@ -1157,6 +1157,29 @@
           <![CDATA[AND s.sale_date < DATE_FORMAT(date_add(curdate() - DAY(curdate()) +1, INTERVAL 1 MONTH ), '%Y-%m-%d %H:%i:%s')]]>
                       GROUP BY subordinate_company_code ORDER BY receivableAccoun DESC
   </select>
+
+    <select id="queryAdditionalSumSalesOnYear" resultType="com.exx.dzj.entity.market.SaleInfo">
+        	select
+                a.receivableAccoun + b.receivableAccoun AS receivableAccoun,
+                a.subordinateCompanyCode, a.subordinateCompanyName
+            from
+                (select
+                    sum(b.goods_num * price.standard_buy_price) AS receivableAccoun,
+                    s.subordinate_company_code AS subordinateCompanyCode, s.subordinate_company_name AS subordinateCompanyName
+                FROM tab_sale_info s
+                inner JOIN tab_sale_goods_detail b on s.sale_code = b.sale_code
+                inner JOIN tab_stock_num_price price on b.stock_code = price.stock_code
+                WHERE s.is_enable = 1 and
+                                    year(s.sale_date) = year(now())
+                                    GROUP BY subordinate_company_code) a
+            LEFT JOIN
+                (select sum(ifnull(s.discount_amount,0)) AS receivableAccoun,
+                    s.subordinate_company_code AS subordinateCompanyCode
+                    FROM tab_sale_info s
+                    WHERE s.is_enable = 1 and year(s.sale_date) = year(now()) GROUP BY subordinate_company_code ) b
+              on a.subordinateCompanyCode = b.subordinateCompanyCode
+            where a.subordinateCompanyCode is not null
+    </select>
 
   <select id="querySumSalesOnYear" resultType="com.exx.dzj.entity.market.SaleInfo">
     /*SELECT SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,

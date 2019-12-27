@@ -15,7 +15,7 @@
         sinfo.sale_code, DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d') sale_date,IFNULL(sinfo.discount_amount,0) discount_amount,
         cs.cust_code, cs.cust_name
       FROM tab_sale_info sinfo
-        LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code AND sgd.stock_code NOT REGEXP '^cb'
+        LEFT JOIN tab_sale_goods_detail sgd ON sinfo.sale_code = sgd.sale_code /*AND sgd.stock_code NOT REGEXP '^cb'*/
         LEFT JOIN tab_stock_info stinfo ON stinfo.stock_code = sgd.stock_code
         LEFT JOIN tab_user_info uinfo ON sinfo.user_code = uinfo.user_code
         LEFT JOIN tab_customer_supplier cs ON sinfo.cust_code = cs.cust_code AND cs.cust_type IN (1, 3)
