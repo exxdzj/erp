@@ -1159,26 +1159,25 @@
   </select>
 
     <select id="queryAdditionalSumSalesOnYear" resultType="com.exx.dzj.entity.market.SaleInfo">
-        	select
+        							select
                 a.receivableAccoun + b.receivableAccoun AS receivableAccoun,
                 a.subordinateCompanyCode, a.subordinateCompanyName
             from
                 (select
                     sum(b.goods_num * price.standard_buy_price) AS receivableAccoun,
-                    s.subordinate_company_code AS subordinateCompanyCode, s.subordinate_company_name AS subordinateCompanyName
+                    IFNULL(s.subordinate_company_code, -1) AS subordinateCompanyCode, IFNULL(s.subordinate_company_name, '其他') AS subordinateCompanyName
                 FROM tab_sale_info s
                 inner JOIN tab_sale_goods_detail b on s.sale_code = b.sale_code
-                inner JOIN tab_stock_num_price price on b.stock_code = price.stock_code
+                inner JOIN tab_stock_num_price price on b.stock_code = price.stock_code and b.stock_address_code = price.stock_address_code
                 WHERE s.is_enable = 1 and
                                     year(s.sale_date) = year(now())
                                     GROUP BY subordinate_company_code) a
             LEFT JOIN
                 (select sum(ifnull(s.discount_amount,0)) AS receivableAccoun,
-                    s.subordinate_company_code AS subordinateCompanyCode
+                    IFNULL(s.subordinate_company_code, -1) AS subordinateCompanyCode
                     FROM tab_sale_info s
                     WHERE s.is_enable = 1 and year(s.sale_date) = year(now()) GROUP BY subordinate_company_code ) b
               on a.subordinateCompanyCode = b.subordinateCompanyCode
-            where a.subordinateCompanyCode is not null
     </select>
 
   <select id="querySumSalesOnYear" resultType="com.exx.dzj.entity.market.SaleInfo">
@@ -1193,7 +1192,7 @@
       SELECT a.subordinateCompanyCode, a.subordinateCompanyName, a.receivableAccoun, ifnull(b.receivableAccoun, 0) as receivedAmoun
       FROM
       (SELECT SUM(IFNULL(goods.goods_num, 0) * IFNULL(goods.real_sell_price, 0)) AS receivableAccoun,
-            subordinate_company_code AS subordinateCompanyCode, subordinate_company_name AS subordinateCompanyName
+            IFNULL(subordinate_company_code,-1) AS subordinateCompanyCode, IFNULL(subordinate_company_name, '其他') AS subordinateCompanyName
           FROM tab_sale_info sinfo
             INNER JOIN tab_sale_goods_detail goods ON sinfo.sale_code = goods.sale_code
             WHERE sinfo.is_enable = 1 and year(sinfo.sale_date) = year(now())
@@ -1936,7 +1935,7 @@ select
       (CASE WHEN t.subordinate_company_name IS NULL THEN '其他' ELSE t.subordinate_company_name END) companyName,
       DATE_FORMAT(t.sale_date,'%Y') `year`,
       SUM(g.goods_num * g.real_sell_price) total,
-      SUM(g.goods_num * (g.real_sell_price - s.standard_buy_price)) profit
+      SUM(g.goods_num * s.standard_buy_price) profit
     FROM tab_sale_info t
     LEFT JOIN tab_sale_goods_detail g ON t.sale_code = g.sale_code
     LEFT JOIN tab_stock_num_price s ON g.stock_code = s.stock_code AND g.stock_address_code = s.stock_address_code
@@ -1945,5 +1944,12 @@ select
       AND t.is_enable = 1
       GROUP BY DATE_FORMAT(t.sale_date,'%Y'),t.subordinate_company_code
       ORDER BY DATE_FORMAT(t.sale_date,'%Y') DESC,total DESC
+  </select>
+
+  <select id="queryDiscountAmount" resultType="com.exx.dzj.entity.market.CompanyProfit">
+    select
+      ifnull(a.subordinate_company_name, '其他') companyName, sum(ifnull(discount_amount, 0)) total
+	from tab_sale_info a
+	where DATE_FORMAT(a.sale_date,'%Y') = #{year} and is_enable = 1 GROUP BY subordinate_company_code
   </select>
 </mapper>

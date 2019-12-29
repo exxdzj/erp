@@ -626,36 +626,44 @@ public class HomePageFacade {
 
         List<String> strList = Arrays.asList("E行销深圳", "E行销培训", "E行销温州", "E行销技术", "E行销西安",  "E行销北京", "E行销广州", "E行销礼品", "其他");
 
+        List<CompanyProfit> companyProfits = null;
         Map<String, List<CompanyProfit>> map = new LinkedHashMap<>();
         if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(data)){
             Map<String, List<CompanyProfit>> collect = data.stream().collect(Collectors.groupingBy(CompanyProfit::getYear));
             List<CompanyProfit> thisYear = collect.get("2019");
-            map.put("2019", processData(thisYear, strList));
+            companyProfits = salesTicketService.queryDiscountAmount("2019");
+            map.put("2019", processData(thisYear, strList, companyProfits));
 
             List<CompanyProfit> lastYear = collect.get("2018");
-            map.put("2018", processData(lastYear, strList));
+            companyProfits = salesTicketService.queryDiscountAmount("2018");
+            map.put("2018", processData(lastYear, strList, companyProfits));
 
             List<CompanyProfit> beforeLastYear = collect.get("2017");
-            map.put("2017", processData(beforeLastYear, strList));
+            companyProfits = salesTicketService.queryDiscountAmount("2017");
+            map.put("2017", processData(beforeLastYear, strList, companyProfits));
         }
 
         return map;
     }
 
-    public List<CompanyProfit> processData (List<CompanyProfit> data, List<String> strList){
+    public List<CompanyProfit> processData (List<CompanyProfit> data, List<String> strList, List<CompanyProfit> companyProfits){
         List<CompanyProfit> list = new ArrayList<>();
         CompanyProfit info = null;
         List<CompanyProfit> temp = null;
+        List<CompanyProfit> temp2 = null;
         BigDecimal total = BigDecimal.ZERO;
         BigDecimal profit = BigDecimal.ZERO;
         if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(data)){
             Map<String, List<CompanyProfit>> collect = data.stream().collect(Collectors.groupingBy(CompanyProfit::getCompanyName));
+            Map<String, List<CompanyProfit>> collect2 = companyProfits.stream().collect(Collectors.groupingBy(CompanyProfit::getCompanyName));
+
             for(String str : strList){
                 temp = collect.get(str);
+                temp2 = collect2.get(str);
                 info = new CompanyProfit();
                 if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(temp)){
                     total = temp.get(0).getTotal();
-                    profit = temp.get(0).getProfit();
+                    profit = temp.get(0).getTotal().subtract(temp.get(0).getProfit()).subtract(temp2.get(0).getTotal());
                 } else {
                     total = BigDecimal.ZERO;
                     profit = BigDecimal.ZERO;

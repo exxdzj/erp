@@ -91,4 +91,6 @@ public interface SalesTicketService extends IService<SaleInfo> {
     List<CompanySaleAccounYearOnYearInfo> queryCustomerCompanySaleAccoun();
 
     List<CompanyProfit> queryCompanyProfit ();
+
+    List<CompanyProfit> queryDiscountAmount(String year);
 }
