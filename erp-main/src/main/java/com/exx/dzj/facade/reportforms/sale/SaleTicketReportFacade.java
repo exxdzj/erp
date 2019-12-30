@@ -114,11 +114,12 @@ public class SaleTicketReportFacade {
                                             sgr.setUnitPrice(end.getUnitPrice());
                                             sgr.setCustName(end.getCustName());
                                             sgr.setStandardBuyPrice(end.getStandardBuyPrice());
-                                            BigDecimal bigDecimal = new BigDecimal(end.getGoodsNum() == null ? 0 : end.getGoodsNum());
+                                            BigDecimal bigDecimal = new BigDecimal(end.getGoodsNum()); // == null ? 0 : end.getGoodsNum()
+//                                            BigDecimal bigDecimal = new BigDecimal(end.getGoodsNum() == null ? 0 : end.getGoodsNum());
                                             sgr.setSalesVolume(end.getUnitPrice().multiply(bigDecimal)); //.subtract(end.getDiscountAmount()));
                                             sgr.setCost(end.getStandardBuyPrice().multiply(bigDecimal));
                                             sgr.setRealName(end.getRealName());
-                                            sgr.setGrossMargin((sgr.getSalesVolume().intValue() == 0) ? BigDecimal.ZERO : sgr.getSalesVolume().subtract(sgr.getCost()));
+                                            sgr.setGrossMargin(sgr.getSalesVolume().subtract(sgr.getCost()));
                                             BigDecimal decimal = MathUtil.keepTwoBigdecimal(sgr.getGrossMargin(), sgr.getSalesVolume(), CommonConstant.DEFAULT_VALUE_FOUR);
                                             sgr.setGrossRate(decimal);
                                             sir.getSaleInfoReports().add(sgr);
@@ -173,7 +174,7 @@ public class SaleTicketReportFacade {
                 stockType.setCountTotal(MathUtil.keepTwoAccurate(new BigDecimal(sum)).doubleValue());
                 stockType.setSalesTotal(saleIncomeTotal);
                 stockType.setCostTotal(costTotal);
-                stockType.setGrossTotal(grossTotal);
+                stockType.setGrossTotal(MathUtil.keepTwoAccurate(grossTotal));
                 double v =  MathUtil.keepTwoBigdecimal(grossTotal, saleIncomeTotal, CommonConstant.DEFAULT_VALUE_FOUR).doubleValue();
                 stockType.setGrossRateTotal(v);
             }
@@ -381,28 +382,30 @@ public class SaleTicketReportFacade {
                                     cr.setCustName(customerBases.get(0).getCustName());
                                 }
 
-                                customerBases.stream().forEach(
-                                        goods -> {
-                                            SaleGoodsReport sgr = new SaleGoodsReport();
-                                            sir.getSaleGoodsReportList().add(sgr);
-                                            sgr.setStockName(goods.getStockName());
-                                            sgr.setGoodsNum(goods.getGoodsNum());
-                                            sgr.setUnitPrice(goods.getUnitPrice());
-                                            BigDecimal salesVolume = goods.getUnitPrice().multiply(new BigDecimal(goods.getGoodsNum()));
-                                            sgr.setSalesVolume(salesVolume.subtract(goods.getDiscountAmount()));
-                                            sgr.setStandardBuyPrice(goods.getStandardBuyPrice());
-                                            BigDecimal cost = goods.getStandardBuyPrice().multiply(new BigDecimal(goods.getGoodsNum()));
-                                            sgr.setCost(cost);
+                                for (int i = 0; i < customerBases.size(); i++){
+                                    SaleGoodsReport sgr = new SaleGoodsReport();
+                                    sir.getSaleGoodsReportList().add(sgr);
+                                    sgr.setStockName(customerBases.get(i).getStockName());
+                                    sgr.setGoodsNum(MathUtil.keepTwoAccurate(new BigDecimal(customerBases.get(i).getGoodsNum())).doubleValue());
+                                    sgr.setUnitPrice(customerBases.get(i).getUnitPrice());
+                                    BigDecimal salesVolume = MathUtil.keepTwoAccurate(customerBases.get(i).getUnitPrice().multiply(new BigDecimal(customerBases.get(i).getGoodsNum())));
 
-                                            BigDecimal subtract = salesVolume.subtract(cost);
-                                            sgr.setGrossMargin(subtract);
-                                            if (salesVolume.intValue() <= CommonConstant.DEFAULT_VALUE_ZERO){
-                                                sgr.setGrossRate(new BigDecimal(CommonConstant.BIGDECIMAL_ZERO_STR));
-                                            } else {
-                                                sgr.setGrossRate(MathUtil.keepTwoBigdecimal(subtract, salesVolume, CommonConstant.DEFAULT_VALUE_FOUR));
-                                            }
-                                        }
-                                );
+//                                        salesVolume = salesVolume.subtract(customerBases.get(i).getDiscountAmount());
+
+                                    sgr.setSalesVolume(salesVolume);
+
+                                    sgr.setStandardBuyPrice(customerBases.get(i).getStandardBuyPrice());
+                                    BigDecimal cost = customerBases.get(i).getStandardBuyPrice().multiply(new BigDecimal(customerBases.get(i).getGoodsNum()));
+                                    sgr.setCost(MathUtil.keepTwoAccurate(cost));
+
+                                    BigDecimal subtract = salesVolume.subtract(cost);
+                                    sgr.setGrossMargin(MathUtil.keepTwoAccurate(subtract));
+                                    if (salesVolume.intValue() <= CommonConstant.DEFAULT_VALUE_ZERO){
+                                        sgr.setGrossRate(new BigDecimal(CommonConstant.BIGDECIMAL_ZERO_STR));
+                                    } else {
+                                        sgr.setGrossRate(MathUtil.keepTwoBigdecimal(subtract, salesVolume, CommonConstant.DEFAULT_VALUE_FOUR));
+                                    }
+                                }
                             }
                     );
 
@@ -423,7 +426,7 @@ public class SaleTicketReportFacade {
                     if (!CollectionUtils.isEmpty(saleGoodsReportList)){
                         double sumGoodsNum = saleGoodsReportList.stream().mapToDouble(SaleGoodsReport::getGoodsNum).sum();
                         totalGoodsNum += sumGoodsNum;
-                        sr.setSumGoodsNum(sumGoodsNum);
+                        sr.setSumGoodsNum(MathUtil.keepTwoAccurate(new BigDecimal(sumGoodsNum)).doubleValue());
 
                         BigDecimal sumSaleVolume = saleGoodsReportList.stream().map(SaleGoodsReport::getSalesVolume).reduce(BigDecimal.ZERO, BigDecimal::add);
                         totalSaleVolume = totalSaleVolume.add(sumSaleVolume);
@@ -441,7 +444,7 @@ public class SaleTicketReportFacade {
                     }
                 }
             }
-            cr.setTotalGoodsNum(totalGoodsNum);
+            cr.setTotalGoodsNum(MathUtil.keepTwoAccurate(new BigDecimal(totalGoodsNum)).doubleValue());
             cr.setTotalCost(totalCost);
             cr.setTotalGrossMargin(totalGrossMargin);
             cr.setTotalSaleVolume(totalSaleVolume);
@@ -458,7 +461,7 @@ public class SaleTicketReportFacade {
         BigDecimal totalGrossRate = MathUtil.keepTwoBigdecimal(totalGrossMargin, totalSaleVolume, CommonConstant.DEFAULT_VALUE_FOUR);//毛利率总计
 
 
-        map.put("totalGoodsNum", totalGoodsNum);
+        map.put("totalGoodsNum", MathUtil.keepTwoAccurate(new BigDecimal(totalGoodsNum)).doubleValue());
         map.put("totalSaleVolume", totalSaleVolume);
         map.put("totalCost", totalCost);
         map.put("totalGrossMargin", totalGrossMargin);
