@@ -205,6 +205,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptInfoBeanMapper, DeptInfoBea
         return deptMapper.queryDept(userCode);
     }
 
+    @Override
+    public DeptInfoBean queryDeptInfoBean(DeptInfoBean deptInfoBean) {
+        return deptMapper.queryDeptInfoBean(deptInfoBean);
+    }
+
     /**
      * 获取 机构编码和部门类型
      * @param parentCode

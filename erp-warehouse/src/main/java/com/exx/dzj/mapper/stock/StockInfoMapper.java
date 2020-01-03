@@ -88,4 +88,6 @@ public interface StockInfoMapper {
     void upateStockNameForSaleGoodsTable(@Param("stockCode") String stockCode, @Param("stockName") String stockName);
 
     void upateStockNameForPurchaseGoodsTable(@Param("stockCode") String stockCode, @Param("stockName") String stockName);
+
+    void updateSaleGoodsStockAddressInfo(StockInfo s);
 }

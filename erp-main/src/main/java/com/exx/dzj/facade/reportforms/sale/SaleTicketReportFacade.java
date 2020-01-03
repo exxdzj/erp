@@ -291,13 +291,17 @@ public class SaleTicketReportFacade {
 
                             BigDecimal sumCost = saleGoodsReportList.stream().map(SaleGoodsReport::getCost).reduce(BigDecimal.ZERO, BigDecimal::add);
                             totalCost = totalCost.add(sumCost);
-                            sr.setSumCost(sumCost);
+                            sr.setSumCost(MathUtil.keepTwoAccurate(sumCost));
 
                             BigDecimal sumGrossMargin = saleGoodsReportList.stream().map(SaleGoodsReport::getGrossMargin).reduce(BigDecimal.ZERO, BigDecimal::add);
                             totalGrossMargin = totalGrossMargin.add(sumGrossMargin);
-                            sr.setSumGrossMargin(sumGrossMargin);
+                            sr.setSumGrossMargin(MathUtil.keepTwoAccurate(sumGrossMargin));
 
-                            sr.setSumGrossRate(MathUtil.keepTwoBigdecimal(sumGrossMargin, sumSaleVolume, CommonConstant.DEFAULT_VALUE_FOUR));
+                            if (sumSaleVolume.compareTo(BigDecimal.ZERO) == 0){
+                                sr.setSumGrossRate(MathUtil.keepTwoAccurate(sumGrossMargin));
+                            } else {
+                                sr.setSumGrossRate(MathUtil.keepTwoAccurate(sumGrossMargin.divide(sumSaleVolume)));
+                            }
                         }
                     }
                 }

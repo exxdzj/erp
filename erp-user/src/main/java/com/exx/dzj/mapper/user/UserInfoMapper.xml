@@ -513,7 +513,7 @@
   </select>
 
   <select id="selectionUserInfo" resultMap="selectionUserInfoMap">
-    SELECT deptInfo.dept_name, userInfo.user_code, userInfo.user_name, userInfo.real_name, userInfo.dept_code
+    SELECT deptInfo.dept_name, userInfo.user_code, userInfo.user_name, userInfo.real_name, userInfo.dept_code, deptInfo.parent_code, deptInfo.is_compare
       FROM tab_user_info userInfo
 	  INNER JOIN tab_dept_info deptInfo ON userInfo.dept_code = deptInfo.dept_code
       WHERE userInfo.is_quit=1
@@ -524,6 +524,8 @@
     <result property="userName" column="user_name"/>
     <result property="realName" column="real_name"/>
     <result property="deptName" column="dept_name"/>
+    <result property="parentCode" column="parent_code"/>
+    <result property="isCompare" column="is_compare"/>
   </resultMap>
 
 

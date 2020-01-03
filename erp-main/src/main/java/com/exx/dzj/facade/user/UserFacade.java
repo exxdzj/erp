@@ -251,24 +251,43 @@ public class UserFacade {
         }
 
         // 获取部门信息
-        List<DeptInfoBean> deptInfos = deptService.queryDeptList();
-        userModels.stream().forEach(
-                o -> {
-                    DeptInfoBean deptInfoBean = new DeptInfoBean();
-                    deptInfoBean.setDeptCode(o.getDeptCode());
-                    DeptInfoBean bean = gainSubordinateCompanyInfo(deptInfos, deptInfoBean);
+//        List<DeptInfoBean> deptInfos = deptService.queryDeptList();
+        for (UserModel o : userModels){
+            DeptInfoBean deptInfoBean = new DeptInfoBean();
+            deptInfoBean.setDeptCode(o.getDeptCode());
+            deptInfoBean.setParentCode(o.getParentCode());
+            if (o.getParentCode() == null){
+                continue;
+            }
 
-                    for (SelectionSaleInfo ssi : list){
-                        if (StringUtils.equals(ssi.getCode(), bean.getDeptCode())) {
-                            SelectionSaleInfo ss = new SelectionSaleInfo();
-                            ss.setCode(o.getUserCode());
-                            ss.setLabel(o.getRealName());
-                            ssi.getChildren().add(ss);
-                        }
-                    }
+            DeptInfoBean bean = new DeptInfoBean();
+            bean.setDeptCode(o.getDeptCode());
+            if (o.getIsCompare() != 1){
+
+                bean = queryDeptInfo(deptInfoBean);
+            }
+
+            for (SelectionSaleInfo ssi : list){
+                if (StringUtils.equals(ssi.getCode(), bean.getDeptCode())) {
+                    SelectionSaleInfo ss = new SelectionSaleInfo();
+                    ss.setCode(o.getUserCode());
+                    ss.setLabel(o.getRealName());
+                    ssi.getChildren().add(ss);
                 }
-        );
+            }
+        }
         return list;
+    }
+
+    public DeptInfoBean queryDeptInfo (DeptInfoBean deptInfoBean){
+        DeptInfoBean info = null;
+        do {
+            info = deptService.queryDeptInfoBean(deptInfoBean);
+
+            deptInfoBean = info;
+        } while(info != null && info.getIsCompare() != 1);
+
+        return info;
     }
 
     private DeptInfoBean gainSubordinateCompanyInfo (List<DeptInfoBean> list, DeptInfoBean deptInfoBean){

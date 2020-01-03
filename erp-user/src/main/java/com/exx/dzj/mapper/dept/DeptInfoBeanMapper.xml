@@ -277,4 +277,11 @@
         LEFT JOIN tab_user_info u ON d.dept_code = u.dept_code
     WHERE u.user_code = #{userCode}
   </select>
+
+  <select id="queryDeptInfoBean" parameterType="com.exx.dzj.entity.dept.DeptInfoBean"
+    resultType="com.exx.dzj.entity.dept.DeptInfoBean">
+    select td.dept_code deptCode, td.dept_name deptName, td.parent_code parentCode, td.is_compare isCompare
+    from tab_dept_info td
+    where td.is_enable = 1 and dept_code = #{parentCode}
+  </select>
 </mapper>

@@ -28,4 +28,6 @@ public interface DeptInfoBeanMapper extends BaseMapper<DeptInfoBean> {
     int delDept(DeptBean dept);
 
     DeptInfoBean queryDept(@Param("userCode") String userCode);
+
+    DeptInfoBean queryDeptInfoBean(DeptInfoBean deptInfoBean);
 }

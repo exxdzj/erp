@@ -24,4 +24,6 @@ public class UserModel implements Serializable {
     private Integer isQuit;
     private String quitDesc;
     private String deptCode;
+    private String parentCode;
+    private Integer isCompare;
 }

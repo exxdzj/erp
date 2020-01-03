@@ -20,6 +20,8 @@
     <result column="create_user" jdbcType="VARCHAR" property="createUser" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="stock_address" jdbcType="TIMESTAMP" property="stockAddress" />
+    <result column="stock_address_code" jdbcType="VARCHAR" property="stockAddressCode" />
   </resultMap>
 
   <sql id="Example_Where_Clause">
@@ -85,7 +87,7 @@
   <sql id="Base_Column_List">
     id, stock_code, nature, stock_name, specificate_type, stock_class, stock_class_name,
     meter_unit, pictures, bar_code, is_shelves, is_enable, is_comm_sale, create_time, create_user,
-    update_time, update_user
+    stock_address_code, stock_address, update_time, update_user
   </sql>
 
   <select id="selectByExample" parameterType="com.exx.dzj.entity.stock.StockInfoExample" resultMap="BaseResultMap">
@@ -853,5 +855,11 @@
 
   <update id="upateStockNameForPurchaseGoodsTable">
       UPDATE tab_purchase_goods_detail SET stock_name=#{stockName} WHERE stock_code = #{stockCode}
+  </update>
+
+  <update id="updateSaleGoodsStockAddressInfo" parameterType="com.exx.dzj.entity.stock.StockInfo">
+    update tab_sale_goods_detail
+      set stock_address_code = #{stockAddressCode}, stock_address = #{stockAddress}
+    where stock_code = #{stockCode}
   </update>
 </mapper>

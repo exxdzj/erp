@@ -216,6 +216,7 @@ StockServiceImpl implements StockService {
     @Transactional(rollbackFor = Exception.class)
     public void updateRelatedStockCode (StockInfo oldStockInfo, StockInfo stockInfo){
         try {
+            updateSaleGoodsStockAddressInfo(oldStockInfo, stockInfo);
             // 存货主表
             //stockMapper.updateStockCode(oldCode, newCode);
 
@@ -242,6 +243,17 @@ StockServiceImpl implements StockService {
         } catch (Exception e){
             e.printStackTrace();
             throw e;
+        }
+    }
+
+    // 更新
+    private void updateSaleGoodsStockAddressInfo (StockInfo oldStockInfo, StockInfo stockInfo){
+        if (StringUtils.isNotEmpty(stockInfo.getStockAddressCode()) && !StringUtils.equals(oldStockInfo.getStockAddressCode(), stockInfo.getStockAddressCode())){
+            StockInfo s = new StockInfo();
+            s.setStockCode(oldStockInfo.getStockCode());
+            s.setStockAddressCode(stockInfo.getStockAddressCode());
+            s.setStockAddress(stockInfo.getStockAddress());
+            stockMapper.updateSaleGoodsStockAddressInfo(s);
         }
     }
 
