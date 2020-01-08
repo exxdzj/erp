@@ -157,4 +157,6 @@ public class CommonConstant {
     public static final String USE_OLD_CDOE ="useOldCode";
 
     public static final List<String> USERCODE = Arrays.asList("5002", "006", "010");
+
+    public static final String[] MONTH = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
 }

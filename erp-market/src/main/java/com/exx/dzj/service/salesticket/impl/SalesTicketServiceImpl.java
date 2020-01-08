@@ -291,4 +291,14 @@ public class SalesTicketServiceImpl extends ServiceImpl<SaleInfoMapper, SaleInfo
     public List<CompanyProfit> queryDiscountAmount(String year) {
         return saleInfoMapper.queryDiscountAmount(year);
     }
+
+    @Override
+    public List<SaleReturnedMoney> queryReturnedMoney(String year) {
+        return saleInfoMapper.queryReturnedMoney(year);
+    }
+
+    @Override
+    public List<CompanyCostBoard> queryCompanyCost(String year) {
+        return saleInfoMapper.queryCompanyCost(year);
+    }
 }

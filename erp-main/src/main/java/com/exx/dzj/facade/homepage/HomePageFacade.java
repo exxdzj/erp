@@ -681,4 +681,115 @@ public class HomePageFacade {
 
         return list;
     }
+
+    public Map<String, Object> queryReturnedMoney(String year){
+        List<String> strList = Arrays.asList("E行销深圳", "E行销培训", "E行销温州", "E行销技术", "E行销西安",  "E行销北京", "E行销广州", "E行销礼品");
+
+        Map<String, Object> data = new HashMap<>();
+        List<SaleReturnedMoney> saleReturnedMonies = salesTicketService.queryReturnedMoney(year);
+
+        List<SaleReturnedMoney> dataList = new ArrayList<>();
+        List<CompanyReturnedAmount> companyList = new ArrayList<>();
+
+        BigDecimal sum = BigDecimal.ZERO;
+
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(saleReturnedMonies)){
+            String[] month = CommonConstant.MONTH;
+
+            CompanyReturnedAmount cra = null;
+            List<BigDecimal> retrunedAmountList = null;
+            Map<String, List<SaleReturnedMoney>> monthMap = null;
+            List<SaleReturnedMoney> saleReturnedMoniesList = null;
+            BigDecimal reduce = null;
+
+            Map<String, List<SaleReturnedMoney>> company = saleReturnedMonies.stream().collect(Collectors.groupingBy(SaleReturnedMoney::getCompanyName));
+            for(List<SaleReturnedMoney> c : company.values()){
+                cra = new CompanyReturnedAmount();
+                companyList.add(cra);
+                retrunedAmountList = new ArrayList<>();
+                cra.setCompanyName(c.get(0).getCompanyName()).setList(retrunedAmountList);
+                monthMap = c.stream().collect(Collectors.groupingBy(SaleReturnedMoney::getMonth));
+
+                for (String s : month){
+                    saleReturnedMoniesList = monthMap.get(s);
+                    reduce =  BigDecimal.ZERO;
+                    if (saleReturnedMoniesList != null){
+                        reduce = saleReturnedMoniesList.stream().map(SaleReturnedMoney::getReturnedAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+                    }
+                    sum = sum.add(reduce);
+                    retrunedAmountList.add(reduce);
+                }
+                cra.setMonthSum(sum);
+                reduce =  BigDecimal.ZERO;
+                sum =  BigDecimal.ZERO;
+            }
+
+
+            Map<String, List<SaleReturnedMoney>> saleman = saleReturnedMonies.stream().collect(Collectors.groupingBy(SaleReturnedMoney::getUserCode));
+            List<SaleReturnedMoney> tempData = null;
+
+            for (List<SaleReturnedMoney> temp : saleman.values()) {
+
+                retrunedAmountList = new ArrayList<>();
+                SaleReturnedMoney saleReturnedMoney = new SaleReturnedMoney();
+                saleReturnedMoney.setUserCode(temp.get(0).getUserCode()).setCompanyName(temp.get(0).getCompanyName())
+                        .setRealName(temp.get(0).getRealName()).setRetrunedAmountList(retrunedAmountList);
+
+                dataList.add(saleReturnedMoney);
+
+                if (temp != null){
+                    Map<String, List<SaleReturnedMoney>> collect1 = temp.stream().collect(Collectors.groupingBy(SaleReturnedMoney::getMonth));
+                    for (String s : month){
+                        tempData = collect1.get(s);
+
+                        if (tempData != null){
+                            retrunedAmountList.add(tempData.get(0).getReturnedAmount());
+                            sum = sum.add(tempData.get(0).getReturnedAmount());
+                        } else {
+                            retrunedAmountList.add(BigDecimal.ZERO);
+                        }
+                    }
+                    saleReturnedMoney.setReturnedAmount(sum);
+                    sum = BigDecimal.ZERO;
+                }
+            }
+
+            Map<String, List<SaleReturnedMoney>> collect = dataList.stream().collect(Collectors.groupingBy(SaleReturnedMoney::getCompanyName));
+            for (CompanyReturnedAmount o : companyList){
+                o.setSaleManList(collect.get(o.getCompanyName()));
+            }
+
+            reduce = saleReturnedMonies.stream().map(SaleReturnedMoney::getReturnedAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+            data.put("sum", reduce);
+        }
+
+
+        data.put("list", companyList);
+
+        return data;
+    }
+
+    public List<CompanyCostBoard> queryCompanyCost (String year){
+        List<CompanyCostBoard> companyCostBoards = salesTicketService.queryCompanyCost(year);
+        List<CompanyCostBoard> data = new ArrayList<>();
+        if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(companyCostBoards)){
+
+            Map<String, List<CompanyCostBoard>> collect = companyCostBoards.stream().collect(Collectors.groupingBy(CompanyCostBoard::getCompanyName));
+            CompanyCostBoard temp = null;
+            List<CompanyCostBoard> tempList = null;
+            for (String s : collect.keySet()) {
+                temp = new CompanyCostBoard();
+                data.add(temp);
+                tempList = collect.get(s);
+                temp.setCompanyName(s).setChildList(tempList);
+                if (org.apache.commons.collections4.CollectionUtils.isNotEmpty(tempList)) {
+                    temp.setCost(tempList.stream().map(CompanyCostBoard::getCost).reduce(BigDecimal.ZERO, BigDecimal::add));
+                } else {
+                    temp.setCost(BigDecimal.ZERO);
+                }
+            }
+        }
+
+        return data;
+    }
 }

@@ -1952,4 +1952,33 @@ select
 	from tab_sale_info a
 	where DATE_FORMAT(a.sale_date,'%Y') = #{year} and is_enable = 1 GROUP BY subordinate_company_code
   </select>
+
+  <select id="queryReturnedMoney" resultType="com.exx.dzj.entity.market.SaleReturnedMoney">
+    select
+    a.user_code userCode, c.real_name realName, DATE_FORMAT(a.sale_date, '%m') `month`, ifnull(a.subordinate_company_name,'其他') companyName,
+    cast(sum(ifnull((select sum(b.goods_num * b.real_sell_price)
+            from tab_sale_goods_detail b
+            where a.sale_code = b.sale_code),0)) - /*销售额 saleAmount  discountAmount*/
+    sum(ifnull(a.discount_amount,0)) -
+    sum(ifnull((select sum(d.collected_amount) from tab_sale_receipts_details d where a.sale_code = d.sale_code), 0))  AS DECIMAL(15, 2)) returnedAmount /*已收款*/
+	from tab_sale_info a
+	LEFT JOIN tab_user_info c on a.user_code = c.user_code
+	where a.is_enable = 1 and year(a.sale_date) = #{year} /*and c.is_quit = 1*/
+	GROUP BY a.user_code,DATE_FORMAT(a.sale_date, '%m')
+  </select>
+
+  <select id="queryCompanyCost" resultType="com.exx.dzj.entity.market.CompanyCostBoard">
+      select
+        b.stock_code stockCode, b.stock_name stockName,
+        cast(sum(if(b.goods_num =0, 1, b.goods_num) *
+            if(b.real_sell_price = 0, c.standard_buy_price, b.real_sell_price)) AS DECIMAL(15, 2)) cost,
+        ifnull(a.subordinate_company_name, '其他') companyName
+      from tab_sale_info a
+      inner JOIN tab_sale_goods_detail b on a.sale_code = b.sale_code
+      INNER JOIN tab_stock_num_price c on b.stock_code = c.stock_code and b.stock_address_code = c.stock_address_code
+      where a.is_enable = 1 and year(a.sale_date) = '2019'
+              and b.stock_code regexp '^CB'
+              and (b.goods_num > 0 or b.real_sell_price > 0)
+              GROUP BY a.subordinate_company_name,b.stock_code
+  </select>
 </mapper>

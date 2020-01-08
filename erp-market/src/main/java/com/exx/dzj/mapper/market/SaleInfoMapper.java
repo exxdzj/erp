@@ -99,4 +99,9 @@ public interface SaleInfoMapper extends BaseMapper<SaleInfo> {
     List<CompanyProfit> queryCompanyProfit();
 
     List<CompanyProfit> queryDiscountAmount(@Param("year") String year);
+
+    List<SaleReturnedMoney> queryReturnedMoney(@Param("year") String year);
+
+    List<CompanyCostBoard> queryCompanyCost(@Param("year") String year);
+
 }

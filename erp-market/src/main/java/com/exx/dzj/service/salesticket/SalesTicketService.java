@@ -3,7 +3,6 @@ package com.exx.dzj.service.salesticket;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exx.dzj.entity.market.*;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -93,4 +92,8 @@ public interface SalesTicketService extends IService<SaleInfo> {
     List<CompanyProfit> queryCompanyProfit ();
 
     List<CompanyProfit> queryDiscountAmount(String year);
+
+    List<SaleReturnedMoney> queryReturnedMoney(String year);
+
+    List<CompanyCostBoard> queryCompanyCost(String year);
 }

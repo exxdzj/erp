@@ -300,7 +300,7 @@ public class SaleTicketReportFacade {
                             if (sumSaleVolume.compareTo(BigDecimal.ZERO) == 0){
                                 sr.setSumGrossRate(MathUtil.keepTwoAccurate(sumGrossMargin));
                             } else {
-                                sr.setSumGrossRate(MathUtil.keepTwoAccurate(sumGrossMargin.divide(sumSaleVolume)));
+                                sr.setSumGrossRate(MathUtil.keepTwoAccurate(MathUtil.keepTwoBigdecimal(sumGrossMargin, sumSaleVolume, CommonConstant.DEFAULT_VALUE_FOUR)));
                             }
                         }
                     }

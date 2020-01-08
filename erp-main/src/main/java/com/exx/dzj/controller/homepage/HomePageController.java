@@ -239,11 +239,48 @@ public class HomePageController {
         return result;
     }
 
+    /**
+     * @description 公司利润
+     * @author yangyun
+     * @date 2020/1/6 0006
+     * @param
+     * @return com.exx.dzj.result.Result
+     */
     @GetMapping("queryCompanyProfit")
     public Result queryCompanyProfit (){
         Result result = Result.responseSuccess();
         Map<String, List<CompanyProfit>> map = homePageFacade.queryCompanyProfit();
         result.setData(map);
+        return result;
+    }
+
+    /**
+     * @description 未回款
+     * @author yangyun
+     * @date 2020/1/6 0006
+     * @param year
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("queryReturnedMoney/{year}")
+    public Result queryReturnedMoney (@PathVariable("year") String year){
+        Result result = Result.responseSuccess();
+        Map<String, Object> stringObjectMap = homePageFacade.queryReturnedMoney(year);
+        result.setData(stringObjectMap);
+        return result;
+    }
+
+    /**
+     * @description: 成本看板
+     * @author yangyun
+     * @date 2020/1/7 0007
+     * @param year
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("queryCompanyCost/{year}")
+    public Result queryCompanyCost (@PathVariable("year") String year){
+        Result result = Result.responseSuccess();
+        List<CompanyCostBoard> companyCostBoards = homePageFacade.queryCompanyCost(year);
+        result.setData(companyCostBoards);
         return result;
     }
 }
