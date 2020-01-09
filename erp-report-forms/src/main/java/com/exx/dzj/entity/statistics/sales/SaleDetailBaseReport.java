@@ -15,6 +15,7 @@ public class SaleDetailBaseReport implements Serializable {
 
     private static final long serialVersionUID = -8284084553679609787L;
 
+    private Integer id;
     private String saleCode;
     private Timestamp saleDate;
     private String salesmanCode;

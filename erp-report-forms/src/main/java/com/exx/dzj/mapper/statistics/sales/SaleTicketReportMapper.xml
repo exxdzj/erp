@@ -157,6 +157,7 @@
         SELECT
         SUM(IFNULL(rd.collected_amount,0)) AS sumSaleVolume,  /*销售额, 总金额*/
         (SELECT SUM(IFNULL(sii.discount_amount,0)) FROM tab_sale_info sii WHERE 1=1
+        AND sii.is_enable = 1
         <if test="startDate != null and startDate != ''">
             AND <![CDATA[ sii.sale_date >= DATE_FORMAT(#{startDate}, '%Y-%m-%d %H:%i:%s')]]>
         </if>
@@ -380,6 +381,7 @@
 
     <select id="querySaleDetailList" resultMap="saleDetailMap" parameterType="com.exx.dzj.bean.SaleDetailReportQuery">
         SELECT
+            sinfo.id id,
             sinfo.sale_code,
             DATE_FORMAT(sinfo.sale_date, '%Y-%m-%d') sale_date,
             sinfo.salesman_code,
@@ -389,10 +391,7 @@
             cs.cust_code,
             cs.cust_name,
             IFNULL(sgd.goods_num, 0) AS goods_num,
-            CASE
-            WHEN sgd.real_sell_price > 0 THEN sgd.real_sell_price
-            ELSE sgd.unit_price
-            END unitPrice,
+            IFNULL(sgd.real_sell_price, 0) unitPrice,
             sgd.stock_address,
             sgd.stock_code,
 
@@ -426,6 +425,7 @@
     </select>
 
     <resultMap id="saleDetailMap" type="com.exx.dzj.entity.statistics.sales.SaleDetailBaseReport">
+        <result column="id" property="id"/>
         <result column="sale_code" property="saleCode"/>
         <result column="exchange_rate" property="exchangeRate"/>
         <result column="sale_date" property="saleDate"/>
