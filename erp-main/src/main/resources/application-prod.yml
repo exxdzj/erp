@@ -1,6 +1,7 @@
 spring:
     datasource:
-        name: dzj
+#        name: dzj
+        name: test-erp
         url: jdbc:mysql://rm-wz9p73l18gj48fn3zo.mysql.rds.aliyuncs.com:3306/test-erp?useUnicode=true&amp;characterEncoding=UTF-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&useSSL=false&rewriteBatchedStatements=true
         username: dzj_user
         password: dzj88_exx
@@ -45,4 +46,4 @@ aliyun:
   accessKeySecret: iw4Yp42IqB5wh461RITJJexpCaFhJw
   bucketName: exx-erp
   subdir: producet-images
-  active: test
+  active: prod

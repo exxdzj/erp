@@ -624,7 +624,7 @@ public class HomePageFacade {
     public Map<String, List<CompanyProfit>> queryCompanyProfit (){
         List<CompanyProfit> data = salesTicketService.queryCompanyProfit();
 
-        List<String> strList = Arrays.asList("E行销深圳", "E行销培训", "E行销温州", "E行销技术", "E行销西安",  "E行销北京", "E行销广州", "E行销礼品", "其他");
+        List<String> strList = Arrays.asList("E行销深圳", "E行销培训", "E行销温州", "E行销技术", "E行销西安",  "E行销北京", "E行销广州", "E行销上海", "爱西柚");
 
         List<CompanyProfit> companyProfits = null;
         Map<String, List<CompanyProfit>> map = new LinkedHashMap<>();

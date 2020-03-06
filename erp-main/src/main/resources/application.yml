@@ -9,6 +9,6 @@ server:
  ##############\u65E5\u5FD7\u4FE1\u606F
 logging:
   config: classpath:log/logback-spring.xml
-##### 打印sql
-  level:
-    com.exx.dzj: debug
+#### 打印sql
+#  level:
+#    com.exx.dzj: debug
