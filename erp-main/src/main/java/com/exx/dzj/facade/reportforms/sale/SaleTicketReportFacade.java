@@ -568,8 +568,10 @@ public class SaleTicketReportFacade {
                     grossRate = sumSaleVolume.intValue() == CommonConstant.DEFAULT_VALUE_ZERO ? BigDecimal.ZERO : next.getGrossRate();
                     report.setGrossRate(grossRate);
 
+                    BigDecimal sumCost = partailly.get(0).getSumCost() == null ? new BigDecimal(0): partailly.get(0).getSumCost();
+
                     // 额外费用
-                    report.setSumCost(partailly.get(0).getSumCost());
+                    report.setSumCost(sumCost);
 
                     // 毛利润
                     grossMargin = sumSaleVolume.multiply(grossRate).divide(BigDecimal.valueOf(100));
@@ -579,7 +581,7 @@ public class SaleTicketReportFacade {
                     report.setSumSaleCost(sumSaleVolume.subtract(grossMargin).divide(BigDecimal.valueOf(CommonConstant.DEFAULT_VALUE_ONE), CommonConstant.DEFAULT_VALUE_TWO, BigDecimal.ROUND_HALF_UP));
 
                     // 纯利润
-                    report.setPureProfit(grossMargin.subtract(partailly.get(0).getSumCost()).divide(BigDecimal.valueOf(CommonConstant.DEFAULT_VALUE_ONE), CommonConstant.DEFAULT_VALUE_TWO, BigDecimal.ROUND_HALF_UP));
+                    report.setPureProfit(grossMargin.subtract(sumCost).divide(BigDecimal.valueOf(CommonConstant.DEFAULT_VALUE_ONE), CommonConstant.DEFAULT_VALUE_TWO, BigDecimal.ROUND_HALF_UP));
 
                     // 佣金率
                     report.setCommissionRate(partailly.get(0).getCommissionRate());

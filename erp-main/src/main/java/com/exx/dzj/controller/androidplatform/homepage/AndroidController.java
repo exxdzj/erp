@@ -7,20 +7,20 @@ import com.exx.dzj.entity.customer.CustomerSupplierBean;
 import com.exx.dzj.entity.customer.CustomerSupplierQuery;
 import com.exx.dzj.entity.market.SaleInfo;
 import com.exx.dzj.entity.stock.StockQuery;
+import com.exx.dzj.entity.trail.LogisticsTrailParam;
 import com.exx.dzj.entity.user.UserQuery;
 import com.exx.dzj.facade.androidfacade.homepage.AndroidFacade;
 import com.exx.dzj.facade.customer.CustomerSupplierFacade;
+import com.exx.dzj.facade.logistics.LogisticsTrailFacade;
 import com.exx.dzj.facade.stock.StockFacade;
 import com.exx.dzj.facade.user.UserFacade;
 import com.exx.dzj.query.QueryGenerator;
 import com.exx.dzj.result.Result;
+import com.exx.dzj.util.ConvertUtils;
 import com.exx.dzj.util.JsonUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +37,9 @@ import java.util.Map;
 @Api(value = "手机端首页接口服务", description = "手机端首页接口服务")
 @RequestMapping("android/")
 public class AndroidController {
+
+    @Autowired
+    private LogisticsTrailFacade logisticsTrailFacade;
 
     @Autowired
     private AndroidFacade androidFacade;
@@ -151,6 +154,19 @@ public class AndroidController {
         int pageNum = query.getPage();
         int pageSize = query.getLimit() == 0 ? CommonConstant.DEFAULT_PAGE_SIZE : query.getLimit();
         result = stockFacade.queryStockWarningList(pageNum, pageSize, query);
+        return result;
+    }
+
+    @GetMapping("queryTrails")
+    public Result queryTrails(HttpServletRequest request, HttpServletResponse response, LogisticsTrailParam param) {
+        Result result = Result.responseSuccess();
+        boolean b = null == param || ConvertUtils.isEmpty(param.getFreightCode()) || ConvertUtils.isEmpty(param.getLogisticCompanyCode());
+        if(b) {
+            result.setCode(400);
+            result.setMsg("请选择要查询物流信息的数据!");
+            return result;
+        }
+        result = logisticsTrailFacade.queryLogisticsTrails(param);
         return result;
     }
 }

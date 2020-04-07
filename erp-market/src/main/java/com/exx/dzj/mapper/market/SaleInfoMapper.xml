@@ -1561,6 +1561,7 @@
       SINFO.collection_user_name AS collectionUserName,
       SINFO.remarks AS saleRemark,
       SINFO.delivery_address AS deliveryAddress,
+      SINFO.deliver_remark AS deliverRemark,
       DICTIONPRO.dict_name AS saleProject,
       IFNULL(SINFO.discount_amount, 0) AS discountAmount,
       SINFO.collection_terms AS collectionTerms,

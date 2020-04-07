@@ -750,6 +750,7 @@ public class SaleExportUtils extends ExportUtil {
             model.setSaleDate(info.getSaleDate());
             model.setCustCode(info.getCustCode());
             model.setCustName(info.getCustName());
+            model.setDeliverRemark(info.getDeliverRemark());
             model.setCustPhoneNum(info.getCustPhoneNum());
             model.setCurrency(info.getCurrency());
             model.setExchangeRate(formateBigdecimal(info.getExchangeRate()));
