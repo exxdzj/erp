@@ -24,12 +24,12 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @Configuration
 @EnableAsync
-//@PropertySource("classpath:executor-config.properties")
+@PropertySource("classpath:executor-config.properties")
 public class ExecutorConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(ExecutorConfig.class);
 
-    @Value("10")
+    /*@Value("10")
     private int corePoolSize;
 
     @Value("15")
@@ -39,10 +39,24 @@ public class ExecutorConfig {
     private int queueCapacity;
 
     @Value("async-service-")
-    private String namePrefix;
+    private String namePrefix;*/
 
     @Value("3000")
     private int keepAliveSeconds;
+
+    @Value("${asyn.executor.thread.core_pool_size}")
+    private int corePoolSize;
+
+    @Value("${asyn.executor.thread.max_pool_size}")
+    private int maxPoolSize;
+
+    @Value("1000")
+    private int queueCapacity;
+
+    @Value("${asyn.executor.thread.name.prefix}")
+    private String namePrefix;
+
+    @Value("${asyn.executor.thread.keep_alive_seconds}")
 
     @Bean("asyncSaleExecutr")
     public AsyncTaskExecutor asyncSaleExecutr (){
