@@ -36,6 +36,20 @@ public class AndroidFacade {
         return list;
     }
 
+    public SaleInfo queryPersonageSaleVolumeByDay(String userCode, Integer dayCount){
+        List<String> list = checkUserCode(userCode);
+
+        SaleInfo s = null;
+        // 个人今日销售额
+        List<SaleInfo> day = androidService.queryPersonageSaleVolumeByDay(list, "day", dayCount);
+        s = new SaleInfo();
+        s.setReceivableAccoun(BigDecimal.ZERO);
+        if (!CollectionUtils.isEmpty(day)){
+            s.setReceivableAccoun(day.stream().map(SaleInfo::getReceivableAccoun).reduce(BigDecimal.ZERO, BigDecimal::add));
+        }
+        return s;
+    }
+
     public Map<String, SaleInfo> queryPersonageSaleVolume(String userCode){
         Map<String, SaleInfo> data = new HashMap<>();
         List<String> list = checkUserCode(userCode);

@@ -27,6 +27,12 @@ public class AndroidHomePageServiceImpl implements AndroidService {
     }
 
     @Override
+    public List<SaleInfo> queryPersonageSaleVolumeByDay(List<String> list, String date, Integer dayCount) {
+
+        return androidMapper.queryPersonageSaleVolumeByDay(list, date, dayCount);
+    }
+
+    @Override
     public int queryCustomerCount(List<String> list, String newly) {
 
         return androidMapper.queryCustomerCount(list, newly);

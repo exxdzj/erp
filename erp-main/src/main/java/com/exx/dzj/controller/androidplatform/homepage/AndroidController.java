@@ -69,6 +69,23 @@ public class AndroidController {
     }
 
     /**
+     * @description
+     * @author yangyun
+     * @date 2020/4/8 0008
+     * @param userCode
+     * @param dayCount
+     * @return com.exx.dzj.result.Result
+     */
+    @GetMapping("queryPersonageSaleVolumeByDay/{userCode}/{dayCount}")
+    public Result queryPersonageSaleVolumeByDay (@PathVariable("userCode") String userCode, @PathVariable("dayCount") Integer dayCount){
+        Result result = Result.responseSuccess();
+        SaleInfo saleInfo = androidFacade.queryPersonageSaleVolumeByDay(userCode, dayCount);
+        result.setData(saleInfo);
+        return result;
+    }
+
+
+    /**
      * @description: 销售员新增客户数, 客户总数
      * @author yangyun
      * @date 2019/8/27 0027
